@@ -112,7 +112,7 @@ public class Main {
                         padrao.getComprimentoPetala() == atributos[j][2] &&
                         padrao.getLarguraPetala() == atributos[j][3] &&
                         classe == atributos[j][4]) {
-                    acertos ++;
+                    acertos++;
                 }
             }
         }
