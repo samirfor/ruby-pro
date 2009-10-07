@@ -5,8 +5,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- *
- * @author alunos
+ * Executa o programa.
+ * @author samir
  */
 public class Main {
 
