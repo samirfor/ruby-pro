@@ -2,6 +2,7 @@ package dmc;
 
 import static org.math.io.files.ASCIIFile.readDoubleArray;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,15 +14,20 @@ public class Main {
 
         BancoDados treinamento = new BancoDados();
         BancoDados teste = new BancoDados();
+        ArrayList<Integer> array = new ArrayList<Integer>();
         double[][] atributos = readDoubleArray(new File("iris.data"));
         boolean flag = true; // flag para adição de iris
-        int indice = 0, i = 0;
+        int indice = 0;
 
-        while (i < 120) { // armazena 120 casos aleatórios de iris
+        /* Treinamento */
+        for (int i = 0; i < 120;) { // armazena 120 casos aleatórios de iris
             flag = true;
-            indice = (int) (Math.random() * 149); // indice aleatório para calcular o dmc
+            // indice aleatório para calcular o dmc
+            indice = (int) (Math.random() * 149);
             if (i != 0) {
-                // Evita que uma mesma iris seja armazenada mais de uma vez no BancoDados treinamento
+                /* Evita que uma mesma iris seja armazenada mais de uma vez
+                 * no BancoDados treinamento
+                 */
                 for (int j = 0; j < treinamento.size(); j++) {
                     Padrao padrao = treinamento.getPadrao(j);
                     if (padrao.getComprimentoSepala() == atributos[indice][0] &&
@@ -39,32 +45,32 @@ public class Main {
                         atributos[indice][2], atributos[indice][3], Classificacao.SETOSA);
                 if (atributos[indice][4] == 1.0) {
                     padrao.setClasse(Classificacao.SETOSA);
-                } else if (atributos[indice][4] == 2.0) {
-                    padrao.setClasse(Classificacao.VERSICOLOR);
-                } else { //if (atributos[indice][4] == 3.0) {
-                    padrao.setClasse(Classificacao.VIRGINICA);
+                } else {
+                    if (atributos[indice][4] == 2.0) {
+                        padrao.setClasse(Classificacao.VERSICOLOR);
+                    } else { //if (atributos[indice][4] == 3.0) {
+                        padrao.setClasse(Classificacao.VIRGINICA);
+                    }
                 }
                 treinamento.add(padrao);
+                array.add(indice); // indices treinados
                 i++;
             }
         }
 
         // cria um objeto dmc com o BancoDados treinamento pronto
         DMC dmc = new DMC(treinamento);
-        i = 0;
+
+        /* Teste */
         System.out.println("\n-------------\n");
+
         System.out.println("Teste:");
-        while (i < 50) { // Procura os casos restantes de iris
+        for (int i = 0; i < 50;) {
             flag = true;
             indice = (int) (Math.random() * 149);
 
-            // Evita que uma iris do treinamento seja utilizado no teste
-            for (int j = 0; j < treinamento.size(); j++) {
-                Padrao padrao = treinamento.getPadrao(j);
-                if (padrao.getComprimentoSepala() == atributos[indice][0] &&
-                        padrao.getLarguraSepala() == atributos[indice][1] &&
-                        padrao.getComprimentoPetala() == atributos[indice][2] &&
-                        padrao.getLarguraPetala() == atributos[indice][3]) {
+            for (int j = 0; j < array.size(); j++) {
+                if (indice == array.get(j)) {
                     flag = false;
                     break;
                 }
@@ -92,10 +98,10 @@ public class Main {
         System.out.println("\n-------------\n");
         // Calcula o percentual de acertos
         double acertos = 0;
-
-        for (i = 0; i < teste.size(); i++) {
+        double classe = 0;
+        for (int i = 0; i < teste.size(); i++) {
             Padrao padrao = teste.getPadrao(i);
-            double classe = 0.0;
+            
 
             for (int j = 0; j < 150; j++) {
 
@@ -116,6 +122,7 @@ public class Main {
                 }
             }
         }
+
         double percentual = (acertos / teste.size()) * 100;
 
         System.out.println("acertos: " + acertos);
