@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dmc;
 
 import static org.math.io.files.ASCIIFile.readDoubleArray;
@@ -116,7 +112,7 @@ public class Main {
                         padrao.getComprimentoPetala() == atributos[j][2] &&
                         padrao.getLarguraPetala() == atributos[j][3] &&
                         classe == atributos[j][4]) {
-                    acertos += 1;
+                    acertos ++;
                 }
             }
         }
