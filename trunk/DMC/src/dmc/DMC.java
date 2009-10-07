@@ -8,6 +8,10 @@ public class DMC {
         this.treinamento = treinamento;
     }
 
+    /**
+     * Calcula o sentróide de setosas.
+     * @return
+     */
     public double getCentroideSetosa() {
         double soma = 0.00;
         int count = 0;
@@ -30,6 +34,10 @@ public class DMC {
         }
     }
 
+    /**
+     * Calcula o centróide de versicolor.
+     * @return
+     */
     public double getCentroideVersicolor() {
         double soma = 0.00;
         int count = 0;
@@ -52,6 +60,10 @@ public class DMC {
         }
     }
 
+    /**
+     * Caclula o centróide de virgínica.
+     * @return
+     */
     public double getCentroideVirginica() {
         double soma = 0.00;
         int count = 0;
@@ -74,6 +86,14 @@ public class DMC {
         }
     }
 
+    /**
+     * Faz a classificação de acordo com os atributos sorteados.
+     * @param comprimento_sepala
+     * @param largura_sepala
+     * @param comprimento_petala
+     * @param largura_petala
+     * @return
+     */
     public Classificacao classificar(double comprimento_sepala, double largura_sepala, double comprimento_petala, double largura_petala) {
         double setosa = 0.0, versicolor = 0.0, virginica = 0.0;
 
