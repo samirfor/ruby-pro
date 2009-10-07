@@ -61,7 +61,7 @@ public class DMC {
     }
 
     /**
-     * Caclula o centróide de virgínica.
+     * Calcula o centróide de virgínica.
      * @return
      */
     public double getCentroideVirginica() {
