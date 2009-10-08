@@ -60,8 +60,6 @@ public class Teste {
             }
 
             System.out.println("\n\n>>>>>>>>>>>>\n\nLendo jogada:");
-            System.out.println("Mostrando dorme:");
-            System.out.println(jogo.mostrarDorme());
             System.out.println("Mostrando mão do jogador1:");
             System.out.println(jogador1.mostrarMao());
             System.out.println("Mostrando mão do jogador2:");
