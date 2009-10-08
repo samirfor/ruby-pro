@@ -1,9 +1,12 @@
 package pecas;
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
+
+import java.io.Serializable;
+
 // #[regen=yes,id=DCE.40437170-2D96-ABA2-24F5-8C411A64E20A]
 // </editor-fold> 
-public class Peca {
+public class Peca implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.A47F5C03-A50B-73C6-6222-BB7A476AC04B]

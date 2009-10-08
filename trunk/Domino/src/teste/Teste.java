@@ -51,10 +51,19 @@ public class Teste {
                     jogo.puxa_do_dorme(jogador_da_vez);
                 } else { // Caso o dorme acabe
                     // Seta jogador da vez
-                    if (jogador_da_vez.getId() == 1) {
+
+                    // Se for o jogador 1 e o jogador 2 passou a vez
+                    if (jogador_da_vez.getId() == 1 && !jogador2.isPassou_vez()) {
+                        jogador_da_vez.setPassou_vez(true);
                         jogador_da_vez = jogador2;
                     } else {
-                        jogador_da_vez = jogador1;
+                        if (!jogador1.isPassou_vez()) {
+                            jogador_da_vez.setPassou_vez(true);
+                            jogador_da_vez = jogador1;
+                        } else {
+                            System.out.println("Empatou!");
+                            System.exit(0); //Encerra o programa.
+                        }
                     }
                 }
             }
@@ -64,11 +73,12 @@ public class Teste {
             System.out.println(jogador1.mostrarMao());
             System.out.println("Mostrando mão do jogador2:");
             System.out.println(jogador2.mostrarMao());
-            System.out.println("Pontas: " + jogo.mostraPontas());
 
+            System.out.println("Tamanho do dorme: " + jogo.getDorme().size());
+            System.out.println("Pontas: " + jogo.mostraPontas());
             System.out.print("Posição da peça: ");
             posicao = ler.nextInt();
-            System.out.print("\nPonta: (-1) para esquerda e (1) para direita\n");
+            System.out.print("\nPonta: (-1) para cima e (1) para baixo\n");
             ponta = ler.nextInt();
 
             // Define de quem é a vez e faz a jogada.
