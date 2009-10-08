@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 import jogador.Jogador;
-import sun.nio.ch.SocketOpts.IP;
+import regras.JogoRegras;
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.71BE868F-EB2E-8D60-26BE-0F7E1B2C1739]
@@ -17,11 +17,13 @@ public class AppCliente {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.A8804613-376E-3AB2-7CAC-94EB899A5C8E]
     // </editor-fold> 
-    public static void main(String[] args) throws UnknownHostException, IOException {
-        Jogador jogador;
+
+    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
+        Jogador jogador = null;
+        JogoRegras jogo = null;
         Socket socket = null;
-        ObjectInputStream entrada;
-        ObjectOutputStream saida;
+        ObjectInputStream entrada = null;
+        ObjectOutputStream saida = null;
         Scanner ler = new Scanner(System.in);
         String host = null;
         int porta = 0;
@@ -35,11 +37,15 @@ public class AppCliente {
         } while (host.equals(null) || porta == 0);
 
         socket = new Socket(host, porta);
-//        saida = new ObjectOutputStream(socket.getOutputStream());
+        saida = new ObjectOutputStream(socket.getOutputStream());
         entrada = new ObjectInputStream(socket.getInputStream());
 
         System.out.println("Conectado ao servidor " + host + ":" + porta);
-        entrada.readUTF();
+        entrada.readUTF(); // resposta da vez
+
+        //Sincronizando jogo
+        jogo = (JogoRegras) entrada.readObject();
+        jogador = (Jogador) entrada.readObject();
 
         entrada.close();
         socket.close();

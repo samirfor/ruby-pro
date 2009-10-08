@@ -1,7 +1,6 @@
 package pecas;
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-
 import java.io.Serializable;
 
 // #[regen=yes,id=DCE.40437170-2D96-ABA2-24F5-8C411A64E20A]
@@ -45,13 +44,9 @@ public class Peca implements Serializable {
     public boolean equals(Peca p) {
         if (pecas[0] == p.getPeca()[0] && pecas[1] == p.getPeca()[1]) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
-
-
-
 }
 

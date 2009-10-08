@@ -91,7 +91,7 @@ public class JogoRegras implements Serializable {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.3A0F3D41-2C04-B8EB-64A5-E31FAB872F0D]
     // </editor-fold>
-    /*
+    /**
      * Retira a peça da mão do jogador e coloca no tabuleiro na ponta
      * especificada no parâmetro ponta (-1 = esquerda ; 1 = direita ; 0 = primeira jogada).
      */
@@ -175,8 +175,6 @@ public class JogoRegras implements Serializable {
             if (i != tamanho - 1) {
                 index_aleatorio = numeroRandom.nextInt(tamanho - i - 1);
             }
-            //System.out.println("index_aleatorio=" + index_aleatorio + "\ti="+i+"\ttamanho="+tamanho);
-            //System.out.println("tabuleiro.get(index_aleatorio)="+tabuleiro.get(index_aleatorio).to_String());
             tabuleiro_embaraiado.add(tabuleiro.get(index_aleatorio));
             tabuleiro.remove(index_aleatorio);
         }
@@ -275,7 +273,7 @@ public class JogoRegras implements Serializable {
         return -1;
     }
 
-    /*
+    /**
      * Define quem jogará primeiro de acordo com as suas peças.
      * Retorna 1 se o jogador 1 jogar primeiro;
      * Retorna 2 se o jogador 2 jogar primeiro;
