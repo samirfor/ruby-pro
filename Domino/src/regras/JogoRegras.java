@@ -1,5 +1,6 @@
 package regras;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import jogador.Jogador;
@@ -8,7 +9,7 @@ import pecas.Peca;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.18927EE1-2187-BC3F-A6DD-73AA479A4160]
 // </editor-fold> 
-public class JogoRegras {
+public class JogoRegras implements Serializable {
 
     /**
      *  <p style="margin-top: 0">
@@ -197,6 +198,18 @@ public class JogoRegras {
         embaraiarTabuleiro();
     }
 
+    public void criarEmpate(Jogador j, int i) {
+        Peca peca;
+        ArrayList<Peca> mao = new ArrayList<Peca>();
+
+        peca = new Peca(i, i);
+        mao.add(peca);
+        i--;
+        peca = new Peca(i, i);
+        mao.add(peca);
+        j.setMao(mao);
+    }
+
     /**
      * Retorna true se conseguiu realizar a operação e false se não.
      */
@@ -253,7 +266,7 @@ public class JogoRegras {
     public int buscaMaiorCarrocao(Jogador jogador) {
         for (int i = 6; i > -1; i--) {
             Peca carrocao = new Peca(i, i);
-            for (int j = 0; j < 7; j++) {
+            for (int j = 0; j < jogador.getMao().size(); j++) {
                 if (carrocao.equals(jogador.getMao().get(j))) {
                     return j;
                 }
@@ -311,23 +324,25 @@ public class JogoRegras {
     public boolean validaJogada(Jogador jogador, Peca peca_escolhida, int ponta, int index_mao) {
         Peca peca_invertida;
 
-        if (ponta == 1) {
-            if (peca_escolhida.getPeca()[0] == tabuleiro.get(tabuleiro.size() - 1).getPeca()[1]) {
-                return true;
-            } else if (peca_escolhida.getPeca()[1] == tabuleiro.get(tabuleiro.size() - 1).getPeca()[1]) {
-                peca_invertida = reordenar(jogador, peca_escolhida);
-                jogador.getMao().set(index_mao, peca_invertida);
-                return true;
+        // Teste se o index_mao está aceitável
+        if (index_mao >= 0 && index_mao < jogador.getMao().size()) {
+            if (ponta == 1) {
+                if (peca_escolhida.getPeca()[0] == tabuleiro.get(tabuleiro.size() - 1).getPeca()[1]) {
+                    return true;
+                } else if (peca_escolhida.getPeca()[1] == tabuleiro.get(tabuleiro.size() - 1).getPeca()[1]) {
+                    peca_invertida = reordenar(jogador, peca_escolhida);
+                    jogador.getMao().set(index_mao, peca_invertida);
+                    return true;
+                }
+            } else {  // ponta == -1
+                if (peca_escolhida.getPeca()[0] == tabuleiro.get(0).getPeca()[0]) {
+                    peca_invertida = reordenar(jogador, peca_escolhida);
+                    jogador.getMao().set(index_mao, peca_invertida);
+                    return true;
+                } else if (peca_escolhida.getPeca()[1] == tabuleiro.get(0).getPeca()[0]) {
+                    return true;
+                }
             }
-        } else {  // ponta == -1
-            if (peca_escolhida.getPeca()[0] == tabuleiro.get(0).getPeca()[0]) {
-                peca_invertida = reordenar(jogador, peca_escolhida);
-                jogador.getMao().set(index_mao, peca_invertida);
-                return true;
-            } else if (peca_escolhida.getPeca()[1] == tabuleiro.get(0).getPeca()[0]) {
-                return true;
-            }
-
         }
         return false;
     }

@@ -1,5 +1,6 @@
 package jogador;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import pecas.Peca;
 
@@ -11,7 +12,7 @@ import pecas.Peca;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.D80BA623-998F-7D93-8338-194BC66DC9ED]
 // </editor-fold> 
-public class Jogador {
+public class Jogador implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.7B662070-D8B0-A672-33B5-BB3B024C100E]
@@ -22,6 +23,15 @@ public class Jogador {
     // </editor-fold> 
     private ArrayList<Peca> mao;
     private int id;
+    private boolean passou_vez;
+
+    public boolean isPassou_vez() {
+        return passou_vez;
+    }
+
+    public void setPassou_vez(boolean passou_vez) {
+        this.passou_vez = passou_vez;
+    }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E610E17F-17E6-033A-6073-B39E657155D2]
@@ -30,6 +40,7 @@ public class Jogador {
         mao = new ArrayList<Peca>();
         this.id = id;
         ganhou = false;
+        passou_vez = false;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
