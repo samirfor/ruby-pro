@@ -21,12 +21,15 @@ public class Jogador {
     // #[regen=yes,id=DCE.D73A1FA4-B3BE-CCA4-A4F3-EC2502A6F521]
     // </editor-fold> 
     private ArrayList<Peca> mao;
+    private int id;
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E610E17F-17E6-033A-6073-B39E657155D2]
     // </editor-fold> 
-    public Jogador() {
+    public Jogador(int id) {
         mao = new ArrayList<Peca>();
+        this.id = id;
+        ganhou = false;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -43,11 +46,51 @@ public class Jogador {
         this.mao = mao;
     }
 
+    /**
+     * Procura uma peça na mão do jogador através do índice.
+     * @param peca
+     * @return
+     * Retorna o índice em que se encontra a peça na mão do jogador.
+     * Retornará (-1) se a peça não for encontrada.
+     */
+    public int buscaPeca(Peca peca) {
+        for (int i = 0; i < this.getMao().size(); i++) {
+            if (peca.equals(this.getMao().get(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Procura um valor nas peças da mão do jogador.
+     *
+     * Nota: Repare que ele retorna o índice da primeira peça em que o valor se encontra.
+     * @param valor
+     * @return
+     * Retorna o índice da peça na mão do jogador.
+     * Retorna (-1) se não encontrar o valor.
+     */
+    public int buscaValor(int valor) {
+        int peca[] = null;
+        for (int i = 0; i < getMao().size(); i++) {
+            peca = getMao().get(i).getPeca();
+            if (valor == peca[0] || valor == peca[1]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,regenBody=yes,id=DCE.B4BC9155-7972-E3FA-CCCB-A4A8749982CD]
     // </editor-fold> 
     public boolean isGanhou() {
-        return ganhou;
+        if (mao.size() == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -71,6 +114,10 @@ public class Jogador {
 
     public int getSomatorio(Peca peca) {
         return peca.getPeca()[0] + peca.getPeca()[1];
+    }
+
+    public int getId() {
+        return id;
     }
 }
 

@@ -52,6 +52,41 @@ public class JogoRegras {
         this.dorme = val;
     }
 
+    public int[] getPontas() {
+        int retorno[] = new int[2];
+
+        retorno[0] = tabuleiro.get(0).getPeca()[0];
+        retorno[1] = tabuleiro.get(tabuleiro.size() - 1).getPeca()[1];
+
+        return retorno;
+    }
+
+    public String mostraPontas() {
+        String s = "";
+        s += "{" + getPontas()[0] + ", " + getPontas()[1] + "}";
+        return s;
+    }
+
+    /**
+     * Determina se o jogador da vez passou a vez ou não, observando se ele
+     * tiver pelo menos uma peça com pelo menos um valor possível de se jogar.
+     * @param jogador
+     * @return
+     * Retorna true se o jogador passou ou false se o jogador não passou a vez.
+     */
+    public boolean passou(Jogador jogador) {
+        if (jogador.buscaValor(getPontas()[0]) != -1) {
+            return false;
+        } else {
+            if (jogador.buscaValor(getPontas()[1]) != -1) {
+                return false;
+            } else {
+                System.out.println("Jogador " + jogador.getId() + " passou.");
+                return true;
+            }
+        }
+    }
+
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.3A0F3D41-2C04-B8EB-64A5-E31FAB872F0D]
     // </editor-fold>
@@ -62,21 +97,23 @@ public class JogoRegras {
     public boolean jogada(Jogador jogador, int posicao, int ponta) {
         Peca peca = jogador.getPeca(posicao);
 
-        if (ponta == 0) {
+        if (ponta == 0) { // Primeira jogada
             tabuleiro.add(peca);
             jogador.getMao().remove(posicao);
             return true;
         }
 
-        if (ponta == 1) {
+        if (ponta == 1) { // Lado direito
             if (validaJogada(jogador, peca, 1, posicao)) {
+                peca = jogador.getPeca(posicao);
                 tabuleiro.add(peca);
             } else {
                 System.out.println("Jogada inválida.");
                 return false;
             }
-        } else {
+        } else { // Lado esquerdo
             if (validaJogada(jogador, peca, -1, posicao)) {
+                peca = jogador.getPeca(posicao); // atualiza a peca
                 tabuleiro.add(0, peca);
             } else {
                 System.out.println("Jogada inválida.");
@@ -103,14 +140,13 @@ public class JogoRegras {
     // </editor-fold> 
     public Peca reordenar(Jogador jogador, Peca peca) {
 
-        Peca antes, depois;
-        int aux[], posaux;
+        Peca retorno;
+        int aux[];
 
-        antes = peca;
-        aux = antes.getPeca();
-        depois = new Peca(aux[1], aux[0]);
+        aux = peca.getPeca();
+        retorno = new Peca(aux[1], aux[0]);
 
-        return depois; // retorna peça invertida
+        return retorno; // retorna peça invertida
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -184,7 +220,7 @@ public class JogoRegras {
      * Após definir a mão dos jogadores, se restarem peças, este método será chamado.
      */
     public void definirDorme() {
-        dorme = tabuleiro;
+        dorme.addAll(tabuleiro);
         tabuleiro.clear();
     }
 
@@ -194,6 +230,24 @@ public class JogoRegras {
             s += i + ": " + dorme.get(i);
         }
         return s;
+    }
+
+    /**
+     * Se caso um jogador passar, este método será chamado e move as peças
+     * do dorme para a mão do jogador.
+     * @param jogador
+     * @return
+     */
+    public boolean puxa_do_dorme(Jogador jogador) {
+        if (dorme.size() != 0) {
+            jogador.getMao().add(dorme.get(0));
+            dorme.remove(0);
+            System.out.println("Jogador " + jogador.getId() + " puxou do dorme.");
+            return true;
+        } else {
+            System.out.println("Jogador " + jogador.getId() + " passou a vez.");
+            return false;
+        }
     }
 
     public int buscaMaiorCarrocao(Jogador jogador) {
@@ -255,16 +309,20 @@ public class JogoRegras {
     }
 
     public boolean validaJogada(Jogador jogador, Peca peca_escolhida, int ponta, int index_mao) {
+        Peca peca_invertida;
+
         if (ponta == 1) {
-            if (peca_escolhida.getPeca()[0] == tabuleiro.get(tabuleiro.size()-1).getPeca()[1]) {
+            if (peca_escolhida.getPeca()[0] == tabuleiro.get(tabuleiro.size() - 1).getPeca()[1]) {
                 return true;
-            } else if (peca_escolhida.getPeca()[1] == tabuleiro.get(tabuleiro.size()-1).getPeca()[1]) {
-                jogador.getMao().set(index_mao, reordenar(jogador, peca_escolhida));
+            } else if (peca_escolhida.getPeca()[1] == tabuleiro.get(tabuleiro.size() - 1).getPeca()[1]) {
+                peca_invertida = reordenar(jogador, peca_escolhida);
+                jogador.getMao().set(index_mao, peca_invertida);
                 return true;
             }
         } else {  // ponta == -1
             if (peca_escolhida.getPeca()[0] == tabuleiro.get(0).getPeca()[0]) {
-                jogador.getMao().set(index_mao, reordenar(jogador, peca_escolhida));
+                peca_invertida = reordenar(jogador, peca_escolhida);
+                jogador.getMao().set(index_mao, peca_invertida);
                 return true;
             } else if (peca_escolhida.getPeca()[1] == tabuleiro.get(0).getPeca()[0]) {
                 return true;
