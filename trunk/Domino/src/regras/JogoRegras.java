@@ -1,8 +1,10 @@
 package regras;
 
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 import jogador.Jogador;
 import pecas.Peca;
 
@@ -344,4 +346,92 @@ public class JogoRegras implements Serializable {
         }
         return false;
     }
-}
+
+    public boolean empatou(Jogador j1, Jogador j2) {
+        if (j1.isEmpatou() && j2.isEmpatou()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    /**
+     *
+     * @param jogador_vez
+     * @param jogador1
+     * @param jogador2
+     * @return
+     * Retorna 1 se jogador1 ganhar
+     * Retorna 2 se jogador2 ganhar
+     * Retorna 5 se empatar
+     * Retorna 0 se o jogador da vez passar a vez
+     */
+//    public int le_jogada(Jogador jogador_vez, Jogador jogador1, Jogador jogador2) {
+//        Scanner ler = new Scanner(System.in);
+//
+//        // Trata o "passa"
+//        while (passou(jogador_vez)) {
+//            if (getDorme().size() != 0) {
+//                puxa_do_dorme(jogador_vez);
+//            } else { // Caso o dorme acabe
+//                // Seta jogador da vez
+//
+//                // Se for o jogador 1 e o jogador 2 não passou a vez
+//                if (jogador_vez.getId() == 1 && !jogador2.isPassou_vez()) {
+//                    jogador1.setPassou_vez(true);
+//                    jogador_vez = jogador2;
+//                } else {
+//                    if (!jogador1.isPassou_vez()) {
+//                        jogador2.setPassou_vez(true);
+//                        jogador_vez = jogador1;
+//                    } else {
+//                        System.out.println("Empatou!");
+//                        return 5; // Empate
+//                        }
+//                }
+//            }
+//        }
+//
+//        System.out.println("\n\n>>>>>>>>>>>>\n\nLendo jogada:");
+//        System.out.println("Mostrando mão do jogador1:");
+//        System.out.println(jogador1.mostrarMao());
+//        System.out.println("Mostrando mão do jogador2:");
+//        System.out.println(jogador2.mostrarMao());
+//
+//        System.out.println("Tamanho do dorme: " + getDorme().size());
+//        System.out.println("Pontas: " + mostraPontas());
+//        System.out.print("Posição da peça: ");
+//        int posicao = ler.nextInt();
+//        System.out.print("\nPonta: (-1) para cima e (1) para baixo\n");
+//        int ponta = ler.nextInt();
+//
+//        /**
+//         * Define de quem é a vez e faz a jogada.
+//         *
+//         */
+//        if (jogador_vez.getId() == 1) {
+//            if (jogada(jogador1, posicao, ponta)) {
+//                if (jogador_vez.isGanhou()) { // Jogador 1 ganhou?
+//                    return 1;
+//                } else {
+//                    jogador_vez = jogador2;
+//                    return 0;
+//                }
+//            } else {
+//                if (jogada(jogador2, posicao, ponta)) {
+//                    if (jogador_vez.isGanhou()) { // Jogador 2 ganhou?
+//                        return 2;
+//                    } else {
+//                        jogador_vez = jogador1;
+//                        return 0;
+//                    }
+//                }
+//            }
+//        }
+//
+//        System.out.println("\n---------------------\nTabuleiro resultante:");
+//        System.out.println(mostrarTabuleiro());
+//        System.out.println("\nAgora é a vez do jogador " + jogador_vez.getId());
+//    }
+    }

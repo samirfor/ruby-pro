@@ -17,7 +17,6 @@ public class AppCliente {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.A8804613-376E-3AB2-7CAC-94EB899A5C8E]
     // </editor-fold> 
-
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Jogador jogador = null;
         JogoRegras jogo = null;
@@ -41,13 +40,20 @@ public class AppCliente {
         entrada = new ObjectInputStream(socket.getInputStream());
 
         System.out.println("Conectado ao servidor " + host + ":" + porta);
-        entrada.readUTF(); // resposta da vez
+        System.out.println("\n>>>>>>>>>>>>>>>>>>>>");
+        System.out.println("Iniciando jogo.");
 
-        //Sincronizando jogo
+        entrada.readUTF(); // Fala quem é a vez
+
+        // Recebe os dados do jogo
         jogo = (JogoRegras) entrada.readObject();
         jogador = (Jogador) entrada.readObject();
 
+        
+
+        // Fecha conexões
         entrada.close();
+        saida.close();
         socket.close();
     }
 }
