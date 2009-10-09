@@ -18,12 +18,21 @@ public class Jogador implements Serializable {
     // #[regen=yes,id=DCE.7B662070-D8B0-A672-33B5-BB3B024C100E]
     // </editor-fold> 
     private boolean ganhou;
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.D73A1FA4-B3BE-CCA4-A4F3-EC2502A6F521]
-    // </editor-fold> 
+    private boolean empatou;
     private ArrayList<Peca> mao;
     private int id;
     private boolean passou_vez;
+
+    // <editor-fold defaultstate="collapsed" desc=" UML Marker ">
+    // #[regen=yes,id=DCE.E610E17F-17E6-033A-6073-B39E657155D2]
+    // </editor-fold>
+    public Jogador(int id) {
+        mao = new ArrayList<Peca>();
+        this.id = id;
+        ganhou = false;
+        passou_vez = false;
+        empatou = false;
+    }
 
     public boolean isPassou_vez() {
         return passou_vez;
@@ -33,14 +42,12 @@ public class Jogador implements Serializable {
         this.passou_vez = passou_vez;
     }
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.E610E17F-17E6-033A-6073-B39E657155D2]
-    // </editor-fold> 
-    public Jogador(int id) {
-        mao = new ArrayList<Peca>();
-        this.id = id;
-        ganhou = false;
-        passou_vez = false;
+    public boolean isEmpatou() {
+        return empatou;
+    }
+
+    public void setEmpatou(boolean empatou) {
+        this.empatou = empatou;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -55,6 +62,44 @@ public class Jogador implements Serializable {
     // </editor-fold> 
     public void setMao(ArrayList<Peca> mao) {
         this.mao = mao;
+    }
+
+    // <editor-fold defaultstate="collapsed" desc=" UML Marker ">
+    // #[regen=yes,regenBody=yes,id=DCE.F36F234B-7CF0-7399-D3D1-36C0518774FE]
+    // </editor-fold>
+    public void setGanhou(boolean val) {
+        this.ganhou = val;
+    }
+
+    public String mostrarMao() {
+        String s = "";
+        for (int i = 0; i < mao.size(); i++) {
+            s += i + ": " + mao.get(i);
+        }
+        return s;
+    }
+
+    public Peca getPeca(int index) {
+        return mao.get(index);
+    }
+
+    public int getSomatorio(Peca peca) {
+        return peca.getPeca()[0] + peca.getPeca()[1];
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    // <editor-fold defaultstate="collapsed" desc=" UML Marker ">
+    // #[regen=yes,regenBody=yes,id=DCE.B4BC9155-7972-E3FA-CCCB-A4A8749982CD]
+    // </editor-fold>
+    public boolean isGanhou() {
+        if (mao.size() == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -92,43 +137,4 @@ public class Jogador implements Serializable {
         }
         return -1;
     }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,regenBody=yes,id=DCE.B4BC9155-7972-E3FA-CCCB-A4A8749982CD]
-    // </editor-fold> 
-    public boolean isGanhou() {
-        if (mao.size() == 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,regenBody=yes,id=DCE.F36F234B-7CF0-7399-D3D1-36C0518774FE]
-    // </editor-fold> 
-    public void setGanhou(boolean val) {
-        this.ganhou = val;
-    }
-
-    public String mostrarMao() {
-        String s = "";
-        for (int i = 0; i < mao.size(); i++) {
-            s += i + ": " + mao.get(i);
-        }
-        return s;
-    }
-
-    public Peca getPeca(int index) {
-        return mao.get(index);
-    }
-
-    public int getSomatorio(Peca peca) {
-        return peca.getPeca()[0] + peca.getPeca()[1];
-    }
-
-    public int getId() {
-        return id;
-    }
 }
-
