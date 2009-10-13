@@ -1,10 +1,8 @@
 package regras;
 
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 import jogador.Jogador;
 import pecas.Peca;
 
@@ -23,6 +21,8 @@ public class JogoRegras implements Serializable {
     // #[regen=yes,id=DCE.7BF6102A-E348-48B1-2921-10C77C495F0A]
     // </editor-fold> 
     private ArrayList<Peca> dorme;
+    private boolean empatou;
+    private boolean ganhou;
     /**
      *  <p style="margin-top: 0">
      *    Tabuleiro do jogo com todas as pe&#231;as j&#225; jogadas.
@@ -39,6 +39,24 @@ public class JogoRegras implements Serializable {
     public JogoRegras() {
         dorme = new ArrayList<Peca>();
         tabuleiro = new ArrayList<Peca>();
+        empatou = false;
+        ganhou = false;
+    }
+
+    public boolean isGanhou() {
+        return ganhou;
+    }
+
+    public void setGanhou(boolean ganhou) {
+        this.ganhou = ganhou;
+    }
+
+    public boolean isEmpatou() {
+        return empatou;
+    }
+
+    public void setEmpatou(boolean empatou) {
+        this.empatou = empatou;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -346,16 +364,6 @@ public class JogoRegras implements Serializable {
         }
         return false;
     }
-
-    public boolean empatou(Jogador j1, Jogador j2) {
-        if (j1.isEmpatou() && j2.isEmpatou()) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    
     /**
      *
      * @param jogador_vez

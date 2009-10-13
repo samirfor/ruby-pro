@@ -18,10 +18,11 @@ public class Jogador implements Serializable {
     // #[regen=yes,id=DCE.7B662070-D8B0-A672-33B5-BB3B024C100E]
     // </editor-fold> 
     private boolean ganhou;
-    private boolean empatou;
     private ArrayList<Peca> mao;
     private int id;
     private boolean passou_vez;
+    private boolean vez;
+
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker ">
     // #[regen=yes,id=DCE.E610E17F-17E6-033A-6073-B39E657155D2]
@@ -31,7 +32,14 @@ public class Jogador implements Serializable {
         this.id = id;
         ganhou = false;
         passou_vez = false;
-        empatou = false;
+    }
+
+     public boolean isVez() {
+        return vez;
+    }
+
+    public void setVez(boolean vez) {
+        this.vez = vez;
     }
 
     public boolean isPassou_vez() {
@@ -40,14 +48,6 @@ public class Jogador implements Serializable {
 
     public void setPassou_vez(boolean passou_vez) {
         this.passou_vez = passou_vez;
-    }
-
-    public boolean isEmpatou() {
-        return empatou;
-    }
-
-    public void setEmpatou(boolean empatou) {
-        this.empatou = empatou;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
