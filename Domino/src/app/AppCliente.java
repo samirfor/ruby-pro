@@ -3,6 +3,7 @@ package app;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -12,7 +13,7 @@ import regras.JogoRegras;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.71BE868F-EB2E-8D60-26BE-0F7E1B2C1739]
 // </editor-fold> 
-public class AppCliente {
+public class AppCliente implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.A8804613-376E-3AB2-7CAC-94EB899A5C8E]
@@ -24,8 +25,8 @@ public class AppCliente {
         ObjectInputStream entrada = null;
         ObjectOutputStream saida = null;
         Scanner ler = new Scanner(System.in);
-        String host = null;
-        int porta = 0;
+        String host = null, log;
+        int porta = 0, i = 0, posicao, ponta;
 
         // Captura endereço do servidor
         do {
@@ -39,17 +40,40 @@ public class AppCliente {
         saida = new ObjectOutputStream(socket.getOutputStream());
         entrada = new ObjectInputStream(socket.getInputStream());
 
-        System.out.println("Conectado ao servidor " + host + ":" + porta);
+        System.out.println("Conectado a " + host + ":" + porta);
+
+        log = entrada.readUTF();
+        System.out.println(log); // Iniciando
+        System.out.println(entrada.readUTF()); // Fala quem é a vez
+        System.out.println(entrada.readUTF()); //
+
         System.out.println("\n>>>>>>>>>>>>>>>>>>>>");
         System.out.println("Iniciando jogo.");
+        do {
+            // Recebe os dados do jogo
+            jogo = (JogoRegras) entrada.readObject();
+            jogador = (Jogador) entrada.readObject();
+            i++;
+            System.out.println("\n\n>>>>>>>>>>>>\nTabuleiro:");
+            System.out.println(jogo.mostrarTabuleiro());
+            System.out.println("\nJogada " + i + ":");
+            System.out.println("Suas peças:");
+            System.out.println(jogador.mostrarMao());
 
-        entrada.readUTF(); // Fala quem é a vez
+            do {
+                System.out.print("Escolher peça número: ");
+                posicao = ler.nextInt();
+                System.out.print("\n(-1) para cima e (1) para baixo\n");
+                ponta = ler.nextInt();
+            } while (!jogo.jogada(jogador, posicao, ponta));
+            if (jogador.getMao().size() == 0) {
+                jogo.setGanhou(true);
+            }
+            saida.writeObject(jogo);
+            saida.writeObject(jogador);
+        } while (!jogo.isEmpatou() && !jogo.isGanhou());
 
-        // Recebe os dados do jogo
-        jogo = (JogoRegras) entrada.readObject();
-        jogador = (Jogador) entrada.readObject();
-
-        
+        System.out.println(entrada.readUTF()); // Fala quem venceu ou empate.
 
         // Fecha conexões
         entrada.close();
