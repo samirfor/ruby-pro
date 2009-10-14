@@ -50,7 +50,7 @@ public class AppCliente implements Serializable {
             jogo = (JogoRegras) entrada.readObject();
             jogador = (Jogador) entrada.readObject();
 
-            System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            System.out.print( "\033[H\033[2J" );
             System.out.println("Agora é a sua vez.");
 
             if (jogo.passou_vez(jogador)) {

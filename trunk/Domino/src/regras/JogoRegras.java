@@ -122,9 +122,7 @@ public class JogoRegras implements Serializable {
             tabuleiro.add(peca);
             jogador.getMao().remove(posicao);
             return true;
-        }
-
-        if (ponta == 1) { // Lado direito
+        } else if (ponta == 1) { // Lado direito
             if (validaJogada(jogador, peca, 1, posicao)) {
                 peca = jogador.getPeca(posicao);
                 tabuleiro.add(peca);
@@ -132,7 +130,7 @@ public class JogoRegras implements Serializable {
                 System.out.println("Jogada inválida.");
                 return false;
             }
-        } else { // Lado esquerdo
+        } else if (ponta == -1) { // Lado esquerdo
             if (validaJogada(jogador, peca, -1, posicao)) {
                 peca = jogador.getPeca(posicao); // atualiza a peca
                 tabuleiro.add(0, peca);
@@ -140,6 +138,9 @@ public class JogoRegras implements Serializable {
                 System.out.println("Jogada inválida.");
                 return false;
             }
+        } else {
+            System.out.println("Jogada inválida: ponta inválida.");
+            return false;
         }
         jogador.getMao().remove(posicao);
         return true;
