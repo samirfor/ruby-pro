@@ -87,7 +87,7 @@ public class AppServidor implements Serializable {
         do {
             if (jogador1.isVez()) { // Vez do 1
                 if (!jogo.passou_vez(jogador1)) { // Se 1 não passou a vez
-                    System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                    System.out.print("\033[H\033[2J");
                     System.out.println("É sua vez.");
                     do {
                         i++;
@@ -111,10 +111,10 @@ public class AppServidor implements Serializable {
                 }
             } else if (jogador2.isVez()) { // Vez do 2
                 if (!jogo.passou_vez(jogador2)) { // Se 2 não passou a vez
-                    System.out.println("Agora é a vez do jogador 2");
+                    System.out.print("\033[H\033[2J");
+                    System.out.println("Agora é a vez do jogador 2, aguardando...");
                     saida.writeObject(jogo);
                     saida.writeObject(jogador2);
-                    System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                     jogo = (JogoRegras) entrada.readObject();
                     jogador2 = (Jogador) entrada.readObject();
                     jogador2.setVez(false);
@@ -144,10 +144,23 @@ public class AppServidor implements Serializable {
             saida.writeUTF("Você ganhou!");
             saida.flush();
         } else {
-            String log = "O jogo se trancou. Empate!";
-            System.out.println(log);
-            saida.writeUTF(log);
-            saida.flush();
+            int soma1 = jogador1.somaMao();
+            int soma2 = jogador2.somaMao();
+
+            if (soma1 > soma2) {
+                jogador1.setGanhou(true);
+                System.out.println("Você ganhou por soma das peças.\nVocê: " + soma1 + "\nSeu oponente: " + soma2);
+                saida.writeUTF("Você perdeu por soma das peças.\nVocê: " + soma2 + "\nSeu oponente: " + soma1);
+            } else if (soma1 < soma2) {
+                jogador2.setGanhou(true);
+                System.out.println("Você perdeu por soma das peças.\nVocê: " + soma2 + "\nSeu oponente: " + soma1);
+                saida.writeUTF("Você ganhou por soma das peças.\nVocê: " + soma1 + "\nSeu oponente: " + soma2);
+            } else {
+                String log = "O jogo se trancou. A soma das peças deu empate. Então: empate!";
+                System.out.println(log);
+                saida.writeUTF(log);
+                saida.flush();
+            }
         }
 
         // Fechando as conexões

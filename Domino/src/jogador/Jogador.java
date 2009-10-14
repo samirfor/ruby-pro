@@ -23,7 +23,6 @@ public class Jogador implements Serializable {
     private boolean passou_vez;
     private boolean vez;
 
-
     // <editor-fold defaultstate="collapsed" desc=" UML Marker ">
     // #[regen=yes,id=DCE.E610E17F-17E6-033A-6073-B39E657155D2]
     // </editor-fold>
@@ -35,7 +34,7 @@ public class Jogador implements Serializable {
         vez = false;
     }
 
-     public boolean isVez() {
+    public boolean isVez() {
         return vez;
     }
 
@@ -137,5 +136,15 @@ public class Jogador implements Serializable {
             }
         }
         return -1;
+    }
+
+    public int somaMao() {
+        int soma = 0;
+
+        for (int i = 0; i < mao.size(); i++) {
+            soma += mao.get(i).getPeca()[0] + mao.get(i).getPeca()[0];
+        }
+
+        return soma;
     }
 }
