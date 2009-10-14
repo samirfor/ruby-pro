@@ -111,8 +111,8 @@ public class AppServidor implements Serializable {
                 }
             } else if (jogador2.isVez()) { // Vez do 2
                 if (!jogo.passou_vez(jogador2)) { // Se 2 não passou a vez
-                    System.out.print("\033[H\033[2J");
                     System.out.println("Agora é a vez do jogador 2, aguardando...");
+                    System.out.print("\033[H\033[2J");
                     saida.writeObject(jogo);
                     saida.writeObject(jogador2);
                     jogo = (JogoRegras) entrada.readObject();

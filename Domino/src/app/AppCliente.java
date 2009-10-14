@@ -45,7 +45,7 @@ public class AppCliente implements Serializable {
         System.out.println("\n>>>>>>>>>>>>>>>>>>>>");
         System.out.println("Iniciando jogo.");
         do {
-            System.out.println("Aguardando...");
+            System.out.println("Aguardando o jogador 1...");
             // Recebe os dados do jogo;
             jogo = (JogoRegras) entrada.readObject();
             jogador = (Jogador) entrada.readObject();
