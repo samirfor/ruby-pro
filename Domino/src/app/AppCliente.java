@@ -42,34 +42,44 @@ public class AppCliente implements Serializable {
 
         System.out.println("Conectado a " + host + ":" + porta);
 
-        log = entrada.readUTF();
-        System.out.println(log); // Iniciando
-        System.out.println(entrada.readUTF()); // Fala quem é a vez
-        System.out.println(entrada.readUTF()); //
-
         System.out.println("\n>>>>>>>>>>>>>>>>>>>>");
         System.out.println("Iniciando jogo.");
         do {
-            // Recebe os dados do jogo
+            System.out.println("Aguardando...");
+            // Recebe os dados do jogo;
             jogo = (JogoRegras) entrada.readObject();
             jogador = (Jogador) entrada.readObject();
-            i++;
-            System.out.println("\n\n>>>>>>>>>>>>\nTabuleiro:");
-            System.out.println(jogo.mostrarTabuleiro());
-            System.out.println("\nJogada " + i + ":");
-            System.out.println("Suas peças:");
-            System.out.println(jogador.mostrarMao());
 
-            do {
-                System.out.print("Escolher peça número: ");
-                posicao = ler.nextInt();
-                System.out.print("\n(-1) para cima e (1) para baixo\n");
-                ponta = ler.nextInt();
-            } while (!jogo.jogada(jogador, posicao, ponta));
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            System.out.println("Agora é a sua vez.");
+
+            if (jogo.passou_vez(jogador)) {
+                jogador.setPassou_vez(true);
+                jogador.setVez(false);
+            } else { // joga
+                i++;
+                System.out.println("\n\n>>>>>>>>>>>>\nTabuleiro:");
+                System.out.println(jogo.mostrarTabuleiro());
+                System.out.println("\nJogada " + i + ":");
+                System.out.println("Suas peças:");
+                System.out.println(jogador.mostrarMao());
+
+                do {
+                    System.out.print("Escolher peça número: ");
+                    posicao = ler.nextInt();
+                    System.out.print("\n(-1) para cima e (1) para baixo\n");
+                    ponta = ler.nextInt();
+                } while (!jogo.jogada(jogador, posicao, ponta));
+            }
+
             if (jogador.getMao().size() == 0) {
                 jogo.setGanhou(true);
             }
+
+            jogador.setVez(false);
+//            System.out.println("Enviando objeto jogo");
             saida.writeObject(jogo);
+//            System.out.println("Enviando objeto jogador");
             saida.writeObject(jogador);
         } while (!jogo.isEmpatou() && !jogo.isGanhou());
 

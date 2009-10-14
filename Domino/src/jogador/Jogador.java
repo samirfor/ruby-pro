@@ -32,6 +32,7 @@ public class Jogador implements Serializable {
         this.id = id;
         ganhou = false;
         passou_vez = false;
+        vez = false;
     }
 
      public boolean isVez() {
