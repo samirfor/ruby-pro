@@ -19,6 +19,7 @@ public class Jogador implements Serializable {
     // </editor-fold> 
     private boolean ganhou;
     private ArrayList<Peca> mao;
+    private String status;
     private int id;
     private boolean passou_vez;
     private boolean vez;
@@ -32,6 +33,15 @@ public class Jogador implements Serializable {
         ganhou = false;
         passou_vez = false;
         vez = false;
+        status = "Normal.";
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public boolean isVez() {
@@ -46,7 +56,7 @@ public class Jogador implements Serializable {
         return passou_vez;
     }
 
-    public void setPassou_vez(boolean passou_vez) {
+    public void setPassouVez(boolean passou_vez) {
         this.passou_vez = passou_vez;
     }
 
@@ -142,7 +152,7 @@ public class Jogador implements Serializable {
         int soma = 0;
 
         for (int i = 0; i < mao.size(); i++) {
-            soma += mao.get(i).getPeca()[0] + mao.get(i).getPeca()[0];
+            soma += mao.get(i).getPeca()[0] + mao.get(i).getPeca()[1];
         }
 
         return soma;

@@ -3,6 +3,7 @@ package regras;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 import jogador.Jogador;
 import pecas.Peca;
 
@@ -102,6 +103,7 @@ public class JogoRegras implements Serializable {
             if (jogador.buscaValor(getPontas()[1]) != -1) {
                 return false;
             } else {
+                jogador.setStatus("Você passou.");
                 System.out.println("Jogador " + jogador.getId() + " passou.");
                 return true;
             }
@@ -121,13 +123,14 @@ public class JogoRegras implements Serializable {
         if (ponta == 0) { // Primeira jogada
             tabuleiro.add(peca);
             jogador.getMao().remove(posicao);
+            jogador.setStatus("Primeira jogada OK!");
             return true;
         } else if (ponta == 1) { // Lado direito
             if (validaJogada(jogador, peca, 1, posicao)) {
                 peca = jogador.getPeca(posicao);
                 tabuleiro.add(peca);
             } else {
-                System.out.println("Jogada inválida.");
+                jogador.setStatus("Jogada inválida. Tente novamente.");
                 return false;
             }
         } else if (ponta == -1) { // Lado esquerdo
@@ -135,14 +138,15 @@ public class JogoRegras implements Serializable {
                 peca = jogador.getPeca(posicao); // atualiza a peca
                 tabuleiro.add(0, peca);
             } else {
-                System.out.println("Jogada inválida.");
+                jogador.setStatus("Jogada inválida. Tente novamente.");
                 return false;
             }
         } else {
-            System.out.println("Jogada inválida: ponta inválida.");
+            jogador.setStatus("Jogada inválida: ponta inválida.");
             return false;
         }
         jogador.getMao().remove(posicao);
+        jogador.setStatus("Jogada OK!");
         return true;
     }
 
@@ -209,9 +213,12 @@ public class JogoRegras implements Serializable {
                 Peca peca = new Peca(j, k);
                 tabuleiro.add(peca);
             }
-
         }
-        // Adicionamos uma peça fictícia para a carroça de 6 ser devidamente sorteada.
+
+        /**
+         * Adicionamos uma peça fictícia para a carroça de 6 ser
+         * devidamente sorteada.
+         */
         Peca peca_ficticia = new Peca(9, 9);
         tabuleiro.add(peca_ficticia);
         embaraiarTabuleiro();
@@ -234,13 +241,11 @@ public class JogoRegras implements Serializable {
      */
     public boolean darMao(Jogador jogador) {
 
-        //System.out.println("Tamanho: "+tabuleiro.size());
         if (tabuleiro.size() != 0) {
             for (int i = 0; i < 7; i++) {
                 jogador.getMao().add(tabuleiro.get(i));
                 tabuleiro.remove(i);
             }
-            //System.out.println("Tamanho: "+tabuleiro.size());
             return true;
         } else {
             System.out.println("Não há peças no tabuleiro.");
@@ -249,7 +254,8 @@ public class JogoRegras implements Serializable {
     }
 
     /**
-     * Após definir a mão dos jogadores, se restarem peças, este método será chamado.
+     * Após definir a mão dos jogadores, se restarem peças,
+     * este método será chamado.
      */
     public void definirDorme() {
         dorme.addAll(tabuleiro);
@@ -270,13 +276,15 @@ public class JogoRegras implements Serializable {
      * @param jogador
      * @return
      */
-    public boolean puxa_do_dorme(Jogador jogador) {
+    public boolean puxaDorme(Jogador jogador) {
         if (dorme.size() != 0) {
             jogador.getMao().add(dorme.get(0));
             dorme.remove(0);
+            jogador.setStatus("Você puxou do dorme.");
             System.out.println("Jogador " + jogador.getId() + " puxou do dorme.");
             return true;
         } else {
+            jogador.setStatus("Você passou a vez.");
             System.out.println("Jogador " + jogador.getId() + " passou a vez.");
             return false;
         }
@@ -288,15 +296,20 @@ public class JogoRegras implements Serializable {
      * @param jogador
      * @return
      */
-    public boolean passou_vez(Jogador jogador) {
-        while (passou(jogador)) { // Enquanto o jogador passar:
-            if (getDorme().size() != 0) { // Se houver dorme
-                puxa_do_dorme(jogador); // O jogador puxa.
-            } else { // Se não houver dorme
+    public boolean passouVez(Jogador jogador) {
+        int i = 1;
+
+        while (passou(jogador)) {           // Enquanto o jogador passar:
+            if (getDorme().size() != 0) {   // Se houver dorme
+                jogador.setStatus("Você passou " + i + " vezes.");
+                i++;
+                puxaDorme(jogador);         // O jogador puxa.
+            } else {                        // Se não houver dorme
+                jogador.setStatus("Você passou a vez.");
                 return true;
             }
         }
-        return false; // Jogador não passou a vez
+        return false;                       // Jogador não passou a vez
     }
 
     public int buscaMaiorCarrocao(Jogador jogador) {
@@ -349,10 +362,9 @@ public class JogoRegras implements Serializable {
                 jogada(jogador2, index_J2, 0);
                 return 2;
             } else {
-                System.out.println("Ninguém num tem nenhum carroção, égua mah!");
-                System.out.println("Reiniciando o jogo...");
+                // Ninguém num tem nenhum carroção, égua mah!
+                // Reiniciando o jogo...
                 return 0;
-                // Reiniciar o jogo.
             }
         }
     }
@@ -381,5 +393,27 @@ public class JogoRegras implements Serializable {
             }
         }
         return false;
+    }
+
+    public void soutJogada(Jogador jogador) {
+        Scanner ler = new Scanner(System.in);
+        int posicao = -2, ponta = -2;
+        boolean resposta;
+
+        jogador.setStatus("Agora é sua vez.");
+        System.out.println(jogador.getStatus());
+        System.out.println("\n\n>>>>>>>>>>>>\nTabuleiro:");
+        System.out.println(mostrarTabuleiro());
+        System.out.println("\nJogada:");
+        System.out.println("Suas peças:");
+        System.out.println(jogador.mostrarMao());
+        do {
+            System.out.print("Escolher peça número: ");
+            posicao = ler.nextInt();
+            System.out.print("\nPonta: (-1) para cima e (1) para baixo\n");
+            ponta = ler.nextInt();
+            resposta = jogada(jogador, posicao, ponta);
+            System.out.println(">> " + jogador.getStatus());
+        } while (!resposta);
     }
 }
