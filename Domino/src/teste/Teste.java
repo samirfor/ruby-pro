@@ -48,17 +48,17 @@ public class Teste {
             // Trata o "passa"
             while (jogo.passou(jogador_da_vez)) {
                 if (jogo.getDorme().size() != 0) {
-                    jogo.puxa_do_dorme(jogador_da_vez);
+                    jogo.puxaDorme(jogador_da_vez);
                 } else { // Caso o dorme acabe
                     // Seta jogador da vez
 
                     // Se for o jogador 1 e o jogador 2 passou a vez
                     if (jogador_da_vez.getId() == 1 && !jogador2.isPassou_vez()) {
-                        jogador_da_vez.setPassou_vez(true);
+                        jogador_da_vez.setPassouVez(true);
                         jogador_da_vez = jogador2;
                     } else {
                         if (!jogador1.isPassou_vez()) {
-                            jogador_da_vez.setPassou_vez(true);
+                            jogador_da_vez.setPassouVez(true);
                             jogador_da_vez = jogador1;
                         } else {
                             System.out.println("Empatou!");

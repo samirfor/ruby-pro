@@ -44,46 +44,29 @@ public class AppCliente implements Serializable {
 
         System.out.println("\n>>>>>>>>>>>>>>>>>>>>");
         System.out.println("Iniciando jogo.");
+        System.out.println("Você é o jogador 2.");
         do {
             System.out.println("Aguardando o jogador 1...");
             // Recebe os dados do jogo;
             jogo = (JogoRegras) entrada.readObject();
             jogador = (Jogador) entrada.readObject();
-
-            System.out.print( "\033[H\033[2J" );
-            System.out.println("Agora é a sua vez.");
-
-            if (jogo.passou_vez(jogador)) {
-                jogador.setPassou_vez(true);
+            System.out.print("\033[H\033[2J");
+            if (jogo.passouVez(jogador)) {
+                jogador.setPassouVez(true);
                 jogador.setVez(false);
             } else { // joga
-                i++;
-                System.out.println("\n\n>>>>>>>>>>>>\nTabuleiro:");
-                System.out.println(jogo.mostrarTabuleiro());
-                System.out.println("\nJogada " + i + ":");
-                System.out.println("Suas peças:");
-                System.out.println(jogador.mostrarMao());
-
-                do {
-                    System.out.print("Escolher peça número: ");
-                    posicao = ler.nextInt();
-                    System.out.print("\n(-1) para cima e (1) para baixo\n");
-                    ponta = ler.nextInt();
-                } while (!jogo.jogada(jogador, posicao, ponta));
+                jogo.soutJogada(jogador);
             }
-
             if (jogador.getMao().size() == 0) {
                 jogo.setGanhou(true);
             }
-
             jogador.setVez(false);
-//            System.out.println("Enviando objeto jogo");
             saida.writeObject(jogo);
-//            System.out.println("Enviando objeto jogador");
             saida.writeObject(jogador);
         } while (!jogo.isEmpatou() && !jogo.isGanhou());
 
-        System.out.println(entrada.readUTF()); // Fala quem venceu ou empate.
+        jogador = (Jogador) entrada.readObject();
+        System.out.println(jogador.getStatus()); // Informa quem venceu ou empate.
 
         // Fecha conexões
         entrada.close();
