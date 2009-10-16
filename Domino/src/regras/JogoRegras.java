@@ -104,7 +104,6 @@ public class JogoRegras implements Serializable {
                 return false;
             } else {
                 jogador.setStatus("Você passou.");
-                System.out.println("Jogador " + jogador.getId() + " passou.");
                 return true;
             }
         }
@@ -248,7 +247,7 @@ public class JogoRegras implements Serializable {
             }
             return true;
         } else {
-            System.out.println("Não há peças no tabuleiro.");
+            // Não há peças no tabuleiro
             return false;
         }
     }
@@ -281,11 +280,9 @@ public class JogoRegras implements Serializable {
             jogador.getMao().add(dorme.get(0));
             dorme.remove(0);
             jogador.setStatus("Você puxou do dorme.");
-            System.out.println("Jogador " + jogador.getId() + " puxou do dorme.");
             return true;
         } else {
             jogador.setStatus("Você passou a vez.");
-            System.out.println("Jogador " + jogador.getId() + " passou a vez.");
             return false;
         }
     }
@@ -413,7 +410,7 @@ public class JogoRegras implements Serializable {
             System.out.print("\nPonta: (-1) para cima e (1) para baixo\n");
             ponta = ler.nextInt();
             resposta = jogada(jogador, posicao, ponta);
-            System.out.println(">> " + jogador.getStatus());
+            System.out.println(jogador.getStatus());
         } while (!resposta);
     }
 }
