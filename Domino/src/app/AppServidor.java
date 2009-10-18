@@ -18,7 +18,7 @@ public class AppServidor implements Serializable {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker ">
     // #[regen=yes,id=DCE.D755BEEC-6994-4C29-12C6-9BCE84173A85]
     // </editor-fold>
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void run(int porta) throws IOException, ClassNotFoundException {
         JogoRegras jogo = new JogoRegras();
         Jogador jogador1 = new Jogador(1);
         Jogador jogador2 = new Jogador(2);
@@ -27,7 +27,7 @@ public class AppServidor implements Serializable {
         boolean resposta2;
 
         System.out.println("Abrindo socket servidor\n");
-        ServerSocket serverSocket = new ServerSocket(6000);
+        ServerSocket serverSocket = new ServerSocket(porta);
         System.out.println("Esperando jogador se conectar");
         Socket socket = serverSocket.accept();
         ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());

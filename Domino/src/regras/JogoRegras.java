@@ -2,6 +2,7 @@ package regras;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 import jogador.Jogador;
@@ -404,11 +405,24 @@ public class JogoRegras implements Serializable {
         System.out.println("\nJogada:");
         System.out.println("Suas peças:");
         System.out.println(jogador.mostrarMao());
+        resposta = false;
         do {
             System.out.print("Escolher peça número: ");
-            posicao = ler.nextInt();
+            try {
+                posicao = ler.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println(">> Digite um número válido!\n");
+                ler = new Scanner(System.in);
+                continue;
+            }
             System.out.print("\nPonta: (-1) para cima e (1) para baixo\n");
-            ponta = ler.nextInt();
+            try {
+                ponta = ler.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println(">> Digite um número válido!\n");
+                ler = new Scanner(System.in);
+                continue;
+            }
             resposta = jogada(jogador, posicao, ponta);
             System.out.println(jogador.getStatus());
         } while (!resposta);
