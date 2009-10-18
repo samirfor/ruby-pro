@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import jogador.Jogador;
 import regras.JogoRegras;
@@ -18,7 +19,7 @@ public class AppCliente implements Serializable {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.A8804613-376E-3AB2-7CAC-94EB899A5C8E]
     // </editor-fold> 
-    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
+    public static void run() throws UnknownHostException, IOException, ClassNotFoundException {
         Jogador jogador = null;
         JogoRegras jogo = null;
         Socket socket = null;
@@ -30,10 +31,14 @@ public class AppCliente implements Serializable {
 
         // Captura endereço do servidor
         do {
-            System.out.print("Informe o IP do servidor: ");
-            host = ler.next();
-            System.out.print("Porta: ");
-            porta = ler.nextInt();
+            try {
+                System.out.print("Informe o IP do servidor: ");
+                host = ler.next();
+                System.out.print("Porta: ");
+                porta = ler.nextInt();
+            } catch (InputMismatchException e) {
+                ler = new Scanner(System.in);
+            }
         } while (host.equals(null) || porta == 0);
 
         socket = new Socket(host, porta);

@@ -3,13 +3,17 @@
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="Domin&#xf3; Online"/>
     <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
       <Color id="Default Cursor"/>
     </Property>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[680, 700]"/>
+      <Dimension value="null"/>
     </Property>
   </Properties>
+  <AccessibilityProperties>
+    <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value="Domin&#xf3; Online"/>
+  </AccessibilityProperties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
   </SyntheticProperties>
@@ -30,50 +34,60 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jPanel4" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="jPanel1" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                      <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="maoJogador" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
+                      <Component id="painelEscolha" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="232" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="370" max="32767" attributes="0"/>
-                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <Component id="titulo" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="410" max="32767" attributes="0"/>
+                      <Component id="seuIp" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="ip" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="flag" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="191" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="tabuleiro" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="titulo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="flag" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="ip" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="seuIp" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
+              <Component id="tabuleiro" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
-                      <Component id="jPanel3" min="-2" max="-2" attributes="1"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="maoJogador" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel1" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="painelEscolha" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="jPanel3">
+    <Container class="javax.swing.JPanel" name="painelEscolha">
 
       <Layout>
         <DimensionLayout dim="0">
@@ -92,12 +106,13 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="83" max="32767" attributes="0"/>
                   <Component id="jogada" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="peca_escolhida" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jogar" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -109,6 +124,7 @@
               <Font name="DejaVu Sans" size="13" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Pe&#xe7;a escolhida:"/>
+            <Property name="toolTipText" type="java.lang.String" value="Clique em uma de suas pe&#xe7;as ao lado para jogar."/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="jogar">
@@ -117,6 +133,7 @@
               <Font name="DejaVu Sans" size="13" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Jogar!"/>
+            <Property name="toolTipText" type="java.lang.String" value="Confirmar a sua jogada."/>
             <Property name="autoscrolls" type="boolean" value="true"/>
           </Properties>
           <AccessibilityProperties>
@@ -128,14 +145,12 @@
         </Component>
         <Component class="javax.swing.JLabel" name="peca_escolhida">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/1-3.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique em uma de suas pe&#xe7;as ao lado para jogar."/>
           </Properties>
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel4">
+    <Container class="javax.swing.JPanel" name="tabuleiro">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -150,17 +165,17 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="581" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="706" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="237" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="9" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
     </Container>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="titulo">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="DejaVu Sans" size="18" style="1"/>
@@ -168,15 +183,16 @@
         <Property name="text" type="java.lang.String" value="Domin&#xf3; Online"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel2">
+    <Component class="javax.swing.JLabel" name="flag">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/pixmap/flag_green.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Sua vez!"/>
+        <Property name="toolTipText" type="java.lang.String" value="Indica o status do jogo."/>
       </Properties>
     </Component>
-    <Container class="javax.swing.JPanel" name="jPanel1">
+    <Container class="javax.swing.JPanel" name="maoJogador">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -208,49 +224,46 @@
                           <Component id="peca5" pref="36" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           <Component id="peca6" pref="37" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="peca7" max="32767" attributes="0"/>
+                          <Component id="peca7" pref="6" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca8" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca8" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca9" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca9" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca10" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca10" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca11" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca11" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca12" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca12" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                          <Component id="peca13" pref="37" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                          <Component id="peca13" pref="42" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="peca14" max="32767" attributes="0"/>
+                          <Component id="peca14" pref="6" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca15" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca15" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca16" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca16" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca17" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca17" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca18" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca18" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="peca19" pref="36" max="32767" attributes="0"/>
+                          <Component id="peca19" pref="41" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                          <Component id="peca20" pref="37" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                          <Component id="peca20" pref="42" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="peca1" alignment="2" max="32767" attributes="0"/>
                       <Component id="peca2" alignment="2" max="32767" attributes="0"/>
@@ -262,25 +275,24 @@
                   </Group>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="peca8" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca9" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca11" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca12" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca13" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca10" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca7" alignment="2" max="32767" attributes="0"/>
+                      <Component id="peca8" alignment="2" pref="73" max="32767" attributes="0"/>
+                      <Component id="peca9" alignment="2" pref="73" max="32767" attributes="0"/>
+                      <Component id="peca11" alignment="2" pref="73" max="32767" attributes="0"/>
+                      <Component id="peca12" alignment="2" pref="73" max="32767" attributes="0"/>
+                      <Component id="peca13" alignment="2" pref="73" max="32767" attributes="0"/>
+                      <Component id="peca10" alignment="2" pref="73" max="32767" attributes="0"/>
+                      <Component id="peca7" alignment="2" pref="73" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="peca15" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca16" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca18" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca19" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca20" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca17" alignment="2" max="32767" attributes="0"/>
-                      <Component id="peca14" alignment="2" max="32767" attributes="0"/>
+                      <Component id="peca15" alignment="2" pref="75" max="32767" attributes="0"/>
+                      <Component id="peca16" alignment="2" pref="75" max="32767" attributes="0"/>
+                      <Component id="peca18" alignment="2" pref="75" max="32767" attributes="0"/>
+                      <Component id="peca19" alignment="2" pref="75" max="32767" attributes="0"/>
+                      <Component id="peca20" alignment="2" pref="75" max="32767" attributes="0"/>
+                      <Component id="peca17" alignment="2" pref="75" max="32767" attributes="0"/>
+                      <Component id="peca14" alignment="2" pref="75" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -291,155 +303,234 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/pixmap/dePeis/2-6.gif"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca0MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca1">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/pixmap/dePeis/0-5.gif"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca1MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca2">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/pixmap/dePeis/5-5.gif"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="verticalTextPosition" type="int" value="1"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca2MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca3">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/pixmap/dePeis/4-6.gif"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca3MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca4">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/pixmap/dePeis/2-5.gif"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca4MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca5">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/pixmap/dePeis/4-4.gif"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca5MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca6">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/pixmap/dePeis/1-3.gif"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca6MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca7">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/2-6.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca7MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca8">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/0-5.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca8MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca9">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/5-5.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="verticalTextPosition" type="int" value="1"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca9MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca10">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/4-6.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca10MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca11">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/2-5.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca11MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca12">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/4-4.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca12MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca13">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/1-3.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca13MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca14">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/2-6.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca14MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca15">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/0-5.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca15MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca16">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/5-5.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="verticalTextPosition" type="int" value="1"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca16MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca17">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/4-6.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca17MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca18">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/2-5.gif"/>
+              <Image iconType="3" name="/pixmap/dePeis/3-5.gif"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca18MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca19">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/4-4.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca19MouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="peca20">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/pixmap/dePeis/1-3.gif"/>
-            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="peca20MouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JLabel" name="seuIp">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Seu IP: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="ip">
+      <Events>
+        <EventHandler event="componentAdded" listener="java.awt.event.ContainerListener" parameters="java.awt.event.ContainerEvent" handler="ipComponentAdded"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>
