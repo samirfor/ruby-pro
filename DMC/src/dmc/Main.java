@@ -1,6 +1,5 @@
 package dmc;
 
-import java.io.IOException;
 import static org.math.io.files.ASCIIFile.readDoubleArray;
 import java.io.File;
 import java.util.ArrayList;
