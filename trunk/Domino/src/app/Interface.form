@@ -60,10 +60,7 @@
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       <Component id="maoJogador" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="painelEscolha" min="-2" max="-2" attributes="1"/>
-                  </Group>
+                  <Component id="painelEscolha" min="-2" max="-2" attributes="1"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -159,13 +156,13 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="peca1" alignment="2" pref="75" max="32767" attributes="0"/>
-                      <Component id="peca2" alignment="2" pref="75" max="32767" attributes="0"/>
-                      <Component id="peca0" alignment="2" pref="75" max="32767" attributes="0"/>
-                      <Component id="peca3" alignment="2" pref="75" max="32767" attributes="0"/>
-                      <Component id="peca4" alignment="2" pref="75" max="32767" attributes="0"/>
-                      <Component id="peca6" alignment="2" pref="75" max="32767" attributes="0"/>
-                      <Component id="peca5" alignment="2" pref="75" max="32767" attributes="0"/>
+                      <Component id="peca1" alignment="2" max="32767" attributes="0"/>
+                      <Component id="peca2" alignment="2" max="32767" attributes="0"/>
+                      <Component id="peca0" alignment="2" max="32767" attributes="0"/>
+                      <Component id="peca3" alignment="2" max="32767" attributes="0"/>
+                      <Component id="peca4" alignment="2" max="32767" attributes="0"/>
+                      <Component id="peca6" alignment="2" max="32767" attributes="0"/>
+                      <Component id="peca5" alignment="2" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
@@ -422,6 +419,7 @@
               <Image iconType="3" name="/pixmap/depeis/0-0.gif"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Clique para escolher esta pe&#xe7;a."/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -543,17 +541,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="titulo" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                          <Component id="flag" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="flag" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="17" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace pref="17" max="-2" attributes="0"/>
-                                  <Component id="ip" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="ip" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -608,7 +599,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="2" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
