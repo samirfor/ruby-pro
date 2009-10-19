@@ -1,11 +1,10 @@
 package dmc;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BancoDados {
 
-    private List<Padrao> padroes;
+    private ArrayList<Padrao> padroes;
 
     public BancoDados() {
         padroes = new ArrayList<Padrao>();
