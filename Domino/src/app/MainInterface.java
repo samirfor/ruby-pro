@@ -5,6 +5,9 @@
  */
 package app;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 
 /**
@@ -15,6 +18,20 @@ public class MainInterface extends javax.swing.JFrame {
 
     /** Creates new form MainInterface */
     public MainInterface() {
+        //
+        // Read the image that will be used as the application icon. Using "/"
+        // in front of the image file name will locate the image at the root
+        // folder of our application. If you don't use a "/" then the image file
+        // should be on the same folder with your class file.
+        //
+        BufferedImage icone = null;
+        try {
+            icone = ImageIO.read(getClass().getResource("/pixmap/samir_sp_boka.png"));
+            setIconImage(icone);
+        } catch (IOException e) {
+            System.out.println("Erro ao carregar o ícone do JFrame.\n" + e);
+        }
+
         initComponents();
     }
 
@@ -37,8 +54,11 @@ public class MainInterface extends javax.swing.JFrame {
         lServidor = new javax.swing.JLabel();
         lStatus = new javax.swing.JLabel();
         rEntrar = new javax.swing.JRadioButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Dominó Online");
+        setResizable(false);
 
         bCriar.setText("Criar");
         bCriar.addActionListener(new java.awt.event.ActionListener() {
@@ -58,17 +78,18 @@ public class MainInterface extends javax.swing.JFrame {
 
         fPorta.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
         fPorta.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        fPorta.setText("6000");
+        fPorta.setText("61200");
         fPorta.setToolTipText("Informe a porta a ser usada");
         fPorta.setDragEnabled(true);
         fPorta.setFocusCycleRoot(true);
 
         lPorta.setText("Porta:");
 
-        tServidor.setText("localhost");
+        tServidor.setText("192.168.254.254");
         tServidor.setToolTipText("Informe o nome ou endereço IP da máquina que quer se conectar.");
+        tServidor.setEnabled(false);
 
-        lServidor.setText("Servidor:");
+        lServidor.setText("IP do Servidor:");
 
         lStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lStatus.setText("Status");
@@ -78,11 +99,6 @@ public class MainInterface extends javax.swing.JFrame {
         rEntrar.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 rEntrarItemStateChanged(evt);
-            }
-        });
-        rEntrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rEntrarActionPerformed(evt);
             }
         });
 
@@ -98,7 +114,7 @@ public class MainInterface extends javax.swing.JFrame {
                     .addComponent(lServidor)
                     .addComponent(tServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lPorta)
-                    .addComponent(fPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fPorta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bCriar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lStatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
                 .addContainerGap())
@@ -125,19 +141,29 @@ public class MainInterface extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/samir_sp_boka.png"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(87, 87, 87)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -165,17 +191,17 @@ public class MainInterface extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_bCriarActionPerformed
 
-    private void rEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rEntrarActionPerformed
-        // TODO add your handling code here:
-}//GEN-LAST:event_rEntrarActionPerformed
+    private void rCriarItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rCriarItemStateChanged
+        if (rCriar.isSelected()) {
+            tServidor.setEnabled(false);
+        }
+    }//GEN-LAST:event_rCriarItemStateChanged
 
     private void rEntrarItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rEntrarItemStateChanged
-        // TODO add your handling code here:
-}//GEN-LAST:event_rEntrarItemStateChanged
-
-    private void rCriarItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rCriarItemStateChanged
-        // TODO add your handling code here:
-}//GEN-LAST:event_rCriarItemStateChanged
+        if (rEntrar.isSelected()) {
+            tServidor.setEnabled(true);
+        }
+    }//GEN-LAST:event_rEntrarItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -196,6 +222,7 @@ public class MainInterface extends javax.swing.JFrame {
     private javax.swing.JButton bCriar;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JFormattedTextField fPorta;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lPorta;
     private javax.swing.JLabel lServidor;

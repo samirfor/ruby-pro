@@ -1,6 +1,5 @@
 package app;
 
-import java.net.ConnectException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
