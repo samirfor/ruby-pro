@@ -1,58 +1,62 @@
 package dmc;
 
+/**
+ * 
+ * @author samir
+ */
 public class Padrao {
 
-    private double comprimento_sepala;
-    private double largura_sepala;
-    private double comprimento_petala;
-    private double largura_petala;
-    private Classificacao classe;
+    private double comprimentoSepala;
+    private double larguraSepala;
+    private double comprimentoPetala;
+    private double larguraPetala;
+    private Classificacao tipo;
 
-    public Padrao(double comprimento_sepala, double largura_sepala, double comprimento_petala, double largura_petala, Classificacao classe) {
-        this.comprimento_sepala = comprimento_sepala;
-        this.largura_sepala = largura_sepala;
-        this.comprimento_petala = comprimento_petala;
-        this.largura_petala = largura_petala;
-        this.classe = classe;
+    public Padrao(double comprimentoSepala, double larguraSepala, double comprimentoPetala, double larguraPetala, Classificacao tipo) {
+        this.comprimentoSepala = comprimentoSepala;
+        this.larguraSepala = larguraSepala;
+        this.comprimentoPetala = comprimentoPetala;
+        this.larguraPetala = larguraPetala;
+        this.tipo = tipo;
     }
 
     public double getComprimentoSepala() {
-        return comprimento_sepala;
+        return comprimentoSepala;
     }
 
     public void setComprimentoSepala(double comprimento) {
-        this.comprimento_sepala = comprimento;
+        this.comprimentoSepala = comprimento;
     }
 
     public double getLarguraSepala() {
-        return largura_sepala;
+        return larguraSepala;
     }
 
     public void setLarguraSepala(double largura) {
-        this.largura_sepala = largura;
+        this.larguraSepala = largura;
     }
 
     public double getComprimentoPetala() {
-        return comprimento_petala;
+        return comprimentoPetala;
     }
 
     public void setComprimentoPetala(double comprimento) {
-        this.comprimento_petala = comprimento;
+        this.comprimentoPetala = comprimento;
     }
 
     public double getLarguraPetala() {
-        return largura_petala;
+        return larguraPetala;
     }
 
     public void setLarguraPetala(double largura) {
-        this.largura_petala = largura;
+        this.larguraPetala = largura;
     }
 
-    public Classificacao getClasse() {
-        return classe;
+    public Classificacao getTipo() {
+        return tipo;
     }
 
-    public void setClasse(Classificacao classe) {
-        this.classe = classe;
+    public void setTipo(Classificacao classe) {
+        this.tipo = classe;
     }
 }
