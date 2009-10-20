@@ -38,31 +38,31 @@ public class Interface extends javax.swing.JFrame {
     private void initComponents() {
 
         maoJogador = new javax.swing.JPanel();
-        peca0 = new javax.swing.JLabel();
-        peca1 = new javax.swing.JLabel();
-        peca2 = new javax.swing.JLabel();
-        peca3 = new javax.swing.JLabel();
-        peca4 = new javax.swing.JLabel();
-        peca5 = new javax.swing.JLabel();
-        peca6 = new javax.swing.JLabel();
-        peca7 = new javax.swing.JLabel();
-        peca8 = new javax.swing.JLabel();
-        peca9 = new javax.swing.JLabel();
-        peca10 = new javax.swing.JLabel();
-        peca11 = new javax.swing.JLabel();
-        peca12 = new javax.swing.JLabel();
-        peca13 = new javax.swing.JLabel();
-        peca14 = new javax.swing.JLabel();
-        peca15 = new javax.swing.JLabel();
-        peca16 = new javax.swing.JLabel();
-        peca17 = new javax.swing.JLabel();
-        peca18 = new javax.swing.JLabel();
-        peca19 = new javax.swing.JLabel();
-        peca20 = new javax.swing.JLabel();
+        peca0 = new javax.swing.JButton();
+        peca1 = new javax.swing.JButton();
+        peca2 = new javax.swing.JButton();
+        peca3 = new javax.swing.JButton();
+        peca4 = new javax.swing.JButton();
+        peca5 = new javax.swing.JButton();
+        peca6 = new javax.swing.JButton();
+        peca7 = new javax.swing.JButton();
+        peca8 = new javax.swing.JButton();
+        peca9 = new javax.swing.JButton();
+        peca10 = new javax.swing.JButton();
+        peca11 = new javax.swing.JButton();
+        peca12 = new javax.swing.JButton();
+        peca13 = new javax.swing.JButton();
+        peca14 = new javax.swing.JButton();
+        peca15 = new javax.swing.JButton();
+        peca16 = new javax.swing.JButton();
+        peca17 = new javax.swing.JButton();
+        peca18 = new javax.swing.JButton();
+        peca19 = new javax.swing.JButton();
+        peca20 = new javax.swing.JButton();
         painelEscolha = new javax.swing.JPanel();
         jogada = new javax.swing.JLabel();
         jogar = new javax.swing.JButton();
-        peca_escolhida = new javax.swing.JLabel();
+        pecaEscolhida = new javax.swing.JButton();
         painelTitulo = new javax.swing.JPanel();
         titulo = new javax.swing.JLabel();
         flag = new javax.swing.JLabel();
@@ -77,202 +77,150 @@ public class Interface extends javax.swing.JFrame {
         maoJogador.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Suas peças", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 13))); // NOI18N
         maoJogador.setAutoscrolls(true);
 
-        peca0.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-1.gif"))); // NOI18N
-        peca0.setToolTipText("Clique para escolher esta peça.");
-        peca0.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca0MouseClicked(evt);
+        peca0.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
+        peca0.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca0ActionPerformed(evt);
             }
         });
 
-        peca1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/3-6.gif"))); // NOI18N
-        peca1.setToolTipText("Clique para escolher esta peça.");
-        peca1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca1MouseClicked(evt);
+        peca1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
+        peca1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca1ActionPerformed(evt);
             }
         });
 
-        peca2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/6-6.gif"))); // NOI18N
-        peca2.setToolTipText("Clique para escolher esta peça.");
-        peca2.setFocusable(false);
-        peca2.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        peca2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca2MouseClicked(evt);
+        peca2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
+        peca2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca2ActionPerformed(evt);
             }
         });
 
-        peca3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/3-3.gif"))); // NOI18N
-        peca3.setToolTipText("Clique para escolher esta peça.");
-        peca3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca3MouseClicked(evt);
+        peca3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
+        peca3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca3ActionPerformed(evt);
             }
         });
 
-        peca4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/1-5.gif"))); // NOI18N
-        peca4.setToolTipText("Clique para escolher esta peça.");
-        peca4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca4MouseClicked(evt);
+        peca4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
+        peca4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca4ActionPerformed(evt);
             }
         });
 
-        peca5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-2.gif"))); // NOI18N
-        peca5.setToolTipText("Clique para escolher esta peça.");
-        peca5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca5MouseClicked(evt);
+        peca5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
+        peca5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca5ActionPerformed(evt);
             }
         });
 
-        peca6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/5-5.gif"))); // NOI18N
-        peca6.setToolTipText("Clique para escolher esta peça.");
-        peca6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca6MouseClicked(evt);
+        peca6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
+        peca6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca6ActionPerformed(evt);
             }
         });
 
         peca7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca7.setToolTipText("Clique para escolher esta peça.");
-        peca7.setEnabled(false);
-        peca7.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca7MouseClicked(evt);
+        peca7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca7ActionPerformed(evt);
             }
         });
 
         peca8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca8.setToolTipText("Clique para escolher esta peça.");
-        peca8.setEnabled(false);
-        peca8.setFocusable(false);
-        peca8.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca8MouseClicked(evt);
+        peca8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca8ActionPerformed(evt);
             }
         });
 
         peca9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca9.setToolTipText("Clique para escolher esta peça.");
-        peca9.setEnabled(false);
-        peca9.setFocusable(false);
-        peca9.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        peca9.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca9MouseClicked(evt);
+        peca9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca9ActionPerformed(evt);
             }
         });
 
         peca10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca10.setToolTipText("Clique para escolher esta peça.");
-        peca10.setEnabled(false);
-        peca10.setFocusable(false);
-        peca10.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca10MouseClicked(evt);
+        peca10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca10ActionPerformed(evt);
             }
         });
 
         peca11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca11.setToolTipText("Clique para escolher esta peça.");
-        peca11.setEnabled(false);
-        peca11.setFocusable(false);
-        peca11.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca11MouseClicked(evt);
+        peca11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca11ActionPerformed(evt);
             }
         });
 
         peca12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca12.setToolTipText("Clique para escolher esta peça.");
-        peca12.setEnabled(false);
-        peca12.setFocusable(false);
-        peca12.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca12MouseClicked(evt);
+        peca12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca12ActionPerformed(evt);
             }
         });
 
         peca13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca13.setToolTipText("Clique para escolher esta peça.");
-        peca13.setEnabled(false);
-        peca13.setFocusable(false);
-        peca13.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca13MouseClicked(evt);
+        peca13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca13ActionPerformed(evt);
             }
         });
 
         peca14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca14.setToolTipText("Clique para escolher esta peça.");
-        peca14.setEnabled(false);
-        peca14.setFocusable(false);
-        peca14.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca14MouseClicked(evt);
+        peca14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca14ActionPerformed(evt);
             }
         });
 
         peca15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca15.setToolTipText("Clique para escolher esta peça.");
-        peca15.setEnabled(false);
-        peca15.setFocusable(false);
-        peca15.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca15MouseClicked(evt);
+        peca15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca15ActionPerformed(evt);
             }
         });
 
         peca16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca16.setToolTipText("Clique para escolher esta peça.");
-        peca16.setEnabled(false);
-        peca16.setFocusable(false);
-        peca16.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        peca16.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca16MouseClicked(evt);
+        peca16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca16ActionPerformed(evt);
             }
         });
 
         peca17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca17.setToolTipText("Clique para escolher esta peça.");
-        peca17.setEnabled(false);
-        peca17.setFocusable(false);
-        peca17.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca17MouseClicked(evt);
+        peca17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca17ActionPerformed(evt);
             }
         });
 
         peca18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca18.setToolTipText("Clique para escolher esta peça.");
-        peca18.setEnabled(false);
-        peca18.setFocusable(false);
-        peca18.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca18MouseClicked(evt);
+        peca18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca18ActionPerformed(evt);
             }
         });
 
         peca19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca19.setToolTipText("Clique para escolher esta peça.");
-        peca19.setEnabled(false);
-        peca19.setFocusable(false);
-        peca19.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca19MouseClicked(evt);
+        peca19.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca19ActionPerformed(evt);
             }
         });
 
         peca20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
-        peca20.setToolTipText("Clique para escolher esta peça.");
-        peca20.setEnabled(false);
-        peca20.setFocusable(false);
-        peca20.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                peca20MouseClicked(evt);
+        peca20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peca20ActionPerformed(evt);
             }
         });
 
@@ -281,96 +229,90 @@ public class Interface extends javax.swing.JFrame {
         maoJogadorLayout.setHorizontalGroup(
             maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(maoJogadorLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(maoJogadorLayout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(peca14)
-                            .addComponent(peca7))
+                        .addComponent(peca0, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(maoJogadorLayout.createSequentialGroup()
-                                .addComponent(peca15, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
-                                .addGap(212, 212, 212))
-                            .addGroup(maoJogadorLayout.createSequentialGroup()
-                                .addComponent(peca8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(peca16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(peca9, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(peca17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(peca10))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(maoJogadorLayout.createSequentialGroup()
-                                        .addComponent(peca11, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(peca12, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(maoJogadorLayout.createSequentialGroup()
-                                        .addComponent(peca18)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(peca19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(peca20)
-                                    .addComponent(peca13)))))
+                        .addComponent(peca1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca2, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca3, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca4, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca5, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca6, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))
                     .addGroup(maoJogadorLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(peca0)
+                        .addComponent(peca13, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(peca1)
+                        .addComponent(peca12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(peca2)
+                        .addComponent(peca11, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(peca3)
+                        .addComponent(peca10, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(peca4)
+                        .addComponent(peca9, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(peca5)
+                        .addComponent(peca8, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(peca6)))
+                        .addComponent(peca7, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))
+                    .addGroup(maoJogadorLayout.createSequentialGroup()
+                        .addComponent(peca20, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca18, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca17, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca16, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca15, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(peca14, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         maoJogadorLayout.setVerticalGroup(
             maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(maoJogadorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(peca1, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca2, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca0, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca3, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca4, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca6, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca5, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(peca6)
+                    .addComponent(peca5)
+                    .addComponent(peca4)
+                    .addComponent(peca3)
+                    .addComponent(peca2)
+                    .addComponent(peca1)
+                    .addComponent(peca0))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(peca8, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca7, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca9, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca10, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca11, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca12, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca13, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(peca7)
+                    .addComponent(peca8)
+                    .addComponent(peca9)
+                    .addComponent(peca10)
+                    .addComponent(peca11)
+                    .addComponent(peca12)
+                    .addComponent(peca13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(peca15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(peca19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(maoJogadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(peca14)
+                    .addComponent(peca15)
+                    .addComponent(peca16)
+                    .addComponent(peca17)
+                    .addComponent(peca18)
+                    .addComponent(peca19)
                     .addComponent(peca20))
-                .addContainerGap())
+                .addGap(81, 81, 81))
         );
 
-        jogada.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jogada.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         jogada.setText("Peça escolhida:");
         jogada.setToolTipText("Clique em uma de suas peças ao lado para jogar.");
 
-        jogar.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jogar.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         jogar.setText("Jogar!");
         jogar.setToolTipText("Confirmar a sua jogada.");
         jogar.setAutoscrolls(true);
@@ -380,16 +322,21 @@ public class Interface extends javax.swing.JFrame {
             }
         });
 
-        peca_escolhida.setToolTipText("Clique em uma de suas peças ao lado para jogar.");
+        pecaEscolhida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
+        pecaEscolhida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pecaEscolhidaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout painelEscolhaLayout = new javax.swing.GroupLayout(painelEscolha);
         painelEscolha.setLayout(painelEscolhaLayout);
         painelEscolhaLayout.setHorizontalGroup(
             painelEscolhaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelEscolhaLayout.createSequentialGroup()
+            .addGroup(painelEscolhaLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(painelEscolhaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(peca_escolhida)
+                    .addComponent(pecaEscolhida)
                     .addComponent(jogada)
                     .addComponent(jogar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -397,10 +344,9 @@ public class Interface extends javax.swing.JFrame {
         painelEscolhaLayout.setVerticalGroup(
             painelEscolhaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelEscolhaLayout.createSequentialGroup()
-                .addContainerGap(83, Short.MAX_VALUE)
                 .addComponent(jogada)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(peca_escolhida)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pecaEscolhida)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jogar)
                 .addGap(6, 6, 6))
@@ -424,13 +370,15 @@ public class Interface extends javax.swing.JFrame {
         painelTituloLayout.setHorizontalGroup(
             painelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelTituloLayout.createSequentialGroup()
-                .addGroup(painelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(painelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelTituloLayout.createSequentialGroup()
                         .addComponent(titulo)
-                        .addGap(76, 76, 76)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
                         .addComponent(flag))
-                    .addComponent(ip))
-                .addContainerGap(54, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTituloLayout.createSequentialGroup()
+                        .addContainerGap(427, Short.MAX_VALUE)
+                        .addComponent(ip)))
+                .addContainerGap())
         );
         painelTituloLayout.setVerticalGroup(
             painelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -439,10 +387,10 @@ public class Interface extends javax.swing.JFrame {
                     .addComponent(titulo)
                     .addGroup(painelTituloLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(flag)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ip)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(flag)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(ip)
+                .addContainerGap())
         );
 
         tabuleiro.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tabuleiro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 13))); // NOI18N
@@ -452,7 +400,7 @@ public class Interface extends javax.swing.JFrame {
         tabuleiro.setLayout(tabuleiroLayout);
         tabuleiroLayout.setHorizontalGroup(
             tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 469, Short.MAX_VALUE)
+            .addGap(0, 567, Short.MAX_VALUE)
         );
         tabuleiroLayout.setVerticalGroup(
             tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -469,9 +417,9 @@ public class Interface extends javax.swing.JFrame {
                     .addComponent(tabuleiro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(maoJogador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                         .addComponent(painelEscolha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(painelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(painelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -481,12 +429,13 @@ public class Interface extends javax.swing.JFrame {
                 .addComponent(painelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tabuleiro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(maoJogador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(painelEscolha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(maoJogador, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(painelEscolha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -499,152 +448,156 @@ public class Interface extends javax.swing.JFrame {
         // TODO ação do botão jogar
     }//GEN-LAST:event_jogarActionPerformed
 
-    private void peca0MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca0MouseClicked
+    private void peca0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca0ActionPerformed
         if (peca0.isEnabled()) {
-            peca_escolhida.setIcon(peca0.getIcon());
+            pecaEscolhida.setIcon(peca0.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca0MouseClicked
+    }//GEN-LAST:event_peca0ActionPerformed
 
-    private void peca1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca1MouseClicked
+    private void pecaEscolhidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pecaEscolhidaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pecaEscolhidaActionPerformed
+
+    private void peca1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca1ActionPerformed
         if (peca1.isEnabled()) {
-            peca_escolhida.setIcon(peca1.getIcon());
+            pecaEscolhida.setIcon(peca1.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca1MouseClicked
+    }//GEN-LAST:event_peca1ActionPerformed
 
-    private void peca2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca2MouseClicked
+    private void peca2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca2ActionPerformed
         if (peca2.isEnabled()) {
-            peca_escolhida.setIcon(peca2.getIcon());
+            pecaEscolhida.setIcon(peca2.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca2MouseClicked
+    }//GEN-LAST:event_peca2ActionPerformed
 
-    private void peca6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca6MouseClicked
-        if (peca6.isEnabled()) {
-            peca_escolhida.setIcon(peca6.getIcon());
-            painelEscolha.setVisible(true);
-        }
-    }//GEN-LAST:event_peca6MouseClicked
-
-    private void peca3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca3MouseClicked
+    private void peca3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca3ActionPerformed
         if (peca3.isEnabled()) {
-            peca_escolhida.setIcon(peca3.getIcon());
+            pecaEscolhida.setIcon(peca3.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca3MouseClicked
+    }//GEN-LAST:event_peca3ActionPerformed
 
-    private void peca4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca4MouseClicked
+    private void peca4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca4ActionPerformed
         if (peca4.isEnabled()) {
-            peca_escolhida.setIcon(peca4.getIcon());
+            pecaEscolhida.setIcon(peca4.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca4MouseClicked
+    }//GEN-LAST:event_peca4ActionPerformed
 
-    private void peca5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca5MouseClicked
+    private void peca5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca5ActionPerformed
         if (peca5.isEnabled()) {
-            peca_escolhida.setIcon(peca5.getIcon());
+            pecaEscolhida.setIcon(peca5.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca5MouseClicked
+    }//GEN-LAST:event_peca5ActionPerformed
 
-    private void peca7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca7MouseClicked
+    private void peca6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca6ActionPerformed
+        if (peca6.isEnabled()) {
+            pecaEscolhida.setIcon(peca6.getIcon());
+            painelEscolha.setVisible(true);
+        }
+    }//GEN-LAST:event_peca6ActionPerformed
+
+    private void peca7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca7ActionPerformed
         if (peca7.isEnabled()) {
-            peca_escolhida.setIcon(peca7.getIcon());
+            pecaEscolhida.setIcon(peca7.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca7MouseClicked
+    }//GEN-LAST:event_peca7ActionPerformed
 
-    private void peca8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca8MouseClicked
+    private void peca8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca8ActionPerformed
         if (peca8.isEnabled()) {
-            peca_escolhida.setIcon(peca8.getIcon());
+            pecaEscolhida.setIcon(peca8.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca8MouseClicked
+    }//GEN-LAST:event_peca8ActionPerformed
 
-    private void peca9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca9MouseClicked
+    private void peca9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca9ActionPerformed
         if (peca9.isEnabled()) {
-            peca_escolhida.setIcon(peca9.getIcon());
+            pecaEscolhida.setIcon(peca9.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca9MouseClicked
+    }//GEN-LAST:event_peca9ActionPerformed
 
-    private void peca10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca10MouseClicked
+    private void peca10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca10ActionPerformed
         if (peca10.isEnabled()) {
-            peca_escolhida.setIcon(peca10.getIcon());
+            pecaEscolhida.setIcon(peca10.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca10MouseClicked
+    }//GEN-LAST:event_peca10ActionPerformed
 
-    private void peca11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca11MouseClicked
+    private void peca11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca11ActionPerformed
         if (peca11.isEnabled()) {
-            peca_escolhida.setIcon(peca11.getIcon());
+            pecaEscolhida.setIcon(peca11.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca11MouseClicked
+    }//GEN-LAST:event_peca11ActionPerformed
 
-    private void peca12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca12MouseClicked
+    private void peca12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca12ActionPerformed
         if (peca12.isEnabled()) {
-            peca_escolhida.setIcon(peca12.getIcon());
+            pecaEscolhida.setIcon(peca12.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca12MouseClicked
+    }//GEN-LAST:event_peca12ActionPerformed
 
-    private void peca13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca13MouseClicked
+    private void peca13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca13ActionPerformed
         if (peca13.isEnabled()) {
-            peca_escolhida.setIcon(peca13.getIcon());
+            pecaEscolhida.setIcon(peca13.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca13MouseClicked
+    }//GEN-LAST:event_peca13ActionPerformed
 
-    private void peca14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca14MouseClicked
+    private void peca14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca14ActionPerformed
         if (peca14.isEnabled()) {
-            peca_escolhida.setIcon(peca14.getIcon());
+            pecaEscolhida.setIcon(peca14.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca14MouseClicked
+    }//GEN-LAST:event_peca14ActionPerformed
 
-    private void peca15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca15MouseClicked
+    private void peca15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca15ActionPerformed
         if (peca15.isEnabled()) {
-            peca_escolhida.setIcon(peca15.getIcon());
+            pecaEscolhida.setIcon(peca15.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca15MouseClicked
+    }//GEN-LAST:event_peca15ActionPerformed
 
-    private void peca16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca16MouseClicked
+    private void peca16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca16ActionPerformed
         if (peca16.isEnabled()) {
-            peca_escolhida.setIcon(peca16.getIcon());
+            pecaEscolhida.setIcon(peca16.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca16MouseClicked
+    }//GEN-LAST:event_peca16ActionPerformed
 
-    private void peca17MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca17MouseClicked
+    private void peca17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca17ActionPerformed
         if (peca17.isEnabled()) {
-            peca_escolhida.setIcon(peca17.getIcon());
+            pecaEscolhida.setIcon(peca17.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca17MouseClicked
+    }//GEN-LAST:event_peca17ActionPerformed
 
-    private void peca18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca18MouseClicked
+    private void peca18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca18ActionPerformed
         if (peca18.isEnabled()) {
-            peca_escolhida.setIcon(peca18.getIcon());
+            pecaEscolhida.setIcon(peca18.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca18MouseClicked
+    }//GEN-LAST:event_peca18ActionPerformed
 
-    private void peca19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca19MouseClicked
+    private void peca19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca19ActionPerformed
         if (peca19.isEnabled()) {
-            peca_escolhida.setIcon(peca19.getIcon());
+            pecaEscolhida.setIcon(peca19.getIcon());
             painelEscolha.setVisible(true);
         }
-    }//GEN-LAST:event_peca19MouseClicked
+    }//GEN-LAST:event_peca19ActionPerformed
 
-    private void peca20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peca20MouseClicked
+    private void peca20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peca20ActionPerformed
         if (peca20.isEnabled()) {
-            peca_escolhida.setIcon(peca20.getIcon());
+            pecaEscolhida.setIcon(peca20.getIcon());
             painelEscolha.setVisible(true);
         }
-}//GEN-LAST:event_peca20MouseClicked
+    }//GEN-LAST:event_peca20ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -669,28 +622,28 @@ public class Interface extends javax.swing.JFrame {
     private javax.swing.JPanel maoJogador;
     private javax.swing.JPanel painelEscolha;
     private javax.swing.JPanel painelTitulo;
-    private javax.swing.JLabel peca0;
-    private javax.swing.JLabel peca1;
-    private javax.swing.JLabel peca10;
-    private javax.swing.JLabel peca11;
-    private javax.swing.JLabel peca12;
-    private javax.swing.JLabel peca13;
-    private javax.swing.JLabel peca14;
-    private javax.swing.JLabel peca15;
-    private javax.swing.JLabel peca16;
-    private javax.swing.JLabel peca17;
-    private javax.swing.JLabel peca18;
-    private javax.swing.JLabel peca19;
-    private javax.swing.JLabel peca2;
-    private javax.swing.JLabel peca20;
-    private javax.swing.JLabel peca3;
-    private javax.swing.JLabel peca4;
-    private javax.swing.JLabel peca5;
-    private javax.swing.JLabel peca6;
-    private javax.swing.JLabel peca7;
-    private javax.swing.JLabel peca8;
-    private javax.swing.JLabel peca9;
-    private javax.swing.JLabel peca_escolhida;
+    private javax.swing.JButton peca0;
+    private javax.swing.JButton peca1;
+    private javax.swing.JButton peca10;
+    private javax.swing.JButton peca11;
+    private javax.swing.JButton peca12;
+    private javax.swing.JButton peca13;
+    private javax.swing.JButton peca14;
+    private javax.swing.JButton peca15;
+    private javax.swing.JButton peca16;
+    private javax.swing.JButton peca17;
+    private javax.swing.JButton peca18;
+    private javax.swing.JButton peca19;
+    private javax.swing.JButton peca2;
+    private javax.swing.JButton peca20;
+    private javax.swing.JButton peca3;
+    private javax.swing.JButton peca4;
+    private javax.swing.JButton peca5;
+    private javax.swing.JButton peca6;
+    private javax.swing.JButton peca7;
+    private javax.swing.JButton peca8;
+    private javax.swing.JButton peca9;
+    private javax.swing.JButton pecaEscolhida;
     private javax.swing.JPanel tabuleiro;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
