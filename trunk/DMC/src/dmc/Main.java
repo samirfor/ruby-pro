@@ -17,7 +17,7 @@ public class Main {
      * Executa o programa.
      * @param args
      */
-    public static void main(String[] args) {
+    public static double run() {
 
         BancoDados treinamento = new BancoDados();
         BancoDados teste = new BancoDados();
@@ -26,16 +26,16 @@ public class Main {
         boolean foiTreinado, foiTestado;
         Random numeroRandom = new Random();
         int indiceAleatorio;
-        final int TAMTREINO = 5;
-        final int TAMTESTE = 20;
+        final int TAMTREINO = 120;
+        final int TAMTESTE = 30;
 
         // Treinamento
         for (int i = 0; i < TAMTREINO;) {
             foiTreinado = false;
             indiceAleatorio = numeroRandom.nextInt(150);
 
-            /* Evita que uma mesma iris seja armazenada mais de uma vez
-             * no treinamento
+            /** Evita que uma mesma iris seja armazenada mais de uma vez
+             *  no treinamento
              */
             for (int j = 0; j < indicesSorteados.size(); j++) {
                 if (indiceAleatorio == indicesSorteados.get(j)) {
@@ -67,8 +67,6 @@ public class Main {
 
         // Cria um objeto dmc com o BancoDados treinamento pronto
         DMC dmc = new DMC(treinamento);
-        // Limpa os indices sortados
-        indicesSorteados.clear();
 
         // Teste
         System.out.println("\n=============================\n");
@@ -136,5 +134,6 @@ public class Main {
         System.out.println("Acertos: " + acertos);
         System.out.println("Tamanho do teste: " + teste.size());
         System.out.println("\nPercentual de Acertos: " + percentual + "%");
+        return percentual;
     }
 }
