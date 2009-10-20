@@ -64,15 +64,20 @@ public class Interface extends javax.swing.JFrame {
         jogar = new javax.swing.JButton();
         pecaEscolhida = new javax.swing.JButton();
         painelTitulo = new javax.swing.JPanel();
-        titulo = new javax.swing.JLabel();
         flag = new javax.swing.JLabel();
         ip = new javax.swing.JLabel();
+        titulo = new javax.swing.JLabel();
         tabuleiro = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dominó Online");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setMinimumSize(null);
+        setMinimumSize(new java.awt.Dimension(650, 550));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         maoJogador.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Suas peças", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 13))); // NOI18N
         maoJogador.setAutoscrolls(true);
@@ -308,11 +313,11 @@ public class Interface extends javax.swing.JFrame {
                 .addGap(81, 81, 81))
         );
 
-        jogada.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jogada.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         jogada.setText("Peça escolhida:");
         jogada.setToolTipText("Clique em uma de suas peças ao lado para jogar.");
 
-        jogar.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jogar.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         jogar.setText("Jogar!");
         jogar.setToolTipText("Confirmar a sua jogada.");
         jogar.setAutoscrolls(true);
@@ -354,9 +359,6 @@ public class Interface extends javax.swing.JFrame {
 
         jogar.getAccessibleContext().setAccessibleDescription("Fazer a jogada.");
 
-        titulo.setFont(new java.awt.Font("DejaVu Sans", 1, 18));
-        titulo.setText("Dominó Online");
-
         flag.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         flag.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/flag_red.png"))); // NOI18N
         flag.setText("Aguardando o outro jogador.");
@@ -365,31 +367,34 @@ public class Interface extends javax.swing.JFrame {
         ip.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         ip.setText("Seu IP: 192.168.254.1");
 
+        titulo.setFont(new java.awt.Font("DejaVu Sans", 1, 18)); // NOI18N
+        titulo.setText("Dominó Online");
+
         javax.swing.GroupLayout painelTituloLayout = new javax.swing.GroupLayout(painelTitulo);
         painelTitulo.setLayout(painelTituloLayout);
         painelTituloLayout.setHorizontalGroup(
             painelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelTituloLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTituloLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(titulo)
+                .addGap(204, 204, 204)
                 .addGroup(painelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelTituloLayout.createSequentialGroup()
-                        .addComponent(titulo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
-                        .addComponent(flag))
+                    .addComponent(flag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTituloLayout.createSequentialGroup()
-                        .addContainerGap(427, Short.MAX_VALUE)
-                        .addComponent(ip)))
+                        .addGap(64, 64, 64)
+                        .addComponent(ip, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         painelTituloLayout.setVerticalGroup(
             painelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelTituloLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(painelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(titulo)
                     .addGroup(painelTituloLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(flag)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(ip)
+                        .addComponent(flag)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                        .addComponent(ip)))
                 .addContainerGap())
         );
 
@@ -419,7 +424,7 @@ public class Interface extends javax.swing.JFrame {
                         .addComponent(maoJogador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                         .addComponent(painelEscolha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(painelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(painelTitulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -433,9 +438,7 @@ public class Interface extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(maoJogador, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(painelEscolha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(painelEscolha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -598,6 +601,10 @@ public class Interface extends javax.swing.JFrame {
             painelEscolha.setVisible(true);
         }
     }//GEN-LAST:event_peca20ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        System.out.println(getSize());
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
