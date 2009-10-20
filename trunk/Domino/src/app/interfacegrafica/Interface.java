@@ -1,7 +1,10 @@
-package app;
+package app.interfacegrafica;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 
 /**
@@ -13,6 +16,14 @@ public class Interface extends javax.swing.JFrame {
     /** Creates new form Show */
     public Interface() {
         initComponents();
+
+        BufferedImage icone = null;
+        try {
+            icone = ImageIO.read(getClass().getResource("/pixmap/samir_sp_boka.png"));
+            setIconImage(icone);
+        } catch (IOException e) {
+            System.out.println("Erro ao carregar o ícone do JFrame.\n" + e);
+        }
 
         try {
             InetAddress endereco = InetAddress.getLocalHost();
@@ -68,16 +79,12 @@ public class Interface extends javax.swing.JFrame {
         ip = new javax.swing.JLabel();
         titulo = new javax.swing.JLabel();
         tabuleiro = new javax.swing.JPanel();
+        p0 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dominó Online");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setMinimumSize(new java.awt.Dimension(650, 550));
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
 
         maoJogador.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Suas peças", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 13))); // NOI18N
         maoJogador.setAutoscrolls(true);
@@ -367,7 +374,7 @@ public class Interface extends javax.swing.JFrame {
         ip.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         ip.setText("Seu IP: 192.168.254.1");
 
-        titulo.setFont(new java.awt.Font("DejaVu Sans", 1, 18)); // NOI18N
+        titulo.setFont(new java.awt.Font("DejaVu Sans", 1, 18));
         titulo.setText("Dominó Online");
 
         javax.swing.GroupLayout painelTituloLayout = new javax.swing.GroupLayout(painelTitulo);
@@ -400,16 +407,38 @@ public class Interface extends javax.swing.JFrame {
 
         tabuleiro.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tabuleiro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 13))); // NOI18N
         tabuleiro.setAutoscrolls(true);
+        tabuleiro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabuleiroMouseClicked(evt);
+            }
+        });
+
+        p0.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pixmap/depeis/0-0.gif"))); // NOI18N
+        p0.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                p0ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout tabuleiroLayout = new javax.swing.GroupLayout(tabuleiro);
         tabuleiro.setLayout(tabuleiroLayout);
         tabuleiroLayout.setHorizontalGroup(
             tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 567, Short.MAX_VALUE)
+            .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(tabuleiroLayout.createSequentialGroup()
+                    .addGap(260, 260, 260)
+                    .addComponent(p0, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(260, Short.MAX_VALUE)))
         );
         tabuleiroLayout.setVerticalGroup(
             tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 121, Short.MAX_VALUE)
+            .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(tabuleiroLayout.createSequentialGroup()
+                    .addGap(25, 25, 25)
+                    .addComponent(p0)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -602,9 +631,18 @@ public class Interface extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_peca20ActionPerformed
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        System.out.println(getSize());
-    }//GEN-LAST:event_formWindowClosing
+    private void tabuleiroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabuleiroMouseClicked
+        System.out.println(p0.getSize());
+        IconeRotacionado pi0 = new IconeRotacionado(p0.getIcon(), 90.0);
+//        Dimension dim = new Dimension(84, 47);
+        p0.setSize(84, 47);
+
+        p0.setIcon(pi0);
+    }//GEN-LAST:event_tabuleiroMouseClicked
+
+    private void p0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_p0ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_p0ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -627,6 +665,7 @@ public class Interface extends javax.swing.JFrame {
     private javax.swing.JLabel jogada;
     private javax.swing.JButton jogar;
     private javax.swing.JPanel maoJogador;
+    private javax.swing.JButton p0;
     private javax.swing.JPanel painelEscolha;
     private javax.swing.JPanel painelTitulo;
     private javax.swing.JButton peca0;

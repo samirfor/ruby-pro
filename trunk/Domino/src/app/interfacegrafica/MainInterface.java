@@ -3,7 +3,7 @@
  *
  * Created on 16/10/2009, 02:40:36
  */
-package app;
+package app.interfacegrafica;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

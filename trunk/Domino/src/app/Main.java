@@ -1,5 +1,6 @@
 package app;
 
+import app.interfacegrafica.MainInterface;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
