@@ -2,7 +2,7 @@ package dmc;
 
 import java.util.ArrayList;
 
-/** Faz cálculos da média e desvio padrão dos resutlados obtidos.
+/** Faz cálculos da média e desvio padrão dos resultados obtidos.
  *
  * @author samir
  */
