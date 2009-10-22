@@ -6,53 +6,76 @@ package rs;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
- * @author multi
+ * @author Samir <samirfor@gmail.com>
  */
 public class Main {
 
     /**
-     * @param args the command line arguments
+     * @param args - link para download
      */
     public static void main(String[] args) {
 
-        Html pagina = new Html();
-        Html servidor = new Html();
+        Html pagina, pagina2, postResp = null;
         Scanner ler = new Scanner(System.in);
-        String link, pag;
-        Pattern padraoServidor = Pattern.compile("http://rs\\d{1,3}\\S\\+.com", Pattern.MULTILINE);
-        StringBuilder sb = new StringBuilder();
+        String link, servidor, respostaPost;
+        int primeiro_indice, ultimo_indice;
 
         System.out.println("::: Rapidshare V2 :::\n");
         System.out.println(">>> Criado por Samir <samirfor@gmail.com>\n");
-        System.out.println("\nQual link?");
-//        link = ler.next();
-        link = "http://rapidshare.com/files/290179269/BB3.6_Oct.Ep.3.shan.mkv.001";
 
-        if (pagina.modificaHost(link)) {
-            System.out.println("Link mod: " + pagina.getLink());
+        // Captura link
+        if (args.length == 1) {
+            link = args[0];
+        } else {
+            System.out.println("\nQual link?");
+            link = ler.next();
+        }
 
-            try {
-                pagina.toFile();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            System.out.println(pagina.getBody().indexOf("http://rs"));
-            System.out.println(pagina.getBody().substring(pagina.getBody().indexOf("http://rs"), (pagina.getBody().indexOf("http://rs"))+27));
-//            ArrayList<String> resultados = new ArrayList<String>();
-//            System.out.println(pagina.getBody().split(padrao)[0]);
-            // http://rs000.rapidshare.com
+        // Identifica servidor
+        System.out.println("Conectando...");
+        pagina = new Html(link);
+        primeiro_indice = pagina.buscaString("http://rs");
+        ultimo_indice = primeiro_indice + 27;
+        servidor = pagina.getBody().substring(primeiro_indice, ultimo_indice);
+        System.out.println("Servidor identificado: " + servidor);
+
+        // Envia form através de POST
+        System.out.println("Enviando requisição de download...");
+        pagina2 = new Html(servidor + pagina.getPath());
+        HashMap<String, String> hash = new HashMap<String, String>();
+        hash.put("dl.start", "Free");
+        try {
+            postResp = new Html();
+            postResp.setLink(pagina2.getLink());
+            System.out.println("action: " + pagina2.getLink());
+            postResp.setBody(pagina2.submit(pagina2.getLink(), hash));
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // Grava resultado no arquivo
+        try {
+            postResp.toFile("postResp.html");
+            System.out.println("Resultado foi salvo no arquivo.");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            pagina2.toFile("pagina2.html");
+            System.out.println("Resultado foi salvo no arquivo.");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
