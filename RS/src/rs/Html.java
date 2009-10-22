@@ -12,9 +12,7 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -183,6 +181,6 @@ public class Html {
     }
 
     public void substituirTudo(String padrao, String troca) {
-        body.replaceAll(padrao, troca);
+        body = body.replaceAll(padrao, troca);
     }
 }
