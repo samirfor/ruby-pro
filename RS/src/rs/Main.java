@@ -78,12 +78,22 @@ public class Main {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
+                // Verifica se há tempo de espera
                 padrao = Pattern.compile("Or try again in about \\d+");
                 pesquisa = padrao.matcher(postResp.getBody());
                 if (pesquisa.find()) {
                     int tempo = Integer.parseInt(pesquisa.group().substring(22));
                     System.out.println("Você baixou recentemente um arquivo. Aguardando" + tempo + " minutos.");
-                    Thread.sleep(tempo*60*1000);
+                    Thread.sleep(tempo * 60 * 1000);
+                }
+
+                // Verifica se há download ativo
+                padrao = Pattern.compile("already downloading a file");
+                pesquisa = padrao.matcher(postResp.getBody());
+                if (pesquisa.find()) {
+                    System.out.println("O rapidshare detectou um download em andamento.");
+                    System.out.println("Aguarde esse download terminar para poder baixar.");
+                    System.exit(1);
                 }
 
                 // Identificar link pra download
@@ -116,20 +126,22 @@ public class Main {
 
                     // Download por wget
                     try {
-                        Runtime.getRuntime().exec("wget " + download_link.getLink() + " &");
+                        System.out.println("Baixando com o wget...");
+                        Runtime.getRuntime().exec("wget " + download_link.getLink() + " &").wait();
+                        System.out.println("Download terminado.");
                     } catch (IOException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                    // Grava resultado no arquivo
-                    try {
-                        postResp.toFile("RapidDownload.html");
-                        System.out.println("Resultado foi salvo no arquivo.");
-                    } catch (FileNotFoundException ex) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+//                    // Grava resultado no arquivo
+//                    try {
+//                        postResp.toFile("RapidDownload.html");
+//                        System.out.println("Resultado foi salvo no arquivo.");
+//                    } catch (FileNotFoundException ex) {
+//                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
                 } else {
                     System.out.println("Não foi possível capturar o link de download.");
                 }
