@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
+/** Trata uma página do rapidshare.com
  *
  * @author Samir <samirfor@gmail.com>
  */
@@ -60,12 +60,12 @@ public class Html {
                 uri = new URI(link);
                 return true;
             } catch (UnknownHostException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (URISyntaxException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
