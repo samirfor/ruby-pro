@@ -1,25 +1,25 @@
-package dmc;
+package knn;
 
 /**
- * Implementação do algoritmo DMC (Dynamic Matrix Control).
+ * Implementação do algoritmo KNN (K-nearest Neighbors Algorithm).
  * @author Samir Coutinho Costa <samirfor@gmail.com>
  */
-public class DMC {
+public class KNN {
 
     private BancoDados treinamento;
 
     /**
      * @param treinamento
      */
-    public DMC(BancoDados treinamento) {
+    public KNN(BancoDados treinamento) {
         this.treinamento = treinamento;
     }
 
     /**
-     * Calcula o sentróide de setosas.
+     * Calcula a distância para setosa.
      * @return
      */
-    public double getCentroideSetosa() {
+    public double getDistanciaSetosa() {
         double soma = 0;
         int count = 0;
 
@@ -43,10 +43,10 @@ public class DMC {
     }
 
     /**
-     * Calcula o centróide de versicolor.
+     * Calcula a distância para versicolor.
      * @return
      */
-    public double getCentroideVersicolor() {
+    public double getDistanciaVersicolor() {
         double soma = 0;
         int count = 0;
 
@@ -70,10 +70,10 @@ public class DMC {
     }
 
     /**
-     * Calcula o centróide de virgínica.
+     * Calcula a distância para virgínica.
      * @return
      */
-    public double getCentroideVirginica() {
+    public double getDistanciaVirginica() {
         double soma = 0;
         int count = 0;
 
@@ -107,22 +107,22 @@ public class DMC {
     public Classificacao classificar(double comprimentoSepala, double larguraSepala, double comprimentoPetala, double larguraPetala) {
         double setosa = 0.0, versicolor = 0.0, virginica = 0.0;
 
-        setosa = (Math.pow(comprimentoSepala - getCentroideSetosa(), 2) +
-                Math.pow(larguraSepala - getCentroideSetosa(), 2) +
-                Math.pow(comprimentoPetala - getCentroideSetosa(), 2) +
-                Math.pow(larguraPetala - getCentroideSetosa(), 2));
+        setosa = (Math.pow(comprimentoSepala - getDistanciaSetosa(), 2) +
+                Math.pow(larguraSepala - getDistanciaSetosa(), 2) +
+                Math.pow(comprimentoPetala - getDistanciaSetosa(), 2) +
+                Math.pow(larguraPetala - getDistanciaSetosa(), 2));
         setosa = Math.sqrt(setosa);
 
-        versicolor = (Math.pow(comprimentoSepala - getCentroideVersicolor(), 2) +
-                Math.pow(larguraSepala - getCentroideVersicolor(), 2) +
-                Math.pow(comprimentoPetala - getCentroideVersicolor(), 2) +
-                Math.pow(larguraPetala - getCentroideVersicolor(), 2));
+        versicolor = (Math.pow(comprimentoSepala - getDistanciaVersicolor(), 2) +
+                Math.pow(larguraSepala - getDistanciaVersicolor(), 2) +
+                Math.pow(comprimentoPetala - getDistanciaVersicolor(), 2) +
+                Math.pow(larguraPetala - getDistanciaVersicolor(), 2));
         versicolor = Math.sqrt(versicolor);
 
-        virginica = (Math.pow(comprimentoSepala - getCentroideVirginica(), 2) +
-                Math.pow(larguraSepala - getCentroideVirginica(), 2) +
-                Math.pow(comprimentoPetala - getCentroideVirginica(), 2) +
-                Math.pow(larguraPetala - getCentroideVirginica(), 2));
+        virginica = (Math.pow(comprimentoSepala - getDistanciaVirginica(), 2) +
+                Math.pow(larguraSepala - getDistanciaVirginica(), 2) +
+                Math.pow(comprimentoPetala - getDistanciaVirginica(), 2) +
+                Math.pow(larguraPetala - getDistanciaVirginica(), 2));
         virginica = Math.sqrt(virginica);
 
         System.out.println("\tDistância:");

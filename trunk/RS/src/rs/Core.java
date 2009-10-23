@@ -4,7 +4,6 @@
  */
 package rs;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -17,7 +16,7 @@ import java.util.regex.Pattern;
  *
  * @author Samir <samirfor@gmail.com>
  */
-public class Main {
+public class Core {
 
     /**
      * @param args - link para download
@@ -75,7 +74,7 @@ public class Main {
                     postResp.substituirTudo("http://rapidshare.com", "http://" + rapidshare.getHost());
                     postResp.substituirTudo("https://ssl.rapidshare.com", "https://" + ssl.getHost());
                 } catch (Exception ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 // Verifica se há tempo de espera
@@ -130,7 +129,7 @@ public class Main {
                         Runtime.getRuntime().exec("wget " + download_link.getLink() + " &").wait();
                         System.out.println("Download terminado.");
                     } catch (IOException ex) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
 //                    // Grava resultado no arquivo
@@ -138,9 +137,9 @@ public class Main {
 //                        postResp.toFile("RapidDownload.html");
 //                        System.out.println("Resultado foi salvo no arquivo.");
 //                    } catch (FileNotFoundException ex) {
-//                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+//                        Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
 //                    } catch (IOException ex) {
-//                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+//                        Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
 //                    }
                 } else {
                     System.out.println("Não foi possível capturar o link de download.");
