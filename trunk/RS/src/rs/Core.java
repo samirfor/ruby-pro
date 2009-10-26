@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package rs;
 
 import java.io.IOException;
@@ -20,6 +16,7 @@ public class Core {
 
     /**
      * @param args - link para download
+     * @throws InterruptedException 
      */
     public static void main(String[] args) throws InterruptedException {
 
@@ -82,8 +79,9 @@ public class Core {
                 pesquisa = padrao.matcher(postResp.getBody());
                 if (pesquisa.find()) {
                     int tempo = Integer.parseInt(pesquisa.group().substring(22));
-                    System.out.println("Você baixou recentemente um arquivo. Aguardando" + tempo + " minutos.");
+                    System.out.println("Você baixou recentemente um arquivo. Aguardando " + tempo + " minutos.");
                     Thread.sleep(tempo * 60 * 1000);
+                    System.out.println("Execute novamente para fazer o download.");
                 }
 
                 // Verifica se há download ativo
@@ -124,13 +122,16 @@ public class Core {
                     System.out.println("Donwload mod: " + download_link.getLink());
 
                     // Download por wget
+                    String comando = "gnome-terminal -e 'cd $HOME && wget ";
+                    comando += download_link.getLink() + "'";
+                    System.out.println("Baixando com o wget...");
                     try {
-                        System.out.println("Baixando com o wget...");
-                        Runtime.getRuntime().exec("wget " + download_link.getLink() + " &").wait();
-                        System.out.println("Download terminado.");
-                    } catch (IOException ex) {
-                        Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
+                        Runtime.getRuntime().exec(comando);
+                    } catch (IOException iOException) {
+                        System.out.println("Erro de I/O.");
+                        System.err.println(iOException);
                     }
+                    System.out.println("Download terminado.");
 
 //                    // Grava resultado no arquivo
 //                    try {
