@@ -1,7 +1,8 @@
 package knn;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Comparator;
 
 /**
  *
@@ -9,20 +10,21 @@ import java.util.List;
  */
 public class Lista {
 
-    private List<Valor> valor;
+    private ArrayList<Valor> valor;
 
     public Lista() {
+        valor = new ArrayList<Valor>();
     }
 
-    public Lista(List<Valor> valor) {
+    public Lista(ArrayList<Valor> valor) {
         this.valor = valor;
     }
 
-    public List<Valor> getValor() {
+    public ArrayList<Valor> getValor() {
         return valor;
     }
 
-    public void setValor(List<Valor> valor) {
+    public void setValor(ArrayList<Valor> valor) {
         this.valor = valor;
     }
 
@@ -35,6 +37,28 @@ public class Lista {
     }
 
     public void ordenar() {
-        Collections.sort(valor);
+        Collections.sort(valor, new Comparator<Valor>() {
+
+            @Override
+            public int compare(Valor v1, Valor v2) {
+                if (v1.getDistancia() < v2.getDistancia()) {
+                    return -1;
+                }
+                if (v1.getDistancia() > v2.getDistancia()) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+    }
+
+    @Override
+    public String toString() {
+        String s;
+        s = "Lista: ";
+        for (int i = 0; i < size(); i++) {
+            s += "\nv[" + i + "] = " + valor.get(i);
+        }
+        return s;
     }
 }

@@ -6,11 +6,14 @@ package knn;
  */
 public class Valor implements Comparable {
 
-    private Double valor;
+    private Double distancia;
     private Classificacao tipo;
 
-    public Valor(double valor, Classificacao tipo) {
-        this.valor = valor;
+    public Valor() {
+    }
+
+    public Valor(double distancia, Classificacao tipo) {
+        this.distancia = distancia;
         this.tipo = tipo;
     }
 
@@ -22,16 +25,20 @@ public class Valor implements Comparable {
         this.tipo = tipo;
     }
 
-    public double getValor() {
-        return valor;
+    public double getDistancia() {
+        return distancia;
     }
 
-    public void setValor(double valor) {
-        this.valor = valor;
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
     }
 
     public int compareTo(Object o) {
-        Valor v = (Valor) o;
-        return valor.compareTo(v.valor);
+        throw new UnsupportedOperationException("Não implementado ainda.");
+    }
+
+    @Override
+    public String toString() {
+        return distancia.toString();
     }
 }

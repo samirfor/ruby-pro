@@ -24,9 +24,11 @@ public class KNN {
      * @return
      */
     public Classificacao classificar(double comprimentoSepala, double larguraSepala, double comprimentoPetala, double larguraPetala) {
+        final int K = 5;
         double distancia = 0;
         int setosa = 0, versicolor = 0, virginica = 0;
         Lista lista = new Lista();
+        Valor valor;
 
         for (int i = 0; i < treinamento.size(); i++) {
             Padrao padrao = treinamento.getPadrao(i);
@@ -35,12 +37,37 @@ public class KNN {
                     Math.pow(comprimentoPetala - padrao.getComprimentoPetala(), 2) +
                     Math.pow(larguraPetala - padrao.getLarguraPetala(), 2);
             distancia = Math.sqrt(distancia);
-            Valor valor = new Valor(distancia, padrao.getTipo());
+            valor = new Valor(distancia, padrao.getTipo());
+//            System.out.println("i[" + i + "]" + "valor = new Valor(" + distancia + "," + padrao.getTipo());
             lista.add(valor);
         }
 
-        System.out.println("\tDistância: " + distancia);
+        lista.ordenar();
 
-        return
+        for (int i = 0; i < K; i++) {
+            Classificacao tipo = lista.getValor().get(i).getTipo();
+            System.out.println("lista.getValor.get(" + i + ").getTipo => " + tipo);
+            if (tipo.equals(Classificacao.SETOSA)) {
+                setosa++;
+            } else if (tipo.equals(Classificacao.VERSICOLOR)) {
+                versicolor++;
+            } else if (tipo.equals(Classificacao.VIRGINICA)) {
+                virginica++;
+            }
+        }
+
+        System.out.println("\tContador:");
+        System.out.println("\t\tSetosas: " + setosa);
+        System.out.println("\t\tVersicolores: " + versicolor);
+        System.out.println("\t\tVirginicas: " + virginica);
+
+        if (setosa >= versicolor && setosa >= virginica) {
+            return Classificacao.SETOSA;
+        } else if (versicolor >= setosa && versicolor >= virginica) {
+            return Classificacao.VERSICOLOR;
+        } else if (virginica >= setosa && virginica >= versicolor) {
+            return Classificacao.VIRGINICA;
+        }
+        return null;
     }
 }
