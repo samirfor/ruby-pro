@@ -1,9 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package grafico;
+
+import rs.Core;
 
 /**
  *
@@ -12,7 +9,12 @@ package grafico;
 public class LinkGotcher {
 
     public static void main(String[] args) throws InterruptedException {
-        rs.Core.main(args);
-        Question.main(args);
+        try {
+            Question.main(args);
+        } catch (Exception e) {
+            System.out.println("Não foi possível carregar interface gráfica.");
+            System.out.println("Mudando para modo texto.");
+            Core.main(args);
+        }
     }
 }

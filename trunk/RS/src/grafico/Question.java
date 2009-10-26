@@ -122,7 +122,7 @@ public class Question extends javax.swing.JFrame {
 
     private void downloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadActionPerformed
         String listaLinks = links.getText();
-        String[] arg = new String[1];
+        String[] argumento = new String[1];
         if (listaLinks.equals(null)) {
             links.setText("Não há links para baixar.");
             avisos.setText("Não há links para baixar.");
@@ -132,14 +132,15 @@ public class Question extends javax.swing.JFrame {
                     int inicio = links.getLineStartOffset(i);
                     int fim = links.getLineEndOffset(i);
                     String linha = links.getText(inicio, fim - inicio);
-                    arg[0] = linha;
+                    argumento[0] = linha.replaceAll("^(:/)\\W", "");
+                    System.out.println("Linha de download: " + argumento[0]);
                     avisos.setText("Baixando: " + linha.replaceAll("http://\\S+/\\S+/\\S+/", ""));
                 } catch (BadLocationException ble) {
-                    System.out.println("Erro nos links. Linha "+ (i+1));
-                    avisos.setText("Erro nos links.");
+                    System.out.println("Erro nos links. Linha " + (i + 1));
+                    avisos.setText("Erro nos links. Linha " + (i + 1));
                 }
 
-                
+
             }
         }
     }//GEN-LAST:event_downloadActionPerformed
