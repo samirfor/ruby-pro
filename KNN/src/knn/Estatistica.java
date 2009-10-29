@@ -2,8 +2,8 @@ package knn;
 
 import java.util.ArrayList;
 
-/** Faz cálculos da média e desvio padrão dos resultados obtidos.
- *
+/**
+ * Faz cálculos da média e desvio padrão dos resultados obtidos.
  * @author Samir Coutinho Costa <samirfor@gmail.com>
  */
 public class Estatistica {

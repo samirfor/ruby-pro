@@ -1,7 +1,7 @@
 package knn;
 
 /**
- *
+ * Contém a distância e o tipo de íris para cada padrão do sorteio.
  * @author Samir Coutinho Costa <samirfor@gmail.com>
  */
 public class Valor implements Comparable {

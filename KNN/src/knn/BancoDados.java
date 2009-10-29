@@ -2,6 +2,10 @@ package knn;
 
 import java.util.ArrayList;
 
+/**
+ * Lista de padrões usados na iris.
+ * @author Samir Coutinho Costa <samirfor@gmail.com>
+ */
 public class BancoDados {
 
     private ArrayList<Padrao> padroes;
