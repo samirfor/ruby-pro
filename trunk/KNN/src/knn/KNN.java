@@ -23,7 +23,12 @@ public class KNN {
      * @param larguraPetala
      * @return
      */
-    public Classificacao classificar(double comprimentoSepala, double larguraSepala, double comprimentoPetala, double larguraPetala) {
+    public Classificacao classificar(
+            double comprimentoSepala,
+            double larguraSepala,
+            double comprimentoPetala,
+            double larguraPetala) {
+        
         final int K = 5;
         double distancia = 0;
         int setosa = 0, versicolor = 0, virginica = 0;
@@ -32,13 +37,13 @@ public class KNN {
 
         for (int i = 0; i < treinamento.size(); i++) {
             Padrao padrao = treinamento.getPadrao(i);
-            distancia = Math.pow(comprimentoSepala - padrao.getComprimentoPetala(), 2) +
+            distancia = Math.pow(
+                    comprimentoSepala - padrao.getComprimentoSepala(), 2) +
                     Math.pow(larguraSepala - padrao.getLarguraSepala(), 2) +
                     Math.pow(comprimentoPetala - padrao.getComprimentoPetala(), 2) +
                     Math.pow(larguraPetala - padrao.getLarguraPetala(), 2);
             distancia = Math.sqrt(distancia);
             valor = new Valor(distancia, padrao.getTipo());
-//            System.out.println("i[" + i + "]" + "valor = new Valor(" + distancia + "," + padrao.getTipo());
             lista.add(valor);
         }
 
@@ -46,7 +51,6 @@ public class KNN {
 
         for (int i = 0; i < K; i++) {
             Classificacao tipo = lista.getValor().get(i).getTipo();
-            System.out.println("lista.getValor.get(" + i + ").getTipo => " + tipo);
             if (tipo.equals(Classificacao.SETOSA)) {
                 setosa++;
             } else if (tipo.equals(Classificacao.VERSICOLOR)) {
@@ -56,10 +60,10 @@ public class KNN {
             }
         }
 
-        System.out.println("\tContador:");
-        System.out.println("\t\tSetosas: " + setosa);
+        System.out.println("\tK =>");
+        System.out.println("\t\tSetosas:      " + setosa);
         System.out.println("\t\tVersicolores: " + versicolor);
-        System.out.println("\t\tVirginicas: " + virginica);
+        System.out.println("\t\tVirginicas:   " + virginica);
 
         if (setosa >= versicolor && setosa >= virginica) {
             return Classificacao.SETOSA;

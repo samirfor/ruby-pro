@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Programa de classificação de padrões através de a implementação do algoritmo
- * KNN (Dynamic Matrix Control).
+ * Classificação de padrões através de a implementação do algoritmo
+ * KNN (K-Nearest Neighbors Algorithm).
  * @author Samir Coutinho Costa <samirfor@gmail.com>
  */
 public class Main {
 
     /**
      * Executa o programa.
-     * @param args
+     * @return percentual - retorna a precisão do algoritmo em porcentagem.
      */
     public static double run() {
 

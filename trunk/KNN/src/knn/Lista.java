@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- *
+ * Lista de valores sorteados no KNN.
  * @author Samir Coutinho Costa <samirfor@gmail.com>
  */
 public class Lista {
