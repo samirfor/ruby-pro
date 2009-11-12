@@ -2,6 +2,7 @@
 
 require 'net/http'
 require 'socket'
+require 'logger'
 
 def ajuda()
   puts "::: Rapidshare V2 :::\n"
@@ -166,7 +167,7 @@ def main
       end
       
       #gerar_html(resposta, path_do_arquivo)
-      to_html(resposta, path_do_arquivo)
+      #to_html(resposta, path_do_arquivo)
 
       ## Captura tempo de espera
       tempo = resposta.scan(/var c=\d{1,};/)[0]
