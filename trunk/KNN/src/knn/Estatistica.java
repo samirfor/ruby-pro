@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Estatistica {
 
     public static void main(String[] args) {
-        final int LOOP = 10;
+        final int LOOP = 2;
         double somax = 0, calculo = 0, media = 0, desvio = 0, porcentagem;
         ArrayList<Double> porcentagens = new ArrayList<Double>();
 

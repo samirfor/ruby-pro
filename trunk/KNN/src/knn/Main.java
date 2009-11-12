@@ -26,7 +26,7 @@ public class Main {
         Random numeroRandom = new Random();
         int indiceAleatorio;
         final int TAMTREINO = 120;
-        final int TAMTESTE = 30;
+        final int TAMTESTE = 5;
 
         // Treinamento
         for (int i = 0; i < TAMTREINO;) {

@@ -9,16 +9,16 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=cliente
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/cliente
+CND_ARTIFACT_NAME_Debug=cadastrocliente
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/cadastrocliente
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=cliente.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/cliente.tar
+CND_PACKAGE_NAME_Debug=cadastrocliente.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/cadastrocliente.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=cliente
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/cliente
+CND_ARTIFACT_NAME_Release=cadastrocliente
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/cadastrocliente
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=cliente.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/cliente.tar
+CND_PACKAGE_NAME_Release=cadastrocliente.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/cadastrocliente.tar

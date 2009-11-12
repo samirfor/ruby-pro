@@ -78,7 +78,7 @@ void inserir(cliente *c) {
     for (i = 0; i < NUM_CLIENTES; i++) {
         if (c->isUsado == 0) {
             printf("");
-            scanf("%s", c)
+            scanf("%s", c);
         }
     }
 }
