@@ -13,8 +13,8 @@ CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
 CC=gcc
-CCC=g++
-CXX=g++
+CCC=
+CXX=
 FC=
 AS=as
 
@@ -51,11 +51,11 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	${MAKE}  -f nbproject/Makefile-Release.mk dist/Release/GNU-Linux-x86/cliente
+	${MAKE}  -f nbproject/Makefile-Release.mk dist/Release/GNU-Linux-x86/cadastrocliente
 
-dist/Release/GNU-Linux-x86/cliente: ${OBJECTFILES}
+dist/Release/GNU-Linux-x86/cadastrocliente: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cliente ${OBJECTFILES} ${LDLIBSOPTIONS} 
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cadastrocliente ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -68,7 +68,7 @@ ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.c
 # Clean Targets
 .clean-conf:
 	${RM} -r build/Release
-	${RM} dist/Release/GNU-Linux-x86/cliente
+	${RM} dist/Release/GNU-Linux-x86/cadastrocliente
 
 # Subprojects
 .clean-subprojects:

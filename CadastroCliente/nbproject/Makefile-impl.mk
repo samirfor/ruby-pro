@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Cliente
+PROJECTNAME=CadastroCliente
 
 # Active Configuration
 DEFAULTCONF=Debug
