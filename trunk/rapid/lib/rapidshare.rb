@@ -3,7 +3,6 @@
 require 'net/http'
 require 'socket'
 
-
 def ajuda()
   puts "::: Rapidshare V2 :::\n"
   puts ">>> Criado por Samir <samirfor@gmail.com>\n"
@@ -110,6 +109,8 @@ end
 def main
   if ARGV[0] == nil and $link == nil
     $link = set_link
+  else
+    $link = ARGV[0]
   end
   puts "Baixando o link:\n"+$link
   url = URI.parse($link)
@@ -158,7 +159,7 @@ def main
         puts "Download sem alertas. OK!"
       end
       
-      resposta.bodygerar_html(resposta, path_do_arquivo)
+      #gerar_html(resposta, path_do_arquivo)
 
       ## Captura tempo de espera
       tempo = resposta.scan(/var c=\d{1,};/)[0]
