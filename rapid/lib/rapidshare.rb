@@ -111,6 +111,18 @@ def get_no_slot(body)
   end
 end
 
+def respaw(body)
+  time = nil
+  time = body.scan(/try again in about \d+ minutes/)[0]
+  if time != nil
+    time.gsub!("try again in about ","").gsub!(" minutes","")
+    to_log("Respaw de #{time} minutos.")
+    sleep(60*time.to_i)
+  end
+end
+
+
+
 #################
 #      Main
 #################
@@ -154,6 +166,7 @@ def main
 
       return false if get_no_slot(resposta)
       return false if get_justify(resposta)
+      respaw(resposta)
 
       wait = resposta.scan(/Please try again in \d+ minutes/)[0]
       if wait != nil
