@@ -56,7 +56,6 @@ def contador(tempo)
     tempo -= 1
     sleep(1)
   end while tempo > 0
-  #`zenity --info --title=':: Avia mah!' --text="<b>Ei mah, corrou\!</b>\n\nO tempo já passou\!"`
 end
 
 def to_html(body, path_do_arquivo)
@@ -74,8 +73,16 @@ def gerar_html(resposta, path_do_arquivo)
   system('firefox '+path_do_arquivo)
 end
 
+def to_log(texto)
+  logger = Logger.new('rs.log', 10, 1024000)
+  logger.datetime_format = "%d/%m %H:%M:%S"
+  logger.info(texto)
+  logger.close
+  puts texto
+end
+
 def falhou(segundos)
-  puts "Tentando novamente em #{segundos} segundos."
+  to_log("Tentando novamente em #{segundos} segundos.")
   sleep(segundos)
 end
 
@@ -84,10 +91,10 @@ def get_justify(body)
   justify = body.scan(/<p align=\"justify\">.+<\/p>/)[0]
   if justify != nil
     justify.gsub!("<p align=\"justify\">", "").gsub!("</p>", "")
-    puts justify
+    to_log(justify)
     return true
   else
-    puts "Download sem mensagem de justificativa. OK!"
+    to_log("Download sem mensagem de justificativa. OK!")
     return false
   end
 end
@@ -96,7 +103,7 @@ def get_no_slot(body)
   str = nil
   str = body.scan(/no more download slots available/)[0]
   if str != nil
-    puts "Não há slots disponíveis no momento."
+    to_log("Não há slots disponíveis no momento.")
     return true
   else
     return false
@@ -112,7 +119,7 @@ def main
   else
     $link = ARGV[0]
   end
-  puts "Baixando o link:\n"+$link
+  to_log("Baixando o link:\n"+$link)
   url = URI.parse($link)
   host_rs = get_ip(url.host)
   host_ssl = get_ip('ssl.rapidshare.com')
@@ -121,27 +128,26 @@ def main
 
   begin
     http = Net::HTTP.new(host_rs)
-    puts 'Abrindo conexão HTTP...'
+    to_log('Abrindo conexão HTTP...')
     headers, body = http.get(path)
     if headers.code == "200"
       ## Requisitando pagina de download
-      puts 'Conexão HTTPOK 200.'
+      to_log('Conexão HTTPOK 200.')
 
       servidor_host = body.scan(/rs\w{1,}.rapidshare.com/)[0]
       ## Testa se identificou o host
       if servidor_host == nil
-        puts "\nNão foi possível capturar o servidor."
-        puts "Verifique se a URL está correta."
-        #`zenity --error --text="\nNão foi possível capturar o servidor.\nVerifique se a URL está correta."`
+        to_log("\nNão foi possível capturar o servidor.")
+        to_log("Verifique se a URL está correta.")
         exit
       end
-      puts 'Servidor ' + servidor_host + ' identificado.'
+      to_log('Servidor ' + servidor_host + ' identificado.')
       servidor_ip = get_ip(servidor_host)
       body = trata_body(body, host_ssl, host_rs)
 
       ## Tratando a resposta do POST (1)
       ip_url = URI.parse('http://' + servidor_ip + path)
-      puts 'Enviando requisição de download (1)'
+      to_log('Enviando requisição de download...')
       resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
       resposta = trata_body(resposta.body, host_ssl, host_rs)
 
@@ -151,45 +157,43 @@ def main
       wait = resposta.scan(/Please try again in \d+ minutes/)[0]
       if wait != nil
         wait.gsub!("Please try again in ","").gsub!(" minutes","")
-        puts "Aguardando #{wait.to_s} minutos."
+        to_log("Aguardando #{wait.to_s} minutos.")
         wait = wait.to_i
         sleep(60*wait-10)
         return false
       else
-        puts "Download sem alertas. OK!"
+        to_log("Download sem alertas. OK!")
       end
       
       #gerar_html(resposta, path_do_arquivo)
+      to_html(resposta, path_do_arquivo)
 
       ## Captura tempo de espera
       tempo = resposta.scan(/var c=\d{1,};/)[0]
       if tempo == nil # Testa se identificou o contador
-        puts 'Não foi possível capturar o contador.'
-        puts "Não foi possível baixar o arquivo."
+        to_log('Não foi possível capturar o contador.')
         return false
       end
       tempo.gsub!("var c=", "").gsub!(";","")
-      puts 'Contador identificado.'
+      to_log('Contador identificado.')
       contador(tempo.to_i+1)
-      download = resposta.scan(/http:\/\/rs\S+\\/)[0].gsub("\\","")
-      puts "\nLink para download: " + download
+      download = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
+      download.gsub!("dlf.action=\\'","").gsub!("\\","")
+      to_log("\nLink para download: " + download)
 
       ## Download com wget
       baixou = system("wget " + download)
       if baixou
-        puts "Download concluido com sucesso."
-        `zenity --info --text="Download concluido com sucesso."`
+        to_log("Download concluido com sucesso.")
       else
-        puts "Download falhou."
-        `zenity --error --text="Download falhou."`
+        to_log("Download falhou.")
       end
       return baixou
     else
-      puts "#{headers.code} #{headers.message}"
-      `zenity --error --text='#{headers.code} #{headers.message}'`
+      to_log("#{headers.code} #{headers.message}")
     end
   rescue Timeout::Error
-    puts "Tempo de requisição esgotado. Tentando novamente."
+    to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
   end
 end
