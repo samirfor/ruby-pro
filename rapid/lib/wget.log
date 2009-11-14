@@ -1,0 +1,16 @@
+--2009-11-14 00:42:48--  http://rm01.xpg.com.br/index.html
+Resolvendo rm01.xpg.com.br... 200.149.77.227, 200.149.77.228, 200.149.77.223, ...
+Conectando-se a rm01.xpg.com.br|200.149.77.227|:80... conectado.
+A requisição HTTP foi enviada, aguardando resposta... 302 Moved Temporarily
+Localização: http://www.rm01.xpg.com.br/index.html [redirecionando]
+--2009-11-14 00:42:49--  http://www.rm01.xpg.com.br/index.html
+Resolvendo www.rm01.xpg.com.br... 200.149.77.228, 200.149.77.223, 200.149.77.224, ...
+Reaproveitando a conexão existente para rm01.xpg.com.br:80.
+A requisição HTTP foi enviada, aguardando resposta... 200 OK
+Tamanho: não especificada [text/html]
+Salvando em: `index.html'
+
+     0K ..........                                             36,1K=0,3s
+
+2009-11-14 00:42:50 (36,1 KB/s) - `index.html' salvo [10296]
+
