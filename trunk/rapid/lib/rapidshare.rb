@@ -158,41 +158,6 @@ def simultaneo(body)
   end
 end
 
-
-#################
-#      Main
-#################
-def main
-  if ARGV[0] == nil
-    ajuda
-    exit
-  else
-    if ARGV[0] == "-l"
-      if FileTest.exist?(ARGV[1])
-        to_log("Baixando uma lista de links.")
-        links = get_multi_links(ARGV[1])
-        links.each do |link|
-          next if link == nil or link == ""
-          $link = link
-          begin
-            resp = baixar
-            falhou(10) if !resp
-          end while !resp
-        end
-      else
-        puts "Arquivo não existe."
-        exit
-      end
-    else
-      $link = ARGV[0]
-      begin
-        resp = baixar
-        falhou(10) if !resp
-      end while !resp
-    end
-  end
-end
-
 def baixar
   return true if $link =~ /#.+/
   to_log("Baixando o link: "+$link)
@@ -237,7 +202,7 @@ def baixar
       return false if get_no_slot(resposta)
       return false if get_justify(resposta)
       return false if simultaneo(resposta)
-      
+
       #gerar_html(resposta, path_do_arquivo)
       #to_html(resposta, path_do_arquivo)
 
@@ -259,8 +224,10 @@ def baixar
       baixou = system("wget -c #{download}")
       if baixou
         to_log("Download concluido com sucesso.")
+        to_log("============")
       else
         to_log("Download falhou.")
+        to_log("============")
       end
     else
       to_log("#{headers.code} #{headers.message}")
@@ -269,6 +236,45 @@ def baixar
   rescue Timeout::Error
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
+  end
+end
+
+#################
+#      Main
+#################
+def main
+  if ARGV[0] == nil
+    ajuda
+    exit
+  else
+    if FileTest.exist?("rs.log")
+      File.delete("rs.log")
+    end
+    if ARGV[0] == "-l"
+      if FileTest.exist?(ARGV[1])
+        to_log("Baixando uma lista de links.")
+        links = get_multi_links(ARGV[1])
+        links.each do |link|
+          next if link == nil or link == ""
+          $link = link
+          begin
+            resp = baixar
+            falhou(10) if !resp
+          end while !resp
+        end
+        to_log("Fim da lista.")
+        to_log(">>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<")
+      else
+        puts "Arquivo não existe."
+        exit
+      end
+    else
+      $link = ARGV[0]
+      begin
+        resp = baixar
+        falhou(10) if !resp
+      end while !resp
+    end
   end
 end
 
