@@ -7,7 +7,8 @@ require 'logger'
 def ajuda()
   puts "::: Rapidshare V2 :::\n"
   puts ">>> Criado por Samir <samirfor@gmail.com>\n"
-  puts "\nUso:\n\n\trapidshare2.rb http://rapidshare.com/files/294960685/ca.3444.by.lol.part1.rar"
+  puts "\nUso:\n\n\t$ rapidshare.rb http://rapidshare.com/files/294960685/ca.3444.by.lol.part1.rar"
+  puts "\t$ rapidshare.rb -l caminho_da_lista_de_links"
   #`zenity --info --title='::: Rapidshare V2 :::' --text="<b>.: Criado por Samir (samirfor@gmail.com)\n</b>\nUso:\n\nrapidshare2.rb http://rapidshare.com/files/294960685/ca.3444.by.lol.part1.rar" --no-wrap`
 end
 
@@ -27,6 +28,16 @@ def set_link
   link.chomp
 end
 
+def get_multi_links(arquivo)
+  arq = File.open(arquivo, "r")
+  links = Array.new
+  arq.each_line do |linha|
+    links.push(linha.chomp)
+  end
+  arq.close
+  links
+end
+
 ## Entrada: "www.rapidshare.com"
 ## Saída: "195.122.131.19"
 ## Status: OK
@@ -40,14 +51,12 @@ def trata_body(body, host_ssl, host_rs)
   body.gsub!("http://www.rapidshare.com","http://" + host_rs)
   body.gsub!("http://rapidshare.com","http://" + host_rs)
   body.gsub!("https://ssl.rapidshare.com","https://" + host_ssl)
-
   ## Detecta servidores e altera para numeros IP
   body.scan(/http:\/\/rs\w{1,}.rapidshare.com/).each do |server|
     host = URI.parse(server).host
     serverIp = get_ip(host)
     body.gsub!(server, "#{'http://' + serverIp}")
   end
-
   body
 end
 
@@ -95,7 +104,6 @@ def get_justify(body)
     to_log(justify)
     return true
   else
-    to_log("Download sem mensagem de justificativa. OK!")
     return false
   end
 end
@@ -117,23 +125,83 @@ def respaw(body)
   if time != nil
     time.gsub!("try again in about ","").gsub!(" minutes","")
     to_log("Respaw de #{time} minutos.")
-    sleep(60*time.to_i)
+    sleep(60*time.to_i-10)
+    return true
+  else
+    return false
   end
 end
 
+def waiting(body)
+  wait = body.scan(/Please try again in \d+ minutes/)[0]
+  if wait != nil
+    wait.gsub!("Please try again in ","").gsub!(" minutes","")
+    to_log("Tentando novamente em #{wait.to_s} minutos.")
+    sleep(60*wait.to_i-10)
+    return true
+  else
+    return false
+  end
+end
+
+def simultaneo(body)
+  str = nil
+  tempo = 2
+  str = body.scan(/already downloading a file/)[0]
+  if str != nil
+    to_log("Ja existe um download corrente.")
+    to_log("Tentando novamente em #{tempo.to_s} minutos.")
+    sleep(60*tempo-10)
+    return true
+  else
+    return false
+  end
+end
 
 
 #################
 #      Main
 #################
 def main
-  if ARGV[0] == nil and $link == nil
-    $link = set_link
+  if ARGV[0] == nil
+    ajuda
+    exit
   else
-    $link = ARGV[0]
+    if ARGV[0] == "-l"
+      if FileTest.exist?(ARGV[1])
+        to_log("Baixando uma lista de links.")
+        links = get_multi_links(ARGV[1])
+        links.each do |link|
+          next if link == nil or link == ""
+          $link = link
+          begin
+            resp = baixar
+            falhou(10) if !resp
+          end while !resp
+        end
+      else
+        puts "Arquivo não existe."
+        exit
+      end
+    else
+      $link = ARGV[0]
+      begin
+        resp = baixar
+        falhou(10) if !resp
+      end while !resp
+    end
   end
-  to_log("Baixando o link:\n"+$link)
-  url = URI.parse($link)
+end
+
+def baixar
+  return true if $link =~ /#.+/
+  to_log("Baixando o link: "+$link)
+  if $link =~ /http:\/\/\S+\/.+/
+    url = URI.parse($link)
+  else
+    to_log("Link #{$link} inválido evitado.")
+    return true
+  end
   host_rs = get_ip(url.host)
   host_ssl = get_ip('ssl.rapidshare.com')
   path = url.path
@@ -150,7 +218,7 @@ def main
       servidor_host = body.scan(/rs\w{1,}.rapidshare.com/)[0]
       ## Testa se identificou o host
       if servidor_host == nil
-        to_log("\nNão foi possível capturar o servidor.")
+        to_log("Não foi possível capturar o servidor.")
         to_log("Verifique se a URL está correta.")
         exit
       end
@@ -164,20 +232,11 @@ def main
       resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
       resposta = trata_body(resposta.body, host_ssl, host_rs)
 
+      return false if respaw(resposta)
+      return false if waiting(resposta)
       return false if get_no_slot(resposta)
       return false if get_justify(resposta)
-      respaw(resposta)
-
-      wait = resposta.scan(/Please try again in \d+ minutes/)[0]
-      if wait != nil
-        wait.gsub!("Please try again in ","").gsub!(" minutes","")
-        to_log("Aguardando #{wait.to_s} minutos.")
-        wait = wait.to_i
-        sleep(60*wait-10)
-        return false
-      else
-        to_log("Download sem alertas. OK!")
-      end
+      return false if simultaneo(resposta)
       
       #gerar_html(resposta, path_do_arquivo)
       #to_html(resposta, path_do_arquivo)
@@ -191,28 +250,26 @@ def main
       tempo.gsub!("var c=", "").gsub!(";","")
       to_log('Contador identificado.')
       contador(tempo.to_i+1)
+
       download = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
       download.gsub!("dlf.action=\\'","").gsub!("\\","")
-      to_log("\nLink para download: " + download)
+      to_log("Link para download: #{download}")
 
       ## Download com wget
-      baixou = system("wget " + download)
+      baixou = system("wget -c #{download}")
       if baixou
         to_log("Download concluido com sucesso.")
       else
         to_log("Download falhou.")
       end
-      return baixou
     else
       to_log("#{headers.code} #{headers.message}")
     end
+    return baixou
   rescue Timeout::Error
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
   end
 end
 
-begin
-  resp = main
-  falhou(10) if !resp
-end while !resp
+main
