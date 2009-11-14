@@ -213,7 +213,7 @@ def baixar
         return false
       end
       tempo.gsub!("var c=", "").gsub!(";","")
-      to_log('Contador identificado.')
+      to_log("Contador identificado: #{tempo}")
       contador(tempo.to_i+1)
 
       download = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
