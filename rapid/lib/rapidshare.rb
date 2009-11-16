@@ -158,13 +158,25 @@ def simultaneo(body)
   end
 end
 
-def baixar
-  return true if $link =~ /#.+/
-  to_log("Baixando o link: "+$link)
-  if $link =~ /http:\/\/\S+\/.+/
-    url = URI.parse($link)
+def atualiza_lista(links, link_baixado)
+  arq = File.open("lista", 'w')
+  links.each do |link|
+    if link == link_baixado
+      link = link_baixado.insert(0, "#")
+    end
+  end
+  arq.print(texto)
+  arq.flush
+  arq.close
+end
+
+def baixar(link)
+  return true if link =~ /#.+/
+  to_log("Baixando o link: "+link)
+  if link =~ /http:\/\/\S+\/.+/
+    url = URI.parse(link)
   else
-    to_log("Link #{$link} inválido evitado.")
+    to_log("Link #{link} inválido evitado.")
     return true
   end
   host_rs = get_ip(url.host)
@@ -256,10 +268,13 @@ def main
         links = get_multi_links(ARGV[1])
         links.each do |link|
           next if link == nil or link == ""
-          $link = link
           begin
-            resp = baixar
-            falhou(10) if !resp
+            resp = baixar(link)
+            if !resp
+              falhou(10)
+            else
+              atualiza_lista(links, link)
+            end
           end while !resp
         end
         to_log("Fim da lista.")
