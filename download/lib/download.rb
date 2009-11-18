@@ -3,8 +3,39 @@
 require 'net/http'
 require 'socket'
 require 'logger'
+require 'rapidshare'
+require 'megaupload'
 
-$arquivo_log = "rs.log"
+$arquivo_log = "download.log"
+
+def ajuda()
+  puts "::: Down [RS][MU] V2 :::\n"
+  puts ">>> Criado por Samir <samirfor@gmail.com>\n"
+  puts "\nUso:\n\n\t$ download.rb http://rapidshare.com/files/294960685/ca.3444.by.lol.part1.rar"
+  puts "\t$ download.rb -l caminho_da_lista_de_links"
+end
+
+def get_multi_links(arquivo)
+  arq = File.open(arquivo, "r")
+  links = Array.new
+  arq.each_line do |linha|
+    links.push(linha.chomp)
+  end
+  arq.close
+  links
+end
+
+def get_ip(host)
+  return IPSocket.getaddress(host)
+end
+
+def contador(tempo)
+  begin
+    puts "Resta "+tempo.to_s+" segundos."
+    tempo -= 1
+    sleep(1)
+  end while tempo > 0
+end
 
 def to_log(texto)
   logger = Logger.new($arquivo_log, 10, 1024000)
@@ -14,66 +45,21 @@ def to_log(texto)
   puts texto
 end
 
-def get_justify(body)
-  justify = nil
-  justify = body.scan(/<p align=\"justify\">.+<\/p>/)[0]
-  if justify != nil
-    justify.gsub!("<p align=\"justify\">", "").gsub!("</p>", "")
-    to_log(justify)
-    return true
-  else
-    return false
-  end
+def falhou(segundos)
+  to_log("Tentando novamente em #{segundos} segundos.")
+  sleep(segundos)
 end
 
-def get_no_slot(body)
-  str = nil
-  str = body.scan(/no more download slots available/)[0]
-  if str != nil
-    to_log("Não há slots disponíveis no momento.")
-    return true
-  else
-    return false
+def atualiza_lista(links, link_baixado)
+  arq = File.open("lista", 'w')
+  links.each do |link|
+    if link == link_baixado
+      link = link_baixado.insert(0, "#")
+    end
   end
-end
-
-def respaw(body)
-  time = nil
-  time = body.scan(/try again in about \d+ minutes/)[0]
-  if time != nil
-    time.gsub!("try again in about ","").gsub!(" minutes","")
-    to_log("Respaw de #{time} minutos.")
-    sleep(60*time.to_i-10)
-    return true
-  else
-    return false
-  end
-end
-
-def waiting(body)
-  wait = body.scan(/Please try again in \d+ minutes/)[0]
-  if wait != nil
-    wait.gsub!("Please try again in ","").gsub!(" minutes","")
-    to_log("Tentando novamente em #{wait.to_s} minutos.")
-    sleep(60*wait.to_i-10)
-    return true
-  else
-    return false
-  end
-end
-
-def simultaneo(body)
-  str = nil
-  tempo = 2
-  str = body.scan(/already downloading a file/)[0]
-  if str != nil
-    to_log("Ja existe um download corrente.")
-    to_log("Tentando novamente em #{tempo.to_s} minutos.")
-    sleep(60*tempo-10)
-    return true
-  else
-    return false
-  end
+  arq.print(texto)
+  arq.flush
+  arq.close
 end
 
 def baixar(link)
@@ -167,8 +153,8 @@ def main
     ajuda
     exit
   else
-    if FileTest.exist?("rs.log")
-      File.delete("rs.log")
+    if FileTest.exist?($arquivo_log)
+      File.delete($arquivo_log)
     end
     if ARGV[0] == "-l"
       if FileTest.exist?(ARGV[1])

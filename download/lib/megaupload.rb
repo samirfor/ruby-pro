@@ -6,7 +6,7 @@ def start(link)
     codigo = "a"
     while codigo.length != 3 and codigo.length != 0
       pagina = Net::HTTP.get URI.parse(link)
-      if pagina.match("is not available")||pagina.match("This file has expired")
+      if pagina.match("is not available") or pagina.match("This file has expired")
         puts "Arquivo não disponível ou expirado."
       end
       wsize = pagina.match(/Filesize:\<\/b\> (.*)\<\/div\>/)[1]
