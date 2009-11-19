@@ -1,10 +1,9 @@
-#!/usr/bin/env ruby
+$arquivo_log = "download.log"
+$body = nil
 
-require 'net/http'
-require 'socket'
-require 'logger'
-
-$arquivo_log = "rs.log"
+def get_ip(host)
+  return IPSocket.getaddress(host)
+end
 
 def to_log(texto)
   logger = Logger.new($arquivo_log, 10, 1024000)
@@ -14,9 +13,9 @@ def to_log(texto)
   puts texto
 end
 
-def get_justify(body)
+def get_justify
   justify = nil
-  justify = body.scan(/<p align=\"justify\">.+<\/p>/)[0]
+  justify = $body.scan(/<p align=\"justify\">.+<\/p>/)[0]
   if justify != nil
     justify.gsub!("<p align=\"justify\">", "").gsub!("</p>", "")
     to_log(justify)
@@ -26,9 +25,9 @@ def get_justify(body)
   end
 end
 
-def get_no_slot(body)
+def get_no_slot
   str = nil
-  str = body.scan(/no more download slots available/)[0]
+  str = $body.scan(/no more download slots available/)[0]
   if str != nil
     to_log("Não há slots disponíveis no momento.")
     return true
@@ -37,9 +36,9 @@ def get_no_slot(body)
   end
 end
 
-def respaw(body)
+def respaw
   time = nil
-  time = body.scan(/try again in about \d+ minutes/)[0]
+  time = $body.scan(/try again in about \d+ minutes/)[0]
   if time != nil
     time.gsub!("try again in about ","").gsub!(" minutes","")
     to_log("Respaw de #{time} minutos.")
@@ -50,8 +49,8 @@ def respaw(body)
   end
 end
 
-def waiting(body)
-  wait = body.scan(/Please try again in \d+ minutes/)[0]
+def waiting
+  wait = $body.scan(/Please try again in \d+ minutes/)[0]
   if wait != nil
     wait.gsub!("Please try again in ","").gsub!(" minutes","")
     to_log("Tentando novamente em #{wait.to_s} minutos.")
@@ -62,10 +61,10 @@ def waiting(body)
   end
 end
 
-def simultaneo(body)
+def simultaneo
   str = nil
   tempo = 2
-  str = body.scan(/already downloading a file/)[0]
+  str = $body.scan(/already downloading a file/)[0]
   if str != nil
     to_log("Ja existe um download corrente.")
     to_log("Tentando novamente em #{tempo.to_s} minutos.")
@@ -76,67 +75,52 @@ def simultaneo(body)
   end
 end
 
-def baixar(link)
-  return true if link =~ /#.+/
-  to_log("Baixando o link: "+link)
-  if link =~ /http:\/\/\S+\/.+/
-    url = URI.parse(link)
+def ident_server
+  servidor_host = $body.scan(/rs\w{1,}.rapidshare.com/)[0]
+  ## Testa se identificou o host
+  if servidor_host == nil
+    to_log("Não foi possível capturar o servidor.")
+    to_log("Verifique se a URL está correta.")
+    exit
   else
-    to_log("Link #{link} inválido evitado.")
-    return true
+    return servidor_host
   end
-  host_rs = get_ip(url.host)
-  host_ssl = get_ip('ssl.rapidshare.com')
-  path = url.path
-  path_do_arquivo = "#{'/home/'+`whoami`.chomp+'/rapid.html'}"
+end
 
+def baixar_rs(link)
+  url = URI.parse(link)
+  url.host = get_ip(url.host)
   begin
-    http = Net::HTTP.new(host_rs)
+    http = Net::HTTP.new(url.host)
     to_log('Abrindo conexão HTTP...')
-    headers, body = http.get(path)
+    headers, $body = http.get(url.path)
     if headers.code == "200"
-      ## Requisitando pagina de download
       to_log('Conexão HTTPOK 200.')
-
-      servidor_host = body.scan(/rs\w{1,}.rapidshare.com/)[0]
-      ## Testa se identificou o host
-      if servidor_host == nil
-        to_log("Não foi possível capturar o servidor.")
-        to_log("Verifique se a URL está correta.")
-        exit
-      end
-      to_log('Servidor ' + servidor_host + ' identificado.')
-      size = body.scan(/\| (\d+) KB/)[0][0]
+      host = ident_server
+      to_log('Servidor ' + host + ' identificado.')
+      size = $body.scan(/\| (\d+) KB/)[0][0]
       to_log("Tamanho do arquivo: "+size+" KB ou "+(size.to_f/1024).to_s+" MB")
-      servidor_ip = get_ip(servidor_host)
-      body = trata_body(body, host_ssl, host_rs)
-
+      servidor_ip = get_ip(host)
       ## Tratando a resposta do POST (1)
-      ip_url = URI.parse('http://' + servidor_ip + path)
+      ip_url = URI.parse('http://' + servidor_ip + url.path)
       to_log('Enviando requisição de download...')
-      resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
-      resposta = trata_body(resposta.body, host_ssl, host_rs)
-
-      return false if respaw(resposta)
-      return false if waiting(resposta)
-      return false if get_no_slot(resposta)
-      return false if get_justify(resposta)
-      return false if simultaneo(resposta)
-
-      #gerar_html(resposta, path_do_arquivo)
-      #to_html(resposta, path_do_arquivo)
-
+      $body = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
+      return false if respaw
+      return false if waiting
+      return false if get_no_slot
+      return false if get_justify
+      return false if simultaneo
       ## Captura tempo de espera
-      tempo = resposta.scan(/var c=\d{1,};/)[0]
+      tempo = $body.scan(/var c=\d{1,};/)[0]
       if tempo == nil # Testa se identificou o contador
         to_log('Não foi possível capturar o contador.')
         return false
       end
       tempo.gsub!("var c=", "").gsub!(";","")
-      to_log("Contador identificado: #{tempo}")
+      to_log("Contador identificado: #{tempo} segundos.")
       contador(tempo.to_i+1)
 
-      download = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
+      download = $body.scan(/dlf.action=\\\'\S+\\/)[0]
       download.gsub!("dlf.action=\\'","").gsub!("\\","")
       to_log("Link para download: #{download}")
 
@@ -158,47 +142,3 @@ def baixar(link)
     retry
   end
 end
-
-#################
-#      Main
-#################
-def main
-  if ARGV[0] == nil
-    ajuda
-    exit
-  else
-    if FileTest.exist?("rs.log")
-      File.delete("rs.log")
-    end
-    if ARGV[0] == "-l"
-      if FileTest.exist?(ARGV[1])
-        to_log("Baixando uma lista de links.")
-        links = get_multi_links(ARGV[1])
-        links.each do |link|
-          next if link == nil or link == ""
-          begin
-            resp = baixar(link)
-            if !resp
-              falhou(10)
-            else
-              atualiza_lista(links, link)
-            end
-          end while !resp
-        end
-        to_log("Fim da lista.")
-        to_log(">>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<")
-      else
-        puts "Arquivo não existe."
-        exit
-      end
-    else
-      link = ARGV[0]
-      begin
-        resp = baixar(link)
-        falhou(10) if !resp
-      end while !resp
-    end
-  end
-end
-
-main

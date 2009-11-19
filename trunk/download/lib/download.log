@@ -1,0 +1,9 @@
+# Logfile created on Thu Nov 19 18:04:32 -0300 2009 by /
+I, [19/11 18:04:32#13215]  INFO -- : Baixando uma lista de links.
+I, [19/11 18:04:32#13215]  INFO -- : [RS] Checando link(s) do arquivo...
+I, [19/11 18:04:34#13215]  INFO -- : Baixando o link: http://rapidshare.com/files/253814294/L0st-S0201.rarx
+I, [19/11 18:04:34#13215]  INFO -- : [RS] Checando link(s) do arquivo...
+I, [19/11 18:04:37#13215]  INFO -- : Abrindo conexão HTTP...
+I, [19/11 18:04:44#13215]  INFO -- : Conexão HTTPOK 200.
+I, [19/11 18:04:44#13215]  INFO -- : Não foi possível capturar o servidor.
+I, [19/11 18:04:44#13215]  INFO -- : Verifique se a URL está correta.
