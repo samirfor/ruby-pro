@@ -61,3 +61,4 @@ def getmorti(link)
   puts code
   return code.upcase
 end
+end
