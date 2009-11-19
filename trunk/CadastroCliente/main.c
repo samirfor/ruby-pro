@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define NUM_CLIENTES 20
 
@@ -40,7 +41,7 @@ void menu();
 /**
  * Funções
  */
-void menu() {
+void mostra_menu() {
     printf(">> Cadastro v1.0 <<\n");
     printf("1 - Inserir\n");
     printf("2 - Editar\n");
@@ -51,26 +52,22 @@ void menu() {
 }
 
 cliente * new() {
-    cliente clientes[NUM_CLIENTES] = NULL;
-    cliente *p = clientes;
-
-    /*
-        if (p = malloc(sizeof(cliente)*20) == NULL) {
-            printf("Erro de alocação de memória.\n");
-            exit(1);
-        }
-     */
+    cliente clientes[NUM_CLIENTES];
+    cliente *c = malloc(sizeof(clientes*NUM_CLIENTES));
 
     int i;
     for (i = 0; i < NUM_CLIENTES; i++) {
-        clientes[i].isUsado = 0;
-        clientes[i].codigo = i + 1;
-        clientes[i].cpf = NULL;
-        clientes[i].fone = NULL;
-        clientes[i].nome = NULL;
-        clientes[i].rg = NULL;
+        clientes[i].codigo = -1;
+        clientes[i].cpf = -1;
+        clientes[i].fone = -1;
+        clientes[i].nome = -1;
+        clientes[i].rg = -1;
     }
-    return *p;
+    return *c;
+}
+
+void copia(char *cliente) {
+    strcpy();
 }
 
 void inserir(cliente *c) {
@@ -92,7 +89,7 @@ int main(int argc, char** argv) {
 
     clientes = new();
     do {
-        menu();
+        mostra_menu();
         scanf("%c", opcao);
     } while (opcao < 0 && opcao > 5);
     switch (opcao) {
