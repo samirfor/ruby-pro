@@ -1,5 +1,10 @@
 $arquivo_log = "download.log"
-$body = nil
+
+def url_parse(link)
+  url = URI.parse(link)
+  url.host = get_ip(url.host)
+  URI.parse('http://' + url.host + url.path)
+end
 
 def get_ip(host)
   return IPSocket.getaddress(host)
@@ -13,9 +18,9 @@ def to_log(texto)
   puts texto
 end
 
-def get_justify
+def get_justify(body)
   justify = nil
-  justify = $body.scan(/<p align=\"justify\">.+<\/p>/)[0]
+  justify = body.scan(/<p align=\"justify\">.+<\/p>/)[0]
   if justify != nil
     justify.gsub!("<p align=\"justify\">", "").gsub!("</p>", "")
     to_log(justify)
@@ -25,9 +30,9 @@ def get_justify
   end
 end
 
-def get_no_slot
+def get_no_slot(body)
   str = nil
-  str = $body.scan(/no more download slots available/)[0]
+  str = body.scan(/no more download slots available/)[0]
   if str != nil
     to_log("Não há slots disponíveis no momento.")
     return true
@@ -36,9 +41,20 @@ def get_no_slot
   end
 end
 
-def respaw
+def warning_link_premium(body)
+  str = nil
+  str = body.scan(/need a Premium Account/)[0]
+  if str != nil
+    to_log("Este link so pode ser baixado com uma Conta Premium.")
+    return true
+  else
+    return false
+  end
+end
+
+def respaw(body)
   time = nil
-  time = $body.scan(/try again in about \d+ minutes/)[0]
+  time = body.scan(/try again in about \d+ minutes/)[0]
   if time != nil
     time.gsub!("try again in about ","").gsub!(" minutes","")
     to_log("Respaw de #{time} minutos.")
@@ -49,8 +65,8 @@ def respaw
   end
 end
 
-def waiting
-  wait = $body.scan(/Please try again in \d+ minutes/)[0]
+def waiting(body)
+  wait = body.scan(/Please try again in \d+ minutes/)[0]
   if wait != nil
     wait.gsub!("Please try again in ","").gsub!(" minutes","")
     to_log("Tentando novamente em #{wait.to_s} minutos.")
@@ -61,10 +77,10 @@ def waiting
   end
 end
 
-def simultaneo
+def simultaneo(body)
   str = nil
   tempo = 2
-  str = $body.scan(/already downloading a file/)[0]
+  str = body.scan(/already downloading a file/)[0]
   if str != nil
     to_log("Ja existe um download corrente.")
     to_log("Tentando novamente em #{tempo.to_s} minutos.")
@@ -75,8 +91,8 @@ def simultaneo
   end
 end
 
-def ident_server
-  servidor_host = $body.scan(/rs\w{1,}.rapidshare.com/)[0]
+def ident_server(body)
+  servidor_host = body.scan(/rs\w{1,}.rapidshare.com/)[0]
   ## Testa se identificou o host
   if servidor_host == nil
     to_log("Não foi possível capturar o servidor.")
@@ -93,25 +109,26 @@ def baixar_rs(link)
   begin
     http = Net::HTTP.new(url.host)
     to_log('Abrindo conexão HTTP...')
-    headers, $body = http.get(url.path)
+    headers, body = http.get(url.path)
     if headers.code == "200"
       to_log('Conexão HTTPOK 200.')
-      host = ident_server
+      host = ident_server(body)
       to_log('Servidor ' + host + ' identificado.')
-      size = $body.scan(/\| (\d+) KB/)[0][0]
+      size = body.scan(/\| (\d+) KB/)[0][0]
       to_log("Tamanho do arquivo: "+size+" KB ou "+(size.to_f/1024).to_s+" MB")
       servidor_ip = get_ip(host)
       ## Tratando a resposta do POST (1)
-      ip_url = URI.parse('http://' + servidor_ip + url.path)
+      ip_url = "http://" + servidor_ip + url.path
       to_log('Enviando requisição de download...')
-      $body = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
-      return false if respaw
-      return false if waiting
-      return false if get_no_slot
-      return false if get_justify
-      return false if simultaneo
+      res = Net::HTTP.post_form(url_parse(ip_url), {'dl.start'=>'Free'})
+      return false if respaw(res.body)
+      return false if waiting(res.body)
+      return false if get_no_slot(res.body)
+      return false if warning_link_premium(res.body)
+      return false if get_justify(res.body)
+      return false if simultaneo(res.body)
       ## Captura tempo de espera
-      tempo = $body.scan(/var c=\d{1,};/)[0]
+      tempo = res.body.scan(/var c=\d{1,};/)[0]
       if tempo == nil # Testa se identificou o contador
         to_log('Não foi possível capturar o contador.')
         return false
@@ -120,7 +137,7 @@ def baixar_rs(link)
       to_log("Contador identificado: #{tempo} segundos.")
       contador(tempo.to_i+1)
 
-      download = $body.scan(/dlf.action=\\\'\S+\\/)[0]
+      download = res.body.scan(/dlf.action=\\\'\S+\\/)[0]
       download.gsub!("dlf.action=\\'","").gsub!("\\","")
       to_log("Link para download: #{download}")
 

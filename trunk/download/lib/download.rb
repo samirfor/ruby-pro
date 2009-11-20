@@ -25,6 +25,12 @@ def get_multi_links(arquivo)
   links
 end
 
+def url_parse(link)
+  url = URI.parse(link)
+  url.host = get_ip(url.host)
+  URI.parse('http://' + url.host + url.path)
+end
+
 def atualiza_lista(arquivo, link_baixado, status)
   links = get_multi_links(arquivo)
   arq = File.open(arquivo, 'w')
@@ -75,39 +81,17 @@ def falhou(segundos)
   sleep(segundos)
 end
 
-def falhou_evita(link)
-  to_log("Link #{link} inválido evitado.")
-  atualiza_links(ARGV[1], link, "evita")
-end
-
-def checkfiles_rs(links)
+def checkfile_rs(link)
   begin
-    action = "http://rapidshare.com/cgi-bin/checkfiles.cgi"
-    url = URI.parse(action)
-    url.host = get_ip(url.host)
-    ip_url = URI.parse('http://' + url.host + url.path)
-    if links.type == "Array"
-      l = ""
-      links.each do |link|
-        l += link+"\n"
+    Net::HTTP.get_response(url_parse(link)) do |r|
+      if r.body.include?("<h1>FILE DOWNLOAD</h1>")
+        true
+      else
+        false
       end
-    else
-      l = links
     end
-    to_log("[RS] Checando link(s) do arquivo...")
-    res = Net::HTTP.post_form(ip_url, {'urls'=>l})
-    if res == nil
-      to_log("Checagem deu erro. Evitando.")
-      return false
-    end
-    file_inexistent = res.body.scan(/http:\/\/.+" target="_blank">File inexistent/)
-    return true if file_inexistent != nil
-    file_inexistent.each do |f|
-      link = f.gsub("\" target=\"_blank\">File inexistent","")
-      to_log("Link #{link} inexistente!")
-      atualiza_lista(ARGV[1], link, "inexistente")
-    end
-    return false
+  rescue URI::InvalidURIError
+    false
   rescue Timeout::Error
     to_log("Tempo de requisição de checagem esgotado. Tentando novamente.")
     retry
@@ -120,14 +104,23 @@ def baixar(link)
   if link =~ /http:\/\/\S+\/.+/
     url = URI.parse(link)
     if url.host =~ /rapidshare/
-      baixar_rs(link) if checkfiles_rs(link)
+      if checkfile_rs(link)
+        baixar_rs(link)
+      else
+        to_log("Link inválido evitado.")
+        atualiza_lista(ARGV[1], link, "evitar")
+      end
     elsif url.host =~ /megaupload/
       baixar_mu(link)
+    else
+      to_log("Link inválido evitado.")
+      atualiza_lista(ARGV[1], link, "evitar")
     end
   else
-    falhou_evita(link)
-    return true
+    to_log("Link inválido.")
+    atualiza_lista(ARGV[1], link, "inexistente")
   end
+  true
 end
 
 #################
@@ -144,9 +137,6 @@ def main
     if ARGV[0] == "-l"
       if FileTest.exist?(ARGV[1])
         to_log("Baixando uma lista de links.")
-        # Checando arquivos
-        links = get_multi_links(ARGV[1])
-        checkfiles_rs(links)
         # Capturando links do arquivo
         links = get_multi_links(ARGV[1])
         links.each do |link|
@@ -156,7 +146,7 @@ def main
             if !resp
               falhou(10)
             else
-              atualiza_lista(link)
+              atualiza_lista(ARGV[1], link, "ok")
             end
           end while !resp
         end
@@ -176,4 +166,16 @@ def main
   end
 end
 
-main
+
+# The main program
+begin
+  main
+rescue Interrupt => err
+  STDERR.puts "\nSinal de interrupção recebido"
+  to_log("O programa foi encerrado.")
+rescue SystemExit => err
+  to_log("O programa foi encerrado.")
+rescue Exception => err
+  STDERR.puts err
+  exit(1)
+end
