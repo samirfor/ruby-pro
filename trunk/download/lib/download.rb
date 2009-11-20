@@ -60,12 +60,16 @@ def get_ip(host)
   return IPSocket.getaddress(host)
 end
 
-def contador(tempo)
-  begin
-    puts "Resta "+tempo.to_s+" segundos."
-    tempo -= 1
-    sleep(1)
-  end while tempo > 0
+def contador(tempo, mensagem)
+  t = Time.utc(0) + tempo
+  $stdout.sync = true
+  tempo.downto(0) do
+    print "\r" + t.strftime(mensagem)
+    sleep 1
+    t -= 1
+  end
+  print "\r" + " " * mensagem.length + "\r"
+  $stdout.sync = false
 end
 
 def to_log(texto)
@@ -82,9 +86,11 @@ def falhou(segundos)
 end
 
 def checkfile_rs(link)
+  to_log("[RS] Verificando onlinicidade...")
   begin
     Net::HTTP.get_response(url_parse(link)) do |r|
       if r.body.include?("<h1>FILE DOWNLOAD</h1>")
+        to_log("OK!")
         true
       else
         false
@@ -108,7 +114,7 @@ def baixar(link)
         baixar_rs(link)
       else
         to_log("Link inválido evitado.")
-        atualiza_lista(ARGV[1], link, "evitar")
+        atualiza_lista(ARGV[1], link, "inexistente")
       end
     elsif url.host =~ /megaupload/
       baixar_mu(link)
