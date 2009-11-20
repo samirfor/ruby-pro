@@ -6,10 +6,6 @@ def url_parse(link)
   URI.parse('http://' + url.host + url.path)
 end
 
-def get_ip(host)
-  return IPSocket.getaddress(host)
-end
-
 def to_log(texto)
   logger = Logger.new($arquivo_log, 10, 1024000)
   logger.datetime_format = "%d/%m %H:%M:%S"

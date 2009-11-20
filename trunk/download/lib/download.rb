@@ -57,7 +57,16 @@ def atualiza_lista(arquivo, link_baixado, status)
 end
 
 def get_ip(host)
-  return IPSocket.getaddress(host)
+  begin
+    return IPSocket.getaddress(host)
+  rescue
+    case host
+    when "rapidshare.com"
+      return "195.122.131.2"
+    when "www.rapidshare.com"
+      return "195.122.131.2"
+    end
+  end
 end
 
 def contador(tempo, mensagem)
