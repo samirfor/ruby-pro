@@ -1,0 +1,12 @@
+# Logfile created on Fri Nov 20 01:58:27 -0300 2009 by /
+I, [20/11 01:58:27#28557]  INFO -- : Baixando uma lista de links.
+I, [20/11 01:58:27#28557]  INFO -- : Baixando o link: http://rapidshare.com/files/290680194/Lost.S02E01.DVDRip.XviD-FoV.part1.rar
+I, [20/11 01:58:27#28557]  INFO -- : [RS] Verificando onlinicidade...
+I, [20/11 01:58:38#28557]  INFO -- : OK!
+I, [20/11 01:58:38#28557]  INFO -- : Abrindo conexão HTTP...
+I, [20/11 01:58:51#28557]  INFO -- : Conexão HTTPOK 200.
+I, [20/11 01:58:51#28557]  INFO -- : Servidor rs525.rapidshare.com identificado.
+I, [20/11 01:58:51#28557]  INFO -- : Tamanho do arquivo: 209715 KB ou 204.7998046875 MB
+I, [20/11 01:58:51#28557]  INFO -- : Enviando requisição de download...
+I, [20/11 01:59:06#28557]  INFO -- : Ja existe um download corrente.
+I, [20/11 01:59:06#28557]  INFO -- : Tentando novamente em 2 minutos.
