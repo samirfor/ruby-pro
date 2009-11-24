@@ -20,6 +20,9 @@ public class Core {
      */
     public static void main(String[] args) throws InterruptedException {
 
+
+
+
         Html pagina, pagina2, postResp = null, download_link;
         Html rapidshare, ssl;
         Pattern padrao;
