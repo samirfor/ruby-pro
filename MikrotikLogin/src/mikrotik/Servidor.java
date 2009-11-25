@@ -1,14 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mikrotik;
 
 import java.net.InetAddress;
 
 /**
  *
- * @author multi
+ * @author samir
  */
 public class Servidor {
 
@@ -17,6 +13,9 @@ public class Servidor {
 
     public Servidor(String host) {
         this.host = host;
+    }
+
+    public Servidor() {
     }
 
     public String getHost() {
