@@ -31,7 +31,7 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/mantercliente.o
 
 # C Compiler Flags
 CFLAGS=
@@ -57,10 +57,10 @@ dist/Release/GNU-Linux-x86/cadastrocliente: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cadastrocliente ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.c 
+${OBJECTDIR}/mantercliente.o: nbproject/Makefile-${CND_CONF}.mk mantercliente.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/mantercliente.o mantercliente.c
 
 # Subprojects
 .build-subprojects:
