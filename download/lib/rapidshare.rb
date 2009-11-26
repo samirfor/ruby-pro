@@ -93,7 +93,7 @@ def ident_server(body)
   if servidor_host == nil
     to_log("Não foi possível capturar o servidor.")
     to_log("Verifique se a URL está correta.")
-    false
+    exit
   else
     return servidor_host
   end
@@ -109,9 +109,6 @@ def baixar_rs(link)
     if headers.code == "200"
       to_log('Conexão HTTPOK 200.')
       host = ident_server(body)
-      if !host
-        return false
-      end
       to_log('Servidor ' + host + ' identificado.')
       size = body.scan(/\| (\d+) KB/)[0][0]
       to_log("Tamanho do arquivo: "+size+" KB ou "+(size.to_f/1024).to_s+" MB")
@@ -134,7 +131,7 @@ def baixar_rs(link)
       end
       tempo.gsub!("var c=", "").gsub!(";","")
       to_log("Contador identificado: #{tempo} segundos.")
-      contador(tempo.to_i+1,"O download começará em %Hh %Mm %Ss")
+      contador(tempo.to_i+1)
 
       download = res.body.scan(/dlf.action=\\\'\S+\\/)[0]
       download.gsub!("dlf.action=\\'","").gsub!("\\","")
