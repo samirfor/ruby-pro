@@ -17,7 +17,7 @@ def start(link)
           size = wsize.match(/(\d+\.*\d*) KB/)[1].to_f*1024
         end
       end
-      codigo = "http://www.megaupload.com" << pagina.match("/capgen.php[?A-Z0-9a-z]+")[0])
+      #codigo = "http://www.megaupload.com" << pagina.match("/capgen.php[?A-Z0-9a-z]+")[0])
       varis = {
         'd'=> pagina.match("\"d\" value\=\"([A-Z0-9a-z]+)\"")[1],
         'imagecode'=> pagina.match("\"imagecode\" value\=\"([A-Z0-9a-z]+)\"")[1],
@@ -60,5 +60,4 @@ def getmorti(link)
   code = `ssh -o ConnectTimeout=1 -o stricthostkeychecking=no -o BatchMode=yes david@193.147.69.124 megaocr.rb #{link} 2>/dev/null`.chomp
   puts code
   return code.upcase
-end
 end
