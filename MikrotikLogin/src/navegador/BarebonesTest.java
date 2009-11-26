@@ -1,33 +1,11 @@
 package navegador;
 
-//import java.awt.EventQueue;
-//import java.io.InputStream;
-//import java.io.InputStreamReader;
-//import java.io.Reader;
-//import java.net.URL;
-//import java.net.URLConnection;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
-//import javax.swing.JFrame;
-//import org.lobobrowser.html.HtmlRendererContext;
-//import org.lobobrowser.html.UserAgentContext;
-//import org.lobobrowser.html.gui.HtmlPanel;
-//import org.lobobrowser.html.parser.DocumentBuilderImpl;
-//import org.lobobrowser.html.parser.InputSourceImpl;
-//import org.lobobrowser.html.test.SimpleHtmlRendererContext;
-//import org.lobobrowser.html.test.SimpleUserAgentContext;
-//import org.w3c.dom.Document;
-//import org.w3c.dom.html.HTMLElement;
-//import org.xml.sax.InputSource;
-
 import java.awt.EventQueue;
 import java.net.URL;
 import java.net.URLConnection;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.lobobrowser.html.HtmlRendererContext;
 import org.lobobrowser.html.UserAgentContext;
