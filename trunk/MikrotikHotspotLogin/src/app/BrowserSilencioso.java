@@ -108,7 +108,6 @@ public class BrowserSilencioso {
         // GUI thread.
 
         htmlPanel.setDocument(document, rendererContext);
-        System.exit(0);
     }
 
     private static class LocalUserAgentContext
@@ -126,7 +125,7 @@ public class BrowserSilencioso {
 
         @Override
         public String getAppName() {
-            return "BarebonesTest";
+            return "MikrotkHotspotLogin";
         }
 
         @Override
