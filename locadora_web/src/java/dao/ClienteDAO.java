@@ -12,6 +12,8 @@ import java.sql.SQLException;
  */
 public class ClienteDAO {
 
+
+    //TODO ConexaoDAO
     private String host = "jdbc:postgres://localhost/bd?user=root&password=admin";
     private Connection conn = null;
     private boolean status;
