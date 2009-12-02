@@ -50,7 +50,6 @@ end
 # Contador regressivo
 def contador(tempo, mensagem)
   t = Time.utc(0) + tempo
-  to_log(t.strftime("Contador identificado: %Hh %Mm %Ss."))
   $stdout.sync = true
   tempo.downto(0) do
     print "\r" + t.strftime(mensagem)
@@ -73,7 +72,7 @@ end
 
 def falhou(segundos)
   to_log("Tentando novamente em #{segundos} segundos.")
-  sleep(segundos)
+  contador(segundos, "Falta %S segundos.")
 end
 
 ## Captura de erros
@@ -106,7 +105,7 @@ def respaw(body)
   if time != nil
     time.gsub!("try again in about ","").gsub!(" minutes","")
     to_log("Respaw de #{time} minutos.")
-    sleep(60*time.to_i-10)
+    contador(60*time.to_i, "Falta %M min e %S seg.")
     return true
   else
     return false
@@ -118,7 +117,7 @@ def waiting(body)
   if wait != nil
     wait.gsub!("Please try again in ","").gsub!(" minutes","")
     to_log("Tentando novamente em #{wait.to_s} minutos.")
-    sleep(60*wait.to_i-10)
+    contador(60*wait.to_i, "Falta %M min e %S seg.")
     return true
   else
     return false
@@ -132,7 +131,7 @@ def simultaneo(body)
   if str != nil
     to_log("Ja existe um download corrente.")
     to_log("Tentando novamente em #{tempo.to_s} minutos.")
-    sleep(60*tempo-10)
+    contador(60*tempo, "Falta %M min e %S seg.")
     return true
   else
     return false
@@ -144,11 +143,17 @@ def lot_of_users(body)
   if res != nil
     to_log("Atualmente muitos usuários estão baixando arquivos.")
     to_log("Tentando novamente em 2 minutos.")
-    sleep(60*2-10)
+    contador(60*2, "Falta %M min e %S seg.")
     return true
   else
     return false
   end
+end
+
+def debug(body)
+  arq = File.open("rapid.html", "w")
+  arq.print(body)
+  arq.close
 end
 
 
@@ -205,16 +210,17 @@ def baixar
       end
       tempo.gsub!("var c=", "").gsub!(";","")
 
-      puts "Link para download: #{download}"
-
+      t = Time.utc(0) + tempo.to_i
+      to_log(t.strftime("Contador identificado: %Hh %Mm %Ss."))
       contador(tempo.to_i, "O download iniciará em %Hh %Mm %Ss.")
 
-      download = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
-      download.gsub!("dlf.action=\\'","").gsub!("\\","")
-      download = download.extract(download)
+      link = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
+      link.gsub!("dlf.action=\\'","").gsub!("\\","")
+      uri = url_parse(link)
+      ip_host = get_ip(uri.host)
+      download = 'http://' + ip_host + uri.path
 
       to_log("Link para download: #{download}")
-
       ## Download com wget
       baixou = system("wget -c #{download}")
       if baixou
@@ -231,6 +237,9 @@ def baixar
   rescue Timeout::Error
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
+  rescue Exception => err
+    STDERR.puts err
+    to_log(err)
   rescue
   end
 end
