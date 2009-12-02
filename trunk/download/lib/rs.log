@@ -1,0 +1,23 @@
+# Logfile created on Wed Dec 02 19:21:33 -0300 2009 by /
+I, [02/12 19:21:33#7095]  INFO -- : Baixando uma lista de links.
+I, [02/12 19:21:33#7095]  INFO -- : Baixando o link: http://rapidshare.com/files/290904997/Lost.S04E06.RETAiL.DVDRip-REWARD.part1.rar
+I, [02/12 19:21:34#7095]  INFO -- : Abrindo conexão HTTP...
+I, [02/12 19:21:36#7095]  INFO -- : Conexão HTTPOK 200.
+I, [02/12 19:21:36#7095]  INFO -- : Servidor rs498.rapidshare.com identificado.
+I, [02/12 19:21:36#7095]  INFO -- : Enviando requisição de download...
+I, [02/12 19:21:48#7095]  INFO -- : Não há slots disponíveis no momento.
+I, [02/12 19:21:48#7095]  INFO -- : Tentando novamente em 10 segundos.
+I, [02/12 19:21:58#7095]  INFO -- : Baixando o link: http://rapidshare.com/files/290904997/Lost.S04E06.RETAiL.DVDRip-REWARD.part1.rar
+I, [02/12 19:21:58#7095]  INFO -- : Abrindo conexão HTTP...
+I, [02/12 19:22:00#7095]  INFO -- : Conexão HTTPOK 200.
+I, [02/12 19:22:00#7095]  INFO -- : Servidor rs498.rapidshare.com identificado.
+I, [02/12 19:22:00#7095]  INFO -- : Enviando requisição de download...
+I, [02/12 19:22:07#7095]  INFO -- : Não há slots disponíveis no momento.
+I, [02/12 19:22:07#7095]  INFO -- : Tentando novamente em 10 segundos.
+I, [02/12 19:22:17#7095]  INFO -- : Baixando o link: http://rapidshare.com/files/290904997/Lost.S04E06.RETAiL.DVDRip-REWARD.part1.rar
+I, [02/12 19:22:17#7095]  INFO -- : Abrindo conexão HTTP...
+I, [02/12 19:22:19#7095]  INFO -- : Conexão HTTPOK 200.
+I, [02/12 19:22:19#7095]  INFO -- : Servidor rs498.rapidshare.com identificado.
+I, [02/12 19:22:19#7095]  INFO -- : Enviando requisição de download...
+I, [02/12 19:22:26#7095]  INFO -- : Atualmente muitos usuários estão baixando arquivos.
+I, [02/12 19:22:26#7095]  INFO -- : Tentando novamente em 2 minutos.
