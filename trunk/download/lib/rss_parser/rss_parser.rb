@@ -27,8 +27,8 @@ def file_to_a(arquivo)
 end
 
 def parse(fonte)
-  #fonte = "http://www.onelinkmoviez.com/feeds/posts/default?alt=rss"
-  content = "" # raw content of rss feed will be loaded here
+  #exemplo fonte => "http://www.onelinkmoviez.com/feeds/posts/default?alt=rss"
+  content = ""
   open(fonte) do |s| content = s.read end
   rss = RSS::Parser.parse(content, false)
   rss
@@ -42,6 +42,23 @@ def ja_inserido(link)
     end
   end
   return false
+end
+
+def browser(host, path)
+  begin
+    req = Net::HTTP::Get.new(path)
+    res = Net::HTTP.start(host, 10025) do |http|
+      http.request(req)
+    end
+    puts res.body
+  rescue Timeout::Error
+    puts("Tempo de requisição esgotado. Tentando novamente.")
+    retry
+  rescue Exception => err
+    STDERR.puts err
+    puts(err)
+  rescue
+  end
 end
 
 def run
@@ -73,9 +90,56 @@ def run
   if links.length > 0
     # Escreve a lista de links no final da lista de links
     file_put_a("lista", links)
-    puts "Pronto!"
+    puts "Lista salva com sucesso."
   else
     puts "Não há links se serem salvados."
+  end
+  if ARGV[0] =~ /JD/i
+    puts "\nAdicionando links ao JDownloader."
+    unless ARGV[1] == nil
+      jdownloader = ARGV[1]
+      action = "/action/add/links/grabber0/start1/?d="
+      jd_insert = Array.new
+      if FileTest.exist?("jd_historico")
+        jd_lista = file_to_a("jd_historico")
+        links.each do |link|
+          achou = false
+          jd_lista.each do |jd_link|
+            if link == jd_link
+              achou = true
+              next
+            end
+          end
+          if not achou
+            action += "%20" + link
+            jd_insert.push(link)
+          else
+            puts "INFO: #{link} já está no JD."
+          end
+        end
+      else
+        arq = File.open("jd_historico", "a")
+        arq.close
+        links.each do |link|
+          action += "%20" + link
+          jd_insert.push(link)
+        end
+      end
+      if jd_insert.length > 0
+        arq = File.open("jd_historico", 'a')
+        jd_insert.each do |a|
+          arq.print(a + "\n")
+        end
+        arq.close
+        browser(ARGV[1], action)
+      else
+        puts "Nenhum link foi adicionado no JD."
+        File.delete("lista")
+      end
+    end
+  else
+    puts "Especifique o host do JDownloader."
+    exit(1)
   end
 end
 
