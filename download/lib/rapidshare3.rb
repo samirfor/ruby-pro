@@ -222,7 +222,7 @@ def baixar
 
       to_log("Link para download: #{download}")
       ## Download com wget
-      baixou = system("wget -c #{download}")
+      baixou = system("wget #{download}")
       if baixou
         to_log("Download concluido com sucesso.")
         to_log("============")
