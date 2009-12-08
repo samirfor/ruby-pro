@@ -1,13 +1,23 @@
+######################################################################
+#              Lista de séries para download automático
+######################################################################
+# Este arquivo serve para inserir a sua lista padrões de interesse.
+# Especificações:
+# - Um padrão por linha.
+# - Use palavras-chave.
+# - Não é sensível ao contexto (not case-sensitive).
+# - Para comentários, utilize '#' no começo da linha.
+#
+######################################################################
 24
 Californication
 Dexter
 Greek
 Heroes
 House
-Lie to Me
+Lie.*to.*Me
 Lost
 Smallville
-Big Bang Theory
-Two and a Half Men
-thirst
-extract
+Big.*Bang
+Two.*Half.*Men
+The.*Office
