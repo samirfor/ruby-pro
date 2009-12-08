@@ -41,7 +41,9 @@ def get_multi_links(arquivo)
   arq = File.open(arquivo, "r")
   links = Array.new
   arq.each_line do |linha|
-    links.push(linha.chomp)
+    if (not linha =~ /#.*/i) or (not linha == "") or (not linha == nil)
+      links.push(linha.chomp)
+    end
   end
   arq.close
   links
@@ -159,13 +161,12 @@ end
 
 ## Método para download
 def baixar
-  return true if $link =~ /#.+/
   to_log("Baixando o link: "+$link)
   if $link =~ /http:\/\/\S+\/.+/
     url = URI.parse($link)
   else
     to_log("Link #{$link} inválido evitado.")
-    return true
+    exit(1)
   end
   host_rs = get_ip(url.host)
   host_ssl = get_ip('ssl.rapidshare.com')
@@ -174,6 +175,7 @@ def baixar
 
   begin
     http = Net::HTTP.new(host_rs)
+    http.read_timeout = 15
     to_log('Abrindo conexão HTTP...')
     headers, body = http.get(path)
     if headers.code == "200"
@@ -184,16 +186,30 @@ def baixar
       if servidor_host == nil
         to_log("Não foi possível capturar o servidor.")
         to_log("Verifique se a URL está correta. Evitando ...")
-        return true
+        exit(1)
       end
       to_log('Servidor ' + servidor_host + ' identificado.')
       servidor_ip = get_ip(servidor_host)
 
       ## Mandando requisição POST
       ip_url = URI.parse('http://' + servidor_ip + path)
-      to_log('Enviando requisição de download...')
-      resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
-      resposta = resposta.body
+      req = Net::HTTP::Post.new(ip_url.path)
+      req.set_form_data({'dl.start'=>'Free'})
+      res = Net::HTTP.new(ip_url.host, ip_url.port)
+      res.read_timeout = 30
+      res.start do |post|
+        post.request(req)
+      end
+      puts res
+#      unless res.header.code == "200"
+#        to_log('Erro no envio da requisição de download.')
+#        return false
+#      end
+      resposta = res.body
+
+      #      to_log('Enviando requisição de download...')
+      #      resposta = Net::HTTP.post_form(ip_url, )
+      #      resposta = resposta.body
 
       return false if lot_of_users(resposta)
       return false if respaw(resposta)
@@ -261,7 +277,6 @@ def run
         to_log("Baixando uma lista de links.")
         links = get_multi_links(ARGV[1])
         links.each do |link|
-          next if link == nil or link == ""
           $link = link
           begin
             resp = baixar
