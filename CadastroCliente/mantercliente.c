@@ -185,21 +185,20 @@ int main() {
 
     struct cliente aux;
     aux.codigo = 1;
-    strcpy(aux.nome, "ajalmar");
+    strcpy(aux.nome, "samir");
     strcpy(aux.fone, "8599998888");
-    strcpy(aux.RG, "1555555");
-    strcpy(aux.RG, "1555555");
-    strcpy(aux.CPF, "88877766655");
-    strcpy(aux.dataNascimento, "04/07/1979");
+    strcpy(aux.RG, "98765432");
+    strcpy(aux.CPF, "123456789");
+    strcpy(aux.dataNascimento, "01/01/1988");
 
     insert(clientes, aux);
 
     aux.codigo = 2;
-    strcpy(aux.nome, "rocha");
-    strcpy(aux.fone, "8599998888");
-    strcpy(aux.RG, "1555555");
-    strcpy(aux.CPF, "88877766655");
-    strcpy(aux.dataNascimento, "04/07/1979");
+    strcpy(aux.nome, "jona");
+    strcpy(aux.fone, "553322110000");
+    strcpy(aux.RG, "5678901111");
+    strcpy(aux.CPF, "88888888888");
+    strcpy(aux.dataNascimento, "01/01/1989");
 
     insert(clientes, aux);
 
