@@ -22,6 +22,7 @@ def file_to_a(arquivo)
     array.push(linha.chomp) if not linha =~ /#.*/
   end
   arq.close
+#  p array
   array
 end
 
@@ -89,7 +90,7 @@ def jdownloader_insert(links, jd_conf)
     arq.close
     browser(jd_conf[1], action)
   else
-    puts "ERRO: Nenhum link foi adicionado no JD."
+    puts "INFO: Nenhum link foi adicionado no JD."
     File.delete("lista")
   end
 end
@@ -122,6 +123,7 @@ def run(server)
   series = file_to_a("series.list")
   puts "INIT: Carregando lista de exceções."
   excecoes = file_to_a("excecoes.list")
+  puts "INIT: Conectando ao feed RSS..."
   rss = parse(rss_conf)
   puts "INIT: RSS versão: " + rss.version
   links = Array.new
@@ -132,6 +134,7 @@ def run(server)
       if f.title =~ /.*#{s}.*(HDTV|DVDRip).*XviD.*/i
         excecoes.each do |e|
           if f.title =~ /.*#{e}.*/i
+#            puts "arr_excessoes[#{e.index(e)}] = #{e}\t - titulo = #{f.title}"
             next
           end
         end

@@ -1,0 +1,28 @@
+>> Parse para Megaupload
+INIT: Carregando configurações do RSS.
+INIT: Carregando configurações do JDownloader.
+INIT: Carregando lista de séries.
+INIT: Carregando lista de exceções.
+INIT: Conectando ao feed RSS...
+INIT: RSS versão: 1.0
+
+INFO: Procurando links...
++ Californication.S03E11.HDTV.XviD-SYS
+http://www.megaupload.com/?d=69GU3CND
+
++ Dexter.S04E11.HDTV.XviD-SYS
+http://www.megaupload.com/?d=5E4ZSJOQ
+
++ Desperate.Housewives.S06E10.HDTV.XviD-2HD
+http://www.megaupload.com/?d=Y6VVFXLF
+
+
+INFO: Salvando lista de links.
+INFO: Lista salva com sucesso.
+INFO: JD ativado.
+
+INFO: Adicionando links ao JDownloader.
+INFO: http://www.megaupload.com/?d=69GU3CND já está no JD.
+INFO: http://www.megaupload.com/?d=5E4ZSJOQ já está no JD.
+INFO: http://www.megaupload.com/?d=Y6VVFXLF já está no JD.
+INFO: Nenhum link foi adicionado no JD.

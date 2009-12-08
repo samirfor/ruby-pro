@@ -1,3 +1,18 @@
-rmvb
+######################################################################
+#              Lista de palavras-chave exclusivas
+######################################################################
+# Este arquivo serve para excluir da pesquisa o feed que contiver
+# destas palavras listadas abaixo.
+# Especificações:
+# - Um padrão por linha.
+# - Use palavras-chave.
+# - Não é sensível ao contexto (not case-sensitive).
+# - Para comentários, utilize '#' no começo da linha.
+#
+######################################################################
 720p
 complete
+rmvb
+MPG
+Dollhouse
+Housewives
