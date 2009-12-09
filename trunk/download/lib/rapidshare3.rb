@@ -192,24 +192,10 @@ def baixar
       servidor_ip = get_ip(servidor_host)
 
       ## Mandando requisição POST
+      to_log('Enviando requisição de download...')
       ip_url = URI.parse('http://' + servidor_ip + path)
-      req = Net::HTTP::Post.new(ip_url.path)
-      req.set_form_data({'dl.start'=>'Free'})
-      res = Net::HTTP.new(ip_url.host, ip_url.port)
-      res.read_timeout = 30
-      res.start do |post|
-        post.request(req)
-      end
-      puts res
-#      unless res.header.code == "200"
-#        to_log('Erro no envio da requisição de download.')
-#        return false
-#      end
-      resposta = res.body
-
-      #      to_log('Enviando requisição de download...')
-      #      resposta = Net::HTTP.post_form(ip_url, )
-      #      resposta = resposta.body
+      resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
+      resposta = resposta.body
 
       return false if lot_of_users(resposta)
       return false if respaw(resposta)
