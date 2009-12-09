@@ -1,21 +1,10 @@
 package dao;
 
-import java.beans.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Statement;
 
-/**
- *
- * @author multi
- */
 public class ClienteDAO {
 
-
-    //TODO ConexaoDAO
-    private String host = "jdbc:postgres://localhost/bd?user=root&password=admin";
-    private Connection conn = null;
     private boolean status;
     private Statement stm;
     private ResultSet rs;
@@ -135,44 +124,5 @@ public class ClienteDAO {
 
         return cliente;
 
-    }
-
-    protected void finalize() throws Throwable {
-        disconnect();
-        // TODO Auto-generated method stub
-        super.finalize();
-    }
-
-    // operações da classe database
-    private Connection connect() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(host);
-            stm = conn.createStatement();
-            status = true;
-            System.out.println("A conexão foi um sucesso");
-        } catch (ClassNotFoundException e) {
-            System.out.println("excessão Classe não encontrada");
-            e.printStackTrace();
-        } catch (SQLException e) {
-            System.out.println("SQL Exception... Não conectado");
-            e.printStackTrace();
-        }
-        return conn;
-    }
-
-    private void disconnect() {
-        try {
-            conn.close();
-            status = false;
-            System.out.println("Fechando a conexão");
-        } catch (SQLException erro) {
-            System.out.println("Erro no fechamento");
-            // erro.printStackTrace();
-        }
-    }
-
-    public boolean isconnected() {
-        return status;
     }
 }
