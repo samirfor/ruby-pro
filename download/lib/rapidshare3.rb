@@ -165,19 +165,16 @@ def baixar
   if $link =~ /http:\/\/\S+\/.+/
     url = URI.parse($link)
   else
-    to_log("Link #{$link} inválido evitado.")
-    exit(1)
+    to_log("ERRO: Link #{$link} inválido evitado.")
+    return true
   end
   host_rs = get_ip(url.host)
-  host_ssl = get_ip('ssl.rapidshare.com')
-  path = url.path
-  path_do_arquivo = "#{'/home/'+`whoami`.chomp+'/rapid.html'}"
 
   begin
     http = Net::HTTP.new(host_rs)
     http.read_timeout = 15
     to_log('Abrindo conexão HTTP...')
-    headers, body = http.get(path)
+    headers, body = http.get(url.path)
     if headers.code == "200"
       # Requisitando pagina de download
       to_log('Conexão HTTPOK 200.')
@@ -193,7 +190,7 @@ def baixar
 
       ## Mandando requisição POST
       to_log('Enviando requisição de download...')
-      ip_url = URI.parse('http://' + servidor_ip + path)
+      ip_url = URI.parse('http://' + servidor_ip + url.path)
       resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
       resposta = resposta.body
 
