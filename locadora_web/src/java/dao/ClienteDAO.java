@@ -2,7 +2,9 @@ package dao;
 
 import app.Cliente;
 import db.Conexao;
+import excecao.NotInsertedClientException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,19 +24,19 @@ public class ClienteDAO {
         return instance;
     }
 
-    public void insert(Cliente cliente) throws SQLException, ClassNotFoundException {
+    public void insert(Cliente cliente) throws SQLException, ClassNotFoundException, NotInsertedClientException {
         Connection conn = Conexao.getInstance();
         String sql;
         sql = "INSERT INTO cliente ";
         sql += "(cliente_id, nome, fone, rg, cpf, data_nasc) ";
-        sql += "values(?,?,?,?,?,?)";
+        sql += "values(?,?,?,?,?,?);";
         PreparedStatement pStm = conn.prepareStatement(sql);
         pStm.setInt(1, cliente.getId());
         pStm.setString(2, cliente.getNome());
-        pStm.setString(3, String.valueOf(cliente.getFone()));
-        pStm.setString(4, String.valueOf(cliente.getRG()));
-        pStm.setString(5, String.valueOf(cliente.getCPF()));
-        pStm.setString(6, String.valueOf(cliente.getDataNascimento()));
+        pStm.setLong(3, cliente.getFone());
+        pStm.setLong(4, cliente.getRG());
+        pStm.setLong(5, cliente.getCPF());
+        pStm.setDate(6, (Date) cliente.getDataNascimento());
 
         int qtd_insert = pStm.executeUpdate();
         pStm.close();
@@ -45,18 +47,34 @@ public class ClienteDAO {
 
     }
 
-    public void update(Cliente cliente) {
-        String sql = "update clientes set  nome = '" + cliente.getNome() + "'";
-        sql += " where id = " + cliente.getId();
+    public void update(Cliente cliente) throws SQLException, ClassNotFoundException {
+        
+        Connection conn = Conexao.getInstance();
+        String sql;
+        sql = "UPDATE cliente ";
+        sql += "(cliente_id, nome, fone, rg, cpf, data_nasc) ";
+        sql += "values(?,?,?,?,?,?);";
+        PreparedStatement pStm = conn.prepareStatement(sql);
+        pStm.setInt(1, cliente.getId());
+        pStm.setString(2, cliente.getNome());
+        pStm.setLong(3, cliente.getFone());
+        pStm.setLong(4, cliente.getRG());
+        pStm.setLong(5, cliente.getCPF());
+        pStm.setDate(6, (Date) cliente.getDataNascimento());
 
-        try {
-            stm.executeUpdate(sql);
-            status = true;
-        } catch (SQLException e) {
-            status = false;
-            System.out.print("Erro ao executar Query!");
-            e.printStackTrace();
-        }
+        int qtd_insert = pStm.executeUpdate();
+
+//        String sql = "update clientes set  nome = '" + cliente.getNome() + "'";
+//        sql += " where id = " + cliente.getId();
+//
+//        try {
+//            stm.executeUpdate(sql);
+//            status = true;
+//        } catch (SQLException e) {
+//            status = false;
+//            System.out.print("Erro ao executar Query!");
+//            e.printStackTrace();
+//        }
 
     }
 
