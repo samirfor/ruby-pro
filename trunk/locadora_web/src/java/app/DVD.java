@@ -1,6 +1,6 @@
+package app;
 
 import java.util.Date;
-
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.B87BE2ED-02EB-93A2-A8AD-799F95C4B035]
@@ -11,16 +11,14 @@ public class DVD {
     // #[regen=yes,id=DCE.0B5B7FE7-75DA-40F4-0A17-EC44EEB1EB48]
     // </editor-fold> 
     private int id;
-
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.58C0365C-769E-F327-961B-B8C1BB794396]
     // </editor-fold> 
     private Date dataCompra;
-
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E33FB6C8-A501-FA98-FD29-D2EAEB1421A7]
     // </editor-fold> 
-    private double preco;
+    private Double preco;
 
     public DVD() {
     }
@@ -41,13 +39,12 @@ public class DVD {
         this.id = id;
     }
 
-    public double getPreco() {
+    public Double getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(Double preco) {
         this.preco = preco;
     }
-
 }
 
