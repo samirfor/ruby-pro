@@ -1,16 +1,18 @@
 package dao;
 
+import app.Cliente;
+import db.Conexao;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
 
 public class ClienteDAO {
 
     private boolean status;
-    private Statement stm;
-    private ResultSet rs;
+    private static ClienteDAO instance;
 
     private ClienteDAO() {
-        connect();
     }
 
     public static ClienteDAO getInstance() {
@@ -20,16 +22,25 @@ public class ClienteDAO {
         return instance;
     }
 
-    public void insert(Cliente cliente) {
-        String sql = "insert into clientes(nome) values('" + cliente.getNome() + "')";
+    public void insert(Cliente cliente) throws SQLException, ClassNotFoundException {
+        Connection conn = Conexao.getInstance();
+        String sql;
+        sql = "INSERT INTO cliente ";
+        sql += "(cliente_id, nome, fone, rg, cpf, data_nasc) ";
+        sql += "values(?,?,?,?,?,?)";
+        PreparedStatement pStm = conn.prepareStatement(sql);
+        pStm.setInt(1, cliente.getId());
+        pStm.setString(2, cliente.getNome());
+        pStm.setString(3, String.valueOf(cliente.getFone()));
+        pStm.setString(4, String.valueOf(cliente.getRG()));
+        pStm.setString(5, String.valueOf(cliente.getCPF()));
+        pStm.setString(6, String.valueOf(cliente.getDataNascimento()));
 
-        try {
-            stm.executeUpdate(sql);
-            status = true;
-        } catch (SQLException e) {
-            status = false;
-            System.out.print("Erro ao executar Query!");
-            e.printStackTrace();
+        int qtd_insert = pStm.executeUpdate();
+        pStm.close();
+
+        if (qtd_insert < 1) {
+            throw new NotInsertedClientException();
         }
 
     }
@@ -95,7 +106,8 @@ public class ClienteDAO {
             while (rs.next()) {
                 cliente = fillBean(rs);
                 lista.add(cliente);
-            };
+            }
+            ;
 
 
             status = true;
@@ -124,5 +136,12 @@ public class ClienteDAO {
 
         return cliente;
 
+    }
+
+    public ResultSet connect() throws SQLException, ClassNotFoundException {
+        Connection conn = Conexao.getInstance();
+        stm = conn.createStatement();
+
+        return this.rs;
     }
 }

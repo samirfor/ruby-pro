@@ -1,6 +1,6 @@
+package app;
 
 import java.util.Date;
-
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.9085111D-FAA3-ECB9-FE6B-6AF7DD878902]
@@ -11,12 +11,10 @@ public class ItemMovimentacao {
     // #[regen=yes,id=DCE.98B53DBF-6C01-62BA-409C-FA9D9D5A64FC]
     // </editor-fold> 
     private int id;
-
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.D92E55B4-B4A3-72AB-E7C2-D8E9DF50B04B]
     // </editor-fold> 
     private Date data;
-
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.3C826BF0-99C7-705E-B4EF-C2696284FBC3]
     // </editor-fold> 
@@ -48,6 +46,4 @@ public class ItemMovimentacao {
     public void setId(int id) {
         this.id = id;
     }
-
 }
-

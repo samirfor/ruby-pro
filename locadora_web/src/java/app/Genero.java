@@ -1,20 +1,20 @@
+package app;
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.6E4F29F0-3EE5-D20C-A1D8-7FDF15A7F6CC]
+// #[regen=yes,id=DCE.588399AD-641A-D5A1-FE12-0555339625BF]
 // </editor-fold> 
-public class Situacao {
+public class Genero {
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.6FDA73D5-6DBD-5286-AD13-9A0EDF34E7BF]
+    // #[regen=yes,id=DCE.5DF47E1C-B9F8-EF66-E4A4-A4B39695F4C7]
     // </editor-fold> 
     private int id;
-
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.8E80A3CC-6BD1-7E48-434F-334CF9BE95A5]
+    // #[regen=yes,id=DCE.D92F10D4-0330-0DAF-AF34-567E6B29157B]
     // </editor-fold> 
     private String descricao;
 
-    public Situacao() {
+    public Genero() {
     }
 
     public String getDescricao() {
@@ -32,6 +32,5 @@ public class Situacao {
     public void setId(int id) {
         this.id = id;
     }
-
 }
 
