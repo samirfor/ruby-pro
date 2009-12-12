@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdio_ext.h>
+#include <string.h>
+
 /*
  * 
  */
@@ -42,38 +44,54 @@ void inserir_dependente();
 void listar_cliente();
 void alterar_dependente();
 void listar_dependentes();
-*/
+ */
 
-
-void ler(char *s){
+/*
+void ler(char *s) {
     __fpurge(stdin);
-	gets(s);
+    scanf(s);
 }
+ */
 
-
-void inserir_cliente(){
+void inserir_cliente() {
     Cliente clientes[1];
     FILE * arq;
-    char nome[30];
-    
+    int id, i;
+
     printf("nome:\n");
-    ler(clientes->nome);
+    scanf("%s", &clientes->nome);
     printf("\n fone: \n");
-    ler(clientes->fone);
+    scanf("%s", &clientes->fone);
 
-    arq = fopen("clientes2","wrb+");
-    fwrite(&clientes->nome,sizeof(clientes->nome),1,arq);
-    fwrite(&clientes->fone,sizeof(clientes->fone),1,arq);
+    arq = fopen("clientes2", "a+b");
+    fwrite(&clientes, sizeof (Cliente), 1, arq);
 
-  //rewind(arq);
-
-    fread(&nome,sizeof(nome),1,arq);
-    printf("%s",clientes->nome);
     fclose(arq);
+    menu();
 }
 
-int main(int argc, char** argv) {
+void listar_cliente() {
+    FILE * arq;
+    Cliente aux[1];
 
+    arq = fopen("clientes2", "rb");
+    printf("nome      fone \n");
+    while (!feof(arq)) {
+        fread(&aux, sizeof (Cliente), 1, arq);
+        printf("%s  ,  %s\n ", aux->nome, aux->fone);
+
+        // printf("id\n", aux->id);
+    }
+
+    printf("depois\n");
+    rewind(arq);
+    fread(&aux, sizeof (Cliente), 1, arq);
+    printf("%s  ,  %s\n ", aux->nome, aux->fone);
+    fclose(arq);
+    menu();
+}
+
+void menu() {
     int opcao;
 
     do {
@@ -86,30 +104,39 @@ int main(int argc, char** argv) {
         printf("6 : alterar dependente \n");
         printf("7 : excluir dependente \n");
         printf("8 : listar dependente \n");
+        printf("9 : sair");
         scanf("%d", &opcao);
-    } while (opcao < 1 || opcao > 8);
+    } while (opcao < 1 || opcao > 9);
 
     switch (opcao) {
         case 1: inserir_cliente();
             break;
-/*
-        case 2: alterar_cliente();
-            break;
-        case 3: excluir_cliente();
-            break;
-        case 4: inserir_dependente();
-            break;
+            /*
+                    case 2: alterar_cliente();
+                        break;
+                    case 3: excluir_cliente();
+                        break;
+                    case 4: inserir_dependente();
+                        break;
+             */
         case 5: listar_cliente();
             break;
-        case 6: alterar_dependente();
-            break;
-        case 7: excluir_dependente();
-            break;
-        case 8: listar_dependentes();
-            break;
-*/
+            /*
+                    case 6: alterar_dependente();
+                        break;
+                    case 7: excluir_dependente();
+                        break;
+                    case 8: listar_dependentes();
+                        break;
+             */
+        case 9: exit(0);
     }
 
+
+}
+
+int main(int argc, char** argv) {
+    menu();
 
     return 0;
 }
