@@ -31,20 +31,6 @@ struct Dependente {
 typedef struct Cliente Cliente;
 typedef struct Dependente Dependente;
 
-/*protipo das funçoes*/
-
-/*
- void menu();
- void inserir_cliente();
- void alterar_cliente();
- void excluir_cliente();
- void inserir_dependente();
- void excluir_dependente();
- void listar_cliente();
- void alterar_dependente();
- void listar_dependentes();
- */
-
 void ler(char *s) {
     __fpurge(stdin);
     gets(s);
@@ -53,16 +39,12 @@ void ler(char *s) {
 void init() {
     FILE * arq1, *arq2;
     int valor = 1;
-    //int aux;
 
     arq1 = fopen("id_clientes.dat", "a+b");
     fwrite(&valor, sizeof (int), 1, arq1);
 
     arq2 = fopen("id_dependente.dat", "a+b");
     fwrite(&valor, sizeof (int), 1, arq2);
-    //rewind(arq1);
-    //fread(&aux, sizeof(int), 1, arq1);
-    //printf("valor = %d", aux);
     fclose(arq1);
     fclose(arq2);
 
@@ -113,8 +95,9 @@ void listar_cliente() {
 
     printf("id\tnome\tfone\n");
     while (!feof(arq1)) {
-        fread(&aux, sizeof (Cliente), 1, arq1);
-        printf("%d\t%s\t%s\n ", aux->id, aux->nome, aux->fone);
+        if (fread(&aux, sizeof (Cliente), 1, arq1) != NULL) {
+            printf("%d\t%s\t%s\n ", aux->id, aux->nome, aux->fone);
+        }
     }
     fclose(arq1);
     menu();
