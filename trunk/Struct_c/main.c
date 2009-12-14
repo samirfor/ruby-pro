@@ -273,19 +273,6 @@ void alterar_dependente() {
     menu();
 }
 
-/*
-
-Cliente * zerar(){
-    Cliente cliente;
-
-    cliente.fone='\0';
-    cliente.nome='\0';
-    cliente.id='\0';
-
-    return cliente;
-}
- */
-
 void deletar_cliente() {
     Cliente cliente;
     Cliente aux;
@@ -333,25 +320,6 @@ void deletar_cliente() {
     fclose(arq);
     fclose(arq_aux);
 
-    /*
-        arq = fopen("clientes.dat", "r+b");
-        fseek(arq, (id - 1) * sizeof (Cliente), 0);
-        fwrite(&cliente, sizeof (Cliente), 1, arq);
-        fclose(arq);
-     */
-
-    /*
-        printf("deseja excluir tambem os dependentes?\n");
-
-        do {
-            printf("digite 1 para sim e 0 para não!!!\n");
-            scanf("%d", &flag);
-        } while (flag < 0 || flag > 1);
-
-        if (flag) {
-            deletar_dependente();
-        }
-     */
     menu();
 }
 
@@ -388,10 +356,9 @@ void menu() {
             break;
         case 2:
             alterar_cliente();
-            break; /*
-		 case 3: excluir_cliente();
-		 break;
-		 */
+            break;
+        case 3: deletar_cliente();
+            break;
         case 4:
             inserir_dependente();
             break;
