@@ -29,7 +29,7 @@ struct Dependente {
 };
 
 typedef struct Cliente Cliente;
-typedef struct Dependente Depedente;
+typedef struct Dependente Dependente;
 
 /*protipo das funçoes*/
 
@@ -122,7 +122,7 @@ void listar_cliente() {
 
 void inserir_dependente() {
 
-    Depedente dependente[1];
+    Dependente dependente[1];
     FILE * arq1, *arq2;
     int id = 0, id_cliente;
     char nome[30];
@@ -172,13 +172,13 @@ void inserir_dependente() {
 
 void listar_dependentes() {
     FILE * arq1;
-    Depedente aux[1];
+    Dependente aux[1];
     //	int aux_id;
 
     arq1 = fopen("dependentes.dat", "rb");
     printf("id   id cliente    nome      fone \n");
     while (!feof(arq1)) {
-        fread(&aux, sizeof (Depedente), 1, arq1);
+        fread(&aux, sizeof (Dependente), 1, arq1);
         printf("%d  , %d  ,  %s  ,  %s\n ", aux->id, aux->id_cliente,
                 aux->nome, aux->fone);
     }
@@ -207,6 +207,43 @@ int procura_cliente(char nome[]) {
 
 void alterar_cliente() {
     Cliente cliente;
+    Cliente aux;
+    char nome[30];
+    int id = 0;
+    FILE * arq;
+
+    printf("qual cliente deseja alterar:\n");
+    ler(nome);
+    printf("nome:\n");
+    ler(cliente.nome);
+    printf("\n fone: \n");
+    ler(cliente.fone);
+
+    id = procura_cliente(nome);
+    if (!id) {
+        printf("\n CLIENTE INEXISTENTE \n");
+        menu();
+    }
+    arq = fopen("clientes.dat", "r+b");
+
+    fseek(arq, (id - 1) * sizeof (Cliente), 0);
+    fread(&aux, sizeof (Cliente), 1, arq);
+    cliente.id = aux.id;
+    fseek(arq, (id - 1) * sizeof (Cliente), 0);
+    fwrite(&cliente, sizeof (Cliente), 1, arq);
+    fclose(arq);
+
+    //arq = fopen("clientes.dat", "r+b");
+    //fseek(arq, (id - 1) * sizeof(Cliente), 0);
+    printf("o cliente  %s modificado", aux.nome);
+
+
+    //fclose(arq);
+    menu();
+}
+
+void alterar_dependente(){
+    Dependente dependente;
     Cliente aux;
     char nome[30];
     int id = 0;
@@ -274,10 +311,9 @@ void menu() {
             break;
         case 5:
             listar_cliente();
-            /*
-             break;
-             case 6: alterar_dependente();
-             break;
+            break;
+        case 6: alterar_dependente();
+            break; /*
              case 7: excluir_dependente();
              break;*/
         case 8:
