@@ -8,7 +8,6 @@ import excecao.NameNotFilledException;
 import excecao.NotInsertedClientException;
 import java.sql.SQLException;
 import java.util.List;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ClienteBO {
 
@@ -25,7 +24,7 @@ public class ClienteBO {
     }
 
     public void insert(Cliente cliente) throws ClassNotFoundException,
-            SQLException, NotImplementedException, NameNotFilledException,
+            SQLException, NameNotFilledException,
             IdNotFilledException, NotInsertedClientException {
         
         // realizar alguma validação
