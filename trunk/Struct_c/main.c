@@ -173,7 +173,6 @@ void inserir_dependente() {
 void listar_dependentes() {
     FILE * arq1;
     Dependente aux[1];
-    //	int aux_id;
 
     arq1 = fopen("dependentes.dat", "rb");
     printf("id   id cliente    nome      fone \n");
@@ -193,6 +192,25 @@ int procura_cliente(char nome[]) {
     if ((arq = fopen("clientes.dat", "rb")) != NULL) {
         while (!feof(arq)) {
             fread(&aux, sizeof (Cliente), 1, arq);
+            if (!(strcmp(aux.nome, nome))) {
+                return aux.id;
+            }
+        }
+        return 0;
+    } else {
+        printf("erro ao abrir o arquivo");
+        exit(1);
+    }
+    return 0;
+}
+
+int procura_dependente(char nome[]) {
+    FILE * arq;
+    Dependente aux;
+
+    if ((arq = fopen("dependentes.dat", "rb")) != NULL) {
+        while (!feof(arq)) {
+            fread(&aux, sizeof (Dependente), 1, arq);
             if (!(strcmp(aux.nome, nome))) {
                 return aux.id;
             }
@@ -242,41 +260,78 @@ void alterar_cliente() {
     menu();
 }
 
-void alterar_dependente(){
+void alterar_dependente() {
     Dependente dependente;
-    Cliente aux;
+    Dependente aux;
     char nome[30];
     int id = 0;
     FILE * arq;
 
-    printf("qual cliente deseja alterar:\n");
+    printf("qual dependente deseja alterar:\n");
     ler(nome);
     printf("nome:\n");
-    ler(cliente.nome);
+    ler(dependente.nome);
     printf("\n fone: \n");
-    ler(cliente.fone);
+    ler(dependente.fone);
 
-    id = procura_cliente(nome);
+    id = procura_dependente(nome);
     if (!id) {
         printf("\n CLIENTE INEXISTENTE \n");
         menu();
     }
-    arq = fopen("clientes.dat", "r+b");
+    arq = fopen("dependentes.dat", "r+b");
 
-    fseek(arq, (id - 1) * sizeof (Cliente), 0);
-    fread(&aux, sizeof (Cliente), 1, arq);
-    cliente.id = aux.id;
-    fseek(arq, (id - 1) * sizeof (Cliente), 0);
+    fseek(arq, (id - 1) * sizeof (Dependente), 0);
+    fread(&aux, sizeof (Dependente), 1, arq);
+    dependente.id = aux.id;
+    dependente.id_cliente = aux.id_cliente;
+    fseek(arq, (id - 1) * sizeof (Dependente), 0);
+    fwrite(&dependente, sizeof (Dependente), 1, arq);
+    fclose(arq);
+    printf("o cliente  %s modificado", aux.nome);
+    menu();
+}
+
+void deletar_cliente() {
+    Cliente cliente ;
+    FILE * arq;
+    char nome[30];
+    int id, flag;
+
+    printf("qual cliente deseja excluir?\n");
+    ler(nome);
+    //cliente.nome='i';
+
+    if(!(id = procura_cliente(nome))){
+        printf("cliente não existe\n");
+        menu();
+    }
+    arq = fopen("clientes.dat", "r+b");
+    fseek(arq, (id - 1)*sizeof(Cliente), 0);
     fwrite(&cliente, sizeof (Cliente), 1, arq);
     fclose(arq);
 
-    //arq = fopen("clientes.dat", "r+b");
-    //fseek(arq, (id - 1) * sizeof(Cliente), 0);
-    printf("o cliente  %s modificado", aux.nome);
+    printf("deseja excluir tambem os dependentes?\n");
 
+    do {
+        printf("digite 1 para sim e 0 para não!!!\n");
+        scanf("%d",&flag);
+    }while(flag < 0 || flag >1);
 
-    //fclose(arq);
+    if(flag){
+        deletar_dependente();
+    }
     menu();
+}
+
+void deletar_dependente() {
+    Dependente dependente;
+    FILE *arq;
+    char nome[30];
+    int id;
+
+    printf("qual dependente deseja excluir");
+
 }
 
 void menu() {
@@ -343,15 +398,15 @@ int main(int argc, char** argv) {
 
  Funcionalidades:
 
- 1 - Inserir Cliente     feito
- 2 - Alterar Cliente
+ 1 - Inserir Cliente       feito
+ 2 - Alterar Cliente       feito
  3 - Excluir Cliente (perguntar se irá excluir ou não os dependentes)
  4 - Listar Cliente   feito
- 5 - Inserir Dependente  feito
- 6 - Alterar Dependente
+ 5 - Inserir Dependente    feito
+ 6 - Alterar Dependente    feito
  7 - Excluir Dependente
- 8 - Listar Dependente   feito
- 9 - Menu de Opções      feito
+ 8 - Listar Dependente     feito
+ 9 - Menu de Opções        feito
 
  salvar os arquivos em binários:
 
