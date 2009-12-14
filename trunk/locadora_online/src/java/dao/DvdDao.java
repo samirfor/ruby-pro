@@ -33,7 +33,7 @@ public class DvdDao {
         PreparedStatement pStm = conn.prepareStatement(sql);
         pStm.setDate(1, dvd.getDataCompra());
         pStm.setDouble(2, dvd.getPreco());
-        pStm.setInt(3, dvd.getFilmeId());
+        pStm.setInt(3, dvd.getFilme().getId());
 
         int qtd_insert = pStm.executeUpdate();
         pStm.close();
@@ -53,8 +53,8 @@ public class DvdDao {
         PreparedStatement pStm = conn.prepareStatement(sql);
         pStm.setDate(1, dvd.getDataCompra());
         pStm.setDouble(2, dvd.getPreco());
-        pStm.setInt(3, dvd.getSituacaoId());
-        pStm.setInt(4, dvd.getFilmeId());
+        pStm.setInt(3, dvd.getSituacao().getId());
+        pStm.setInt(4, dvd.getFilme().getId());
         pStm.setInt(5, dvd.getId());
 
         try {
@@ -95,8 +95,8 @@ public class DvdDao {
             d.setId(rs.getInt("dvd_id"));
             d.setDataCompra(rs.getDate("data_compra"));
             d.setPreco(rs.getDouble("preco"));
-            d.setSituacaoId(rs.getInt("situacao"));
-            d.setFilmeId(rs.getInt("filme_id"));
+            d.getSituacao().setId(rs.getInt("situacao"));
+            d.getFilme().setId(rs.getInt("filme_id"));
         } else {
             d = null;
         }
@@ -116,18 +116,17 @@ public class DvdDao {
             d.setId(rs.getInt("dvd_id"));
             d.setDataCompra(rs.getDate("data_compra"));
             d.setPreco(rs.getDouble("preco"));
-            d.setSituacaoId(rs.getInt("situacao"));
-            d.setFilmeId(rs.getInt("filme_id"));
+            d.getSituacao().setId(rs.getInt("situacao"));
+            d.getFilme().setId(rs.getInt("filme_id"));
             lista.add(d);
         }
         stm.close();
         return lista;
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        Conexao.closeConnection();
-        super.finalize();
-    }
+//    @Override
+//    protected void finalize() throws Throwable {
+//        Conexao.closeConnection();
+//        super.finalize();
+//    }
 }
-

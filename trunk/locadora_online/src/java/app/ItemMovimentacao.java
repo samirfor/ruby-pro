@@ -19,6 +19,7 @@ public class ItemMovimentacao {
     // #[regen=yes,id=DCE.3C826BF0-99C7-705E-B4EF-C2696284FBC3]
     // </editor-fold> 
     private Date dataEntrega;
+    private DVD dvd = new DVD();
 
     public ItemMovimentacao() {
     }
@@ -45,5 +46,13 @@ public class ItemMovimentacao {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public DVD getDvd() {
+        return dvd;
+    }
+
+    public void setDvd(DVD dvd) {
+        this.dvd = dvd;
     }
 }

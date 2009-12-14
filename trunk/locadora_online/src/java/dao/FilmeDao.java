@@ -39,7 +39,7 @@ public class FilmeDao {
         pStm.setInt(3, filme.getDuracao());
         pStm.setString(4, filme.getDiretor());
         pStm.setInt(5, filme.getGenero().getId());
-        
+
 
         int qtd_insert = pStm.executeUpdate();
         pStm.close();
@@ -134,9 +134,9 @@ public class FilmeDao {
         return lista;
     }
 
-    /*protected void finalize() throws Throwable {
-   Conexao.closeConnection();
-   super.finalize();
-   }*/
+//    protected void finalize() throws Throwable {
+//        Conexao.closeConnection();
+//        super.finalize();
+//    }
 }
 
