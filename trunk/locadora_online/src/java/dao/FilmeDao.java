@@ -27,19 +27,18 @@ public class FilmeDao {
         return instance;
     }
 
-    public void insert(Filme filme, Genero genero) throws SQLException, ClassNotFoundException, NotInsertedClientException {
+    public void insert(Filme filme) throws SQLException, ClassNotFoundException, NotInsertedClientException {
         Connection conn = Conexao.getInstance();
         String sql;
         sql = "INSERT INTO filme ";
-        sql += "(filme_id, titulo, ano, duracao, diretor, genero_id) ";
-        sql += "VALUES (?,?,?,?,?,?);";
+        sql += "(titulo, ano, duracao, diretor, genero_id) ";
+        sql += "VALUES (?,?,?,?,?);";
         PreparedStatement pStm = conn.prepareStatement(sql);
-        pStm.setInt(1, filme.getId());
-        pStm.setString(2, filme.getTitulo());
-        pStm.setInt(3, filme.getAno());
-        pStm.setInt(4, filme.getDuracao());
-        pStm.setString(5, filme.getDiretor());
-        pStm.setInt(6, genero.getId());
+        pStm.setString(1, filme.getTitulo());
+        pStm.setInt(2, filme.getAno());
+        pStm.setInt(3, filme.getDuracao());
+        pStm.setString(4, filme.getDiretor());
+        pStm.setInt(5, filme.getGenero().getId());
         
 
         int qtd_insert = pStm.executeUpdate();
@@ -105,7 +104,7 @@ public class FilmeDao {
             f.setTitulo(rs.getString("titulo"));
             f.setAno(rs.getInt("duracao"));
             f.setDiretor(rs.getString("diretor"));
-            f.setGeneroId(rs.getInt("genero_id"));
+            f.getGenero().setId(rs.getInt("genero_id"));
         } else {
             f = null;
         }
@@ -115,7 +114,7 @@ public class FilmeDao {
     }
 
     public List<Filme> findAll() throws SQLException, ClassNotFoundException {
-        String sql = "SELECT * FROM filme;";
+        String sql = "SELECT f.*, g.descricao FROM filme f , genero g WHERE f.genero_id = g.genero_id ORDER BY f.filme_id";
         List<Filme> lista = new ArrayList<Filme>();
         Connection conn = Conexao.getInstance();
         Statement stm = conn.createStatement();
@@ -124,18 +123,20 @@ public class FilmeDao {
             Filme f = new Filme();
             f.setId(rs.getInt("filme_id"));
             f.setTitulo(rs.getString("titulo"));
-            f.setAno(rs.getInt("duracao"));
+            f.setAno(rs.getInt("ano"));
+            f.setDuracao(rs.getInt("duracao"));
             f.setDiretor(rs.getString("diretor"));
-            f.setGeneroId(rs.getInt("genero_id"));
+            f.getGenero().setId(rs.getInt("genero_id"));
+            f.getGenero().setDescricao(rs.getString("descricao"));
             lista.add(f);
         }
         stm.close();
         return lista;
     }
 
-    protected void finalize() throws Throwable {
-        Conexao.closeConnection();
-        super.finalize();
-    }
+    /*protected void finalize() throws Throwable {
+   Conexao.closeConnection();
+   super.finalize();
+   }*/
 }
 

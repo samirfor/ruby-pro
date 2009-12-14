@@ -103,7 +103,7 @@ public class GeneroDao {
         ResultSet rs = stm.executeQuery(sql);
         while (rs.next()) {
             Genero f = new Genero();
-            f.setId(rs.getInt("filme_id"));
+            f.setId(rs.getInt("genero_id"));
             f.setDescricao(rs.getString("descricao"));
             lista.add(f);
         }

@@ -25,7 +25,7 @@ public class Filme {
     // #[regen=yes,id=DCE.53556548-9767-CF15-6BA0-ACB2696A0325]
     // </editor-fold> 
     private String diretor;
-    private Genero genero;
+    private Genero genero = new Genero();
 
     public Filme() {
     }
