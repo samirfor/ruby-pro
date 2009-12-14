@@ -111,10 +111,10 @@ void listar_cliente() {
 
     arq1 = fopen("clientes.dat", "rb");
 
-    printf("id   nome      fone \n");
+    printf("id\tnome\tfone\n");
     while (!feof(arq1)) {
         fread(&aux, sizeof (Cliente), 1, arq1);
-        printf("%d    %s  ,  %s\n ", aux->id, aux->nome, aux->fone);
+        printf("%d\t%s\t%s\n ", aux->id, aux->nome, aux->fone);
     }
     fclose(arq1);
     menu();
@@ -177,9 +177,11 @@ void listar_dependentes() {
     arq1 = fopen("dependentes.dat", "rb");
     printf("id   id cliente    nome      fone \n");
     while (!feof(arq1)) {
-        fread(&aux, sizeof (Dependente), 1, arq1);
-        printf("%d  , %d  ,  %s  ,  %s\n ", aux->id, aux->id_cliente,
-                aux->nome, aux->fone);
+
+        if (fread(&aux, sizeof (Dependente), 1, arq1) != NULL) {
+            printf("%d  , %d  ,  %s  ,  %s\n ", aux->id, aux->id_cliente,
+                    aux->nome, aux->fone);
+        }
     }
     fclose(arq1);
     menu();
@@ -251,12 +253,8 @@ void alterar_cliente() {
     fwrite(&cliente, sizeof (Cliente), 1, arq);
     fclose(arq);
 
-    //arq = fopen("clientes.dat", "r+b");
-    //fseek(arq, (id - 1) * sizeof(Cliente), 0);
     printf("o cliente  %s modificado", aux.nome);
 
-
-    //fclose(arq);
     menu();
 }
 
@@ -292,35 +290,85 @@ void alterar_dependente() {
     menu();
 }
 
+/*
+
+Cliente * zerar(){
+    Cliente cliente;
+
+    cliente.fone='\0';
+    cliente.nome='\0';
+    cliente.id='\0';
+
+    return cliente;
+}
+ */
+
 void deletar_cliente() {
-    Cliente cliente ;
-    FILE * arq;
+    Cliente cliente;
+    Cliente aux;
+    FILE * arq, * arq_aux;
     char nome[30];
     int id, flag;
 
     printf("qual cliente deseja excluir?\n");
     ler(nome);
-    //cliente.nome='i';
 
-    if(!(id = procura_cliente(nome))){
+
+    if (!(id = procura_cliente(nome))) {
         printf("cliente não existe\n");
         menu();
     }
-    arq = fopen("clientes.dat", "r+b");
-    fseek(arq, (id - 1)*sizeof(Cliente), 0);
-    fwrite(&cliente, sizeof (Cliente), 1, arq);
-    fclose(arq);
 
-    printf("deseja excluir tambem os dependentes?\n");
+    arq = fopen("clientes.dat", "rb");
+    arq_aux = fopen("tmp.dat", "wb");
 
-    do {
-        printf("digite 1 para sim e 0 para não!!!\n");
-        scanf("%d",&flag);
-    }while(flag < 0 || flag >1);
+    fseek(arq, (id - 1) * sizeof (Cliente), 0);
+    fread(&cliente, sizeof (Cliente), 1, arq);
 
-    if(flag){
-        deletar_dependente();
+    rewind(arq);
+    while (!feof(arq)) {
+        fread(&aux, sizeof (Cliente), 1, arq);
+        if (&aux != NULL) {
+            if (!strcmp(cliente.nome, nome)) {
+                fwrite(&cliente, sizeof (Cliente), 1, arq_aux);
+            }
+        }
     }
+
+    fclose(arq);
+    fclose(arq_aux);
+
+    arq = fopen("tmp.dat", "rb");
+    arq_aux = fopen("clientes.dat", "wb");
+    while (!feof(arq)) {
+        fread(&aux, sizeof (Cliente), 1, arq);
+        if (&aux != NULL) {
+            fwrite(&cliente, sizeof (Cliente), 1, arq_aux);
+        }
+    }
+
+    fclose(arq);
+    fclose(arq_aux);
+
+    /*
+        arq = fopen("clientes.dat", "r+b");
+        fseek(arq, (id - 1) * sizeof (Cliente), 0);
+        fwrite(&cliente, sizeof (Cliente), 1, arq);
+        fclose(arq);
+     */
+
+    /*
+        printf("deseja excluir tambem os dependentes?\n");
+
+        do {
+            printf("digite 1 para sim e 0 para não!!!\n");
+            scanf("%d", &flag);
+        } while (flag < 0 || flag > 1);
+
+        if (flag) {
+            deletar_dependente();
+        }
+     */
     menu();
 }
 
