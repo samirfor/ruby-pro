@@ -111,9 +111,10 @@ public class GeneroDao {
         return lista;
     }
 
-    protected void finalize() throws Throwable {
-        Conexao.closeConnection();
-        super.finalize();
-    }
+//    @Override
+//    protected void finalize() throws Throwable {
+//        Conexao.closeConnection();
+//        super.finalize();
+//    }
 }
 

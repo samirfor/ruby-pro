@@ -19,7 +19,7 @@ public class Movimentacao {
     // #[regen=yes,id=DCE.760AAE0B-3C22-25B9-923F-82410406127E]
     // </editor-fold> 
     private Date dataEntrega;
-    private Cliente cliente;
+    private Cliente cliente = new Cliente();
 
     public Movimentacao() {
     }

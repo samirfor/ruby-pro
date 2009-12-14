@@ -57,28 +57,12 @@ public class DVD {
         this.filme = filme;
     }
 
-    public Integer getFilmeId() {
-        return filme.getId();
-    }
-
-    public void setFilmeId(Integer id) {
-        filme.setId(id);
-    }
-
     public Situacao getSituacao() {
         return situacao;
     }
 
     public void setSituacao(Situacao situacao) {
         this.situacao = situacao;
-    }
-
-    public void setSituacaoId(Integer id) {
-        situacao.setId(id);
-    }
-
-    public Integer getSituacaoId() {
-        return situacao.getId();
     }
 }
 

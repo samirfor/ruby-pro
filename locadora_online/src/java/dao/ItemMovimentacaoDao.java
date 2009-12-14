@@ -26,7 +26,8 @@ public class ItemMovimentacaoDao {
         return instance;
     }
 
-    public void insert(ItemMovimentacao itemMovimentacao) throws SQLException, ClassNotFoundException, NotInsertedClientException {
+    public void insert(ItemMovimentacao itemMovimentacao) throws SQLException,
+            ClassNotFoundException, NotInsertedClientException {
         Connection conn = Conexao.getInstance();
         String sql;
         sql = "INSERT INTO item_movimentacao (item_id, data_entrega, dvd) ";
@@ -34,8 +35,8 @@ public class ItemMovimentacaoDao {
         PreparedStatement pStm = conn.prepareStatement(sql);
         pStm.setInt(1, itemMovimentacao.getId());
         pStm.setDate(2, itemMovimentacao.getDataEntrega());
-       // pStm.setInt(3, itemMovimentacao.getdvd());
-       
+        pStm.setInt(3, itemMovimentacao.getDvd().getId());
+
 
         int qtd_insert = pStm.executeUpdate();
         pStm.close();
@@ -46,7 +47,8 @@ public class ItemMovimentacaoDao {
 
     }
 
-    public void update(ItemMovimentacao  itemMovimentacao) throws SQLException, ClassNotFoundException {
+    public void update(ItemMovimentacao itemMovimentacao) throws SQLException,
+            ClassNotFoundException {
 
         Connection conn = Conexao.getInstance();
         String sql;
@@ -55,7 +57,7 @@ public class ItemMovimentacaoDao {
         sql += "VALUES (?,?) WHERE item_id = ?;";
         PreparedStatement pStm = conn.prepareStatement(sql);
         pStm.setDate(1, itemMovimentacao.getDataEntrega());
-       // pStm.setInt(2, itemMovimentacao.getdvd());
+        pStm.setInt(2, itemMovimentacao.getDvd().getId());
         pStm.setInt(2, itemMovimentacao.getId());
 
         try {
@@ -69,7 +71,8 @@ public class ItemMovimentacaoDao {
 
     }
 
-    public void delete(ItemMovimentacao  itemMovimentacao) throws SQLException, ClassNotFoundException {
+    public void delete(ItemMovimentacao itemMovimentacao) throws SQLException,
+            ClassNotFoundException {
         Connection conn = Conexao.getInstance();
         String sql = "DELETE FROM item_movimentacao WHERE item_id = ?;";
         PreparedStatement pStm = conn.prepareStatement(sql);
@@ -85,7 +88,8 @@ public class ItemMovimentacaoDao {
         }
     }
 
-    public ItemMovimentacao findById(int id) throws SQLException, ClassNotFoundException {
+    public ItemMovimentacao findById(int id) throws SQLException,
+            ClassNotFoundException {
         Connection conn = Conexao.getInstance();
         String sql = "SELECT * FROM item_movimentacao WHERE item_id = ?;";
         PreparedStatement pStm = conn.prepareStatement(sql);
@@ -104,7 +108,8 @@ public class ItemMovimentacaoDao {
 
     }
 
-    public List<ItemMovimentacao> findAll() throws SQLException, ClassNotFoundException {
+    public List<ItemMovimentacao> findAll() throws SQLException,
+            ClassNotFoundException {
         String sql = "SELECT * FROM item_movimentacao;";
         List<ItemMovimentacao> lista = new ArrayList<ItemMovimentacao>();
         Connection conn = Conexao.getInstance();
@@ -114,16 +119,17 @@ public class ItemMovimentacaoDao {
             ItemMovimentacao i = new ItemMovimentacao();
             i.setId(rs.getInt("item_id"));
             i.setDataEntrega(rs.getDate("data_entrega"));
-            //tem o dvd da tabela???
+            i.getDvd().setId(rs.getInt("dvd"));
             lista.add(i);
         }
         stm.close();
         return lista;
     }
 
-    protected void finalize() throws Throwable {
-        Conexao.closeConnection();
-        super.finalize();
-    }
+//    @Override
+//    protected void finalize() throws Throwable {
+//        Conexao.closeConnection();
+//        super.finalize();
+//    }
 }
 

@@ -38,14 +38,6 @@ public class Filme {
         this.genero = genero;
     }
 
-    public void setGeneroId(Integer id) {
-        genero.setId(id);
-    }
-
-    public Integer getGeneroId() {
-        return genero.getId();
-    }
-
     public Integer getAno() {
         return ano;
     }

@@ -132,8 +132,8 @@ public class ClienteDao {
         return lista;
     }
 
-    protected void finalize() throws Throwable {
-        Conexao.closeConnection();
-        super.finalize();
-    }
+//    protected void finalize() throws Throwable {
+//        Conexao.closeConnection();
+//        super.finalize();
+//    }
 }
