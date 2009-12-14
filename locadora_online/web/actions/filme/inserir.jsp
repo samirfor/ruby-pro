@@ -31,12 +31,12 @@
         try{
            FilmeDao.getInstance().insert(filme);
            %>
-           <p>Filme Inserido. <a href="../../index.jsp"><input type="button" value="Back" name="back" /></a></p>
+           <p>Filme Inserido. <a href="../../index.jsp"><input type="button" value="Voltar" name="back" /></a></p>
            <%
         } catch (Exception e) {
            %>
            <p>Um erro ocorreu. [<%=e.getMessage() %>]<br/>
-           <input type="button" value="Back" name="back" onclick="javascript:history.go(-1)" /></p>
+           <input type="button" value="Voltar" name="back" onclick="javascript:history.go(-1)" /></p>
            <%
         }
         %>
