@@ -114,8 +114,9 @@ end
 
 def server_maintenance(body)
   str = nil
-  str = body.scan(/mm/i)[0]
+  str = body.scan(/The server \d+.rapidshare.com is momentarily not available/i)[0]
   if str != nil
+    server = str.scan(/\d+/)[0]
     to_log("O servidor do rapidshare #{server} está em manutenção. Evitando")
     return true
   else
@@ -208,8 +209,18 @@ def baixar
         to_log("Verifique se a URL está correta. Evitando ...")
         exit(1)
       end
+      
       to_log('Servidor ' + servidor_host + ' identificado.')
       servidor_ip = get_ip(servidor_host)
+
+      ## Captura tamanho do arquivo
+      tamanho = resposta.scan(/\| (\d+) KB/)[0][0]
+      if tamanho == nil # Testa se identificou o tamanho
+        to_log('Não foi possível capturar o tamanho.')
+      else
+        tamanho = tamanho.to_i
+        to_log("Tamanho #{tamanho} KB ou #{tamanho/1024.0} MB")
+      end
 
       ## Mandando requisição POST
       to_log('Enviando requisição de download...')
@@ -226,12 +237,11 @@ def baixar
       return false if error(resposta)
 
       ## Captura tempo de espera
-      tempo = resposta.scan(/var c=\d{1,};/)[0]
+      tempo = resposta.scan(/var c=(\d+)/)[0][0]
       if tempo == nil # Testa se identificou o contador
         to_log('Não foi possível capturar o contador.')
         return false
       end
-      tempo.gsub!("var c=", "").gsub!(";","")
 
       t = Time.utc(0) + tempo.to_i
       to_log(t.strftime("Contador identificado: %Hh %Mm %Ss."))
