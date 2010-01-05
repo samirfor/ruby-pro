@@ -59,7 +59,7 @@ def get_multi_links(arquivo)
   arq = File.open(arquivo, "r")
   links = Array.new
   arq.each_line do |linha|
-    if (not linha =~ /#.*/i) or (not linha == "") or (not linha == nil)
+    if not (linha =~ /#.*/i or linha == "" or linha == nil)
       links.push(linha.chomp)
     end
   end
@@ -232,7 +232,7 @@ def baixar
       servidor_ip = get_ip(servidor_host)
 
       ## Captura tamanho do arquivo
-      tamanho = resposta.scan(/\| (\d+) KB/)[0][0]
+      tamanho = body.scan(/\| (\d+) KB/i)[0][0]
       if tamanho == nil # Testa se identificou o tamanho
         to_log('Não foi possível capturar o tamanho.')
       else
