@@ -80,7 +80,7 @@ end
 ## Captura de erros
 def get_justify(body)
   justify = nil
-  justify = body.scan(/<p align=\"justify\">.+<\/p>/)[0]
+  justify = body.scan(/<p align=\"justify\">.+<\/p>/i)[0]
   if justify != nil
     justify.gsub!("<p align=\"justify\">", "").gsub!("</p>", "")
     to_log(justify)
@@ -101,9 +101,31 @@ def get_no_slot(body)
   end
 end
 
+def error(body)
+  str = nil
+  str = body.scan(/<h1>(error|erro)<\/h1>/i)[0]
+  if str != nil
+    to_log("Houve algum erro do rapidshare. Download indisponível no momento.")
+    return true
+  else
+    return false
+  end
+end
+
+def server_maintenance(body)
+  str = nil
+  str = body.scan(/mm/i)[0]
+  if str != nil
+    to_log("O servidor do rapidshare #{server} está em manutenção. Evitando")
+    return true
+  else
+    return false
+  end
+end
+
 def respaw(body)
   time = nil
-  time = body.scan(/try again in about \d+ minutes/)[0]
+  time = body.scan(/try again in about \d+ minutes/i)[0]
   if time != nil
     time.gsub!("try again in about ","").gsub!(" minutes","")
     to_log("Respaw de #{time} minutos.")
@@ -115,7 +137,7 @@ def respaw(body)
 end
 
 def waiting(body)
-  wait = body.scan(/Please try again in \d+ minutes/)[0]
+  wait = body.scan(/Please try again in \d+ minutes/i)[0]
   if wait != nil
     wait.gsub!("Please try again in ","").gsub!(" minutes","")
     to_log("Tentando novamente em #{wait.to_s} minutos.")
@@ -129,7 +151,7 @@ end
 def simultaneo(body)
   str = nil
   tempo = 2
-  str = body.scan(/already downloading a file/)[0]
+  str = body.scan(/already downloading a file/i)[0]
   if str != nil
     to_log("Ja existe um download corrente.")
     to_log("Tentando novamente em #{tempo.to_s} minutos.")
@@ -141,7 +163,7 @@ def simultaneo(body)
 end
 
 def lot_of_users(body)
-  res = body.scan(/Currently a lot of users are downloading files/)[0]
+  res = body.scan(/Currently a lot of users are downloading files/i)[0]
   if res != nil
     to_log("Atualmente muitos usuários estão baixando arquivos.")
     to_log("Tentando novamente em 2 minutos.")
@@ -178,7 +200,8 @@ def baixar
     if headers.code == "200"
       # Requisitando pagina de download
       to_log('Conexão HTTPOK 200.')
-      servidor_host = body.scan(/rs\w{1,}.rapidshare.com/)[0]
+      debug(body) if ARGV[2] == "debug"
+      servidor_host = body.scan(/rs\w{1,}.rapidshare.com/i)[0]
       # Testa se identificou o host
       if servidor_host == nil
         to_log("Não foi possível capturar o servidor.")
@@ -200,6 +223,7 @@ def baixar
       return false if get_no_slot(resposta)
       return false if simultaneo(resposta)
       return false if get_justify(resposta)
+      return false if error(resposta)
 
       ## Captura tempo de espera
       tempo = resposta.scan(/var c=\d{1,};/)[0]
