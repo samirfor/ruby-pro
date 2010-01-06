@@ -25,8 +25,8 @@ require 'logger'
 def ajuda()
   puts "::: Rapidshare V3 :::\n"
   puts ">>> Criado por Samir <samirfor@gmail.com>\n"
-  puts "\nUso:\n\n\t$ rapidshare3.rb http://rapidshare.com/files/294960685/ca.3444.by.lol.part1.rar"
-  puts "\t$ rapidshare3.rb -l caminho_da_lista_de_links"
+  puts "\nUso:\n\n\t$ rs http://rapidshare.com/files/294960685/ca.3444.by.lol.part1.rar"
+  puts "\t$ rs -l caminho_da_lista_de_links [debug]"
 end
 
 # Traduz hostname da URL para ip
@@ -59,7 +59,7 @@ def get_multi_links(arquivo)
   arq = File.open(arquivo, "r")
   links = Array.new
   arq.each_line do |linha|
-    if not (linha =~ /#.*/i or linha == "" or linha == nil)
+    if not (linha =~ /#.*/i or linha == "" or linha == nil or linha == "\n")
       links.push(linha.chomp)
     end
   end
@@ -123,7 +123,12 @@ def error(body)
   str = nil
   str = body.scan(/<h1>(error|erro)<\/h1>/i)[0]
   if str != nil
-    to_log("Houve algum erro do rapidshare. Download indisponível no momento.")
+    error_msg = body.scan(/<.*--E.*-->(.+)(<.*--|<\/div>)/im)[0]
+    if error_msg != nil
+      to_log(error_msg[0] + " Evitando link.")
+    else
+      to_log("Houve algum erro do rapidshare. Evitando link.")
+    end
     return true
   else
     return false
@@ -213,13 +218,17 @@ def baixar
 
   begin
     http = Net::HTTP.new(host_rs)
-    http.read_timeout = 15
+    http.read_timeout = 15 #segundos
     to_log('Abrindo conexão HTTP...')
     headers, body = http.get(url.path)
     if headers.code == "200"
       # Requisitando pagina de download
       to_log('Conexão HTTPOK 200.')
-      debug(body) if ARGV[2] == "debug"
+      ARGV.each do |item|
+        debug(body) if item == "debug"
+      end
+      return true if error(body)
+
       servidor_host = body.scan(/rs\w{1,}.rapidshare.com/i)[0]
       # Testa se identificou o host
       if servidor_host == nil
@@ -252,7 +261,6 @@ def baixar
       return false if get_no_slot(resposta)
       return false if simultaneo(resposta)
       return false if get_justify(resposta)
-      return false if error(resposta)
 
       ## Captura tempo de espera
       tempo = resposta.scan(/var c=(\d+)/)[0][0]
@@ -282,7 +290,9 @@ def baixar
         to_log("============")
       end
     else
+      to_log("Não foi possível carregar a página.")
       to_log("#{headers.code} #{headers.message}")
+      baixou = false
     end
     return baixou
   rescue Timeout::Error
