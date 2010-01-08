@@ -26,7 +26,9 @@ def ajuda()
   puts "::: Rapidshare V3 :::\n"
   puts ">>> Criado por Samir <samirfor@gmail.com>\n"
   puts "\nUso:\n\n\t$ rs http://rapidshare.com/files/294960685/ca.3444.by.lol.part1.rar"
-  puts "\t$ rs -l caminho_da_lista_de_links [debug]"
+  puts "\t$ rs -l caminho_da_lista_de_links [debug]\n"
+  puts "Para testar apenas:"
+  puts "\t$ rs -l caminho_da_lista_de_links -t"
 end
 
 # Traduz hostname da URL para ip
@@ -358,6 +360,21 @@ def run
     # Lista de links
     if ARGV[0] == "-l"
       if FileTest.exist?(ARGV[1])
+        if ARGV[2] == "-t"
+          puts ">> Apenas testando os links:"
+          links = get_multi_links(ARGV[1])
+          puts "Testando #{links.size} links."
+          count = 0
+          links.each do |link|
+            count += 1 if not testa_link(link)
+          end
+          if count == 0
+            puts "Não há links com problema."
+          else
+            puts "Há #{count} links com problema."
+          end
+          exit
+        end
         to_log("Baixando uma lista de links.")
         links = get_multi_links(ARGV[1])
         to_log ">> Testando os links........"
