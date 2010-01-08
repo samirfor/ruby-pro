@@ -204,6 +204,45 @@ def debug(body)
   arq.close
 end
 
+def testa_link(link)
+  to_log("Testando link: " + link)
+  if link =~ /http:\/\/\S+\/.+/
+    url = URI.parse(link)
+  else
+    to_log("ERRO: Link #{link} inválido evitado.")
+    return false
+  end
+  host_rs = get_ip(url.host)
+
+  begin
+    http = Net::HTTP.new(host_rs)
+    http.read_timeout = 15 #segundos
+    headers, body = http.get(url.path)
+    if headers.code == "200"
+      # Requisitando pagina de download
+      return false if error(body)
+      txt = body.scan(/<h1>.*DOWNLOAD.*<\/h1>/i)[0]
+      if txt != nil
+        to_log "Teste OK!"
+      else
+        to_log "Algum problema com o link."
+        return false
+      end
+    else
+      to_log("Não foi possível carregar a página.")
+      to_log("#{headers.code} #{headers.message}")
+    end
+    return true
+  rescue Timeout::Error
+    to_log("Tempo de requisição esgotado. Tentando novamente.")
+    retry
+  rescue Exception => err
+    STDERR.puts err
+    to_log err
+  rescue
+  end
+end
+
 
 ## Método para download
 def baixar
@@ -321,7 +360,12 @@ def run
       if FileTest.exist?(ARGV[1])
         to_log("Baixando uma lista de links.")
         links = get_multi_links(ARGV[1])
+        to_log ">> Testando os links........"
+        links_ok = Array.new
         links.each do |link|
+          links_ok.push(link) if testa_link(link)
+        end
+        links_ok.each do |link|
           $link = link
           begin
             resp = baixar
