@@ -28,7 +28,9 @@ def ajuda()
   puts "\nUso:\n\n\t$ rs http://rapidshare.com/files/294960685/ca.3444.by.lol.part1.rar"
   puts "\t$ rs -l caminho_da_lista_de_links [debug]\n"
   puts "Para testar apenas:"
-  puts "\t$ rs -l caminho_da_lista_de_links -t"
+  puts "\t$ rs -l caminho_da_lista_de_links -t\n"
+  puts "Para baixar uma lista de links sem testar:"
+  puts "\t$ rs -l caminho_da_lista_de_links -s\n"
 end
 
 # Traduz hostname da URL para ip
@@ -377,17 +379,28 @@ def run
         end
         to_log("Baixando uma lista de links.")
         links = get_multi_links(ARGV[1])
-        to_log ">> Testando os links........"
-        links_ok = Array.new
-        links.each do |link|
-          links_ok.push(link) if testa_link(link)
-        end
-        links_ok.each do |link|
-          $link = link
-          begin
-            resp = baixar
-            falhou(10) if !resp
-          end while !resp
+        if not ARGV[2] == "-s"
+          to_log ">> Testando os links........"
+          links_ok = Array.new
+          links.each do |link|
+            links_ok.push(link) if testa_link(link)
+          end
+          links_ok.each do |link|
+            $link = link
+            begin
+              resp = baixar
+              falhou(10) if !resp
+            end while !resp
+          end
+        else
+          to_log "Você optou não testar os links."
+          links.each do |link|
+            $link = link
+            begin
+              resp = baixar
+              falhou(10) if !resp
+            end while !resp
+          end
         end
         to_log("Fim da lista.")
         to_log(">>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<")
