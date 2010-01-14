@@ -127,7 +127,7 @@ def error(body)
   str = nil
   str = body.scan(/<h1>(error|erro)<\/h1>/i)[0]
   if str != nil
-    error_msg = body.scan(/<.*--E.*-->(.+)(<.*--|<\/div>)/im)[0]
+    error_msg = body.scan(/<.*--.*E.*-->(.+)/i)[0]
     if error_msg != nil
       to_log(error_msg[0] + " Evitando link.")
     else
