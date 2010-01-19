@@ -250,6 +250,10 @@ end
 
 ## Método para download
 def baixar
+  if FileTest.exist?("cancelar")
+    to_log "Downloads cancelado pelo usuário."
+    exit
+  end
   to_log("Baixando o link: "+$link)
   if $link =~ /http:\/\/\S+\/.+/
     url = URI.parse($link)
