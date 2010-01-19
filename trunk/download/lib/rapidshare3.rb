@@ -21,6 +21,8 @@
 require 'net/http'
 require 'socket'
 require 'logger'
+require 'rexml/document'
+include REXML
 
 def ajuda()
   puts "::: Rapidshare V3 :::\n"
@@ -91,7 +93,25 @@ def to_log(texto)
   logger.datetime_format = "%d/%m %H:%M:%S"
   logger.info(texto)
   logger.close
+  to_xml(texto)
   puts texto
+end
+
+def to_xml(texto)
+  doc = Document.new 
+  linha = Element.new "historico"
+  doc.add_element linha
+  #linha = Element.new "td"
+  # formatar hora
+  tempo = Time.new
+  linha.attributes["data"] = tempo.strftime("%Y/%m/%d %H:%M:%S")
+  # processo
+  processo = Process.pid
+  linha.attributes["processo"] = processo.to_s
+  # historico
+  linha.attributes["mensagem"] = texto
+  doc.root.add_element linha
+  doc.write(File.open("rs.log.xml", "a"), 1)
 end
 
 def falhou(segundos)
@@ -363,6 +383,16 @@ def run
     if FileTest.exist?("rs.log")
       File.delete("rs.log")
     end
+    # arquivo xml
+    #if FileTest.exist?("rs.log.xml")
+    #  File.delete("rs.log.xml")
+    #end
+
+    doc = Document.new
+    xmldecl = XMLDecl.new("1.0", "UTF-8", "no")
+    doc.add xmldecl
+    doc.write(File.open("rs.log.xml", "w"), 1)
+
     # Lista de links
     if ARGV[0] == "-l"
       if FileTest.exist?(ARGV[1])
