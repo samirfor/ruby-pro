@@ -236,13 +236,17 @@ def download_sucess(arquivo)
   para_escrever = Array.new
   linhas.each do |linha|
     if linha.chomp == $link
-      para_escrever.push("#OK#" + $link)
+      para_escrever.push("##" + $link)
     else
       para_escrever.push($link)
     end
   end
   arq.puts para_escrever
   arq.close
+end
+
+def estatistica()
+
 end
 
 def testa_link(link)
@@ -364,15 +368,19 @@ def baixar
       download = 'http://' + ip_host + uri.path
 
       to_log("Link para download: #{download}")
+      inicio = Time.now
       ## Download com wget
       baixou = system("wget -c #{download}")
+      fim = Time.now
+      tempo = Time.local(0) + (fim - inicio)
+      str_tempo = tempo.strftime("%Hh %Mm %Ss")
       if baixou
-        to_log("Download concluido com sucesso.")
-        to_log("============")
+        to_log("Download concluido com sucesso em #{str_tempo}.")
+        to_log("Velocidade média foi de #{tamanho.to_i/(fim - inicio)} KB/s.")
       else
-        to_log("Download falhou.")
-        to_log("============")
+        to_log("Download falhou com #{str_tempo} decorridos.")
       end
+      to_log("============")
     else
       to_log("Não foi possível carregar a página.")
       to_log("#{headers.code} #{headers.message}")
@@ -452,6 +460,7 @@ def run
           links.each do |link|
             $link = link
             begin
+              resp = baixar
               unless resp
                 falhou(10)
               else
