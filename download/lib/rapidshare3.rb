@@ -228,6 +228,23 @@ def debug(body)
   arq.close
 end
 
+def download_sucess(arquivo)
+  arq = File.open(arquivo, "r")
+  linhas = arq.readlines
+  arq.close
+  arq = File.open(arquivo, "w")
+  para_escrever = Array.new
+  linhas.each do |linha|
+    if linha.chomp == $link
+      para_escrever.push("#OK#" + $link)
+    else
+      para_escrever.push($link)
+    end
+  end
+  arq.puts para_escrever
+  arq.close
+end
+
 def testa_link(link)
   to_log("Testando link: " + link)
   if link =~ /http:\/\/\S+\/.+/
@@ -383,15 +400,15 @@ def run
     if FileTest.exist?("rs.log")
       File.delete("rs.log")
     end
-    # arquivo xml
-    #if FileTest.exist?("rs.log.xml")
-    #  File.delete("rs.log.xml")
-    #end
+    #    # arquivo xml
+    #    if FileTest.exist?("rs.log.xml")
+    #      File.delete("rs.log.xml")
+    #    end
 
-    doc = Document.new
-    xmldecl = XMLDecl.new("1.0", "UTF-8", "no")
-    doc.add xmldecl
-    doc.write(File.open("rs.log.xml", "w"), 1)
+    #    doc = Document.new
+    #    xmldecl = XMLDecl.new("1.0", "UTF-8", "no")
+    #    doc.add xmldecl
+    #    doc.write(File.open("rs.log.xml", "w"), 1)
 
     # Lista de links
     if ARGV[0] == "-l"
@@ -413,7 +430,7 @@ def run
         end
         to_log("Baixando uma lista de links.")
         links = get_multi_links(ARGV[1])
-        if not ARGV[2] == "-s"
+        unless ARGV[2] == "-s"
           to_log ">> Testando os links........"
           links_ok = Array.new
           links.each do |link|
@@ -423,7 +440,11 @@ def run
             $link = link
             begin
               resp = baixar
-              falhou(10) if !resp
+              unless resp
+                falhou(10)
+              else
+                download_sucess
+              end
             end while !resp
           end
         else
@@ -431,8 +452,11 @@ def run
           links.each do |link|
             $link = link
             begin
-              resp = baixar
-              falhou(10) if !resp
+              unless resp
+                falhou(10)
+              else
+                download_sucess
+              end
             end while !resp
           end
         end
