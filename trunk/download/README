@@ -1,3 +1,24 @@
-== rapid
+Este programa foi desenvolvido para se conseguir baixar no Rapidshare.com em
+ambientes com Squid + DansGuardian
 
-You should document your project here.
+Para baixar, há dois modos:
+
+- Baixando apenas um link:
+Simplesmente você digita o nome do programa e a URL como parâmetro.
+
+- Baixando uma lista de links:
+Você precisa colocar os links em um arquivo, um link por linha. Digite o nome
+do programa com o parâmetro -l e o caminho completo ou parcial do arquivo que
+você colocou a lista de links.
+
+> Parâmetros:
+
+-t     => usado para quando você quer apenas testar o(s) link(s).
+-s     => usado para baixar sem testar o(s) link(s).
+debug  => usado para mostrar algumas mensagens sobre o procedimento. Cria o
+arquivo "rapid.html" contendo a página de download para ver erros do programa.
+
+
+Se você está baixando uma lista de links e quer parar os downloads após o
+término do link corrente, crie um arquivo chamado "cancelar" na mesma pasta onde
+o programa foi executado.
