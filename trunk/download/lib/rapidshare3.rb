@@ -66,7 +66,7 @@ def get_multi_links(arquivo)
   links = Array.new
   arq.each_line do |linha|
     if not (linha =~ /#.*/i or linha == "" or linha == nil or linha == "\n")
-      links.push(linha.chomp)
+      links.push(linha.strip)
     end
   end
   arq.close
@@ -93,26 +93,26 @@ def to_log(texto)
   logger.datetime_format = "%d/%m %H:%M:%S"
   logger.info(texto)
   logger.close
-  to_xml(texto)
+#  to_xml(texto)
   puts texto
 end
 
-def to_xml(texto)
-  doc = Document.new 
-  linha = Element.new "historico"
-  doc.add_element linha
-  #linha = Element.new "td"
-  # formatar hora
-  tempo = Time.new
-  linha.attributes["data"] = tempo.strftime("%Y/%m/%d %H:%M:%S")
-  # processo
-  processo = Process.pid
-  linha.attributes["processo"] = processo.to_s
-  # historico
-  linha.attributes["mensagem"] = texto
-  doc.root.add_element linha
-  doc.write(File.open("rs.log.xml", "a"), 1)
-end
+#def to_xml(texto)
+#  doc = Document.new
+#  linha = Element.new "historico"
+#  doc.add_element linha
+#  #linha = Element.new "td"
+#  # formatar hora
+#  tempo = Time.new
+#  linha.attributes["data"] = tempo.strftime("%Y/%m/%d %H:%M:%S")
+#  # processo
+#  processo = Process.pid
+#  linha.attributes["processo"] = processo.to_s
+#  # historico
+#  linha.attributes["mensagem"] = texto
+#  doc.root.add_element linha
+#  doc.write(File.open("rs.log.xml", "a"), 1)
+#end
 
 def falhou(segundos)
   to_log("Tentando novamente em #{segundos} segundos.")
@@ -235,7 +235,7 @@ def download_sucess(arquivo)
   arq = File.open(arquivo, "w")
   para_escrever = Array.new
   linhas.each do |linha|
-    if linha.chomp == $link
+    if linha.strip == $link
       para_escrever.push("##" + $link)
     else
       para_escrever.push(linha)
