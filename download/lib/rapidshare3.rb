@@ -238,7 +238,7 @@ def download_sucess(arquivo)
     if linha.chomp == $link
       para_escrever.push("##" + $link)
     else
-      para_escrever.push($link)
+      para_escrever.push(linha)
     end
   end
   arq.puts para_escrever
@@ -284,6 +284,10 @@ def testa_link(link)
   rescue Exception => err
     STDERR.puts err
     to_log err
+  rescue Interrupt => err
+    STDERR.puts "\nSinal de interrupção recebido"
+    to_log("O programa foi encerrado.")
+    exit(1)
   rescue
   end
 end
@@ -307,13 +311,17 @@ def baixar
   begin
     http = Net::HTTP.new(host_rs)
     http.read_timeout = 15 #segundos
-    to_log('Abrindo conexão HTTP...')
+    ARGV.each do |item|
+      to_log('Abrindo conexão HTTP...') if item == "debug"
+    end
     headers, body = http.get(url.path)
     if headers.code == "200"
       # Requisitando pagina de download
-      to_log('Conexão HTTPOK 200.')
       ARGV.each do |item|
-        debug(body) if item == "debug"
+        if item == "debug"
+          to_log('Conexão HTTPOK 200.')
+          debug(body) 
+        end
       end
       return true if error(body)
 
@@ -324,8 +332,11 @@ def baixar
         to_log("Verifique se a URL está correta. Evitando ...")
         exit(1)
       end
-      
-      to_log('Servidor ' + servidor_host + ' identificado.')
+      ARGV.each do |item|
+        if item == "debug"
+          to_log('Servidor ' + servidor_host + ' identificado.')
+        end
+      end
       servidor_ip = get_ip(servidor_host)
 
       ## Captura tamanho do arquivo
@@ -369,8 +380,8 @@ def baixar
 
       to_log("Link para download: #{download}")
       inicio = Time.now
-      ## Download com wget
-      baixou = system("wget -c #{download}")
+      ## Download com curl
+      baixou = system("curl -LO #{download}")
       fim = Time.now
       tempo = Time.local(0) + (fim - inicio)
       str_tempo = tempo.strftime("%Hh %Mm %Ss")
@@ -451,7 +462,7 @@ def run
               unless resp
                 falhou(10)
               else
-                download_sucess
+                download_sucess(ARGV[1])
               end
             end while !resp
           end
@@ -464,7 +475,7 @@ def run
               unless resp
                 falhou(10)
               else
-                download_sucess
+                download_sucess(ARGV[1])
               end
             end while !resp
           end
