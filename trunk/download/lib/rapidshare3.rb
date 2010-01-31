@@ -21,8 +21,8 @@
 require 'net/http'
 require 'socket'
 require 'logger'
-require 'rexml/document'
-include REXML
+#require 'rexml/document'
+#include REXML
 
 def ajuda()
   puts "::: Rapidshare V3 :::\n"
