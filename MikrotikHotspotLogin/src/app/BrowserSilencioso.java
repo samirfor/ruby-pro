@@ -29,11 +29,13 @@ public class BrowserSilencioso {
     private String uri;
     private String body;
     private String login;
+    private String senha;
     private String ip;
 
-    public BrowserSilencioso(String ip, String login) {
+    public BrowserSilencioso(String ip, String login, String senha) {
         uri = "http://" + ip + "/login";
         this.login = login;
+        this.senha = senha;
         this.ip = ip;
     }
 
@@ -68,7 +70,9 @@ public class BrowserSilencioso {
         body = body.replace("<head>", "<head><base href=\"http://" + ip + "\">");
         body = body.replace(
                 "document.login.username.focus();",
-                "document.login.username.value = \"" + login + "\"; doLogin();");
+                "document.login.username.value = \"" + login + "\";"
+                + "document.login.password.value = \"" + senha + "\";"
+                + "doLogin();");
         // Convert body to InputStream
         in = new ByteArrayInputStream(body.getBytes("UTF-8"));
 
