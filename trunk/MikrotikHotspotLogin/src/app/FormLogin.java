@@ -12,14 +12,11 @@ public class FormLogin {
 
     public static void usage() {
         System.out.println("Uso:");
-        System.out.println("\tjava -jar MikrotikLogin [IPSERVIDOR] [LOGIN]");
-        System.out.println("\tExemplo:\n\t\tjava -jar MikrotikLogin 10.0.0.1 samir");
+        System.out.println("\tjava -jar MikrotikLogin [URL_SERVER] [LOGIN] [SENHA]");
+        System.out.println("\tExemplo:\n\t\tjava -jar MikrotikLogin bennet.com.br samir 8888");
     }
 
     public static void main(String[] args) throws MalformedURLException, IOException, SAXException {
-//        args[0] = "10.0.0.1";
-//        args[1] = "samir";
-
         System.out.println("MikroticLogin v1.0 by Samir");
         System.out.println("<samirfor@gmail.com>\n");
         System.out.println("GNU GENERAL PUBLIC LICENSE");
@@ -28,13 +25,13 @@ public class FormLogin {
         System.out.println("Everyone is permitted to copy and distribute verbatim copies");
         System.out.println("of this license document, but changing it is not allowed\n");
 
-        if (args.length != 2) {
+        if (args.length != 3) {
             System.out.println("Quantidade de parâmetros inválida.");
             usage();
             System.exit(-1);
         }
 
-        BrowserSilencioso browser = new BrowserSilencioso(args[0], args[1]);
+        BrowserSilencioso browser = new BrowserSilencioso(args[0], args[1], args[2]);
         browser.open();
         System.out.println("\n\n" + args[1] + " autenticado com sucesso.");
         System.exit(0);
