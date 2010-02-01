@@ -679,10 +679,10 @@
 				"sSearch": "Search:",
 				"sUrl": "",
 				"oPaginate": {
-					"sFirst":    "&nbsp;&nbsp;&nbsp;",
-					"sPrevious": "&nbsp;&nbsp;&nbsp;",
-					"sNext":     "&nbsp;&nbsp;&nbsp;",
-					"sLast":     "&nbsp;&nbsp;&nbsp;"
+					"sFirst":    "&laquo;",
+					"sPrevious": "&lsaquo;",
+					"sNext":     "&rsaquo;",
+					"sLast":     "&raquo;"
 				}
 			};
 			

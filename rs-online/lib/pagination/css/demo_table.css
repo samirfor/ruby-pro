@@ -164,11 +164,11 @@ table.display td.center {
  * DataTables row classes
  */
 table.display tr.odd.gradeA {
-	background-color: #ddffdd;
+	background-color: #FFDCDC;
 }
 
 table.display tr.even.gradeA {
-	background-color: #eeffee;
+	background-color: #E0CDCD;
 }
 
 
@@ -290,23 +290,39 @@ td.details {
 }
 
 span.first {
-	background-image: url('../images/go-first.png');
-	background-repeat: no-repeat;
+	/*background-image: url('../images/go-first.png');
+	background-repeat: no-repeat;*/
+   background-color: #F2F2F2;
+	border: 1px solid #aaa;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
 }
 
 span.previous {
-	background-image: url('../images/go-previous.png');
-	background-repeat: no-repeat;
+	/*background-image: url('../images/go-previous.png');
+	background-repeat: no-repeat;*/
+   background-color: #F2F2F2;
+	border: 1px solid #aaa;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
 }
 
 span.next {
-	background-image: url('../images/go-next.png');
-	background-repeat: no-repeat;
+	/*background-image: url('../images/go-next.png');
+	background-repeat: no-repeat;*/
+   background-color: #F2F2F2;
+	border: 1px solid #aaa;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
 }
 
 span.last {
-	background-image: url('../images/go-last.png');
-	background-repeat: no-repeat;
+	/*background-image: url('../images/go-last.png');
+	background-repeat: no-repeat;*/
+   background-color: #F2F2F2;
+	border: 1px solid #aaa;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
 }
 
 .paging_full_numbers span.paginate_button:hover {
@@ -325,11 +341,11 @@ span.last {
 }
 
 table.display tr.even.row_selected td {
-	background-color: #B0BED9;
+	background-color: #FFDCDC;
 }
 
 table.display tr.odd.row_selected td {
-	background-color: #9FAFD1;
+	background-color: #E0CDCD;
 }
 
 
@@ -339,7 +355,8 @@ table.display tr.odd.row_selected td {
 /* For the standard odd/even */
 /* tr para mudar cor de quem está sendo sortiado. */
 tr.odd td.sorting_1 {
-	background-color: #E3F4D7;
+	background-color: #FFD5D5;
+   color: #000000;
 }
 
 #demo tbody tr.odd td.highlighted {
@@ -355,7 +372,8 @@ tr.odd td.sorting_3 {
 }
 
 tr.even td.sorting_1 {
-	background-color: #C6E9AF;
+	background-color: #FFAAAA;
+   color: #000000;
 }
 
 #demo tbody tr.even td.highlighted {
