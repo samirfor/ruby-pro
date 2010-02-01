@@ -756,7 +756,7 @@
 			 * Purpose:  Sorting information
 			 * Scope:    jQuery.dataTable.classSettings
 			 */
-			this.aaSorting = [ [1, 'asc'] ];
+			this.aaSorting = [ [0, 'desc'] ];
 			
 			/*
 			 * Variable: aaSortingFixed
