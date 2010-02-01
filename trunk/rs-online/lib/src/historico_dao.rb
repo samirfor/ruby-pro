@@ -1,6 +1,7 @@
 # To change this template, choose Tools | Templates
 # and open the template in the editor.
 require "dbi"
+require "src/historico"
 
 class HistoricoDao
   def initialize
