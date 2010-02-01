@@ -23,6 +23,7 @@ require 'socket'
 require 'logger'
 #require 'rexml/document'
 #include REXML
+require 'dbi'
 
 def ajuda()
   puts "::: Rapidshare V3 :::\n"
@@ -94,6 +95,7 @@ def to_log(texto)
   logger.info(texto)
   logger.close
   #  to_xml(texto)
+  save_records(texto)
   puts texto
 end
 
@@ -113,6 +115,16 @@ end
 #  doc.root.add_element linha
 #  doc.write(File.open("rs.log.xml", "a"), 1)
 #end
+
+def save_records(texto)
+  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+  # formatar hora
+  tempo = Time.new.strftime("%Y/%m/%d %H:%M:%S")
+  # processo
+  processo = Process.pid.to_s
+  conn.do("INSERT INTO rs.historico (data, processo, mensagem) values ('#{tempo}', '#{processo}', '#{texto}')")
+  conn.disconnect
+end
 
 def falhou(segundos)
   to_log("Tentando novamente em #{segundos} segundos.")
