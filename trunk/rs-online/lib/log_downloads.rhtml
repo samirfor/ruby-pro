@@ -1,0 +1,147 @@
+<%#
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Name       : Professional
+Description: A two-column, fixed-width design with dark color scheme background.
+Version    : 1.0
+Released   : 20081230
+
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <!-- PAGINAÇÃO VIA AJAX -->
+      <style type="text/css" title="currentStyle">
+         @import "pagination/css/demo_page.css";
+         @import "pagination/css/demo_table.css";
+      </style>
+      <script type="text/javascript" language="javascript" src="pagination/js/jquery.js"></script>
+      <script type="text/javascript" language="javascript" src="pagination/js/jquery.dataTables.js"></script>
+      <script type="text/javascript" charset="utf-8">
+         $(document).ready(function() {
+            $('#example').dataTable( {
+               "sPaginationType": "full_numbers"
+            } );
+         } );
+      </script>
+      <!-- PAGINAÇÃO VIA AJAX -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>DownloadRS3 ~ version 1.0b ~ Powered by eRuby</title>
+  <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+
+<div id="wrapper">
+
+<div id="header">
+	<div id="logo">
+		<h1><a href="#">DownloadRS3</a></h1>
+		<p>version 1.0b ~ Powered by eRuby</p>
+	</div>
+	<!-- end #logo -->
+	<div id="menu">
+		<ul>
+			<li class="active"><a href="#">Home</a></li>
+			<li><a href="#">About Us</a></li>
+			<li><a href="#">Products</a></li>
+			<li><a href="#">Services</a></li>
+			<li><a href="#">Contact Us</a></li>
+		</ul>
+	</div>
+	<!-- end #menu -->
+</div>
+<!-- end #header -->
+<div id="page">
+	<!--<div id="header-pic"></div>-->
+	<div id="content">
+		<div class="post">
+			<h1 class="title">Welcome to DownloadRS 1.0b </h1>
+			<p class="byline"><small>Posted by Nightcrawler</small></p>
+			<div class="entry">
+           <div id="demo">
+            <table id="example" border="0" cellpadding="0" class="display" align="center">
+               <thead>
+                  <tr>
+                     <th>#</th>
+                     <th>Processo</th>
+                     <th>Data</th>
+                     <th>Mensagem</th>
+                     <th></th>
+                  </tr>
+               </thead>
+              <tbody>
+                <%
+                require "src/historico_dao.rb"
+                historico_find_all = HistoricoDao.new
+                list = historico_find_all.find_all
+                list.each do |line|
+                  print "<tr>"
+                  print "<td>#{line.id}</td>"
+                  print "<td>#{line.processo}</td>"
+                  print "<td>#{line.data}</td>"
+                  print "<td>#{line.mensagem}</td>"
+                  print "<td></td></tr>"
+                end
+                %>
+              </tbody>
+            </table>
+			</div>
+			<div class="meta">
+				<p class="links"></p>
+			</div>
+		</div>
+	</div>
+	<!-- end #content -->
+	<div id="sidebar">
+		<div id="sidebar-bgtop"></div>
+		<div id="sidebar-content">
+			<div id="sidebar-bgbtm">
+			<ul>
+				<li id="search">
+					<h2>Search</h2>
+					<form method="get" action="">
+						<fieldset>
+						<input type="text" id="s" name="s" value="" />
+						<input type="submit" id="x" value="Search" />
+						</fieldset>
+					</form>
+				</li>
+				<li>
+					<h2>Pacotes</h2>
+					<ul>
+						<li><a href="#">Novo Pacote</a></li>
+						<li><a href="#">Lista de pacotes</a></li>
+					</ul>
+				</li>
+				<li>
+					<h2>Downloads</h2>
+					<ul>
+						<li><a href="#">Lista de Downloads</a></li>
+						<li><a href="#">Log de Downloads</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		</div>
+	</div>
+	<!-- end #sidebar -->
+	<div style="clear:both; margin:0;"></div>
+</div>
+<!-- end #page -->
+
+</div>
+
+<div id="footer">
+	<p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. DownloadRS is powered by eRuby.</p>
+</div>
+<!-- end #footer -->
+</body>
+</html>
