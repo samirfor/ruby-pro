@@ -93,7 +93,7 @@ def to_log(texto)
   logger.datetime_format = "%d/%m %H:%M:%S"
   logger.info(texto)
   logger.close
-#  to_xml(texto)
+  #  to_xml(texto)
   puts texto
 end
 
@@ -269,6 +269,15 @@ def testa_link(link)
       txt = body.scan(/<h1>.*DOWNLOAD.*<\/h1>/i)[0]
       if txt != nil
         to_log "Teste OK!"
+        ## Captura tamanho do arquivo
+        tamanho = body.scan(/\| (\d+) KB/i)[0][0]
+        if tamanho == nil # Testa se identificou o tamanho
+          to_log('Não foi possível capturar o tamanho.')
+        else
+          tamanho = tamanho.to_i
+          to_log("Tamanho #{tamanho} KB ou #{tamanho/1024.0} MB")
+          $tamanho_total += tamanho
+        end
       else
         to_log "Algum problema com o link."
         return false
@@ -437,11 +446,15 @@ def run
           links = get_multi_links(ARGV[1])
           puts "Testando #{links.size} links."
           count = 0
+          $tamanho_total = 0
           links.each do |link|
-            count += 1 if not testa_link(link)
+            if not testa_link(link)
+              count += 1
+            end
           end
           if count == 0
             puts "Não há links com problema."
+            to_log ">> Tamanho total: #{$tamanho_total/1024.0} MB"
           else
             puts "Há #{count} links com problema."
           end
@@ -449,12 +462,14 @@ def run
         end
         to_log("Baixando uma lista de links.")
         links = get_multi_links(ARGV[1])
+        $tamanho_total = 0
         unless ARGV[2] == "-s"
           to_log ">> Testando os links........"
           links_ok = Array.new
           links.each do |link|
             links_ok.push(link) if testa_link(link)
           end
+          to_log ">> Tamanho total: #{$tamanho_total/1024.0} MB"
           links_ok.each do |link|
             $link = link
             begin
