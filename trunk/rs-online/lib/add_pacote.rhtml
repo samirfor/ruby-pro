@@ -48,12 +48,26 @@ Released   : 20081230
 	<!--<div id="header-pic"></div>-->
 	<div id="content">
 		<div class="post">
-			<h1 class="title">Welcome to DownloadRS 1.0b </h1>
-			<p class="byline"><small>Posted by Nightcrawler</small></p>
+			<h1 class="title">Adicionar Novo Pacote</h1>
 			<div class="entry">
-				<p>
-              DownloadRS is powered by eRuby.
-            </p>
+           <form action="save_pacote.rhtml" method="post">
+             <table width="90%" border="0" cellpadding="5">
+             <tr>
+               <td><b>Nome do Pacote (Opcional): </b><input type="text" name="name" class="text" size="50" /></td>
+             </tr>
+             <tr>
+               <td>
+                 <b>Links: </b><textarea name="package" cols="120" rows="15" class="area-wide"></textarea>
+               </td>
+             </tr>
+             <tr>
+               <td align="right">
+                 <input type="reset" value="Limpar Lista" class="sPacote"/>
+                 <input type="submit" value=" OK   &raquo; " class="sPacote"/>
+               </td>
+             </tr>
+           </table>
+           </form>
 			</div>
 			<div class="meta">
 				<p class="links"></p>
