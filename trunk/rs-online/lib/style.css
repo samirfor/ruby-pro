@@ -45,7 +45,7 @@ p, ol, ul {
 
 a {
 	color: #000000;
-   text-decoration: underline;
+   text-decoration: none;
 }
 
 a:hover {

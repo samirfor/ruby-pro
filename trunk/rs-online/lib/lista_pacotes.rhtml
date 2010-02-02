@@ -83,7 +83,8 @@ Released   : 20081230
                     rst = conn.execute(sql)
                     rst.fetch do |row|
                       print "<tr>\n<td>#{row["id"]}</td>\n";
-                      print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">#{row["nome"]}</td>\n"
+                      print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">"
+                      print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;#{row["nome"]}</td>\n"
                       if row["completado"] == false
                       %>
                         <td align="center"><img src="images/cancel.png" alt="Não" /></td>
