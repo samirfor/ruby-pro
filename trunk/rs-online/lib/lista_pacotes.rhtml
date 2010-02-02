@@ -18,6 +18,21 @@ Released   : 20081230
 
 <html>
   <head>
+    <!-- PAGINAÇÃO VIA AJAX -->
+      <style type="text/css" title="currentStyle">
+         @import "pagination/css/demo_page.css";
+         @import "pagination/css/demo_table.css";
+      </style>
+      <script type="text/javascript" language="javascript" src="pagination/js/jquery.js"></script>
+      <script type="text/javascript" language="javascript" src="pagination/js/jquery.dataTables.js"></script>
+      <script type="text/javascript" charset="utf-8">
+         $(document).ready(function() {
+            $('#example').dataTable( {
+               "sPaginationType": "full_numbers"
+            } );
+         } );
+      </script>
+      <!-- PAGINAÇÃO VIA AJAX -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>DownloadRS3 ~ version 1.0b ~ Powered by eRuby</title>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
@@ -48,54 +63,50 @@ Released   : 20081230
         <!--<div id="header-pic"></div>-->
         <div id="content">
           <div class="post">
-            <%
-            require 'dbi'
-            require 'cgi'
-
-            # inserir o pacote e os links no banco
-            def save_pacote(name)
-              conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-              sql = "INSERT INTO rs.pacote (nome) VALUES ('#{name}') RETURNING id"
-              rst = conn.execute(sql)
-              conn.disconnect
-              return rst.fetch[0]
-            end
-
-            def save_links(links, id_pacote)
-              conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-              links.each do |line|
-                sql = "INSERT INTO rs.link (id_pacote, link) VALUES (#{id_pacote}, '#{line}')"
-                conn.do(sql)
-              end
-              conn.disconnect
-            end
-            
-            begin
-              cgi = CGI.new
-              a_params = cgi.params
-              params_links = a_params["package"][0].to_a
-              links = Array.new
-              params_links.each do |linha|
-                links.push linha.chomp
-              end
-
-              nome_pacote = a_params["name"]
-              id_pacote = save_pacote(nome_pacote)
-              save_links(links, id_pacote)
-            
-            rescue Exception => err %>
-              <h1 class="title">Ocorreu um erro.</h1>
-              <h2>Não foi possível carregar a página. Contate o administrador!</h2>
-              <p> <% puts err %> </p>
-            <%
-            end
-            %>
-            <h1 class="title"><% print a_params["name"] %></h1>
-            <p class="byline"><small>Posted by Nightcrawler</small></p>
+            <h1 class="title">Lista de Pacotes</h1>
             <div class="entry">
-              <p>
-                <% print a_params["package"] %>
-              </p>
+              <div id="demo"><br/>
+                <table id="example" border="0" cellpadding="0" class="display" align="center">
+                  <thead>
+                    <tr>
+                      <th width="5%">#</th>
+                      <th>Nome</th>
+                      <th width="10%">Completado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <%
+                    require "dbi"
+
+                    conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+                    sql = "SELECT * FROM rs.pacote WHERE mostrar = 'true' "
+                    rst = conn.execute(sql)
+                    rst.fetch do |row|
+                      print "<tr>\n<td>#{row["id"]}</td>\n";
+                      print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">#{row["nome"]}</td>\n"
+                      if row["completado"] == false
+                      %>
+                        <td align="center"><img src="images/cancel.png" alt="Não" /></td>
+                      <%
+                      else
+                      %>
+                        <td align="center"><img src="images/accept.png" alt="Não" /></td>
+                      <%
+                      end
+                      print "\n"
+                      print "</tr>\n"
+                    end
+                    rst.finish
+                    conn.disconnect
+                  %>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th colspan="4" align="center">DownloadRS3 ~ version 1.0b ~ Powered by eRuby</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
             </div>
             <div class="meta">
               <p class="links"></p>
@@ -121,7 +132,7 @@ Released   : 20081230
                   <h2>Pacotes</h2>
                   <ul>
                     <li><a href="add_pacote.rhtml">Novo Pacote</a></li>
-                    <li><a href="#">Lista de pacotes</a></li>
+                    <li><a href="lista_pacotes.rhtml">Lista de pacotes</a></li>
                   </ul>
                 </li>
                 <li>
