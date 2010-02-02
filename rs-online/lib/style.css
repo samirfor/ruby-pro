@@ -45,10 +45,13 @@ p, ol, ul {
 
 a {
 	color: #000000;
+   text-decoration: underline;
 }
 
 a:hover {
 	text-decoration: none;
+   cursor: pointer;
+   color: #A02C2C;
 	/*color: #FF0000;*/
 }
 

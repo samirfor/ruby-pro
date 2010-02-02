@@ -63,61 +63,69 @@ Released   : 20081230
 	<!--<div id="header-pic"></div>-->
 	<div id="content">
 		<div class="post">
-			<h1 class="title">Log de Downloads </h1>
+			<h1 class="title">Lista de Links</h1>
 			<div class="entry">
-           <div id="demo"><br/>
-            <table id="example" border="0" cellpadding="0" class="display" align="center">
-               <thead>
-                  <tr>
-                     <th>#</th>
-                     <th>Data</th>
-                     <th>Processo</th>
-                     <th>Mensagem</th>
-                  </tr>
-               </thead>
-              <tbody>
-                <%
-                #require "src/historico_dao.rb"
-                #historico_find_all = HistoricoDao.new
-                #list = historico_find_all.find_all
-                #list.each do |line|
-                  #print "<tr>"
-                  #print "<td>#{line.id}</td>"
-                  #print "<td>#{line.processo}</td>"
-                  #print "<td>#{line.data}</td>"
-                  #print "<td>#{line.mensagem}</td>"
-                  #print "<td></td></tr>"
-                #end
+				<div id="demo"><br/>
+                <table id="example" border="0" cellpadding="0" class="display" align="center">
+                  <thead>
+                    <tr>
+                      <th width="5%">#</th>
+                      <th>Nome</th>
+                      <th width="10%">Completado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <%
+                    require 'dbi'
+                    require 'cgi'
 
-                require "dbi"
-                conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-                sql = "SELECT * FROM rs.historico ORDER BY id desc LIMIT 100 "
-                rst = conn.execute(sql)
-                rst.fetch do |row|
-                  print "<tr>\n<td>#{row["id"]}</td>\n";
-                  print "<td>#{row["data"]}</td>\n"
-                  print "<td>#{row["processo"]}</td>\n"
-                  print "<td>#{row["mensagem"]}</td>\n</tr>\n"
-                  #, , , row["mensagem"])
-                end
-                rst.finish
-                conn.disconnect
-                %>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th colspan="4" align="center">DownloadRS3 ~ version 1.0b ~ Powered by eRuby</th>
-                </tr>
-              </tfoot>
-            </table>
-           </div>
-           
+                    begin
+                      cgi = CGI.new
+                      a_params = cgi.params
+                      id_pacote = a_params["id_pacote"]
+
+                      conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+                      sql = "SELECT * FROM rs.link WHERE id_pacote =  #{id_pacote}"
+                      rst = conn.execute(sql)
+                      rst.fetch do |row|
+                      print "<tr>\n<td>#{row["id_link"]}</td>\n";
+                      print "<td>#{row["link"]}</td>\n"
+                      if row["completado"] == false
+                      %>
+                        <td align="center"><img src="images/cancel.png" alt="Não" /></td>
+                      <%
+                      else
+                      %>
+                        <td align="center"><img src="images/accept.png" alt="Não" /></td>
+                      <%
+                      end
+                      print "\n"
+                      print "</tr>\n"
+                      end
+                      rst.finish
+                      conn.disconnect
+
+                      rescue Exception => err %>
+                      <h1 class="title">Ocorreu um erro.</h1>
+                      <h2>Não foi possível carregar a página. Contate o administrador!</h2>
+                      <p> <% puts err %> </p>
+                  <%
+                    end
+                  %>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th colspan="4" align="center">DownloadRS3 ~ version 1.0b ~ Powered by eRuby</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+			</div>
 			<div class="meta">
 				<p class="links"></p>
 			</div>
 		</div>
 	</div>
-   </div>
 	<!-- end #content -->
 	<div id="sidebar">
 		<div id="sidebar-bgtop"></div>
