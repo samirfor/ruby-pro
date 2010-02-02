@@ -1,5 +1,6 @@
 # To change this template, choose Tools | Templates
 # and open the template in the editor.
+require 'dbi'
 
 def update_link_completado(id_link)
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
@@ -24,20 +25,23 @@ end
 
 # --- RETORNA TODOS OS LINKS DE UM DETERMINADO PACOTE. [ HASH ]
 def select_pacote_pendente
-  hash = Hash.new
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "SELECT l.link, l.id_link FROM rs.pacote p, rs.link l WHERE p.completado = 'false' LIMIT 1"
+  sql = "SELECT id FROM rs.pacote WHERE completado = 'false' LIMIT 1"
   rst = conn.execute(sql)
-  rst.each do |row|
-    hash[row["id_link"]] = row["link"]
-  end
+  id_pacote = rst.fetch[0]
   rst.finish
   conn.disconnect
-  hash
+  id_pacote
 end
 
 def select_lista_links(id_pacote)
+  hash = Hash.new
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "SELECT * FROM rs.link WHERE id_pacote = #{id_pacote}"
+  sql = "SELECT l.link, l.id_link FROM rs.pacote p, rs.link l " +
+    "WHERE l.id_pacote = p.id AND p.id = #{id_pacote}"
   rst = conn.execute(sql)
+  rst.fetch do |row|
+    hash[row["id_link"]] = row["link"]
+  end
+  hash
 end
