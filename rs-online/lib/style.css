@@ -277,3 +277,30 @@ a img {
 #footer a {
 	color: #FFFFFF;
 }
+
+/* Download CSS */
+.area-wide {
+   border: 1px solid #aaa;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+   font-size: 10pt;
+}
+
+.sPacote {
+   border: 1px solid #aaa;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+   width: 10%;
+   padding: 1% 1% 1% 1%;
+}
+
+.sPacote:hover {
+   background-color: #FFD5D5;
+   cursor: pointer;
+}
+
+.text {
+   border: 1px solid #aaa;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+}

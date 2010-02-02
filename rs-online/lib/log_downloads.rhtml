@@ -92,7 +92,7 @@ Released   : 20081230
 
                 require "dbi"
                 conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-                sql = "SELECT * FROM rs.historico ORDER BY data"
+                sql = "SELECT * FROM rs.historico ORDER BY id desc LIMIT 100 "
                 rst = conn.execute(sql)
                 rst.fetch do |row|
                   print "<tr>\n<td>#{row["id"]}</td>\n";

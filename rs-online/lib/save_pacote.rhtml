@@ -48,11 +48,37 @@ Released   : 20081230
 	<!--<div id="header-pic"></div>-->
 	<div id="content">
 		<div class="post">
-			<h1 class="title">Welcome to DownloadRS 1.0b </h1>
+        <%
+        require "dbi"
+        require 'cgi'
+        cgi = CGI.new
+        a_params = cgi.params
+
+        # tratar a_param aqui.
+        # . . .
+        # inserir o pacote e os links no banco
+        def save_pacote(name)
+          conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+          sql = "INSERT INTO rs.pacote (name) VALUES (#{name}) RETURNING id"
+          rst = conn.execute(sql)
+          conn.disconnect
+          return rst
+        end
+
+        def save_links(links, id_pacote)
+          conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+          links.each do |line|
+             sql = "INSERT INTO rs.pacote (id_pacote, link) VALUES (#{id_pacote}, #{line})"
+             conn.do(sql)
+          end
+          conn.disconnect
+        end
+        %>
+          <h1 class="title"><% print a_params["name"] %></h1>
 			<p class="byline"><small>Posted by Nightcrawler</small></p>
 			<div class="entry">
 				<p>
-              DownloadRS is powered by eRuby.
+              <% print a_params["package"] %>
             </p>
 			</div>
 			<div class="meta">
