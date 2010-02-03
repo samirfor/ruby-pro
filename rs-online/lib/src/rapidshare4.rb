@@ -97,9 +97,9 @@ def update_data_inicio_link id_link, data
   conn.disconnect
 end
 
-def update_link_completado id_link, data
+def update_link_completado id_link, data, id_status
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "UPDATE rs.link SET data_fim = '#{data}', completado = 'true' WHERE id = #{id_link}"
+  sql = "UPDATE rs.link SET data_fim = '#{data}', completado = 'true', id_status = #{id_status} WHERE id = #{id_link}"
   conn.do(sql)
   conn.disconnect
 end
