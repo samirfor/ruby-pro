@@ -442,10 +442,10 @@ def run
       to_log ">> Testando os links........"
       links_online = Hash.new
       links_before_test.each do |link|
-        links_online[link[0]] = link[1] if testa_link(link[1])
+        links_online[link[0]] = link[1].strip if testa_link(link[1].strip)
       end
       to_log ">> Tamanho total: #{$tamanho_total/1024.0} MB"
-      links_online.each do |link|
+      links_online.sort.each do |link|
         begin
           resp = baixar(link[1])
           unless resp
@@ -457,6 +457,7 @@ def run
       end
       to_log("Fim do pacote.")
       to_log("********************")
+      update_pacote_completado(id_pacote)
     rescue
       retry
     end
