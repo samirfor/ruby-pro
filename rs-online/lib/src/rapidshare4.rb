@@ -26,14 +26,9 @@ require 'logger'
 require 'dbi'
 
 def ajuda()
-  puts "::: Rapidshare V3 :::\n"
+  puts "::: Rapidshare V4 :::\n"
   puts ">>> Criado por Samir <samirfor@gmail.com>\n"
-  puts "\nUso:\n\n\t$ rs http://rapidshare.com/files/294960685/ca.3444.by.lol.part1.rar"
-  puts "\t$ rs -l caminho_da_lista_de_links [debug]\n"
-  puts "Para testar apenas:"
-  puts "\t$ rs -l caminho_da_lista_de_links -t\n"
-  puts "Para baixar uma lista de links sem testar:"
-  puts "\t$ rs -l caminho_da_lista_de_links -s\n"
+  puts "Banco de Dados Postgres necessário para rodar o programa."
 end
 
 # CLASSES
@@ -163,7 +158,7 @@ end
 def save_records(texto)
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   # formatar hora
-  tempo = Time.new.strftime("%Y/%m/%d %H:%M:%S")
+  tempo = Time.new.strftime("%d/%m/%Y %H:%M:%S")
   # processo
   processo = Process.pid.to_s
   conn.do("INSERT INTO rs.historico (data, processo, mensagem) values ('#{tempo}', '#{processo}', '#{texto}')")
@@ -212,10 +207,10 @@ end
 
 # Gera linhas de log
 def to_log(texto)
-  logger = Logger.new('rs.log', 10, 1024000)
-  logger.datetime_format = "%d/%m %H:%M:%S"
-  logger.info(texto)
-  logger.close
+#  logger = Logger.new('rs.log', 10, 1024000)
+#  logger.datetime_format = "%d/%m %H:%M:%S"
+#  logger.info(texto)
+#  logger.close
   #  to_xml(texto)
   save_records(texto)
   puts texto
@@ -510,6 +505,7 @@ def run
   begin
     begin
       $tamanho_total = 0
+
       id_pacote = select_pacote_pendente
       if id_pacote == nil
         to_log "Não há pacotes resgistrados para download."
@@ -518,26 +514,37 @@ def run
       links_before_test = select_lista_links(id_pacote)
 
       to_log ">> Testando os links........"
-      # TODO trocar Hash por Array e usar a classe Link
-      links_online = Hash.new
+      links_online = Array.new
       links_before_test.each do |link|
-        links_online[link[0]] = link[1].strip if testa_link(link[1].strip)
+        if testa_link(link.link.strip)
+          links_online.push(link)
+          update_status_link(link.id_link, link.tamanho, Status::ONLINE)
+        else
+          update_status_link(link.id_link, Status::OFFLINE)
+        end
       end
+
       to_log ">> Tamanho total: #{$tamanho_total/1024.0} MB"
       links_online.sort.each do |link|
         begin
-          resp = baixar(link[1])
+          update_status_link(link.id_link, Status::BAIXANDO)
+          resp = baixar(link.link.strip)
           unless resp
             falhou(10)
           else
-            update_link_completado(link[0])
+            update_link_completado(link.id_link, Time.now.strftime("%d/%m/%Y %H:%M:%S"), Status::BAIXADO)
           end
         end while !resp
       end
       to_log("Fim do pacote.")
       to_log("********************")
-      update_pacote_completado(id_pacote)
-    rescue
+      if select_status_pacote == 0
+        update_pacote_completado(Time.now.strftime("%d/%m/%Y %H:%M:%S"), id_pacote)
+      else
+        update_pacote_problema(id_pacote)
+      end
+    rescue Exception => err
+      to_log err
       retry
     end
   end while id_pacote != nil
@@ -547,6 +554,7 @@ end
 
 # O main do programa
 begin
+  ajuda
   run
 rescue Interrupt => err
   STDERR.puts "\nSinal de interrupção recebido"

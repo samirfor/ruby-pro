@@ -19,22 +19,22 @@ Released   : 20081230
 <html>
   <head>
     <!-- PAGINAÇÃO VIA AJAX -->
-      <style type="text/css" title="currentStyle">
-         @import "pagination/css/demo_page.css";
-         @import "pagination/css/demo_table.css";
-      </style>
-      <script type="text/javascript" language="javascript" src="pagination/js/jquery.js"></script>
-      <script type="text/javascript" language="javascript" src="pagination/js/jquery.dataTables.js"></script>
-      <script type="text/javascript" charset="utf-8">
-         $(document).ready(function() {
-            $('#example').dataTable( {
-               "sPaginationType": "full_numbers"
-            } );
-         } );
-      </script>
-      <!-- PAGINAÇÃO VIA AJAX -->
+    <style type="text/css" title="currentStyle">
+      @import "pagination/css/demo_page.css";
+      @import "pagination/css/demo_table.css";
+    </style>
+    <script type="text/javascript" language="javascript" src="pagination/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="pagination/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      $(document).ready(function() {
+        $('#example').dataTable( {
+          "sPaginationType": "full_numbers"
+        } );
+      } );
+    </script>
+    <!-- PAGINAÇÃO VIA AJAX -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>DownloadRS3 ~ version 1.0b ~ Powered by eRuby</title>
+    <title>DownloadRS4 ~ version 1.0b ~ Powered by eRuby</title>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
   </head>
   <body>
@@ -88,11 +88,20 @@ Released   : 20081230
                       print "<tr>\n<td>#{row["id"]}</td>\n";
                       print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">"
                       print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"]}</td>\n"
-                      print "<td>#{row["data_inicio"].strftime("%d/%m/%Y %H:%M:%S")}</td>"
+                      #print row["data_inicio"].class
+                      if row["data_inicio"].class.to_s == "DBI::Timestamp"
+                        print "<td>#{row["data_inicio"].to_time.strftime("%d/%m/%Y %H:%M:%S")}</td>"
+                      else
+                        print "<td>#{row["data_inicio"].strftime("%d/%m/%Y %H:%M:%S")}</td>"
+                      end
                       if row["data_fim"] == nil
                         print "<td align=\"center\"><img src=\"images/hourglass.png\" alt=\"Progress\" /></td>"
                       else
-                        print "<td>#{row["data_fim"].strftime("%d/%m/%Y %H:%M:%S")}</td>"
+                        if row["data_fim"].class.to_s == "DBI::Timestamp"
+                          print "<td>#{row["data_fim"].to_time.strftime("%d/%m/%Y %H:%M:%S")}</td>"
+                        else
+                          print "<td>#{row["data_fim"].strftime("%d/%m/%Y %H:%M:%S")}</td>"
+                        end
                       end
                       # completado
                       unless row["completado"]
@@ -150,19 +159,19 @@ Released   : 20081230
                   </form>
                 </li>
                 <li>
-					<h2>Pacotes</h2>
-					<ul>
-                 <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
-						<li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
-					</ul>
-				</li>
-				<li>
-					<h2>Downloads</h2>
-					<ul>
-						<li><a href="#">Lista de Downloads</a></li>
-						<li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
-					</ul>
-				</li>
+                  <h2>Pacotes</h2>
+                  <ul>
+                    <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
+                    <li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2>Downloads</h2>
+                  <ul>
+                    <li><a href="#">Lista de Downloads</a></li>
+                    <li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
+                  </ul>
+                </li>
               </ul>
             </div>
           </div>
