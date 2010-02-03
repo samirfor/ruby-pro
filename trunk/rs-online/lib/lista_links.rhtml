@@ -90,7 +90,7 @@ Released   : 20081230
 
                       conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
                       sql = "SELECT l.*, (l.data_fim - l.data_inicio) AS intervalo, s.status " +
-                        "FROM rs.link l, rs.status s WHERE id_pacote =  #{id_pacote}"
+                        "FROM rs.link l, rs.status s WHERE id_pacote =  #{id_pacote} AND l.id_status = s.id_status"
                       rst = conn.execute(sql)
                       rst.fetch do |row|
                       short_link = row["link"].split("/")
