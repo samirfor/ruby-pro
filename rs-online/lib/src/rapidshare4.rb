@@ -65,7 +65,7 @@ module Prioridade
   MUITO_ALTA = 5
 end
 
-def update_status_link id_link, tamanho, id_status
+def update_status_link_tamanho id_link, tamanho, id_status
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "UPDATE rs.link SET id_status = #{id_status}, tamanho = #{tamanho} WHERE id_link = #{id_link}"
   conn.do(sql)
@@ -332,11 +332,12 @@ def debug(body)
 end
 
 def testa_link(link)
-  to_log("Testando link: " + link)
-  if link =~ /http:\/\/\S+\/.+/
-    url = URI.parse(link)
+  link.link.strip!
+  to_log("Testando link: " + link.link)
+  if link.link =~ /http:\/\/\S+\/.+/
+    url = URI.parse(link.link)
   else
-    to_log("ERRO: Link #{link} inválido evitado.")
+    to_log("ERRO: Link #{link.link} inválido evitado.")
     return false
   end
   host_rs = get_ip(url.host)
@@ -359,6 +360,7 @@ def testa_link(link)
           tamanho = tamanho.to_i
           to_log("Tamanho #{tamanho} KB ou #{tamanho/1024.0} MB")
           $tamanho_total += tamanho
+          update_status_link_tamanho(link.id_link, tamanho, Status::ONLINE)
         end
       else
         to_log "Algum problema com o link."
@@ -517,9 +519,8 @@ def run
       to_log ">> Testando os links........"
       links_online = Array.new
       links_before_test.each do |link|
-        if testa_link(link.link.strip)
+        if testa_link(link)
           links_online.push(link)
-          update_status_link(link.id_link, link.tamanho, Status::ONLINE)
         else
           update_status_link(link.id_link, Status::OFFLINE)
         end
