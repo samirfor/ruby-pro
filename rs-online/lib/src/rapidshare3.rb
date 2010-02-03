@@ -34,23 +34,63 @@ def ajuda()
   puts "\t$ rs -l caminho_da_lista_de_links -s\n"
 end
 
-def update_link_completado(id_link)
+# CLASSES
+class Link
+  attr_writer :id_link, :link, :id_pacote, :completado, :tamanho, :id_status
+
+  def initialize(id_link, link, id_pacote, id_status)
+    @id_link = id_link
+    @link = link
+    @id_pacote = id_pacote
+    @id_status = id_status
+  end
+end
+
+# Database functions and constants
+
+# --- STATUS
+module Status
+  BAIXADO = 1
+  OFFLINE = 2
+  ONLINE = 3
+  BAIXANDO = 4
+  AGUARDANDO = 5
+  INTERROMPIDO = 6
+end
+
+# --- PRIORIDADE
+module Prioridade
+    BAIXA = 1
+    NORMAL = 2
+    NENHUMA = 3
+    ALTA = 4
+    MUITO_ALTA = 5
+end
+
+def update_status_link id_link, tamanho, id_status
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "UPDATE rs.link SET completado = 'true' WHERE id_link = #{id_link}"
+  sql = "UPDATE rs.link SET id_status = #{id_status}, tamanho = #{tamanho} WHERE id_link = #{id_link}"
   conn.do(sql)
   conn.disconnect
 end
 
-def update_pacote_completado(id_pacote)
+def update_pacote_completado data, id_pacote
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "UPDATE rs.pacote SET completado = 'true' WHERE id = #{id_pacote}"
+  sql = "UPDATE rs.pacote SET data_fim = '#{data}', completado = 'true' WHERE id = #{id_pacote}"
   conn.do(sql)
   conn.disconnect
 end
 
-def update_data_fim(data, id_pacote)
+def update_data_inicio_link id_link, data
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "UPDATE rs.pacote SET data_fim = '#{data}' WHERE id = #{id_pacote}"
+  sql = "UPDATE rs.link SET data_inicio = '#{data}' WHERE id = #{id_link}"
+  conn.do(sql)
+  conn.disconnect
+end
+
+def update_link_completado id_link, data
+  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+  sql = "UPDATE rs.link SET data_fim = '#{data}', completado = 'true' WHERE id = #{id_link}"
   conn.do(sql)
   conn.disconnect
 end
@@ -58,7 +98,9 @@ end
 # --- RETORNA TODOS OS LINKS DE UM DETERMINADO PACOTE. [ HASH ]
 def select_pacote_pendente
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "SELECT id FROM rs.pacote WHERE completado = 'false' LIMIT 1"
+  sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
+    "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
+    "GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc LIMIT 1"
   rst = conn.execute(sql)
   begin
   id_pacote = rst.fetch[0]
@@ -73,15 +115,17 @@ def select_pacote_pendente
 end
 
 def select_lista_links(id_pacote)
-  hash = Hash.new
+  array = Array.new
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "SELECT l.link, l.id_link FROM rs.pacote p, rs.link l " +
+  sql = "SELECT l.link, l.id_link, l.id_pacote, l.id_status FROM rs.pacote p, rs.link l " +
     "WHERE l.id_pacote = p.id AND p.id = #{id_pacote}"
   rst = conn.execute(sql)
   rst.fetch do |row|
-    hash[row["id_link"]] = row["link"]
+    array.push Link.new(row["id_link"], row["link"], row["id_pacote"], row["id_status"])
   end
-  hash.sort
+  rst.finish
+  conn.disconnect
+  array.sort
 end
 
 def save_records(texto)
@@ -93,6 +137,8 @@ def save_records(texto)
   conn.do("INSERT INTO rs.historico (data, processo, mensagem) values ('#{tempo}', '#{processo}', '#{texto}')")
   conn.disconnect
 end
+
+# --- Database ---
 
 # Traduz hostname da URL para ip
 # Retorno: String IP

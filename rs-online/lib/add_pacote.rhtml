@@ -54,14 +54,24 @@ Released   : 20081230
              <table width="90%" border="0" cellpadding="5">
              <tr>
                <td><b>Nome do Pacote (Opcional): </b><input type="text" name="name" class="text" size="50" /></td>
+               <td>
+                 <b>Prioridade: </b>
+                 <select name="prioridade" class="select-box">
+                   <option value="1">Baixa</option>
+                   <option value="2">Normal</option>
+                   <option value="3" selected="selected">Nenhuma</option>
+                   <option value="4">Alta</option>
+                   <option value="5">Muito Alta</option>
+                 </select>
+               </td>
              </tr>
              <tr>
-               <td>
+               <td colspan="2">
                  <b>Links: </b><textarea name="package" cols="120" rows="15" class="area-wide"></textarea>
                </td>
              </tr>
              <tr>
-               <td align="right">
+               <td align="right" colspan="2">
                  <input type="reset" value="Limpar Lista" class="sPacote"/>
                  <input type="submit" value=" OK   &raquo; " class="sPacote"/>
                </td>
