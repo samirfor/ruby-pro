@@ -21,8 +21,6 @@
 require 'net/http'
 require 'socket'
 require 'logger'
-#require 'rexml/document'
-#include REXML
 require 'dbi'
 
 def ajuda()
