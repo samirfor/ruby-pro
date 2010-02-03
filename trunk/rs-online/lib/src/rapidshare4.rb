@@ -137,7 +137,7 @@ def select_lista_links(id_pacote)
   end
   rst.finish
   conn.disconnect
-  array.sort
+  array#.sort
 end
 
 def select_status_link id_pacotes
@@ -527,9 +527,10 @@ def run
       end
 
       to_log ">> Tamanho total: #{$tamanho_total/1024.0} MB"
-      links_online.sort.each do |link|
+      links_online.each do |link|
         begin
           update_status_link(link.id_link, Status::BAIXANDO)
+          update_data_inicio_link(link.id_link, Time.now.strftime("%d/%m/%Y %H:%M:%S"))
           resp = baixar(link.link.strip)
           unless resp
             falhou(10)
