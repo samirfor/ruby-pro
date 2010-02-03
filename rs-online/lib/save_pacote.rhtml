@@ -57,7 +57,7 @@ Released   : 20081230
               data_ini = Time.now
               conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
               sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade) " +
-                  "VALUES ('#{name}', '#{data_ini.strftime("%d/%m/%Y %H:%M:%S")}', #{prioridade}) RETURNING id"
+                  "VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}', #{prioridade}) RETURNING id"
               rst = conn.execute(sql)
               conn.disconnect
               return rst.fetch[0]
