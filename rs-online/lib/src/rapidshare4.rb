@@ -144,6 +144,22 @@ def select_lista_links(id_pacote)
   array.sort
 end
 
+def select_status_link id_pacotes
+  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacotes} "
+  rst = conn.execute(sql)
+  count_pacotes = rst.fetch[0]
+  rst.finish
+
+  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacotes} AND id_status = 1 "
+  rst = conn.execute(sql)
+  count_baixados = rst.fetch[0]
+  rst.finish
+  conn.disconnect
+
+  return count_pacotes - count_baixados
+end
+
 def save_records(texto)
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   # formatar hora
