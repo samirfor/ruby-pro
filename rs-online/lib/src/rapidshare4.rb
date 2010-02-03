@@ -62,16 +62,23 @@ end
 
 # --- PRIORIDADE
 module Prioridade
-    BAIXA = 1
-    NORMAL = 2
-    NENHUMA = 3
-    ALTA = 4
-    MUITO_ALTA = 5
+  BAIXA = 1
+  NORMAL = 2
+  NENHUMA = 3
+  ALTA = 4
+  MUITO_ALTA = 5
 end
 
 def update_status_link id_link, tamanho, id_status
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "UPDATE rs.link SET id_status = #{id_status}, tamanho = #{tamanho} WHERE id_link = #{id_link}"
+  conn.do(sql)
+  conn.disconnect
+end
+
+def update_status_link id_link, id_status
+  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+  sql = "UPDATE rs.link SET id_status = #{id_status} WHERE id_link = #{id_link}"
   conn.do(sql)
   conn.disconnect
 end
@@ -97,6 +104,13 @@ def update_link_completado id_link, data
   conn.disconnect
 end
 
+def update_pacote_problema id_pacote
+  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+  sql = "UPDATE rs.pacote SET problema = 'true' WHERE id = #{id_pacote}"
+  conn.do(sql)
+  conn.disconnect
+end
+
 # --- RETORNA TODOS OS LINKS DE UM DETERMINADO PACOTE. [ HASH ]
 def select_pacote_pendente
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
@@ -105,7 +119,7 @@ def select_pacote_pendente
     "GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc LIMIT 1"
   rst = conn.execute(sql)
   begin
-  id_pacote = rst.fetch[0]
+    id_pacote = rst.fetch[0]
   rescue Exception => err
     puts "Erro no fetch"
     puts err

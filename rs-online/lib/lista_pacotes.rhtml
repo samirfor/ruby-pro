@@ -87,7 +87,7 @@ Released   : 20081230
                     rst.fetch do |row|
                       print "<tr>\n<td>#{row["id"]}</td>\n";
                       print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">"
-                      print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;#{row["nome"]}</td>\n"
+                      print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"]}</td>\n"
                       print "<td>#{row["data_inicio"].strftime("%d/%m/%Y %H:%M:%S")}</td>"
                       if row["data_fim"] == nil
                         print "<td align=\"center\"><img src=\"images/hourglass.png\" alt=\"Progress\" /></td>"
@@ -150,19 +150,19 @@ Released   : 20081230
                   </form>
                 </li>
                 <li>
-                  <h2>Pacotes</h2>
-                  <ul>
-                    <li><a href="add_pacote.rhtml">Novo Pacote</a></li>
-                    <li><a href="lista_pacotes.rhtml">Lista de pacotes</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <h2>Downloads</h2>
-                  <ul>
-                    <li><a href="#">Lista de Downloads</a></li>
-                    <li><a href="log_downloads.rhtml">Log de Downloads</a></li>
-                  </ul>
-                </li>
+					<h2>Pacotes</h2>
+					<ul>
+                 <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
+						<li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
+					</ul>
+				</li>
+				<li>
+					<h2>Downloads</h2>
+					<ul>
+						<li><a href="#">Lista de Downloads</a></li>
+						<li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
+					</ul>
+				</li>
               </ul>
             </div>
           </div>
