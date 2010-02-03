@@ -75,6 +75,7 @@ Released   : 20081230
                       <th width="9%">Fim</th>
                       <th width="12%">Intervalo</th>
                       <th width="10%">Completado</th>
+                      <th width="10%">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -88,7 +89,8 @@ Released   : 20081230
                       id_pacote = a_params["id_pacote"]
 
                       conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-                      sql = "SELECT *, (data_fim - data_inicio) AS intervalo FROM rs.link WHERE id_pacote =  #{id_pacote}"
+                      sql = "SELECT l.*, (l.data_fim - l.data_inicio) AS intervalo, s.status " +
+                        "FROM rs.link l, rs.status s WHERE id_pacote =  #{id_pacote}"
                       rst = conn.execute(sql)
                       rst.fetch do |row|
                       short_link = row["link"].split("/")
@@ -132,13 +134,21 @@ Released   : 20081230
                       <%
                       end
                       %>
+                        <td><%=row["status"].capitalize %></td>
                       </tr>
                       <%
                       print "\n"
-                      end
+                      end%>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                            <th colspan="7" align="center">DownloadRS4 ~ version 1.0b ~ Powered by eRuby</th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                      <%
                       rst.finish
                       conn.disconnect
-
                     rescue Exception => err %>
                       <h1 class="title">Ocorreu um erro.</h1>
                       <h2>Não foi possível carregar a página. Contate o administrador!</h2>
@@ -146,13 +156,6 @@ Released   : 20081230
                   <%
                     end
                   %>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th colspan="5" align="center">DownloadRS4 ~ version 1.0b ~ Powered by eRuby</th>
-                    </tr>
-                  </tfoot>
-                </table>
               </div>
 			</div>
 			<div class="meta">
