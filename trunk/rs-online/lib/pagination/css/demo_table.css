@@ -330,7 +330,7 @@ span.first:hover, span.previous:hover, span.next:hover, span.last:hover {
 }
 
 .paging_full_numbers span.paginate_button:hover {
-	background-color: #FADC9C;
+	background-color: #FFD5D5;
 	border: 1px solid #aaa;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
