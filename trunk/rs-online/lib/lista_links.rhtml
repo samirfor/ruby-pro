@@ -71,6 +71,8 @@ Released   : 20081230
                     <tr>
                       <th width="5%">#</th>
                       <th>Nome</th>
+                      <th width="15%">Inicio</th>
+                      <th width="15%">Fim</th>
                       <th width="10%">Completado</th>
                     </tr>
                   </thead>
@@ -88,15 +90,30 @@ Released   : 20081230
                       sql = "SELECT * FROM rs.link WHERE id_pacote =  #{id_pacote}"
                       rst = conn.execute(sql)
                       rst.fetch do |row|
+                      short_link = row["link"].split("/")
+                      path = short_link[short_link.size - 1]
                       %>
                       <tr>
                         <td><%=row["id_link"] %></td>
                         <td>
-                          <a href="<%=row["link"] %>"><img alt="link" src="images/link.png" border="0"/></a>&nbsp;&nbsp;
-                          <%=row["link"] %>
+                          <a href="<%=row["link"].gsub("rapidshare.com","195.122.131.2") %>"><img alt="link" src="images/link.png" border="0"/></a>&nbsp;&nbsp;
+                          <%=path %>
                         </td>
                       <%
                       print "\n"
+                      # data inicio
+                      if row["data_inicio"] == nil
+                        %><td align="center"><img src="images/hourglass.png" alt="Progress" /></td><%
+                      else
+                        %><td><%=row["data_inicio"].strftime("%d/%m/%Y %H:%M:%S") %></td><%
+                      end
+                      # data fim
+                      if row["data_fim"] == nil
+                        %><td align="center"><img src="images/hourglass.png" alt="Progress" /></td><%
+                      else
+                        %><td><%=row["data_fim"].strftime("%d/%m/%Y %H:%M:%S") %></td><%
+                      end
+                      # completado
                       if row["completado"] == false
                       %>
                         <td align="center"><img src="images/cancel.png" alt="Não" /></td>
@@ -124,7 +141,7 @@ Released   : 20081230
                   </tbody>
                   <tfoot>
                     <tr>
-                      <th colspan="4" align="center">DownloadRS3 ~ version 1.0b ~ Powered by eRuby</th>
+                      <th colspan="5" align="center">DownloadRS3 ~ version 1.0b ~ Powered by eRuby</th>
                     </tr>
                   </tfoot>
                 </table>
