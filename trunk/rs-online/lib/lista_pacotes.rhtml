@@ -71,7 +71,10 @@ Released   : 20081230
                     <tr>
                       <th width="5%">#</th>
                       <th>Nome</th>
+                      <th width="15%">Inicio</th>
+                      <th width="15%">Fim</th>
                       <th width="10%">Completado</th>
+                      <th width="6%">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -85,13 +88,30 @@ Released   : 20081230
                       print "<tr>\n<td>#{row["id"]}</td>\n";
                       print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">"
                       print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;#{row["nome"]}</td>\n"
-                      if row["completado"] == false
+                      print "<td>#{row["data_inicio"].strftime("%d/%m/%Y %H:%M:%S")}</td>"
+                      if row["data_fim"] == nil
+                        print "<td align=\"center\"><img src=\"images/hourglass.png\" alt=\"Progress\" /></td>"
+                      else
+                        print "<td>#{row["data_fim"].strftime("%d/%m/%Y %H:%M:%S")}</td>"
+                      end
+                      # completado
+                      unless row["completado"]
                       %>
                         <td align="center"><img src="images/cancel.png" alt="Não" /></td>
                       <%
                       else
                       %>
                         <td align="center"><img src="images/accept.png" alt="Não" /></td>
+                      <%
+                      end
+                      # status
+                      unless row["problema"]
+                      %>
+                        <td align="center"><img src="images/accept.png" alt="Não" /></td>
+                      <%
+                      else
+                      %>
+                        <td align="center"><img src="images/exclamation.png" alt="Não" /></td>
                       <%
                       end
                       print "\n"
@@ -103,7 +123,7 @@ Released   : 20081230
                   </tbody>
                   <tfoot>
                     <tr>
-                      <th colspan="4" align="center">DownloadRS3 ~ version 1.0b ~ Powered by eRuby</th>
+                      <th colspan="6" align="center">DownloadRS3 ~ version 1.0b ~ Powered by eRuby</th>
                     </tr>
                   </tfoot>
                 </table>
