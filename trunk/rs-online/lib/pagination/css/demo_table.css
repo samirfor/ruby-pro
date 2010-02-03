@@ -325,6 +325,10 @@ span.last {
 	-moz-border-radius: 2px;
 }
 
+span.first:hover, span.previous:hover, span.next:hover, span.last:hover {
+   background-color: #FFD5D5;
+}
+
 .paging_full_numbers span.paginate_button:hover {
 	background-color: #FADC9C;
 	border: 1px solid #aaa;
@@ -333,8 +337,8 @@ span.last {
 }
 
 .paging_full_numbers span.paginate_active {
-	background-color: #FADC9C;
-	color: #C28508;
+	background-color: #550000;
+	color: #FFF;
 	border: 1px solid #aaa;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;

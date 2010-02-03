@@ -289,7 +289,7 @@ a img {
    font-size: 10pt;
 }
 
-.sPacote {
+.sPacote, .sLimpar {
    border: 1px solid #aaa;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
@@ -297,7 +297,7 @@ a img {
    padding: 1% 1% 1% 1%;
 }
 
-.sPacote:hover {
+.sPacote:hover, .sLimpar:hover {
    background-color: #FFD5D5;
    cursor: pointer;
 }

@@ -56,8 +56,8 @@ Released   : 20081230
             def save_pacote(name, prioridade)
               data_ini = Time.now
               conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-              sql = "INSERT INTO rs.pacote (nome, data_ini, prioridade) " +
-                  "VALUES ('#{name}', '#{data_ini.strf("%d/%m/%Y %H:%M:%S")}', #{prioridade}) RETURNING id"
+              sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade) " +
+                  "VALUES ('#{name}', '#{data_ini.strftime("%d/%m/%Y %H:%M:%S")}', #{prioridade}) RETURNING id"
               rst = conn.execute(sql)
               conn.disconnect
               return rst.fetch[0]
@@ -85,7 +85,18 @@ Released   : 20081230
               prioridade = a_params["prioridade"]
               id_pacote = save_pacote(nome_pacote, prioridade)
               save_links(links, id_pacote)
-            
+
+              %>
+              <h1 class="title"><% puts a_params["name"] %></h1>
+              <div class="entry">
+              <p>
+                <% puts a_params["package"] %>
+              </p>
+              </div>
+              <div class="meta">
+                <p class="links">Pacote adicionado.</p>
+              </div>
+              <%
             rescue Exception => err %>
               <h1 class="title">Ocorreu um erro.</h1>
               <h2>Não foi possível carregar a página. Contate o administrador!</h2>
@@ -93,15 +104,6 @@ Released   : 20081230
             <%
             end
             %>
-            <h1 class="title"><% puts a_params["name"] %></h1>
-            <div class="entry">
-              <p>
-                <% puts a_params["package"] %>
-              </p>
-            </div>
-            <div class="meta">
-              <p class="links"></p>
-            </div>
           </div>
         </div>
         <!-- end #content -->
