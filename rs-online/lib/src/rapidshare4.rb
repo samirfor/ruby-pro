@@ -34,6 +34,7 @@ end
 # CLASSES
 class Link
   attr_writer :id_link, :link, :id_pacote, :completado, :tamanho, :id_status
+  attr_reader :id_link, :link, :id_pacote, :completado, :tamanho, :id_status
 
   def initialize(id_link, link, id_pacote, id_status)
     @id_link = id_link
