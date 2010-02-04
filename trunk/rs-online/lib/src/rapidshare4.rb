@@ -42,6 +42,10 @@ class Link
     @id_pacote = id_pacote
     @id_status = id_status
   end
+
+  def <=>(object)
+    return self.id_link <=> object.id_link
+  end
 end
 
 # Database functions and constants
@@ -518,7 +522,7 @@ def run
 
       to_log ">> Testando os links........"
       links_online = Array.new
-      links_before_test.each do |link|
+      links_before_test.sort.each do |link|
         if testa_link(link)
           links_online.push(link)
         else
@@ -527,7 +531,7 @@ def run
       end
 
       to_log ">> Tamanho total: #{$tamanho_total/1024.0} MB"
-      links_online.each do |link|
+      links_online.sort.each do |link|
         begin
           update_status_link(link.id_link, Status::BAIXANDO)
           update_data_inicio_link(link.id_link, Time.now.strftime("%d/%m/%Y %H:%M:%S"))
