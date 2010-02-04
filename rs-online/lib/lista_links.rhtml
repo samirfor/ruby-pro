@@ -71,11 +71,12 @@ Released   : 20081230
                     <tr>
                       <th width="5%">#</th>
                       <th>Nome</th>
+                      <th>Tamanho</th>
                       <th width="9%">Inicio</th>
                       <th width="9%">Fim</th>
                       <th width="12%">Intervalo</th>
                       <th width="10%">Completado</th>
-                      <th width="10%">Status</th>
+                      <th width="6%">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -89,7 +90,7 @@ Released   : 20081230
                       id_pacote = a_params["id_pacote"]
 
                       conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-                      sql = "SELECT l.*, (l.data_fim - l.data_inicio) AS intervalo, s.status " +
+                      sql = "SELECT l.*, (l.data_fim - l.data_inicio) AS intervalo, l.tamanho, s.status, s.id_status " +
                         "FROM rs.link l, rs.status s WHERE id_pacote =  #{id_pacote} AND l.id_status = s.id_status"
                       rst = conn.execute(sql)
                       rst.fetch do |row|
@@ -102,6 +103,14 @@ Released   : 20081230
                             <a href="<%=row["link"].gsub("rapidshare.com","195.122.131.2") %>"><img alt="link" src="images/link.png" border="0"/></a>&nbsp;&nbsp;
                             <%=path %>
                           </td>
+                          <%
+                          # tamanho
+                          unless row["tamanho"] == nil
+                          %><td><%=row["tamanho"]/1024.0 %> MB</td><%
+                          else
+                          %><td align="center"> --- </td><%
+                          end
+                          %>
                           <%
                           print "\n"
                           # data inicio
@@ -133,18 +142,35 @@ Released   : 20081230
                           end
                           # completado
                           if row["completado"] == false
-                          %>
-                            <td align="center"><img src="images/cancel.png" alt="Não" /></td>
-                          <%
+                          %><td align="center"><img src="images/cancel.png" alt="Não" /></td><%
                           else
-                          %>
-                            <td align="center"><img src="images/accept.png" alt="Não" /></td>
-                          <%
+                          %><td align="center"><img src="images/accept.png" alt="Não" /></td><%
                           end
-                        %>
-                          <td><%=row["status"].capitalize %></td>
-                        </tr>
-                        <%
+                          # status
+                          # --- STATUS
+                          module Status
+                            BAIXADO = 1
+                            OFFLINE = 2
+                            ONLINE = 3
+                            BAIXANDO = 4
+                            AGUARDANDO = 5
+                            INTERROMPIDO = 6
+                          end
+                          case row["id_status"]
+                            when Status::BAIXADO
+                            %><td align="center"><img src="images/drive_disk.png" alt="Baixado" title="Baixado" /></td><%
+                            when Status::OFFLINE
+                            %><td align="center"><img src="images/database_error.png" alt="Offline" title="Offline" /></td><%
+                            when Status::ONLINE
+                            %><td align="center"><img src="images/database_connect.png" alt="Online" title="Online" /></td><%
+                            when Status::BAIXANDO
+                            %><td align="center"><img src="images/loading.gif" alt="Baixando" title="Baixando" /></td><%
+                            when Status::AGUARDANDO
+                            %><td align="center"><img src="images/hourglass.png" alt="Aguardando" title="Aguardando" /></td><%
+                            when Status::INTERROMPIDO
+                            %><td align="center"><img src="images/exclamation.png" alt="Interrompido" title="Interrompido" /></td><%
+                          end%>
+                        </tr><%
                         print "\n"
                       end%>
                     </tbody>
