@@ -78,7 +78,8 @@ Released   : 20081230
               params_links = a_params["package"][0].to_a
               links = Array.new
               params_links.each do |linha|
-                links.push linha.chomp
+                linha.strip!
+                links.push linha if linha =~ /http:\/\/\S*rapidshare.com\S*\/.+/
               end
 
               nome_pacote = a_params["name"]
