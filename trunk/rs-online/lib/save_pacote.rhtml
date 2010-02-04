@@ -53,11 +53,11 @@ Released   : 20081230
             require 'cgi'
 
             # inserir o pacote e os links no banco
-            def save_pacote(name, prioridade)
+            def save_pacote(name, prioridade, senha)
               data_ini = Time.now
               conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-              sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade) " +
-                  "VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}', #{prioridade}) RETURNING id"
+              sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade, senha) " +
+                    "VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}', #{prioridade}), '#{senha}' RETURNING id"
               rst = conn.execute(sql)
               conn.disconnect
               return rst.fetch[0]
@@ -84,7 +84,8 @@ Released   : 20081230
 
               nome_pacote = a_params["name"]
               prioridade = a_params["prioridade"]
-              id_pacote = save_pacote(nome_pacote, prioridade)
+              senha = a_params["senha"]
+              id_pacote = save_pacote(nome_pacote, prioridade, senha)
               save_links(links, id_pacote)
 
               %>
