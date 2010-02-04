@@ -110,7 +110,7 @@ Released   : 20081230
                           else
                           %><td align="center"> --- </td><%
                           end
-                          %>
+                        %>
                           <%
                           print "\n"
                           # data inicio
@@ -127,7 +127,7 @@ Released   : 20081230
                           if row["data_fim"] == nil
                           %><td align="center"><img src="images/hourglass.png" alt="Progress" /></td><%
                           else
-                          if row["data_fim"].class.to_s == "DBI::Timestamp"
+                            if row["data_fim"].class.to_s == "DBI::Timestamp"
                             %><td><%=row["data_fim"].to_time.strftime("%d/%m/%Y %H:%M:%S") %></td><%
                             else
                             %><td><%=row["data_fim"].strftime("%d/%m/%Y %H:%M:%S") %></td><%
@@ -157,43 +157,100 @@ Released   : 20081230
                             INTERROMPIDO = 6
                           end
                           case row["id_status"]
-                            when Status::BAIXADO
-                            %><td align="center"><img src="images/drive_disk.png" alt="Baixado" title="Baixado" /></td><%
-                            when Status::OFFLINE
-                            %><td align="center"><img src="images/database_error.png" alt="Offline" title="Offline" /></td><%
-                            when Status::ONLINE
-                            %><td align="center"><img src="images/database_connect.png" alt="Online" title="Online" /></td><%
-                            when Status::BAIXANDO
-                            %><td align="center"><img src="images/loading.gif" alt="Baixando" title="Baixando" /></td><%
-                            when Status::AGUARDANDO
-                            %><td align="center"><img src="images/hourglass.png" alt="Aguardando" title="Aguardando" /></td><%
-                            when Status::INTERROMPIDO
-                            %><td align="center"><img src="images/exclamation.png" alt="Interrompido" title="Interrompido" /></td><%
+                          when Status::BAIXADO
+                          %><td align="center"><img src="images/drive_disk.png" alt="Baixado" title="Baixado" /></td><%
+                          when Status::OFFLINE
+                          %><td align="center"><img src="images/database_error.png" alt="Offline" title="Offline" /></td><%
+                          when Status::ONLINE
+                          %><td align="center"><img src="images/database_connect.png" alt="Online" title="Online" /></td><%
+                          when Status::BAIXANDO
+                          %><td align="center"><img src="images/loading.gif" alt="Baixando" title="Baixando" /></td><%
+                          when Status::AGUARDANDO
+                          %><td align="center"><img src="images/hourglass.png" alt="Aguardando" title="Aguardando" /></td><%
+                          when Status::INTERROMPIDO
+                          %><td align="center"><img src="images/exclamation.png" alt="Interrompido" title="Interrompido" /></td><%
                           end%>
                         </tr><%
                         print "\n"
-                      end%>
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <th colspan="8" align="center">DownloadRS4 ~ version 1.0b ~ Powered by eRuby</th>
-                      </tr>
-                    </tfoot>
-                  </table>
+                      end
+                      rst.finish
+                      # update?
+                      acao = a_params["do"].to_s
+                      if acao != nil and acao == "update"
+                        up_sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}', "
+                        up_sql += "senha = '#{a_params["senha"]}' WHERE id = #{a_params["id_pacote"]}"
+                        conn.do(up_sql)
+                        #print up_sql
+                      end
+                      %>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th colspan="8" align="center">DownloadRS4 ~ version 1.0b ~ Powered by eRuby</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                    <%
+                    
+                    conn.disconnect
+                  rescue Exception => err %>
+                    <h1 class="title">Ocorreu um erro.</h1>
+                    <h2>Não foi possível carregar a página. Contate o administrador!</h2>
+                    <p> <% puts err %> </p>
                   <%
-                  rst.finish
-                  conn.disconnect
-                rescue Exception => err %>
-                  <h1 class="title">Ocorreu um erro.</h1>
-                  <h2>Não foi possível carregar a página. Contate o administrador!</h2>
-                  <p> <% puts err %> </p>
-                <%
-                end
-              %>
+                  end
+
+
+                %>
+                </div>
+              </div>
+              <div class="meta">
+                <p class="links"></p>
               </div>
             </div>
-            <div class="meta">
-              <p class="links"></p>
+            <div class="post">
+              <h1 class="title">Editar Pacote</h1>
+              <div class="entry">
+                <form action="lista_links.rhtml" method="get">
+                  <table width="90%" border="0" cellpadding="5">
+                    <tr align="right">
+                      <td><b>Prioridade: </b></td>
+                      <td>
+                        <select name="prioridade" class="select-box">
+                          <option value="1">Baixa</option>
+                          <option value="2">Normal</option>
+                          <option value="3" selected="selected">Nenhuma</option>
+                          <option value="4">Alta</option>
+                          <option value="5">Muito Alta</option>
+                        </select>
+                      </td>
+                      <td>
+                        <b>Mostrar na Lista: </b>
+                      </td>
+                      <td>
+                        <select name="mostrar" class="select-box">
+                          <option value="true" selected="selected">Sim</option>
+                          <option value="false">Não</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr align="right">
+                      <td><b>Senha: </b></td>
+                      <td><input type="text" name="senha" class="text" size="30"/></td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr align="right">
+                      <td colspan="4">
+                        <input type="hidden" name="id_pacote" value="<%=id_pacote %>" />
+                        <input type="hidden" name="do" value="update" />
+                        <input type="reset" value="Limpar" class="sLimpar"/>&nbsp;
+                        <input type="submit" value=" OK   &raquo; " class="sPacote"/>
+                      </td>
+                    </tr>
+                  </table>
+                </form>
+              </div>
             </div>
           </div>
           <div class="post">
@@ -239,50 +296,16 @@ Released   : 20081230
               </form>
             </div>
           </div>
+          <!-- end #sidebar -->
+          <div style="clear:both; margin:0;"></div>
         </div>
-        <!-- end #content -->
-        <div id="sidebar">
-          <div id="sidebar-bgtop"></div>
-          <div id="sidebar-content">
-            <div id="sidebar-bgbtm">
-              <ul>
-                <li id="search">
-                  <h2>Search</h2>
-                  <form method="get" action="">
-                    <fieldset>
-                      <input type="text" id="s" name="s" value="" />
-                      <input type="submit" id="x" value="Search" />
-                    </fieldset>
-                  </form>
-                </li>
-                <li>
-                  <h2>Pacotes</h2>
-                  <ul>
-                    <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
-                    <li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <h2>Downloads</h2>
-                  <ul>
-                    <li><a href="#">Lista de Downloads</a></li>
-                    <li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <!-- end #sidebar -->
-        <div style="clear:both; margin:0;"></div>
+        <!-- end #page -->
+
       </div>
-      <!-- end #page -->
 
-    </div>
-
-    <div id="footer">
-      <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. DownloadRS is powered by eRuby.</p>
-    </div>
-    <!-- end #footer -->
-  </body>
-</html>
+      <div id="footer">
+        <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. DownloadRS is powered by eRuby.</p>
+      </div>
+      <!-- end #footer -->
+    </body>
+  </html>

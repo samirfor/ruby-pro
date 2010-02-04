@@ -81,12 +81,34 @@ Released   : 20081230
                     <%
                     require "dbi"
 
+                    # --- PRIORIDADE
+                    module Prioridade
+                      BAIXA = 1
+                      NORMAL = 2
+                      NENHUMA = 3
+                      ALTA = 4
+                      MUITO_ALTA = 5
+                    end
+
                     conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
                     sql = "SELECT * FROM rs.pacote WHERE mostrar = 'true' "
                     rst = conn.execute(sql)
                     rst.fetch do |row|
                       print "<tr>\n<td>#{row["id"]}</td>\n";
                       print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">"
+                      case row["prioridade"]
+                      when Prioridade::NORMAL
+                        %><img src="images/normal.png" alt="Folder" />&nbsp;&nbsp;<%
+                        when Prioridade::BAIXA
+                        %><img src="images/baixa.png" alt="Folder" />&nbsp;&nbsp;<%
+                      when Prioridade::NENHUMA
+                        %><img src="images/nenhum.png" alt="Folder" />&nbsp;&nbsp;<%
+                      when Prioridade::ALTA
+                        %><img src="images/alta.png" alt="Folder" />&nbsp;&nbsp;<%
+                      when Prioridade::MUITO_ALTA
+                        %><img src="images/muito.alta.png" alt="Folder" />&nbsp;&nbsp;<%
+
+                      end
                       print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"]}</td>\n"
                       #print row["data_inicio"].class
                       if row["data_inicio"].class.to_s == "DBI::Timestamp"
