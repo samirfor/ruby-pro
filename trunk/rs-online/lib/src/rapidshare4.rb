@@ -144,14 +144,14 @@ def select_lista_links(id_pacote)
   array#.sort
 end
 
-def select_status_link id_pacotes
+def select_status_links id_pacote
   conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacotes} "
+  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
   rst = conn.execute(sql)
   count_pacotes = rst.fetch[0]
   rst.finish
 
-  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacotes} AND id_status = 1 "
+  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} AND id_status = 1 "
   rst = conn.execute(sql)
   count_baixados = rst.fetch[0]
   rst.finish
@@ -545,7 +545,7 @@ def run
       end
       to_log("Fim do pacote.")
       to_log("********************")
-      if select_status_pacote == 0
+      if select_status_links(id_pacote) == 0
         update_pacote_completado(Time.now.strftime("%d/%m/%Y %H:%M:%S"), id_pacote)
       else
         update_pacote_problema(id_pacote)
