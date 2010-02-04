@@ -69,55 +69,95 @@ module Prioridade
   MUITO_ALTA = 5
 end
 
+def db_connect
+  begin
+    DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+  rescue DBI::DatabaseError => e
+    to_log "Ocorreu erro ao se conectar no banco de dados."
+    to_log "Código do erro: #{e.err}"
+    to_log "#{e.errstr}"
+    to_log "SQLSTATE: #{e.state}"
+  end
+end
+
+def db_statement_execute(sql)
+  begin
+    conn = db_connect
+    rst = conn.execute(sql)
+    retorno = Array.new
+    retorno.push rst
+    retorno.push conn
+    retorno
+  rescue DBI::DatabaseError => e
+    to_log "Ocorreu erro consultando o banco de dados."
+    to_log "Código do erro: #{e.err}"
+    to_log "#{e.errstr}"
+    to_log "SQLSTATE: #{e.state}"
+  end
+end
+
+def db_statement_do(sql)
+  begin
+    conn = db_connect
+    conn.do(sql)
+    db_disconnect(conn)
+  rescue DBI::DatabaseError => e
+    to_log "Ocorreu erro ao modificar o banco de dados."
+    to_log "Código do erro: #{e.err}"
+    to_log "#{e.errstr}"
+    to_log "SQLSTATE: #{e.state}"
+  end
+end
+
+def db_disconnect(conn)
+  begin
+    conn.disconnect
+  rescue DBI::DatabaseError => e
+    to_log "Ocorreu na disconexão do banco de dados."
+    to_log "Código do erro: #{e.err}"
+    to_log "#{e.errstr}"
+    to_log "SQLSTATE: #{e.state}"
+  end
+end
+
 def update_status_link_tamanho id_link, tamanho, id_status
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "UPDATE rs.link SET id_status = #{id_status}, tamanho = #{tamanho} WHERE id_link = #{id_link}"
-  conn.do(sql)
-  conn.disconnect
+  db_statement_do(sql)
 end
 
 def update_status_link id_link, id_status
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "UPDATE rs.link SET id_status = #{id_status} WHERE id_link = #{id_link}"
-  conn.do(sql)
-  conn.disconnect
+  db_statement_do(sql)
 end
 
 def update_pacote_completado data, id_pacote
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "UPDATE rs.pacote SET data_fim = '#{data}', completado = 'true' WHERE id = #{id_pacote}"
-  conn.do(sql)
-  conn.disconnect
+  db_statement_do(sql)
 end
 
 def update_data_inicio_link id_link, data
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "UPDATE rs.link SET data_inicio = '#{data}' WHERE id_link = #{id_link}"
-  conn.do(sql)
-  conn.disconnect
+  db_statement_do(sql)
 end
 
 def update_link_completado id_link, data, id_status
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "UPDATE rs.link SET data_fim = '#{data}', completado = 'true', id_status = #{id_status} WHERE id_link = #{id_link}"
-  conn.do(sql)
-  conn.disconnect
+  db_statement_do(sql)
 end
 
 def update_pacote_problema id_pacote
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "UPDATE rs.pacote SET problema = 'true' WHERE id = #{id_pacote}"
-  conn.do(sql)
-  conn.disconnect
+  db_statement_do(sql)
 end
 
 # --- RETORNA TODOS OS LINKS DE UM DETERMINADO PACOTE. [ HASH ]
 def select_pacote_pendente
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
     "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
     "GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc LIMIT 1"
-  rst = conn.execute(sql)
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
   begin
     id_pacote = rst.fetch[0]
   rescue Exception => err
@@ -126,48 +166,52 @@ def select_pacote_pendente
     id_pacote = nil
   end
   rst.finish
-  conn.disconnect
+  db_disconnect(conn)
   id_pacote
 end
 
 def select_lista_links(id_pacote)
   array = Array.new
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "SELECT l.link, l.id_link, l.id_pacote, l.id_status FROM rs.pacote p, rs.link l " +
-    "WHERE l.id_pacote = p.id AND p.id = #{id_pacote}"
-  rst = conn.execute(sql)
+    "WHERE l.id_pacote = p.id AND p.id = #{id_pacote} AND l.completado = 'false'"
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
   rst.fetch do |row|
     array.push Link.new(row["id_link"], row["link"], row["id_pacote"], row["id_status"])
   end
   rst.finish
-  conn.disconnect
-  array#.sort
+  db_disconnect(conn)
+  array.sort
 end
 
 def select_status_links id_pacote
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
-  rst = conn.execute(sql)
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
   count_pacotes = rst.fetch[0]
   rst.finish
+  db_disconnect(conn)
 
   sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} AND id_status = 1 "
-  rst = conn.execute(sql)
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
   count_baixados = rst.fetch[0]
   rst.finish
-  conn.disconnect
+  db_disconnect(conn)
 
   return count_pacotes - count_baixados
 end
 
 def save_records(texto)
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   # formatar hora
   tempo = Time.new.strftime("%d/%m/%Y %H:%M:%S")
   # processo
   processo = Process.pid.to_s
-  conn.do("INSERT INTO rs.historico (data, processo, mensagem) values ('#{tempo}', '#{processo}', '#{texto}')")
-  conn.disconnect
+  sql = "INSERT INTO rs.historico (data, processo, mensagem) values ('#{tempo}', '#{processo}', '#{texto}')"
+  db_statement_do(sql)
 end
 
 # --- Database ---
@@ -212,10 +256,10 @@ end
 
 # Gera linhas de log
 def to_log(texto)
-#  logger = Logger.new('rs.log', 10, 1024000)
-#  logger.datetime_format = "%d/%m %H:%M:%S"
-#  logger.info(texto)
-#  logger.close
+  #  logger = Logger.new('rs.log', 10, 1024000)
+  #  logger.datetime_format = "%d/%m %H:%M:%S"
+  #  logger.info(texto)
+  #  logger.close
   #  to_xml(texto)
   save_records(texto)
   puts texto
@@ -417,7 +461,7 @@ def baixar(link)
       ARGV.each do |item|
         if item == "debug"
           to_log('Conexão HTTPOK 200.')
-          debug(body) 
+          debug(body)
         end
       end
       return true if error(body)
@@ -522,7 +566,7 @@ def run
 
       to_log ">> Testando os links........"
       links_online = Array.new
-      links_before_test.sort.each do |link|
+      links_before_test.each do |link|
         if testa_link(link)
           links_online.push(link)
         else
@@ -531,7 +575,7 @@ def run
       end
 
       to_log ">> Tamanho total: #{$tamanho_total/1024.0} MB"
-      links_online.sort.each do |link|
+      links_online.each do |link|
         begin
           update_status_link(link.id_link, Status::BAIXANDO)
           update_data_inicio_link(link.id_link, Time.now.strftime("%d/%m/%Y %H:%M:%S"))
