@@ -406,7 +406,7 @@ def testa_link(link)
           to_log('Não foi possível capturar o tamanho.')
         else
           tamanho = tamanho.to_i
-          to_log("Tamanho #{tamanho} KB ou #{tamanho/1024.0} MB")
+          to_log("Tamanho #{tamanho} KB ou #{sprintf("%.2f MB", tamanho/1024.0)}")
           $tamanho_total += tamanho
           update_status_link_tamanho(link.id_link, tamanho, Status::ONLINE)
         end
@@ -486,7 +486,7 @@ def baixar(link)
         to_log('Não foi possível capturar o tamanho.')
       else
         tamanho = tamanho.to_i
-        to_log("Tamanho #{tamanho} KB ou #{tamanho/1024.0} MB")
+        to_log("Tamanho #{tamanho} KB ou #{sprintf("%.2f MB", tamanho/1024.0)}")
       end
 
       ## Mandando requisição POST
