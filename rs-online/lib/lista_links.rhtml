@@ -199,8 +199,6 @@ Released   : 20081230
                     <p> <% puts err %> </p>
                   <%
                   end
-
-
                 %>
                 </div>
               </div>
@@ -208,51 +206,6 @@ Released   : 20081230
                 <p class="links"></p>
               </div>
             </div>
-            <div class="post">
-              <h1 class="title">Editar Pacote</h1>
-              <div class="entry">
-                <form action="lista_links.rhtml" method="get">
-                  <table width="90%" border="0" cellpadding="5">
-                    <tr align="right">
-                      <td><b>Prioridade: </b></td>
-                      <td>
-                        <select name="prioridade" class="select-box">
-                          <option value="1">Baixa</option>
-                          <option value="2">Normal</option>
-                          <option value="3" selected="selected">Nenhuma</option>
-                          <option value="4">Alta</option>
-                          <option value="5">Muito Alta</option>
-                        </select>
-                      </td>
-                      <td>
-                        <b>Mostrar na Lista: </b>
-                      </td>
-                      <td>
-                        <select name="mostrar" class="select-box">
-                          <option value="true" selected="selected">Sim</option>
-                          <option value="false">Não</option>
-                        </select>
-                      </td>
-                    </tr>
-                    <tr align="right">
-                      <td><b>Senha: </b></td>
-                      <td><input type="text" name="senha" class="text" size="30"/></td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                    </tr>
-                    <tr align="right">
-                      <td colspan="4">
-                        <input type="hidden" name="id_pacote" value="<%=id_pacote %>" />
-                        <input type="hidden" name="do" value="update" />
-                        <input type="reset" value="Limpar" class="sLimpar"/>&nbsp;
-                        <input type="submit" value=" OK   &raquo; " class="sPacote"/>
-                      </td>
-                    </tr>
-                  </table>
-                </form>
-              </div>
-            </div>
-          </div>
           <div class="post">
             <h1 class="title">Editar Pacote</h1>
             <div class="entry">
@@ -296,6 +249,39 @@ Released   : 20081230
               </form>
             </div>
           </div>
+        </div>
+        <div id="sidebar">
+          <div id="sidebar-bgtop"></div>
+          <div id="sidebar-content">
+            <div id="sidebar-bgbtm">
+              <ul>
+                <li id="search">
+                  <h2>Search</h2>
+                  <form method="get" action="">
+                    <fieldset>
+                      <input type="text" id="s" name="s" value="" />
+                      <input type="submit" id="x" value="Search" />
+                    </fieldset>
+                  </form>
+                </li>
+                <li>
+                  <h2>Pacotes</h2>
+                  <ul>
+                    <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
+                    <li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2>Downloads</h2>
+                  <ul>
+                    <li><a href="#">Lista de Downloads</a></li>
+                    <li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
           <!-- end #sidebar -->
           <div style="clear:both; margin:0;"></div>
         </div>
