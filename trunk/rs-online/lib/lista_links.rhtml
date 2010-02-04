@@ -106,7 +106,7 @@ Released   : 20081230
                           <%
                           # tamanho
                           unless row["tamanho"] == nil
-                          %><td><%=row["tamanho"]/1024.0 %> MB</td><%
+                          %><td><%=sprintf("%.2f", row["tamanho"]/1024.0) %> MB</td><%
                           else
                           %><td align="center"> --- </td><%
                           end
