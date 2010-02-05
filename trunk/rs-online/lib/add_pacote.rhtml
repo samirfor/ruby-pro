@@ -26,105 +26,105 @@ Released   : 20081230
 
     <div id="wrapper">
 
-<div id="header">
-	<div id="logo">
-		<h1><a href="#">DownloadRS4</a></h1>
-		<p>version 1.0b ~ Powered by eRuby</p>
-	</div>
-	<!-- end #logo -->
-	<div id="menu">
-		<ul>
-			<li class="active"><a href="index.rhtml">Home</a></li>
-			<li><a href="#">About Us</a></li>
-			<li><a href="#">Products</a></li>
-			<li><a href="#">Services</a></li>
-			<li><a href="#">Contact Us</a></li>
-		</ul>
-	</div>
-	<!-- end #menu -->
-</div>
-<!-- end #header -->
-<div id="page">
-	<!--<div id="header-pic"></div>-->
-	<div id="content">
-		<div class="post">
-			<h1 class="title">Adicionar Novo Pacote</h1>
-			<div class="entry">
-           <form action="save_pacote.rhtml" method="post">
-             <table width="90%" border="0" cellpadding="5">
-             <tr>
-               <td align="right"><b>Nome do Pacote (Opcional): </b><input type="text" name="name" class="text" size="50" /></td>
-               <td>&nbsp;</td>
-             </tr>
-             <tr>
-               <td align="right">
-                 <b>Senha: </b><input type="text" name="senha" class="text" size="50" />
-               </td>
-               <td><b>Prioridade: </b>
-                 <select name="prioridade" class="select-box">
-                   <option value="1" selected="selected">Nenhuma</option>
-                   <option value="2">Baixa</option>
-                   <option value="3">Normal</option>
-                   <option value="4">Alta</option>
-                   <option value="5">Muito Alta</option>
-                 </select></td>
-             </tr>
-             <tr>
-               <td colspan="2">
-                 <b>Links: </b><textarea name="package" cols="120" rows="15" class="area-wide"></textarea>
-               </td>
-             </tr>
-             <tr>
-               <td align="right" colspan="2">
-                 <input type="reset" value="Limpar Lista" class="sLimpar"/>
-                 <input type="submit" value=" OK   &raquo; " class="sPacote"/>
-               </td>
-             </tr>
-           </table>
-           </form>
-			</div>
-			<div class="meta">
-				<p class="links"></p>
-			</div>
-		</div>
-	</div>
-	<!-- end #content -->
-	<div id="sidebar">
-		<div id="sidebar-bgtop"></div>
-		<div id="sidebar-content">
-			<div id="sidebar-bgbtm">
-			<ul>
-				<li id="search">
-					<h2>Search</h2>
-					<form method="get" action="">
-						<fieldset>
-						<input type="text" id="s" name="s" value="" />
-						<input type="submit" id="x" value="Search" />
-						</fieldset>
-					</form>
-				</li>
-				<li>
-					<h2>Pacotes</h2>
-					<ul>
-                 <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
-						<li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
-					</ul>
-				</li>
-				<li>
-					<h2>Downloads</h2>
-					<ul>
-						<li><a href="#">Lista de Downloads</a></li>
-						<li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-		</div>
-	</div>
-	<!-- end #sidebar -->
-	<div style="clear:both; margin:0;"></div>
-</div>
-<!-- end #page -->
+      <div id="header">
+        <div id="logo">
+          <h1><a href="#">DownloadRS4</a></h1>
+          <p>version 1.0b ~ Powered by eRuby</p>
+        </div>
+        <!-- end #logo -->
+        <div id="menu">
+          <ul>
+            <li class="active"><a href="index.rhtml">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <!-- end #menu -->
+      </div>
+      <!-- end #header -->
+      <div id="page">
+        <!--<div id="header-pic"></div>-->
+        <div id="content">
+          <div class="post">
+            <h1 class="title">Adicionar Novo Pacote</h1>
+            <div class="entry">
+              <form action="save_pacote.rhtml" method="post">
+                <table width="90%" border="0" cellpadding="5">
+                  <tr>
+                    <td align="right"><b>Nome do Pacote (Opcional): </b><input type="text" name="name" class="text" size="50" /></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td align="right">
+                      <b>Senha: </b><input type="text" name="senha" class="text" size="50" />
+                    </td>
+                    <td><b>Prioridade: </b>
+                      <select name="prioridade" class="select-box">
+                        <option value="1" selected="selected">Nenhuma</option>
+                        <option value="2">Baixa</option>
+                        <option value="3">Normal</option>
+                        <option value="4">Alta</option>
+                        <option value="5">Muito Alta</option>
+                      </select></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <b>Links: </b><textarea name="package" cols="120" rows="15" class="area-wide"></textarea>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right" colspan="2">
+                      <input type="reset" value="Limpar Lista" class="sLimpar"/>
+                      <input type="submit" value=" OK   &raquo; " class="sPacote"/>
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </div>
+            <div class="meta">
+              <p class="links"></p>
+            </div>
+          </div>
+        </div>
+        <!-- end #content -->
+        <div id="sidebar">
+          <div id="sidebar-bgtop"></div>
+          <div id="sidebar-content">
+            <div id="sidebar-bgbtm">
+              <ul>
+                <li id="search">
+                  <h2>Search</h2>
+                  <form method="get" action="">
+                    <fieldset>
+                      <input type="text" id="s" name="s" value="" />
+                      <input type="submit" id="x" value="Search" />
+                    </fieldset>
+                  </form>
+                </li>
+                <li>
+                  <h2>Pacotes</h2>
+                  <ul>
+                    <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
+                    <li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2>Downloads</h2>
+                  <ul>
+                    <li><a href="#">Lista de Downloads</a></li>
+                    <li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- end #sidebar -->
+        <div style="clear:both; margin:0;"></div>
+      </div>
+      <!-- end #page -->
 
     </div>
 
