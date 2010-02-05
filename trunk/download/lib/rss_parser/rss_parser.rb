@@ -198,8 +198,10 @@ def main(server)
   rescue Interrupt => err
     STDERR.puts "\nINTERRUPT: Sinal de interrupção recebido"
     puts "INTERRUPT: O programa foi encerrado."
+    exit(1)
   rescue SystemExit => err
     puts "INTERRUPT: O programa foi encerrado."
+    exit
   rescue Exception => err
     STDERR.puts err
     exit(1)

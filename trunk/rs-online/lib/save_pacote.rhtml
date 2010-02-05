@@ -57,7 +57,7 @@ Released   : 20081230
               data_ini = Time.now
               conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
               sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade, senha) " +
-                    "VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}', #{prioridade}), '#{senha}' RETURNING id"
+                "VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}', #{prioridade}, '#{senha}') RETURNING id"
               rst = conn.execute(sql)
               conn.disconnect
               return rst.fetch[0]
@@ -71,7 +71,7 @@ Released   : 20081230
               end
               conn.disconnect
             end
-            
+
             begin
               cgi = CGI.new
               a_params = cgi.params
@@ -88,24 +88,24 @@ Released   : 20081230
               id_pacote = save_pacote(nome_pacote, prioridade, senha)
               save_links(links, id_pacote)
 
-              %>
+            %>
               <h1 class="title"><% puts a_params["name"] %></h1>
               <div class="entry">
-              <p>
-                <% puts a_params["package"] %>
-              </p>
+                <p>
+                  <% puts a_params["package"] %>
+                </p>
               </div>
               <div class="meta">
                 <p class="links">Pacote adicionado.</p>
               </div>
-              <%
+            <%
             rescue Exception => err %>
               <h1 class="title">Ocorreu um erro.</h1>
               <h2>Não foi possível carregar a página. Contate o administrador!</h2>
               <p> <% puts err %> </p>
             <%
             end
-            %>
+          %>
           </div>
         </div>
         <!-- end #content -->
@@ -124,19 +124,19 @@ Released   : 20081230
                   </form>
                 </li>
                 <li>
-					<h2>Pacotes</h2>
-					<ul>
-                 <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
-						<li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
-					</ul>
-				</li>
-				<li>
-					<h2>Downloads</h2>
-					<ul>
-						<li><a href="#">Lista de Downloads</a></li>
-						<li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
-					</ul>
-				</li>
+                  <h2>Pacotes</h2>
+                  <ul>
+                    <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
+                    <li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2>Downloads</h2>
+                  <ul>
+                    <li><a href="#">Lista de Downloads</a></li>
+                    <li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
+                  </ul>
+                </li>
               </ul>
             </div>
           </div>
