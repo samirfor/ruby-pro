@@ -17,9 +17,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-# Link Test
-# http://rapidshare.com/files/334602673/Nullsoft.Winamp.v5.572.Build.2830.incl.keymaker-RedT.rar
-
 require 'net/http'
 require 'socket'
 require 'logger'
@@ -28,7 +25,7 @@ require 'dbi'
 def ajuda()
   puts "::: Rapidshare V4 :::\n"
   puts ">>> Criado por Samir <samirfor@gmail.com>\n"
-  puts "Banco de Dados Postgres necessário para rodar o programa."
+  puts "Banco de Dados PostgreSQL necessário para rodar o programa."
 end
 
 # CLASSES
@@ -62,9 +59,9 @@ end
 
 # --- PRIORIDADE
 module Prioridade
-  BAIXA = 1
-  NORMAL = 2
-  NENHUMA = 3
+  NENHUMA = 1
+  BAIXA = 2
+  NORMAL = 3
   ALTA = 4
   MUITO_ALTA = 5
 end
@@ -610,6 +607,7 @@ begin
 rescue Interrupt => err
   STDERR.puts "\nSinal de interrupção recebido"
   to_log("O programa foi encerrado.")
+  exit(1)
 rescue SystemExit => err
   to_log("O programa foi encerrado.")
 rescue Exception => err
