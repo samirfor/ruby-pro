@@ -528,8 +528,10 @@ begin
 rescue Interrupt => err
   STDERR.puts "\nSinal de interrupção recebido"
   to_log("O programa foi encerrado.")
+  exit(1)
 rescue SystemExit => err
   to_log("O programa foi encerrado.")
+  exit(1)
 rescue Exception => err
   STDERR.puts err
   exit(1)
