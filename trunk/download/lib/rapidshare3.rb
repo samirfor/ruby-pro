@@ -21,7 +21,6 @@
 require 'net/http'
 require 'socket'
 require 'logger'
-require 'dbi'
 
 def ajuda()
   puts "::: Rapidshare V3 :::\n"
@@ -82,7 +81,7 @@ def contador(tempo, mensagem)
     t -= 1
   end
   print "\r" + " " * mensagem.length + "\r"
-  $stdout.sync = false
+  $stdout.sync = falexse
   sleep(1)
 end
 
@@ -92,8 +91,6 @@ def to_log(texto)
   logger.datetime_format = "%d/%m %H:%M:%S"
   logger.info(texto)
   logger.close
-  #  to_xml(texto)
-  save_records(texto)
   puts texto
 end
 
@@ -112,17 +109,7 @@ end
 #  linha.attributes["mensagem"] = texto
 #  doc.root.add_element linha
 #  doc.write(File.open("rs.log.xml", "a"), 1)
-#end
-
-def save_records(texto)
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  # formatar hora
-  tempo = Time.new.strftime("%Y/%m/%d %H:%M:%S")
-  # processo
-  processo = Process.pid.to_s
-  conn.do("INSERT INTO rs.historico (data, processo, mensagem) values ('#{tempo}', '#{processo}', '#{texto}')")
-  conn.disconnect
-end
+#ensa
 
 def falhou(segundos)
   to_log("Tentando novamente em #{segundos} segundos.")
@@ -300,14 +287,12 @@ def testa_link(link)
   rescue Timeout::Error
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
+  rescue Interrupt
+    to_log "Programa foi interrompido pelo usuário."
+    abort
   rescue Exception => err
     STDERR.puts err
     to_log err
-  rescue Interrupt => err
-    STDERR.puts "\nSinal de interrupção recebido"
-    to_log("O programa foi encerrado.")
-    exit(1)
-  rescue
   end
 end
 
@@ -420,10 +405,13 @@ def baixar
   rescue Timeout::Error
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
+  rescue Interrupt => err
+    to_log "Programa foi interrompido pelo usuário."
+    abort
   rescue Exception => err
     STDERR.puts err
     to_log(err)
-  rescue
+    return false
   end
 end
 
@@ -438,15 +426,6 @@ def run
     if FileTest.exist?("rs.log")
       File.delete("rs.log")
     end
-    #    # arquivo xml
-    #    if FileTest.exist?("rs.log.xml")
-    #      File.delete("rs.log.xml")
-    #    end
-
-    #    doc = Document.new
-    #    xmldecl = XMLDecl.new("1.0", "UTF-8", "no")
-    #    doc.add xmldecl
-    #    doc.write(File.open("rs.log.xml", "w"), 1)
 
     # Lista de links
     if ARGV[0] == "-l"
@@ -525,14 +504,13 @@ end
 # O main do programa
 begin
   run
-rescue Interrupt => err
-  STDERR.puts "\nSinal de interrupção recebido"
-  to_log("O programa foi encerrado.")
-  exit(1)
-rescue SystemExit => err
-  to_log("O programa foi encerrado.")
-  exit(1)
+rescue Interrupt
+  to_log "Sinal de interrupção recebido"
+  to_log "O programa foi encerrado."
+  abort
+rescue SystemExit
+  to_log("SYSEXIT: O programa foi encerrado.")
 rescue Exception => err
   STDERR.puts err
-  exit(1)
+  abort
 end
