@@ -103,7 +103,7 @@ public class NaiveBayes {
         System.out.println("VARIANCIA :"+variancia);
         
         
-        //classeSetosa = setosa[0] * setosa[1] * setosa[2] * setosa[3];
+        classeSetosa = setosa[0] * setosa[1] * setosa[2] * setosa[3];
         //System.out.println("classeSetosa" + classeSetosa);
 
         

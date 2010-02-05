@@ -23,9 +23,11 @@ public class Estatistica {
         boolean repeticao = false;
         double tipo, acertos = 0.0;
         double[][] atributos = readDoubleArray(new File("iris_1.data"));
+
         int index = 0, count = 0;
         PadraoIris p;
-
+        new NewClass(atributos).getIntervalo();
+        
         while (count < 120) {
             repeticao = false;
            index = num.nextInt(150);
