@@ -219,13 +219,7 @@ def get_ip(host)
   begin
     return IPSocket.getaddress(host)
   rescue Exception
-    case host
-    when "rapidshare.com"
-      return "195.122.131.2"
-      break
-    when "www.rapidshare.com"
-      return "195.122.131.2"
-    end
+    return "195.122.131.2" if host == "rapidshare.com" or host == "www.rapidshare.com"
   end
 end
 
@@ -257,7 +251,6 @@ def to_log(texto)
   #  logger.datetime_format = "%d/%m %H:%M:%S"
   #  logger.info(texto)
   #  logger.close
-  #  to_xml(texto)
   save_records(texto)
   puts texto
 end
@@ -419,13 +412,12 @@ def testa_link(link)
   rescue Timeout::Error
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
+  rescue Interrupt
+    to_log "Sinal de interrupção recebido"
+    to_log "O programa foi encerrado."
+    abort
   rescue Exception => err
-    STDERR.puts err
     to_log err
-  rescue Interrupt => err
-    STDERR.puts "\nSinal de interrupção recebido"
-    to_log("O programa foi encerrado.")
-    exit(1)
   end
 end
 
@@ -538,10 +530,12 @@ def baixar(link)
   rescue Timeout::Error
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
+  rescue Interrupt
+    to_log "Sinal de interrupção recebido"
+    to_log "O programa foi encerrado."
+    abort
   rescue Exception => err
-    STDERR.puts err
     to_log(err)
-  rescue
   end
 end
 
@@ -590,6 +584,10 @@ def run
       else
         update_pacote_problema(id_pacote)
       end
+    rescue Interrupt
+      to_log "Sinal de interrupção recebido"
+      to_log "O programa foi encerrado."
+      abort
     rescue Exception => err
       to_log err
       retry
@@ -603,10 +601,10 @@ end
 begin
   ajuda
   run
-rescue Interrupt => err
-  STDERR.puts "\nSinal de interrupção recebido"
-  to_log("O programa foi encerrado.")
-  exit(1)
+rescue Interrupt
+  to_log "Sinal de interrupção recebido"
+  to_log "O programa foi encerrado."
+  abort
 rescue SystemExit => err
   to_log("O programa foi encerrado.")
   exit
