@@ -83,9 +83,9 @@ Released   : 20081230
 
                     # --- PRIORIDADE
                     module Prioridade
-                      BAIXA = 1
-                      NORMAL = 2
-                      NENHUMA = 3
+                      NENHUMA = 1
+                      BAIXA = 2
+                      NORMAL = 3
                       ALTA = 4
                       MUITO_ALTA = 5
                     end
@@ -98,15 +98,15 @@ Released   : 20081230
                       print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">"
                       case row["prioridade"]
                       when Prioridade::NORMAL
-                        %><img src="images/normal.png" alt="Folder" />&nbsp;&nbsp;<%
-                        when Prioridade::BAIXA
-                        %><img src="images/baixa.png" alt="Folder" />&nbsp;&nbsp;<%
+                      %><img src="images/normal.png" alt="Folder" />&nbsp;&nbsp;<%
+                      when Prioridade::BAIXA
+                      %><img src="images/baixa.png" alt="Folder" />&nbsp;&nbsp;<%
                       when Prioridade::NENHUMA
-                        %><img src="images/nenhum.png" alt="Folder" />&nbsp;&nbsp;<%
+                      %><img src="images/nenhum.png" alt="Folder" />&nbsp;&nbsp;<%
                       when Prioridade::ALTA
-                        %><img src="images/alta.png" alt="Folder" />&nbsp;&nbsp;<%
+                      %><img src="images/alta.png" alt="Folder" />&nbsp;&nbsp;<%
                       when Prioridade::MUITO_ALTA
-                        %><img src="images/muito.alta.png" alt="Folder" />&nbsp;&nbsp;<%
+                      %><img src="images/muito.alta.png" alt="Folder" />&nbsp;&nbsp;<%
 
                       end
                       print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"]}</td>\n"
