@@ -413,6 +413,7 @@ def testa_link(link)
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
   rescue Interrupt
+    update_status_link(link.id_link, Status::INTERROMPIDO)
     to_log "Sinal de interrupção recebido"
     to_log "O programa foi encerrado."
     abort
@@ -516,7 +517,7 @@ def baixar(link)
       str_tempo = tempo.strftime("%Hh %Mm %Ss")
       if baixou
         to_log("Download concluido com sucesso em #{str_tempo}.")
-        to_log("Velocidade média foi de #{tamanho.to_i/(fim - inicio)} KB/s.")
+        to_log("Velocidade média foi de #{sprintf("%.2f KB/s", tamanho.to_i/(fim - inicio))} KB/s.")
       else
         to_log("Download falhou com #{str_tempo} decorridos.")
       end
@@ -531,6 +532,7 @@ def baixar(link)
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
   rescue Interrupt
+    update_status_link(link.id_link, Status::INTERROMPIDO)
     to_log "Sinal de interrupção recebido"
     to_log "O programa foi encerrado."
     abort
@@ -564,7 +566,7 @@ def run
         end
       end
 
-      to_log ">> Tamanho total: #{$tamanho_total/1024.0} MB"
+      to_log ">> Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)} MB"
       links_online.each do |link|
         begin
           update_status_link(link.id_link, Status::BAIXANDO)
