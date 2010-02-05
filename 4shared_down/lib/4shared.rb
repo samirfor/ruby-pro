@@ -41,7 +41,7 @@ def get_ip(host)
   rescue Exception => err
     if host == "4shared.com" or host == "www.4shared.com"
       to_log "Não foi possível resolver host. Setando manualmente"
-      return "208.88.227.170"
+      return "72.233.72.131"
     end
   end
 end
@@ -195,7 +195,7 @@ def baixar(link)
   to_log("Baixando o link: "+link)
   url = URI.parse(link)
   host_4s = get_ip(url.host)
-  url.path.gsub!("/file", "/get")
+  #  url.path.gsub!("/file", "/get")
 
   begin
     http = Net::HTTP.new(host_4s)
@@ -227,29 +227,37 @@ def baixar(link)
       end
       servidor_ip = get_ip(servidor_host)
 
-      #      ## Mandando requisição POST
-      #      to_log('Enviando requisição de download...')
-      #      ip_url = URI.parse('http://' + servidor_ip + url.path)
-      #      resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
-      #      resposta = resposta.body
+
+
+      ## Mandando requisição POST
+      passkey = body.scan(/name=\"pass\" value=\"(.+)\"/)[0][0]
+      if passkey == nil # Testa se identificou o password
+        to_log "Não foi possível capturar o passkey."
+        abort
+      end
+      to_log('Enviando requisição de download...')
+      resposta = Net::HTTP.post_form(url, {'pass'=>"#{passkey}"})
+      resposta = resposta.body
+      debug resposta
 
       ## Captura tempo de espera
-      tempo = resposta.scan(/var c = (\d+);/)[0][0]
+      tempo = resposta.scan(/var c = (\d+);/)[0]
       if tempo == nil # Testa se identificou o contador
         to_log('Não foi possível capturar o contador.')
         return false
       end
+      t = Time.utc(0) + tempo.to_i
+      to_log(t.strftime("Contador identificado: %Hh %Mm %Ss."))
+      contador(tempo.to_i, "O download iniciará em %Hh %Mm %Ss.")
 
-      debug body
+      
       exit(0)
 
 
 
 
 
-      t = Time.utc(0) + tempo.to_i
-      to_log(t.strftime("Contador identificado: %Hh %Mm %Ss."))
-      contador(tempo.to_i, "O download iniciará em %Hh %Mm %Ss.")
+      
 
       link = resposta.scan(/a href=\\\'\S+\\/)[0]
       link.gsub!("dlf.action=\\'","").gsub!("\\","")
@@ -280,12 +288,13 @@ def baixar(link)
   rescue Timeout::Error
     to_log("Tempo de requisição esgotado. Tentando novamente.")
     retry
+  rescue Interrupt
+    to_log "\nSinal de interrupção recebido"
+    to_log "O programa foi encerrado."
+    abort
   rescue Exception => err
     STDERR.puts err
     to_log(err)
-  rescue Interrupt => err
-    to_log(err)
-    exit(1)
   end
 end
 
@@ -294,6 +303,7 @@ end
 #################
 def run
   if ARGV[0] == nil
+    to_log "Nenhum parâmetro detectado."
     ajuda
     exit(0)
   end
@@ -338,17 +348,15 @@ def run
       end
     end
 
-    if
-      to_log("Fim da lista.")
-      to_log(">>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<")
+    to_log("Fim da lista.")
+    to_log(">>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<")
 
-    else # único link
-      link = ARGV[0]
-      begin
-        resp = baixar(link)
-        falhou(10) if !resp
-      end while !resp
-    end
+  else # único link
+    link = ARGV[0]
+    begin
+      resp = baixar(link)
+      falhou(10) if !resp
+    end while !resp
   end
 end
 
@@ -357,12 +365,12 @@ begin
   ajuda
   run
 rescue Interrupt => err
-  STDERR.puts "\nSinal de interrupção recebido"
-  to_log("O programa foi encerrado.")
-  exit(1)
+  to_log "\nSinal de interrupção recebido"
+  to_log "O programa foi encerrado."
+  abort
 rescue SystemExit => err
-  to_log("O programa foi encerrado.")
+  to_log("SYSEXIT: O programa foi encerrado.")
 rescue Exception => err
-  STDERR.puts err
-  exit(1)
+  to_log err
+  abort
 end
