@@ -517,7 +517,7 @@ def baixar(link)
       str_tempo = tempo.strftime("%Hh %Mm %Ss")
       if baixou
         to_log("Download concluido com sucesso em #{str_tempo}.")
-        to_log("Velocidade média foi de #{sprintf("%.2f KB/s", tamanho.to_i/(fim - inicio))} KB/s.")
+        to_log("Velocidade média foi de #{sprintf("%.2f KB/s", tamanho.to_i/(fim - inicio))}.")
       else
         to_log("Download falhou com #{str_tempo} decorridos.")
       end
