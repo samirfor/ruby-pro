@@ -272,7 +272,7 @@ def testa_link(link)
           to_log('Não foi possível capturar o tamanho.')
         else
           tamanho = tamanho.to_i
-          to_log("Tamanho #{tamanho} KB ou #{tamanho/1024.0} MB")
+          to_log("Tamanho #{tamanho} KB ou #{sprintf("%.2f MB", tamanho/1024.0)}")
           $tamanho_total += tamanho
         end
       else
@@ -349,7 +349,7 @@ def baixar
         to_log('Não foi possível capturar o tamanho.')
       else
         tamanho = tamanho.to_i
-        to_log("Tamanho #{tamanho} KB ou #{tamanho/1024.0} MB")
+        to_log("Tamanho #{tamanho} KB ou #{sprintf("%.2f MB", tamanho/1024.0)}")
       end
 
       ## Mandando requisição POST
@@ -391,7 +391,7 @@ def baixar
       str_tempo = tempo.strftime("%Hh %Mm %Ss")
       if baixou
         to_log("Download concluido com sucesso em #{str_tempo}.")
-        to_log("Velocidade média foi de #{tamanho.to_i/(fim - inicio)} KB/s.")
+        to_log("Velocidade média foi de #{sprintf("%.2f KB/s", tamanho.to_i/(fim - inicio))}")
       else
         to_log("Download falhou com #{str_tempo} decorridos.")
       end

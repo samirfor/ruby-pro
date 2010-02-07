@@ -213,6 +213,7 @@ def baixar(link)
         end
       end
 
+      # Identificando host
       servidor_host = body.scan(/dc\w{1,}.4shared.com/i)[0]
       # Testa se identificou o host
       if servidor_host == nil
@@ -227,23 +228,49 @@ def baixar(link)
       end
       servidor_ip = get_ip(servidor_host)
 
+      # Capturando link do download
+      link_download = body.scan(/<a href=\"(\S+)\" class=\"dbtn\" tabindex=\"1\"/)[0][0]
+      if link_download == nil
+        # pode ser link direto!
+        link_download = body.scan(/startDownload.*window.location.*http:\/\/.*\"/)[0]
+        if link_download == nil
+          # pode ser uma imagem
+          link_download = body.scan(/<a href=\"http:\/\/dc\d+.(4shared|4shared-china).com\/download\/.*\" class=\".*dbtn.*\" tabindex=\"1\"/)[0]
+          if link_download == nil
+            to_log "Não foi possível detectar o link pra download."
+            return false
+          end
+        end
+      else
+        to_log "Preparando download"
+        url = URI.parse(link_download)
+        ip_host = get_ip url.host
+        http = Net::HTTP.new(ip_host)
+        http.read_timeout = 15 #segundos
+        ARGV.each do |item|
+          to_log('Abrindo conexão HTTP...') if item == "debug"
+        end
+        headers, body = http.get(url.path)
+        if headers.code != "200"
+          to_log("Não foi possível carregar a página.")
+          to_log("#{headers.code} #{headers.message}")
+          return false
+        end
+
+        msg = body.scan(/id=\'divDLStart\' >.*<a href='.*'.*onclick=\"return callPostDownload\(\);\">Click here to download this file<\/a>.*<\/div>/)[0]
+        if msg =~ /linkerror.jsp/
+          to_log "Houve algum erro no link: linkerror.jsp"
+          return false
+        end
 
 
-      ## Mandando requisição POST
-      passkey = body.scan(/name=\"pass\" value=\"(.+)\"/)[0][0]
-      if passkey == nil # Testa se identificou o password
-        to_log "Não foi possível capturar o passkey."
-        abort
       end
-      to_log('Enviando requisição de download...')
-      resposta = Net::HTTP.post_form(url, {'pass'=>"#{passkey}"})
-      resposta = resposta.body
-      debug resposta
 
       ## Captura tempo de espera
       tempo = resposta.scan(/var c = (\d+);/)[0]
       if tempo == nil # Testa se identificou o contador
-        to_log('Não foi possível capturar o contador.')
+        to_log('Não foi possível capturar o contador. Definindo 40 segundos...')
+        tempo = 40
         return false
       end
       t = Time.utc(0) + tempo.to_i
