@@ -370,17 +370,19 @@ def debug(body)
 end
 
 def testa_link(link)
-  link.link.strip!
-  to_log("Testando link: " + link.link)
-  if link.link =~ /http:\/\/\S+\/.+/
-    url = URI.parse(link.link)
-  else
-    to_log("ERRO: Link #{link.link} inválido evitado.")
-    return false
-  end
-  host_rs = get_ip(url.host)
-
   begin
+    abort if cancelar?
+  
+    link.link.strip!
+    to_log("Testando link: " + link.link)
+    if link.link =~ /http:\/\/\S+\/.+/
+      url = URI.parse(link.link)
+    else
+      to_log("ERRO: Link #{link.link} inválido evitado.")
+      return false
+    end
+    host_rs = get_ip(url.host)
+
     http = Net::HTTP.new(host_rs)
     http.read_timeout = 15 #segundos
     headers, body = http.get(url.path)
@@ -422,23 +424,29 @@ def testa_link(link)
   end
 end
 
+def cancelar?
+  if FileTest.exist?("cancelar")
+    to_log "Downloads cancelado pelo usuário."
+    true
+  end
+  false
+end
+
 
 ## Método para download
 def baixar(link)
-  if FileTest.exist?("cancelar")
-    to_log "Downloads cancelado pelo usuário."
-    exit
-  end
-  to_log("Baixando o link: "+link)
-  if link =~ /http:\/\/\S+\/.+/
-    url = URI.parse(link)
-  else
-    to_log("ERRO: Link #{link} inválido evitado.")
-    return true
-  end
-  host_rs = get_ip(url.host)
-
   begin
+    abort if cancelar?
+
+    to_log("Baixando o link: "+link)
+    if link =~ /http:\/\/\S+\/.+/
+      url = URI.parse(link)
+    else
+      to_log("ERRO: Link #{link} inválido evitado.")
+      return true
+    end
+    host_rs = get_ip(url.host)
+
     http = Net::HTTP.new(host_rs)
     http.read_timeout = 15 #segundos
     ARGV.each do |item|
@@ -533,7 +541,7 @@ def baixar(link)
     retry
   rescue Interrupt
     update_status_link(link.id_link, Status::INTERROMPIDO)
-    to_log "Sinal de interrupção recebido"
+    to_log "\nSinal de interrupção recebido"
     to_log "O programa foi encerrado."
     abort
   rescue Exception => err
