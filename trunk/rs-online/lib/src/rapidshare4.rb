@@ -247,12 +247,18 @@ end
 
 # Gera linhas de log
 def to_log(texto)
-  #  logger = Logger.new('rs.log', 10, 1024000)
-  #  logger.datetime_format = "%d/%m %H:%M:%S"
-  #  logger.info(texto)
-  #  logger.close
   save_records(texto)
   puts texto
+end
+
+# Gera linhas de log debug
+def to_debug(texto)
+  ARGV.each do |arg|
+    if arg == "debug"
+      save_records(texto)
+      puts texto
+    end
+  end
 end
 
 def falhou(segundos)
@@ -371,7 +377,7 @@ end
 
 def testa_link(link)
   begin
-    abort if cancelar?
+    cancelar?
   
     link.link.strip!
     to_log("Testando link: " + link.link)
@@ -418,25 +424,25 @@ def testa_link(link)
     update_status_link(link.id_link, Status::INTERROMPIDO)
     to_log "\nSinal de interrupção recebido"
     to_log "O programa foi encerrado."
-    abort
+    exit!(1)
   rescue Exception => err
     to_log err
+    retry
   end
 end
 
 def cancelar?
   if FileTest.exist?("cancelar")
     to_log "Downloads cancelado pelo usuário."
-    true
+    exit!(1)
   end
-  false
 end
 
 
 ## Método para download
 def baixar(link)
   begin
-    abort if cancelar?
+    cancelar?
 
     to_log("Baixando o link: "+link)
     if link =~ /http:\/\/\S+\/.+/
@@ -543,9 +549,10 @@ def baixar(link)
     update_status_link(link.id_link, Status::INTERROMPIDO)
     to_log "\nSinal de interrupção recebido"
     to_log "O programa foi encerrado."
-    abort
+    exit!(1)
   rescue Exception => err
-    to_log(err)
+    to_log err
+    return false
   end
 end
 
@@ -560,7 +567,7 @@ def run
       id_pacote = select_pacote_pendente
       if id_pacote == nil
         to_log "Não há pacotes resgistrados para download."
-        exit(1)
+        exit!(1)
       end
       links_before_test = select_lista_links(id_pacote)
 
@@ -588,23 +595,21 @@ def run
         end while !resp
       end
       to_log("Fim do pacote.")
-      to_log("********************")
       if select_status_links(id_pacote) == 0
         update_pacote_completado(Time.now.strftime("%d/%m/%Y %H:%M:%S"), id_pacote)
       else
         update_pacote_problema(id_pacote)
       end
     rescue Interrupt
-      to_log "Sinal de interrupção recebido"
+      to_log "\nSinal de interrupção recebido"
       to_log "O programa foi encerrado."
-      abort
+      exit!(1)
     rescue Exception => err
-      to_log err
+      to_debug err
       retry
     end
   end while id_pacote != nil
   to_log("Fim do(s) download(s).")
-  to_log("########################")
 end
 
 # O main do programa
@@ -612,12 +617,12 @@ begin
   ajuda
   run
 rescue Interrupt
-  to_log "Sinal de interrupção recebido"
+  to_log "\nSinal de interrupção recebido"
   to_log "O programa foi encerrado."
-  abort
+  exit!(1)
 rescue SystemExit => err
   to_log("O programa foi encerrado.")
-  exit
+  exit!
 rescue Exception => err
   STDERR.puts err
   exit(1)
