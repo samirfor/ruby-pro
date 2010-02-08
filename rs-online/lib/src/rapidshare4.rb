@@ -416,7 +416,7 @@ def testa_link(link)
     retry
   rescue Interrupt
     update_status_link(link.id_link, Status::INTERROMPIDO)
-    to_log "Sinal de interrupção recebido"
+    to_log "\nSinal de interrupção recebido"
     to_log "O programa foi encerrado."
     abort
   rescue Exception => err
