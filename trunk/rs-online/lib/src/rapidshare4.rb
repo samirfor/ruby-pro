@@ -432,10 +432,15 @@ def testa_link(link)
 end
 
 def cancelar?
-  if FileTest.exist?("cancelar")
+  if FileTest.exist?("cancelar") or FileTest.exist?("fechar")
     to_log "Downloads cancelado pelo usuário."
     exit!(1)
   end
+end
+
+# O mesmo que "cancelar?"
+def fechar?
+  cancelar?
 end
 
 
