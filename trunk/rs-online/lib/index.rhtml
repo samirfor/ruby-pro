@@ -5,6 +5,7 @@
 
 <%
 require 'dbi'
+require 'src/database'
 
 def select_pacote
   sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
@@ -55,43 +56,7 @@ def select_count_links id_pacote
   count
 end
 
-def db_connect
-  begin
-    DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  rescue DBI::DatabaseError => e
-    to_log "Ocorreu erro ao se conectar no banco de dados."
-    to_log "Código do erro: #{e.err}"
-    to_log "#{e.errstr}"
-    to_log "SQLSTATE: #{e.state}"
-  end
-end
 
-def db_statement_execute(sql)
-  begin
-    conn = db_connect
-    rst = conn.execute(sql)
-    retorno = Array.new
-    retorno.push rst
-    retorno.push conn
-    retorno
-  rescue DBI::DatabaseError => e
-    to_log "Ocorreu erro consultando o banco de dados."
-    to_log "Código do erro: #{e.err}"
-    to_log "#{e.errstr}"
-    to_log "SQLSTATE: #{e.state}"
-  end
-end
-
-def db_disconnect(conn)
-  begin
-    conn.disconnect
-  rescue DBI::DatabaseError => e
-    to_log "Ocorreu na disconexão do banco de dados."
-    to_log "Código do erro: #{e.err}"
-    to_log "#{e.errstr}"
-    to_log "SQLSTATE: #{e.state}"
-  end
-end
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -152,8 +117,13 @@ Released   : 20081230
                 begin
                   pacote = select_pacote
                   count = select_count_links pacote["id"]
-                  puts "Pacote baixando/a ser baixado a seguir: "%>
+                  puts "Pacote baixando/a ser baixado a seguir: "
+                %>
+                </p>
+                <p>
                   <a href="lista_links.rhtml?id_pacote=<%= pacote["id"] %>"<b><%= pacote["nome"] %></b></a>
+                </p>
+                <p>
                   <%= count[0] %> de <%= count[1] %> links baixados.
                 <%
                 rescue Exception => e
