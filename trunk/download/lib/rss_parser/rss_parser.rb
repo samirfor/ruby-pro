@@ -38,7 +38,6 @@ def file_to_a(arquivo)
     array.push(linha.chomp) if not linha =~ /#.*/
   end
   arq.close
-#  p array
   array
 end
 
@@ -52,10 +51,10 @@ def ja_inserido(link)
   return false
 end
 
-def browser(host, path)
+def browser(host, path, porta)
   begin
     req = Net::HTTP::Get.new(path)
-    res = Net::HTTP.start(host, 10025) do |http|
+    res = Net::HTTP.start(host, porta) do |http|
       http.request(req)
     end
     puts res.body
@@ -104,7 +103,7 @@ def jdownloader_insert(links, jd_conf)
       arq.print(a + "\n")
     end
     arq.close
-    browser(jd_conf[1], action)
+    browser(jd_conf[1], action, 10025)
   else
     puts "INFO: Nenhum link foi adicionado no JD."
     File.delete("lista")
@@ -150,7 +149,6 @@ def run(server)
       if f.title =~ /.*#{s}.*(HDTV|DVDRip).*XviD.*/i
         excecoes.each do |e|
           if f.title =~ /.*#{e}.*/i
-#            puts "arr_excessoes[#{e.index(e)}] = #{e}\t - titulo = #{f.title}"
             next
           end
         end
