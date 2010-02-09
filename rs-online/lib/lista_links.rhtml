@@ -83,16 +83,19 @@ Released   : 20081230
                     <%
                     require 'dbi'
                     require 'cgi'
+                    require 'src/database'
+                    require 'src/status'
 
                     begin
                       cgi = CGI.new
                       a_params = cgi.params
                       id_pacote = a_params["id_pacote"]
 
-                      conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
                       sql = "SELECT l.*, (l.data_fim - l.data_inicio) AS intervalo, l.tamanho, s.status, s.id_status " +
                         "FROM rs.link l, rs.status s WHERE id_pacote =  #{id_pacote} AND l.id_status = s.id_status"
-                      rst = conn.execute(sql)
+                      db = db_statement_execute(sql)
+                      rst = db[0]
+                      conn = db[1]
                       rst.fetch do |row|
                         short_link = row["link"].split("/")
                         path = short_link[short_link.size - 1]
@@ -146,16 +149,7 @@ Released   : 20081230
                           else
                           %><td align="center"><img src="images/accept.png" alt="Não" /></td><%
                           end
-                          # status
                           # --- STATUS
-                          module Status
-                            BAIXADO = 1
-                            OFFLINE = 2
-                            ONLINE = 3
-                            BAIXANDO = 4
-                            AGUARDANDO = 5
-                            INTERROMPIDO = 6
-                          end
                           case row["id_status"]
                           when Status::BAIXADO
                           %><td align="center"><img src="images/drive_disk.png" alt="Baixado" title="Baixado" /></td><%
@@ -180,32 +174,31 @@ Released   : 20081230
                         up_sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}', "
                         up_sql += "senha = '#{a_params["senha"]}' WHERE id = #{a_params["id_pacote"]}"
                         conn.do(up_sql)
-                        #print up_sql
                       end
-                      %>
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <th colspan="8" align="center">DownloadRS4 ~ version 1.0b ~ Powered by eRuby</th>
-                        </tr>
-                      </tfoot>
-                    </table>
-                    <%
-                    
-                    conn.disconnect
-                  rescue Exception => err %>
-                    <h1 class="title">Ocorreu um erro.</h1>
-                    <h2>Não foi possível carregar a página. Contate o administrador!</h2>
-                    <p> <% puts err %> </p>
+                    %>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="8" align="center">DownloadRS4 ~ version 1.0b ~ Powered by eRuby</th>
+                      </tr>
+                    </tfoot>
+                  </table>
                   <%
-                  end
-                %>
-                </div>
-              </div>
-              <div class="meta">
-                <p class="links"></p>
+
+                  db_disconnect(conn)
+                rescue Exception => err %>
+                  <h1 class="title">Ocorreu um erro.</h1>
+                  <h2>Não foi possível carregar a página. Contate o administrador!</h2>
+                  <p> <% puts err %> </p>
+                <%
+                end
+              %>
               </div>
             </div>
+            <div class="meta">
+              <p class="links"></p>
+            </div>
+          </div>
           <div class="post">
             <h1 class="title">Editar Pacote</h1>
             <div class="entry">
@@ -282,16 +275,16 @@ Released   : 20081230
             </div>
           </div>
         </div>
-          <!-- end #sidebar -->
-          <div style="clear:both; margin:0;"></div>
-        </div>
-        <!-- end #page -->
-
+        <!-- end #sidebar -->
+        <div style="clear:both; margin:0;"></div>
       </div>
+      <!-- end #page -->
 
-      <div id="footer">
-        <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. DownloadRS is powered by eRuby.</p>
-      </div>
-      <!-- end #footer -->
-    </body>
-  </html>
+    </div>
+
+    <div id="footer">
+      <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. DownloadRS is powered by eRuby.</p>
+    </div>
+    <!-- end #footer -->
+  </body>
+</html>
