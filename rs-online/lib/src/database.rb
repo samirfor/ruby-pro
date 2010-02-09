@@ -140,7 +140,12 @@ def select_status_links id_pacote
   return count_pacotes - count_baixados
 end
 
-def save_records(texto)
+def to_log texto
+  save_historico texto
+  puts texto
+end
+
+def save_historico(texto)
   # formatar hora
   tempo = Time.new.strftime("%d/%m/%Y %H:%M:%S")
   # processo

@@ -91,12 +91,13 @@ Released   : 20081230
             %>
               <h1 class="title"><% puts nome_pacote %></h1>
               <div class="entry">
-                <%
-                links.each do |link| %>
-                  <p>
-                    <%= link %>
-                  </p> <%
-                end %>
+                <p>
+                  <%
+                  links.each do |link| %>
+                    <%= link %><br/>
+                  <%
+                  end %>
+                </p>
               </div>
               <div class="meta">
                 <p class="links">Pacote adicionado.</p>

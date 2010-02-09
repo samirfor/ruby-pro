@@ -59,51 +59,52 @@ end
 
 # Contador regressivo
 def contador(tempo, mensagem)
-  t = Time.utc(0) + tempo
-  $stdout.sync = true
-  tempo.downto(0) do
-    print "\r" + t.strftime(mensagem)
-    sleep 1
-    t -= 1
+  begin
+    t = Time.utc(0) + tempo
+    $stdout.sync = true
+    tempo.downto(0) do
+      print "\r" + t.strftime(mensagem)
+      sleep 1
+      t -= 1
+    end
+    print "\r" + " " * mensagem.length + "\r"
+    $stdout.sync = false
+    sleep(1)
+  rescue Interrupt
+    to_log "\nSinal de interrupção recebido"
+    to_log "O programa foi encerrado."
+    exit!(1)
   end
-  print "\r" + " " * mensagem.length + "\r"
-  $stdout.sync = false
-  sleep(1)
 end
 
 # Gera linhas de log
-def to_log(texto)
-  save_records(texto)
+def to_log texto
+  save_historico texto
   puts texto
 end
 
 # Gera linhas de log debug
-def to_debug(texto)
+def to_debug texto
   ARGV.each do |arg|
     if arg == "debug"
-      save_records(texto)
+      save_historico texto
       puts texto
     end
   end
 end
 
 def falhou(segundos)
-  to_log("Tentando novamente em #{segundos} segundos.")
-  contador(segundos, "Falta %S segundos.")
-end
-
-## Captura de erros
-def get_justify(body)
-  justify = nil
-  justify = body.scan(/<p align=\"justify\">.+<\/p>/i)[0]
-  if justify != nil
-    justify.gsub!("<p align=\"justify\">", "").gsub!("</p>", "")
-    to_log(justify)
-    return true
-  else
-    return false
+  begin
+    to_log("Tentando novamente em #{segundos} segundos.")
+    contador(segundos, "Falta %S segundos.")
+  rescue Interrupt
+    to_log "\nSinal de interrupção recebido"
+    to_log "O programa foi encerrado."
+    exit!(1)
   end
 end
+
+## -- Captura de erros
 
 def get_no_slot(body)
   str = nil
@@ -116,7 +117,7 @@ def get_no_slot(body)
   end
 end
 
-def error(body)
+def error(body, link)
   str = nil
   str = body.scan(/<h1>(error|erro)<\/h1>/i)[0]
   if str != nil
@@ -126,6 +127,7 @@ def error(body)
     else
       to_log("Houve algum erro do rapidshare. Evitando link.")
     end
+    update_status_link(link.id_link, Status::OFFLINE)
     return true
   else
     return false
@@ -183,6 +185,30 @@ def simultaneo(body)
   end
 end
 
+def get_justify body
+  justify = nil
+  justify = body.scan(/<p align=\"justify\">.+<\/p>/i)[0]
+  if justify != nil
+    justify.gsub!("<p align=\"justify\">", "").gsub!("</p>", "")
+    to_log(justify)
+    return true
+  else
+    return false
+  end
+end
+
+def blocked body, link
+  str = nil
+  str = body.scan(/suspected to contain illegal content and has been blocked/i)[0]
+  if str != nil
+    to_log("O link foi bloqueado.")
+    update_status_link(link.id_link, Status::OFFLINE)
+    return true
+  else
+    return false
+  end
+end
+
 def lot_of_users(body)
   res = body.scan(/Currently a lot of users are downloading files/i)[0]
   if res != nil
@@ -195,7 +221,7 @@ def lot_of_users(body)
   end
 end
 
-def debug(body)
+def to_html(body)
   arq = File.open("rapid.html", "w")
   arq.print(body)
   arq.close
@@ -210,8 +236,8 @@ def testa_link(link)
     if link.link =~ /http:\/\/\S+\/.+/
       url = URI.parse(link.link)
     else
-      to_log("ERRO: Link #{link.link} inválido evitado.")
-      return false
+      to_log("ERRO: Link inválido evitado.")
+      update_status_link(link.id_link, Status::OFFLINE)
     end
     host_rs = get_ip(url.host)
 
@@ -220,7 +246,7 @@ def testa_link(link)
     headers, body = http.get(url.path)
     if headers.code == "200"
       # Requisitando pagina de download
-      return false if error(body)
+      return false if error(body, link)
       txt = body.scan(/<h1>.*DOWNLOAD.*<\/h1>/i)[0]
       if txt != nil
         to_log "Teste OK!"
@@ -236,6 +262,7 @@ def testa_link(link)
         end
       else
         to_log "Algum problema com o link."
+        update_status_link(link.id_link, Status::OFFLINE)
         return false
       end
     else
@@ -252,6 +279,7 @@ def testa_link(link)
     to_log "O programa foi encerrado."
     exit!(1)
   rescue Exception => err
+    update_status_link(link.id_link, Status::OFFLINE)
     to_log err
     retry
   end
@@ -275,30 +303,25 @@ def baixar(link)
   begin
     cancelar?
 
-    to_log("Baixando o link: "+link)
+    to_log("Baixando o link: #{link}")
     if link =~ /http:\/\/\S+\/.+/
       url = URI.parse(link)
     else
       to_log("ERRO: Link #{link} inválido evitado.")
-      return true
+      update_status_link(link.id_link, Status::OFFLINE)
     end
     host_rs = get_ip(url.host)
 
     http = Net::HTTP.new(host_rs)
     http.read_timeout = 15 #segundos
-    ARGV.each do |item|
-      to_log('Abrindo conexão HTTP...') if item == "debug"
-    end
+    to_debug('Abrindo conexão HTTP...')
     headers, body = http.get(url.path)
     if headers.code == "200"
       # Requisitando pagina de download
-      ARGV.each do |item|
-        if item == "debug"
-          to_log('Conexão HTTPOK 200.')
-          debug(body)
-        end
-      end
-      return true if error(body)
+      to_debug('Conexão HTTPOK 200.')
+
+      return true if error body, link
+      return true if blocked body, link
 
       servidor_host = body.scan(/rs\w{1,}.rapidshare.com/i)[0]
       # Testa se identificou o host
@@ -318,13 +341,14 @@ def baixar(link)
       tamanho = body.scan(/\| (\d+) KB/i)[0][0]
       if tamanho == nil # Testa se identificou o tamanho
         to_log('Não foi possível capturar o tamanho.')
+        return false
       else
         tamanho = tamanho.to_i
-        to_log("Tamanho #{tamanho} KB ou #{sprintf("%.2f MB", tamanho/1024.0)}")
+        to_debug("Tamanho #{tamanho} KB ou #{sprintf("%.2f MB", tamanho/1024.0)}")
       end
 
       ## Mandando requisição POST
-      to_log('Enviando requisição de download...')
+      to_debug('Enviando requisição de download...')
       ip_url = URI.parse('http://' + servidor_ip + url.path)
       resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
       resposta = resposta.body
@@ -344,7 +368,7 @@ def baixar(link)
       end
 
       t = Time.utc(0) + tempo.to_i
-      to_log(t.strftime("Contador identificado: %Hh %Mm %Ss."))
+      to_debug(t.strftime("Contador identificado: %Hh %Mm %Ss."))
       contador(tempo.to_i, "O download iniciará em %Hh %Mm %Ss.")
 
       link = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
@@ -353,7 +377,7 @@ def baixar(link)
       ip_host = get_ip(uri.host)
       download = 'http://' + ip_host + uri.path
 
-      to_log("Link para download: #{download}")
+      to_log("Baixando: #{download}")
       inicio = Time.now
       ## Download com curl
       baixou = system("curl -LO #{download}")
@@ -366,7 +390,6 @@ def baixar(link)
       else
         to_log("Download falhou com #{str_tempo} decorridos.")
       end
-      to_log("============")
     else
       to_log("Não foi possível carregar a página.")
       to_log("#{headers.code} #{headers.message}")
@@ -383,6 +406,7 @@ def baixar(link)
     exit!(1)
   rescue Exception => err
     to_log err
+    update_status_link(link.id_link, Status::INTERROMPIDO)
     return false
   end
 end
@@ -402,7 +426,7 @@ def run
       end
       links_before_test = select_lista_links(id_pacote)
 
-      to_log ">> Testando os links........"
+      to_log "Testando os links........"
       links_online = Array.new
       links_before_test.each do |link|
         if testa_link(link)
@@ -412,7 +436,7 @@ def run
         end
       end
 
-      to_log ">> Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)} MB"
+      to_log "Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)} MB"
       links_online.each do |link|
         begin
           update_status_link(link.id_link, Status::BAIXANDO)
@@ -443,10 +467,21 @@ def run
   to_log("Fim do(s) download(s).")
 end
 
+def singleton?
+  ps = `ps -ef | grep rs-online`.to_a
+  return false if ps.size >= 4
+  return true
+end
+
 # O main do programa
 begin
   ajuda
-  run
+  if singleton?
+    run
+  else
+    to_log 'Há outro processo "rs-online" rodando nesta máquina.'
+    abort
+  end
 rescue Interrupt
   to_log "\nSinal de interrupção recebido"
   to_log "O programa foi encerrado."
