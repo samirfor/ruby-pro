@@ -3,6 +3,97 @@
 # and open the template in the editor.
 %>
 
+<%
+require 'dbi'
+
+def select_pacote
+  sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
+    "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
+    "GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc LIMIT 1"
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  pacote = Hash.new
+  begin
+    rst.fetch do |row|
+      pacote["nome"] = row["nome"]
+      pacote["id"] = row["id"]
+    end
+  rescue Exception => err
+    puts "Erro no fetch!"
+    puts err
+  end
+  rst.finish
+  db_disconnect(conn)
+  if pacote.size > 0
+    pacote
+  else
+    nil
+  end
+end
+
+def select_count_links id_pacote
+  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  count_total = rst.fetch[0]
+  rst.finish
+  db_disconnect(conn)
+
+  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} AND id_status = 1 "
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  count_baixados = rst.fetch[0]
+  rst.finish
+  db_disconnect(conn)
+
+  count = []
+  count.push count_baixados
+  count.push count_total
+  count
+end
+
+def db_connect
+  begin
+    DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+  rescue DBI::DatabaseError => e
+    to_log "Ocorreu erro ao se conectar no banco de dados."
+    to_log "Código do erro: #{e.err}"
+    to_log "#{e.errstr}"
+    to_log "SQLSTATE: #{e.state}"
+  end
+end
+
+def db_statement_execute(sql)
+  begin
+    conn = db_connect
+    rst = conn.execute(sql)
+    retorno = Array.new
+    retorno.push rst
+    retorno.push conn
+    retorno
+  rescue DBI::DatabaseError => e
+    to_log "Ocorreu erro consultando o banco de dados."
+    to_log "Código do erro: #{e.err}"
+    to_log "#{e.errstr}"
+    to_log "SQLSTATE: #{e.state}"
+  end
+end
+
+def db_disconnect(conn)
+  begin
+    conn.disconnect
+  rescue DBI::DatabaseError => e
+    to_log "Ocorreu na disconexão do banco de dados."
+    to_log "Código do erro: #{e.err}"
+    to_log "#{e.errstr}"
+    to_log "SQLSTATE: #{e.state}"
+  end
+end
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 Design by Free CSS Templates
@@ -17,94 +108,113 @@ Released   : 20081230
 -->
 
 <html>
-<head>
-  <link rel="icon" href="images/favicon.png" type="image/x-icon" />
-  <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>DownloadRS4 ~ version 1.0b ~ Powered by eRuby</title>
-  <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
-</head>
-<body>
+  <head>
+    <link rel="icon" href="images/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>DownloadRS4 ~ version 1.0b ~ Powered by eRuby</title>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+  </head>
+  <body>
 
-<div id="wrapper">
+    <div id="wrapper">
 
-<div id="header">
-	<div id="logo">
-		<h1><a href="#">DownloadRS4</a></h1>
-		<p>version 1.0b ~ Powered by eRuby</p>
-	</div>
-	<!-- end #logo -->
-	<div id="menu">
-		<ul>
-			<li class="active"><a href="index.rhtml">Home</a></li>
-			<li><a href="#">About Us</a></li>
-			<li><a href="#">Products</a></li>
-			<li><a href="#">Services</a></li>
-			<li><a href="#">Contact Us</a></li>
-		</ul>
-	</div>
-	<!-- end #menu -->
-</div>
-<!-- end #header -->
-<div id="page">
-	<!--<div id="header-pic"></div>-->
-	<div id="content">
-		<div class="post">
-			<h1 class="title">Welcome to DownloadRS 1.0b </h1>
-			<p class="byline"><small>Posted by Nightcrawler</small></p>
-			<div class="entry">
-				<p>
-              DownloadRS is powered by eRuby.
-            </p>
-			</div>
-			<div class="meta">
-				<p class="links"></p>
-			</div>
-		</div>
-	</div>
-	<!-- end #content -->
-	<div id="sidebar">
-		<div id="sidebar-bgtop"></div>
-		<div id="sidebar-content">
-			<div id="sidebar-bgbtm">
-			<ul>
-				<li id="search">
-					<h2>Search</h2>
-					<form method="get" action="">
-						<fieldset>
-						<input type="text" id="s" name="s" value="" />
-						<input type="submit" id="x" value="Search" />
-						</fieldset>
-					</form>
-				</li>
-				<li>
-					<h2>Pacotes</h2>
-					<ul>
-                 <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
-						<li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
-					</ul>
-				</li>
-				<li>
-					<h2>Downloads</h2>
-					<ul>
-						<li><a href="#">Lista de Downloads</a></li>
-						<li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-		</div>
-	</div>
-	<!-- end #sidebar -->
-	<div style="clear:both; margin:0;"></div>
-</div>
-<!-- end #page -->
+      <div id="header">
+        <div id="logo">
+          <h1><a href="#">DownloadRS4</a></h1>
+          <p>version 1.0b ~ Powered by eRuby</p>
+        </div>
+        <!-- end #logo -->
+        <div id="menu">
+          <ul>
+            <li class="active"><a href="index.rhtml">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <!-- end #menu -->
+      </div>
+      <!-- end #header -->
+      <div id="page">
+        <!--<div id="header-pic"></div>-->
+        <div id="content">
+          <div class="post">
+            <h1 class="title">Welcome to DownloadRS 1.0b </h1>
+            <p class="byline"><small>Posted by Nightcrawler</small></p>
+            <div class="entry">
+              <p>
+                DownloadRS is powered by eRuby.
+              </p>
+              <p>
+                <%
+                begin
+                  pacote = select_pacote
+                  count = select_count_links pacote["id"]
+                  puts "Pacote baixando/a ser baixado a seguir: "%>
+                  <a href="lista_links.rhtml?id_pacote=<%= pacote["id"] %>"<b><%= pacote["nome"] %></b></a>
+                  <%= count[0] %> de <%= count[1] %> links baixados.
+                <%
+                rescue Exception => e
+                  puts "Não foi possível detectar um pacote mais prioritário."
+                %>
+                </p>
+                <p><%
+                  puts e
+                %>
+                </p><%
+              end
+            %>
+            </div>
+            <div class="meta">
+              <p class="links"></p>
+            </div>
+          </div>
+        </div>
+        <!-- end #content -->
+        <div id="sidebar">
+          <div id="sidebar-bgtop"></div>
+          <div id="sidebar-content">
+            <div id="sidebar-bgbtm">
+              <ul>
+                <li id="search">
+                  <h2>Search</h2>
+                  <form method="get" action="">
+                    <fieldset>
+                      <input type="text" id="s" name="s" value="" />
+                      <input type="submit" id="x" value="Search" />
+                    </fieldset>
+                  </form>
+                </li>
+                <li>
+                  <h2>Pacotes</h2>
+                  <ul>
+                    <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
+                    <li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2>Downloads</h2>
+                  <ul>
+                    <li><a href="#">Estatística (em construção)</a></li>
+                    <li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- end #sidebar -->
+        <div style="clear:both; margin:0;"></div>
+      </div>
+      <!-- end #page -->
 
-</div>
+    </div>
 
-<div id="footer">
-	<p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. DownloadRS is powered by eRuby.</p>
-</div>
-<!-- end #footer -->
-</body>
+    <div id="footer">
+      <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. DownloadRS is powered by eRuby.</p>
+    </div>
+    <!-- end #footer -->
+  </body>
 </html>
