@@ -147,7 +147,7 @@ def update_pacote_problema id_pacote
   db_statement_do(sql)
 end
 
-# --- RETORNA TODOS OS LINKS DE UM DETERMINADO PACOTE. [ HASH ]
+# --- Retorna o pacote a ser baixado mais prioritário e mais recente.
 def select_pacote_pendente
   sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
     "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
