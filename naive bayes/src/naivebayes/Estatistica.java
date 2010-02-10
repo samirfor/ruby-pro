@@ -23,15 +23,18 @@ public class Estatistica {
         boolean repeticao = false;
         double tipo, acertos = 0.0;
         double[][] atributos = readDoubleArray(new File("iris_1.data"));
-
+       
         int index = 0, count = 0;
         PadraoIris p;
-        new NewClass(atributos).getIntervalo();
-        
+
+        //normalização dos dados
+        Normalizar normal = new Normalizar(atributos);
+        atributos = normal.getDadosNormalizados(); 
+
         while (count < 120) {
             repeticao = false;
-           index = num.nextInt(150);
-          
+            index = num.nextInt(150);
+
 
             for (int i = 0; i < indexRepetidos.size(); i++) {
                 if (index == indexRepetidos.get(i)) {
@@ -39,7 +42,7 @@ public class Estatistica {
                     break;
                 }
             }
-           if (!repeticao) {
+            if (!repeticao) {
                 p = new PadraoIris(atributos[index][0], atributos[index][1], atributos[index][2],
                         atributos[index][3], Classificacao.SETOSA);
                 if (atributos[index][4] == 1.0) {
@@ -59,7 +62,7 @@ public class Estatistica {
         count = 0;
         NaiveBayes naive = new NaiveBayes(treinamento);
         //teste
-        index=10;
+        index = 10;
         while (count < 30) {
             index = num.nextInt(150);
             repeticao = false;
@@ -92,7 +95,6 @@ public class Estatistica {
             for (int j = 0; j < 150; j++) {
                 if ((p.getTamanho_sepala() == atributos[j][0]) && (p.getLargura_sepala() == atributos[j][1]) && (p.getTamanho_petala() == atributos[j][2]) && (p.getLargura_petala() == atributos[j][3]) && tipo == atributos[j][4]) {
                     acertos++;
-                   // System.out.println(" classe " + tipo);
                     break;
                 }
             }
