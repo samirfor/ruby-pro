@@ -18,5 +18,6 @@ RS-Online é um gerenciador de downloads. Nele é possível inserir uma lista de
 
   * Status do pacote
   * Log de downloads
+  * Download por Prioridade
 
 _Powered by eRuby_
