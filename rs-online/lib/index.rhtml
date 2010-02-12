@@ -107,11 +107,8 @@ Released   : 20081230
         <div id="content">
           <div class="post">
             <h1 class="title">Welcome to DownloadRS 1.0b </h1>
-            <p class="byline"><small>Posted by Nightcrawler</small></p>
             <div class="entry">
-              <p>
-                DownloadRS is powered by eRuby.
-              </p>
+              
               <p>
                 <%
                 begin
@@ -121,6 +118,7 @@ Released   : 20081230
                 %>
                 </p>
                 <p>
+                  <img alt="Now Downlading" title="Now Downlading" src="images/now_loading.gif" align="middle" width="80"/>
                   <a href="lista_links.rhtml?id_pacote=<%= pacote["id"] %>"<b><%= pacote["nome"] %></b></a>
                 </p>
                 <p>
@@ -138,7 +136,7 @@ Released   : 20081230
             %>
             </div>
             <div class="meta">
-              <p class="links"></p>
+              <p class="links">DownloadRS is powered by eRuby.</p>
             </div>
           </div>
         </div>
