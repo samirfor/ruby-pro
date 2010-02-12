@@ -118,11 +118,13 @@ Released   : 20081230
                 %>
                 </p>
                 <p>
+                  <a href="lista_links.rhtml?id_pacote=<%= pacote["id"] %>">
                   <img alt="Now Downloading" title="Now Downloading" src="images/now_loading.gif" align="middle" width="80"/>
-                  <a href="lista_links.rhtml?id_pacote=<%= pacote["id"] %>"<b><%= pacote["nome"] %></b></a>
+                  <b><%= pacote["nome"] %></b></a>
                 </p>
                 <p>
-                  <%= count[0] %> de <%= count[1] %> links baixados.
+                  <% restante = count[1] - count[0] %>
+                  <%= count[0] %> de <%= count[1] %> links baixados. Falta só <%= restante %> <% print "pacote" if restante == 1 %><% print "pacotes" if restante > 1 %>.
                 <%
                 rescue Exception => e
                   puts "Não foi possível detectar um pacote mais prioritário."
