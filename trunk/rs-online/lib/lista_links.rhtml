@@ -3,12 +3,11 @@
 # and open the template in the editor.
 %>
 <%
-  require 'dbi'
-  require 'cgi'
-  require 'src/database'
-  require 'src/status'
+require 'dbi'
+require 'cgi'
+require 'src/database'
+require 'src/status'
 
-  
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
@@ -204,7 +203,7 @@ Released   : 20081230
           <div class="post">
             <h1 class="title">Editar Pacote</h1>
             <div class="entry">
-              <form action="" method="get">
+              <form action="resp_lista_links.rhtml" method="post">
                 <table width="90%" border="0" cellpadding="5">
                   <tr align="right">
                     <td><b>Prioridade: </b></td>
@@ -220,10 +219,10 @@ Released   : 20081230
                     <td>
                       <b>Mostrar na Lista: </b>
                     </td>
-                    <td>
+                    <td>           
                       <select name="mostrar" class="select-box">
-                        <option value="1" selected="selected">Sim</option>
-                        <option value="0">Não</option>
+                        <option value="true" selected="selected">Sim</option>
+                        <option value="false">Não</option>
                       </select>
                     </td>
                   </tr>
