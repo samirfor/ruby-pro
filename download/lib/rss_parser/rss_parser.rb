@@ -144,6 +144,23 @@ def run(server)
   links = Array.new
 
   puts "\nINFO: Procurando links...\n"
+
+
+  rss.items.each do |r|
+    series.each do |s|
+      achou_excecao = false
+      excecoes.each do |e|
+        if r.title =~ /.*#{e}.*/i
+          achou_excecao = true
+        end
+      end
+
+      unless achou_excecao
+
+      end
+    end
+  end
+
   series.each do |s|
     rss.items.each do |f|
       if f.title =~ /.*#{s}.*(HDTV|DVDRip).*XviD.*/i
@@ -162,8 +179,8 @@ def run(server)
         end
         link = link.delete_if { |e| not (e =~ /.*http:\/\/#{server}.*/i) }
         if link == nil or link.nitems == 0
-          puts "\nErro: Não foi possível detectar o(s) link(s) de #{f.title}."
-          exit(1)
+          puts "\nErro: Não foi possível detectar o(s) link(s) de #{rss.items[i].title}."
+          abort
         else
           link.each do |lk|
             links.push(lk)

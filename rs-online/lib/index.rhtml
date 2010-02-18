@@ -124,7 +124,7 @@ Released   : 20081230
                 </p>
                 <p>
                   <% restante = count[1] - count[0] %>
-                  <%= count[0] %> de <%= count[1] %> links baixados. Falta só <%= restante %> <% print "pacote" if restante == 1 %><% print "pacotes" if restante > 1 %>.
+                  <%= count[0] %> de <%= count[1] %> links baixados. Falta só <%= restante %> <% print "link" if restante == 1 %><% print "links" if restante > 1 %>.
                 <%
                 rescue Exception => e
                   puts "Não foi possível detectar um pacote mais prioritário."
