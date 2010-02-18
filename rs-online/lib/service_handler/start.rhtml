@@ -3,62 +3,6 @@
 # and open the template in the editor.
 %>
 
-<%
-require 'dbi'
-require 'src/database'
-
-def select_pacote
-  sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
-    "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
-    "GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc LIMIT 1"
-  db = db_statement_execute(sql)
-  rst = db[0]
-  conn = db[1]
-  pacote = Hash.new
-  begin
-    rst.fetch do |row|
-      pacote["nome"] = row["nome"]
-      pacote["id"] = row["id"]
-    end
-  rescue Exception => err
-    puts "Erro no fetch!"
-    puts err
-  end
-  rst.finish
-  db_disconnect(conn)
-  if pacote.size > 0
-    pacote
-  else
-    nil
-  end
-end
-
-def select_count_links id_pacote
-  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
-  db = db_statement_execute(sql)
-  rst = db[0]
-  conn = db[1]
-  count_total = rst.fetch[0]
-  rst.finish
-  db_disconnect(conn)
-
-  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} AND id_status = 1 "
-  db = db_statement_execute(sql)
-  rst = db[0]
-  conn = db[1]
-  count_baixados = rst.fetch[0]
-  rst.finish
-  db_disconnect(conn)
-
-  count = []
-  count.push count_baixados
-  count.push count_total
-  count
-end
-
-
-%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 Design by Free CSS Templates
@@ -72,13 +16,21 @@ Released   : 20081230
 
 -->
 
+<%
+def start_download
+  if system("cd /home/multi/www/videos_scene; rs-online &")
+    return true
+  else
+    return false
+  end
+end
+%>
+
 <html>
   <head>
-    <link rel="icon" href="images/favicon.png" type="image/x-icon" />
-    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>DownloadRS4 ~ version 1.0b ~ Powered by eRuby</title>
-    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../style.css" media="screen" />
   </head>
   <body>
 
@@ -106,45 +58,21 @@ Released   : 20081230
         <!--<div id="header-pic"></div>-->
         <div id="content">
           <div class="post">
-            <h1 class="title">Welcome to DownloadRS 1.0b </h1>
-            <div class="entry">
-
-              <p>
-                <%
-                begin
-                  pacote = select_pacote
-                  count = select_count_links pacote["id"]
-                  puts "Pacote baixando/a ser baixado a seguir: "
-                %>
-                </p>
-                <p>
-                  <a href="lista_links.rhtml?id_pacote=<%= pacote["id"] %>">
-                    <img alt="Now Downloading" title="Now Downloading" src="images/now_loading.gif" align="middle" width="80"/>
-                    <b><%= pacote["nome"] %></b></a>
-                </p>
-                <p>
-                  <% restante = count[1] - count[0] %>
-                  <%= count[0] %> de <%= count[1] %> links baixados. Falta só <%= restante %> <% print "link" if restante == 1 %><% print "links" if restante > 1 %>.
-                </p>
-                <p>
-                  <b>Service handler</b><br/>
-                  <a href="service_handler/start.rhtml">Iniciar downloads</a><br/>
-                  <a href="service_handler/stop.rhtml">Parar downloads</a> (termina o download corrente e encerra o serviço)<br/>
-                  <a href="service_handler/kill.rhtml">Matar processo</a> (finaliza o serviço imediatamente)<br/>
-                <%
-                rescue Exception => e
-                  puts "Não foi possível detectar um pacote mais prioritário."
-                %>
-                </p>
-                <p><%
-                  puts e
-                %>
-                </p><%
+            <h1 class="title">
+              <%
+              if start_download %>
+                Processo iniciado com sucesso!
+              <%
+              else %>
+                Falha ao tentar iniciar downloads.
+              <%
               end
             %>
+            </h1>
+            <div class="entry">
             </div>
             <div class="meta">
-              <p class="links">DownloadRS is powered by eRuby.</p>
+              <p class="links"></p>
             </div>
           </div>
         </div>
