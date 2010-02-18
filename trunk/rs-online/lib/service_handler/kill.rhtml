@@ -18,11 +18,8 @@ Released   : 20081230
 
 <%
 def kill_processo
-  if system("killall rs-online")
-    return true
-  else
-    return false
-  end
+  # Pegar do banco o numero do processo
+  Process.kill(9, pid)
 end
 %>
 

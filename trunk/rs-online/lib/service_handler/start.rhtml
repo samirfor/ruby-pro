@@ -18,10 +18,18 @@ Released   : 20081230
 
 <%
 def start_download
-  if system("cd /home/multi/www/videos_scene; rs-online &")
-    return true
-  else
-    return false
+  begin
+    cancelar = "/home/multi/www/videos_scene/cancelar"
+    fechar = "/home/multi/www/videos_scene/fechar"
+    if File.exist?(cancelar)
+      File.delete(cancelar)
+    end
+    if File.exist?(fechar)
+      File.delete(fechar)
+    end
+    return system("rs-online")
+  rescue Exception => e
+    return e
   end
 end
 %>
@@ -44,7 +52,7 @@ end
         <!-- end #logo -->
         <div id="menu">
           <ul>
-            <li class="active"><a href="index.rhtml">Home</a></li>
+            <li class="active"><a href="../index.rhtml">Home</a></li>
             <li><a href="#">About Us</a></li>
             <li><a href="#">Products</a></li>
             <li><a href="#">Services</a></li>
@@ -58,18 +66,11 @@ end
         <!--<div id="header-pic"></div>-->
         <div id="content">
           <div class="post">
-            <h1 class="title">
-              <%
-              if start_download %>
-                Processo iniciado com sucesso!
-              <%
-              else %>
-                Falha ao tentar iniciar downloads.
-              <%
-              end
-            %>
-            </h1>
+            <h1 class="title">Iniciando serviço</h1>
             <div class="entry">
+              <p>
+                <%= start_download %>
+              </p>
             </div>
             <div class="meta">
               <p class="links"></p>
@@ -94,15 +95,15 @@ end
                 <li>
                   <h2>Pacotes</h2>
                   <ul>
-                    <li><a href="add_pacote.rhtml"><img alt="novo" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
-                    <li><a href="lista_pacotes.rhtml"><img alt="novo" src="images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
+                    <li><a href="../add_pacote.rhtml"><img alt="novo" src="../images/package_add.png"/>&nbsp;Novo Pacote</a></li>
+                    <li><a href="../lista_pacotes.rhtml"><img alt="novo" src="../images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
                   </ul>
                 </li>
                 <li>
                   <h2>Downloads</h2>
                   <ul>
                     <li><a href="#">Estatística (em construção)</a></li>
-                    <li><a href="log_downloads.rhtml"><img alt="novo" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
+                    <li><a href="../log_downloads.rhtml"><img alt="novo" src="../images/report.png"/>&nbsp;Log de Downloads</a></li>
                   </ul>
                 </li>
               </ul>

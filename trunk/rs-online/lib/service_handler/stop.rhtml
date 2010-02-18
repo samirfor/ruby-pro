@@ -18,13 +18,9 @@ Released   : 20081230
 
 <%
 def stop_download
-  #if system("cd /home/multi/www/videos_scene; touch cancelar")
-  #return true
-  #else
-  #return false
-  #end
   begin
-    system("cd /home/multi/www/videos_scene; touch cancelar")
+    File.new "/home/multi/www/videos_scene/cancelar", "w"
+    return "Download cancelado pelo usuário."
   rescue Exception => e
     return e
   end
@@ -65,7 +61,7 @@ end
           <div class="post">
             <h1 class="title">Parando downloads</h1>
             <div class="entry">
-              <%= stop_download %>
+              <p><%= stop_download %></p>
             </div>
             <div class="meta">
               <p class="links"></p>
