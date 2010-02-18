@@ -2,7 +2,14 @@
 # To change this template, choose Tools | Templates
 # and open the template in the editor.
 %>
+<%
+  require 'dbi'
+  require 'cgi'
+  require 'src/database'
+  require 'src/status'
 
+  
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 Design by Free CSS Templates
@@ -81,11 +88,6 @@ Released   : 20081230
                   </thead>
                   <tbody>
                     <%
-                    require 'dbi'
-                    require 'cgi'
-                    require 'src/database'
-                    require 'src/status'
-
                     begin
                       cgi = CGI.new
                       a_params = cgi.params
@@ -173,7 +175,7 @@ Released   : 20081230
                       if acao != nil and acao == "update"
                         up_sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}', "
                         up_sql += "senha = '#{a_params["senha"]}' WHERE id = #{a_params["id_pacote"]}"
-                        conn.do(up_sql)
+                        db_statement_do(up_sql)
                       end
                     %>
                     </tbody>

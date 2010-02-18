@@ -26,4 +26,14 @@ class HistoricoDao
     db_disconnect(conn)
     return list
   end
+
+  def select_last_pid
+    sql = "SELECT processo FROM rs.historico WHERE id = (SELECT MAX(id) FROM rs.historico)"
+    db = db_statement_execute(sql)
+    rst = db[0]
+    conn = db[1]
+    rst.finish
+    db_disconnect(conn)
+    return rst.fetch[0]
+  end
 end
