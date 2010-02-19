@@ -78,7 +78,7 @@ Released   : 20081230
                     require "dbi"
                     require 'src/prioridade'
 
-                    sql = "SELECT * FROM rs.pacote WHERE mostrar = 'true' "
+                    sql = "SELECT * FROM rs.pacote WHERE mostrar = 'false' "
                     db = db_statement_execute(sql)
                     rst = db[0]
                     conn = db[1]
@@ -149,7 +149,6 @@ Released   : 20081230
                     </tr>
                   </tfoot>
                 </table>
-                <p><a href="lista_pacotes_ocultos.rhtml">Ver pacotes ocultos</a></p>
               </div>
             </div>
             <div class="meta">
