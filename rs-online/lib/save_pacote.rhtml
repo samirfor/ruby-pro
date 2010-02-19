@@ -1,6 +1,26 @@
-<%#
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
+<%
+require 'dbi'
+require 'cgi'
+
+# inserir o pacote e os links no banco
+def save_pacote(name, prioridade, senha)
+  data_ini = Time.now
+  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+  sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade, senha) " +
+    "VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}', #{prioridade}, '#{senha}') RETURNING id"
+  rst = conn.execute(sql)
+  conn.disconnect
+  return rst.fetch[0]
+end
+
+def save_links(links, id_pacote)
+  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+  links.each do |line|
+    sql = "INSERT INTO rs.link (id_pacote, link) VALUES (#{id_pacote}, '#{line}')"
+    conn.do(sql)
+  end
+  conn.disconnect
+end
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -48,30 +68,8 @@ Released   : 20081230
         <!--<div id="header-pic"></div>-->
         <div id="content">
           <div class="post">
+
             <%
-            require 'dbi'
-            require 'cgi'
-
-            # inserir o pacote e os links no banco
-            def save_pacote(name, prioridade, senha)
-              data_ini = Time.now
-              conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-              sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade, senha) " +
-                "VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}', #{prioridade}, '#{senha}') RETURNING id"
-              rst = conn.execute(sql)
-              conn.disconnect
-              return rst.fetch[0]
-            end
-
-            def save_links(links, id_pacote)
-              conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-              links.each do |line|
-                sql = "INSERT INTO rs.link (id_pacote, link) VALUES (#{id_pacote}, '#{line}')"
-                conn.do(sql)
-              end
-              conn.disconnect
-            end
-
             begin
               cgi = CGI.new
               a_params = cgi.params
@@ -87,7 +85,6 @@ Released   : 20081230
               senha = a_params["senha"]
               id_pacote = save_pacote(nome_pacote, prioridade, senha)
               save_links(links, id_pacote)
-
             %>
               <h1 class="title"><% puts nome_pacote %></h1>
               <div class="entry">
@@ -106,7 +103,7 @@ Released   : 20081230
             rescue Exception => err %>
               <h1 class="title">Ocorreu um erro.</h1>
               <h2>Não foi possível carregar a página. Contate o administrador!</h2>
-              <p> <% puts err %> </p>
+              <p> <%= err %> </p>
             <%
             end
           %>

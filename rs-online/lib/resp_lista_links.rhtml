@@ -1,21 +1,6 @@
-<%#
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-%>
-
 <%
 require 'dbi'
 require 'src/database'
-
-#def hide_package id
-#sql = "UPDATE rs.pacote SET mostrar = 'F' WHERE id = #{id}"
-#db_statement_do(sql)
-#end
-
-#def show_package id
-#sql = "UPDATE rs.pacote SET mostrar = 'T' WHERE id = #{id}"
-#db_statement_do(sql)
-#end
 
 def update_pacote
   begin
@@ -28,17 +13,13 @@ def update_pacote
         return "Algum parâmetro é nulo. Por favor, preencha todos os campos."
       end
     end
-    if a_params["senha"] == "\'\'"
-      a_params["senha"] = ""
-    end
 
-    #id_pacote = a_params["id_pacote"]
-    #acao = a_params["do"].to_s
-    #if acao != nil and acao == "update"
-    sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}', "
-    sql += "senha = '#{a_params["senha"]}' WHERE id = #{a_params["id_pacote"]}"
+    sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}'"
+    unless a_params["senha"] == ""
+      sql += ", senha = '#{a_params["senha"]}'"
+    end
+    sql += " WHERE id = #{a_params["id_pacote"]}"
     db_statement_do(sql)
-    #end
     return "Pacote modificado com sucesso."
   rescue Exception => e
     return e
