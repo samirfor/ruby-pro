@@ -250,7 +250,14 @@ Released   : 20081230
                     <td><b>Senha: </b></td>
                     <td><input type="text" name="senha" class="text" size="30" value="<%= a_params["senha"] %>"/></td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td>
+                      <% # Implemtentar o Cancelar download do pacote
+                      #print "<a href=\"lista_links.rhtml?id_pacote=#{row["id"]}"
+                      #print "&prioridade=#{row["prioridade"]}&senha=#{row["senha"]}"
+                      #print "&mostrar=#{row["mostrar"]}\">"
+                      #print "Cancelar download do pacote"
+                    %>
+                    </td>
                   </tr>
                   <tr align="right">
                     <td colspan="4">

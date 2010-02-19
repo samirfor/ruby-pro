@@ -15,7 +15,7 @@ def update_pacote
     end
 
     sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}'"
-    unless a_params["senha"] == ""
+    unless a_params["senha"][0] == ""
       sql += ", senha = '#{a_params["senha"]}'"
     end
     sql += " WHERE id = #{a_params["id_pacote"]}"
