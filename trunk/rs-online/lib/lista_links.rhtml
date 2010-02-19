@@ -1,14 +1,22 @@
-<%#
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-%>
 <%
 require 'dbi'
 require 'cgi'
 require 'src/database'
 require 'src/status'
 
+def select_prioridade
+  sql = "SELECT * FROM rs.prioridade"
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  array = rst.fetch_all.clone
+  rst.finish
+  db_disconnect(conn)
+  array.sort
+end
+
 %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 Design by Free CSS Templates
@@ -169,14 +177,14 @@ Released   : 20081230
                         print "\n"
                       end
                       rst.finish
-                      # update?
-                      acao = a_params["do"].to_s
-                      if acao != nil and acao == "update"
-                        up_sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}', "
-                        up_sql += "senha = '#{a_params["senha"]}' WHERE id = #{a_params["id_pacote"]}"
-                        db_statement_do(up_sql)
-                      end
-                    %>
+                      ## update?
+                      #acao = a_params["do"].to_s
+                      #if acao != nil and acao == "update"
+                      #up_sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}', "
+                      #up_sql += "senha = '#{a_params["senha"]}' WHERE id = #{a_params["id_pacote"]}"
+                      #db_statement_do(up_sql)
+                      #end
+                      %>
                     </tbody>
                     <tfoot>
                       <tr>
@@ -185,12 +193,11 @@ Released   : 20081230
                     </tfoot>
                   </table>
                   <%
-
                   db_disconnect(conn)
                 rescue Exception => err %>
                   <h1 class="title">Ocorreu um erro.</h1>
                   <h2>Não foi possível carregar a página. Contate o administrador!</h2>
-                  <p> <% puts err %> </p>
+                  <p> <%= err %> </p>
                 <%
                 end
               %>
@@ -209,11 +216,17 @@ Released   : 20081230
                     <td><b>Prioridade: </b></td>
                     <td>
                       <select name="prioridade" class="select-box">
-                        <option value="1" selected="selected">Nenhuma</option>
-                        <option value="2">Baixa</option>
-                        <option value="3">Normal</option>
-                        <option value="4">Alta</option>
-                        <option value="5">Muito Alta</option>
+                        <%
+                        select_prioridade.each do |p|
+                          print "<option value=\"" + p[0].to_s + "\""
+                          if a_params["prioridade"][0] == p[0].to_s
+                            print " selected=\"selected\">"
+                          else
+                            print ">"
+                          end
+                          print p[1].capitalize + "<\/option>\n"
+                        end
+                      %>
                       </select>
                     </td>
                     <td>

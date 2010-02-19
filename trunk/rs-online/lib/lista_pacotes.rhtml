@@ -1,8 +1,3 @@
-<%#
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 Design by Free CSS Templates
@@ -92,18 +87,18 @@ Released   : 20081230
                       print "<td>";
                       case row["prioridade"]
                       when Prioridade::NORMAL
-                      %><img src="images/normal.png" alt="3 - Normal" title="3" /><%
+                      %><img src="images/normal.png" alt="3 - Normal" title="3 - Normal" /><%
                       when Prioridade::BAIXA
-                      %><img src="images/baixa.png" alt="2 - Baixa" title="2" /><%
+                      %><img src="images/baixa.png" alt="2 - Baixa" title="2 - Baixa" /><%
                       when Prioridade::NENHUMA
-                      %><img src="images/nenhum.png" alt="1 - Nenhuma" title="1" /><%
+                      %><img src="images/nenhum.png" alt="1 - Nenhuma" title="1 - Nenhuma" /><%
                       when Prioridade::ALTA
-                      %><img src="images/alta.png" alt="4 - Alta" title="4" /><%
+                      %><img src="images/alta.png" alt="4 - Alta" title="4 - Alta" /><%
                       when Prioridade::MUITO_ALTA
-                      %><img src="images/muito.alta.png" alt="5 - M. Alta" title="5" /><%
+                      %><img src="images/muito.alta.png" alt="5 - M. Alta" title="5 - M. Alta" /><%
                       end
                       print "</td>\n"
-                      print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">"
+                      print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}&prioridade=#{row["prioridade"]}&senha=#{row["senha"]}&mostrar=#{row["mostrar"]}\">"
 
                       print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"]}</td>\n"
                       #print row["data_inicio"].class
