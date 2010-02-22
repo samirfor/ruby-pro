@@ -30,7 +30,7 @@ public class DesvioPadrao {
                 tamanho++;
             }
         }
-        if (tamanho == 0){
+        if (tamanho == 0) {
             return 0;
         }
         return Math.sqrt(desvioPadrao / tamanho);
@@ -49,7 +49,7 @@ public class DesvioPadrao {
                 tamanho++;
             }
         }
-        if (tamanho == 0){
+        if (tamanho == 0) {
             return 0;
         }
         return Math.sqrt(desvioPadrao / tamanho);
@@ -68,7 +68,7 @@ public class DesvioPadrao {
                 tamanho++;
             }
         }
-        if (tamanho == 0){
+        if (tamanho == 0) {
             return 0;
         }
         return Math.sqrt(desvioPadrao / tamanho);
@@ -86,13 +86,33 @@ public class DesvioPadrao {
                 tamanho++;
             }
         }
-        if (tamanho == 0){
+        if (tamanho == 0) {
             return 0;
         }
-         //System.out.println("DESVIO  "+ desvioPadrao);
-         //System.out.println("TAMANHO DA SEPALA  DESVIO : "+media);
+        //System.out.println("DESVIO  "+ desvioPadrao);
+        //System.out.println("TAMANHO DA SEPALA  DESVIO : "+media);
         return Math.sqrt(desvioPadrao / tamanho);
 
+    }
+
+    public static double getDesvioPadrao(ArrayList<Double> values) {
+        double media = 0;
+        double desvio = 0;
+
+        for (int i = 0; i < values.size(); i++) {
+            media = media + values.get(i);
+        }
+        media = media / values.size();
+
+        for (int j = 0; j < values.size(); j++) {
+            desvio = desvio + Math.pow(values.get(j) - media, 2);
+        }
+
+        desvio = Math.sqrt(desvio / values.size());
+
+        System.out.println("Primeiro intervalo de confiaça " + (media - desvio) + "," + (media + desvio));
+
+         return desvio;
 
     }
 }
