@@ -15,7 +15,7 @@ import java.io.File;
  */
 public class Estatistica {
 
-    public static void main(String[] args) {
+    public static double estatistica() {
         ArrayList<PadraoIris> treinamento = new ArrayList<PadraoIris>();
         ArrayList<PadraoIris> teste = new ArrayList<PadraoIris>();
         ArrayList<Integer> indexRepetidos = new ArrayList<Integer>();
@@ -102,5 +102,6 @@ public class Estatistica {
         }
         double percentual = ((acertos / teste.size()) * 100);
         System.out.println("acertos = " + percentual);
+        return percentual;
     }
 }
