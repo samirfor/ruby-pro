@@ -11,14 +11,14 @@ require 'rake/rdoctask'
 require 'rake/testtask'
 
 spec = Gem::Specification.new do |s|
-  s.name = 'rapid'
-  s.version = '0.0.1'
+  s.name = 'RSDownloader'
+  s.version = '4'
   s.has_rdoc = true
   s.extra_rdoc_files = ['README', 'LICENSE']
   s.summary = 'Your summary here'
   s.description = s.summary
-  s.author = ''
-  s.email = ''
+  s.author = 'Samir e Nightcrawler'
+  s.email = 'samirfor@gmail.com'
   # s.executables = ['your_executable_here']
   s.files = %w(LICENSE README Rakefile) + Dir.glob("{bin,lib,spec}/**/*")
   s.require_path = "lib"

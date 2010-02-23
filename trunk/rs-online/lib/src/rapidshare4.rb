@@ -427,6 +427,7 @@ def run
       links_before_test = select_lista_links(id_pacote)
 
       to_log "Testando os links........"
+      update_tamanho_pacote(id_pacote, 0) # zera o tamanho do pacote
       links_online = Array.new
       links_before_test.each do |link|
         if testa_link(link)
@@ -436,6 +437,7 @@ def run
         end
       end
 
+      update_tamanho_pacote(id_pacote, $tamanho_total)
       to_log "Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)} MB"
       links_online.each do |link|
         begin

@@ -57,6 +57,11 @@ def update_status_link_tamanho id_link, tamanho, id_status
   db_statement_do(sql)
 end
 
+def update_tamanho_pacote id_pacote, tamanho
+  sql = "UPDATE rs.pacote SET tamanho = #{tamanho} WHERE id = #{id_pacote}"
+  db_statement_do(sql)
+end
+
 def update_status_link id_link, id_status
   sql = "UPDATE rs.link SET id_status = #{id_status} WHERE id_link = #{id_link}"
   db_statement_do(sql)
