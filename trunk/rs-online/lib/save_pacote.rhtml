@@ -5,21 +5,31 @@ require 'cgi'
 # inserir o pacote e os links no banco
 def save_pacote(name, prioridade, senha)
   data_ini = Time.now
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
-  sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade, senha) " +
-    "VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}', #{prioridade}, '#{senha}') RETURNING id"
-  rst = conn.execute(sql)
-  conn.disconnect
-  return rst.fetch[0]
+  sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
+  unless senha == ""
+    sql += ", senha"
+  end
+  sql += ") VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}' "
+  sql += ", #{prioridade}"
+  unless senha == ""
+    sql += ", '#{senha}'"
+  end
+  sql += ") RETURNING id"
+
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  resultado = rst.fetch[0]
+  rst.finish
+  db_disconnect(conn)
+  return resultado
 end
 
 def save_links(links, id_pacote)
-  conn = DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   links.each do |line|
     sql = "INSERT INTO rs.link (id_pacote, link) VALUES (#{id_pacote}, '#{line}')"
-    conn.do(sql)
+    db_statement_do(sql)
   end
-  conn.disconnect
 end
 %>
 
@@ -84,11 +94,11 @@ Released   : 20081230
 
               nome_pacote = a_params["name"]
               prioridade = a_params["prioridade"]
-              senha = a_params["senha"]
+              senha = a_params["senha"][0]
               id_pacote = save_pacote(nome_pacote, prioridade, senha)
               save_links(links, id_pacote)
             %>
-              <h1 class="title"><% puts nome_pacote %></h1>
+              <h1 class="title"><%= nome_pacote %></h1>
               <div class="entry">
                 <p>
                   <%
