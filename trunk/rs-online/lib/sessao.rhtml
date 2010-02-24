@@ -1,0 +1,20 @@
+<%
+
+require 'cgi'
+require 'cgi/session'
+
+cgi = CGI.new("html4")
+
+# We make sure to delete an old session if one exists,
+# not just to free resources, but to prevent the session
+# from being maliciously hijacked later on.
+begin
+  session = CGI::Session.new(cgi, 'new_session' => false,
+    'session_expires' => Time.now + 15 * 60)
+  session.delete
+rescue ArgumentError  # if no old session
+end
+session = CGI::Session.new(cgi, 'new_session' => true)
+session.close
+
+%>
