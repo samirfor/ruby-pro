@@ -102,7 +102,7 @@ Released   : 20081230
                       print "</td>\n"
                       print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}&prioridade=#{row["prioridade"]}&senha=#{row["senha"]}&mostrar=#{row["mostrar"]}\">"
 
-                      print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"]}</td>\n"
+                      print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"].strip}</td>\n"
                       #print row["data_inicio"].class
                       if row["data_inicio"].class.to_s == "DBI::Timestamp"
                         print "<td>#{row["data_inicio"].to_time.strftime("%d/%m/%Y %H:%M:%S")}</td>"
