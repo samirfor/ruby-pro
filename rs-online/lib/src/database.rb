@@ -155,3 +155,14 @@ def save_historico(texto)
   sql = "INSERT INTO rs.historico (data, processo, mensagem) values ('#{tempo}', '#{processo}', '#{texto}')"
   db_statement_do(sql)
 end
+
+def select_servico id
+  sql = "SELECT id, descricao FROM rs.servico WHERE id = #{id}"
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  id_servico = rst.fetch[0]
+  rst.finish
+  db_disconnect(conn)
+  id_servico
+end

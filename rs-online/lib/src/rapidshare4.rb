@@ -29,6 +29,7 @@ require 'src/link'
 require 'src/database'
 require 'src/status'
 require 'src/prioridade'
+require 'src/excecoes'
 
 # -- Métodos locais
 
@@ -71,9 +72,7 @@ def contador(tempo, mensagem)
     $stdout.sync = false
     sleep(1)
   rescue Interrupt
-    to_log "\nSinal de interrupção recebido"
-    to_log "O programa foi encerrado."
-    exit!(1)
+    interrupt
   end
 end
 
@@ -98,9 +97,7 @@ def falhou(segundos)
     to_log("Tentando novamente em #{segundos} segundos.")
     contador(segundos, "Falta %S segundos.")
   rescue Interrupt
-    to_log "\nSinal de interrupção recebido"
-    to_log "O programa foi encerrado."
-    exit!(1)
+    interrupt
   end
 end
 
@@ -275,9 +272,7 @@ def testa_link(link)
     retry
   rescue Interrupt
     update_status_link(link.id_link, Status::INTERROMPIDO)
-    to_log "\nSinal de interrupção recebido"
-    to_log "O programa foi encerrado."
-    exit!(1)
+    interrupt
   rescue Exception => err
     update_status_link(link.id_link, Status::OFFLINE)
     to_log err
@@ -401,9 +396,7 @@ def baixar(link)
     retry
   rescue Interrupt
     update_status_link(link.id_link, Status::INTERROMPIDO)
-    to_log "\nSinal de interrupção recebido"
-    to_log "O programa foi encerrado."
-    exit!(1)
+    interrupt
   rescue Exception => err
     to_log err
     update_status_link(link.id_link, Status::INTERROMPIDO)
@@ -458,9 +451,7 @@ def run
         update_pacote_problema(id_pacote)
       end
     rescue Interrupt
-      to_log "\nSinal de interrupção recebido"
-      to_log "O programa foi encerrado."
-      exit!(1)
+      interrupt
     rescue Exception => err
       to_debug err
       retry
@@ -485,9 +476,7 @@ begin
     abort
   end
 rescue Interrupt
-  to_log "\nSinal de interrupção recebido"
-  to_log "O programa foi encerrado."
-  exit!(1)
+  interrupt
 rescue SystemExit => err
   to_log("O programa foi encerrado.")
   exit!
