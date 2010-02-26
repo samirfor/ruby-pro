@@ -102,8 +102,7 @@ Released   : 20081230
                       print "</td>\n"
                       print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}&prioridade=#{row["prioridade"]}&senha=#{row["senha"]}&mostrar=#{row["mostrar"]}\">"
 
-                      print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"].strip}</td>\n"
-                      #print row["data_inicio"].class
+                      print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"]}&nbsp;(#{sprintf("%.2f MB", row["tamanho"].to_i/1024.0)})</td>\n"
                       if row["data_inicio"].class.to_s == "DBI::Timestamp"
                         print "<td>#{row["data_inicio"].to_time.strftime("%d/%m/%Y %H:%M:%S")}</td>"
                       else
@@ -151,7 +150,9 @@ Released   : 20081230
                     </tr>
                   </tfoot>
                 </table>
-                <p><a href="lista_pacotes_ocultos.rhtml">Ver pacotes ocultos</a></p>
+                <p>
+                  <a href="lista_pacotes_ocultos.rhtml">Ver pacotes ocultos</a>
+                </p>
               </div>
             </div>
             <div class="meta">
