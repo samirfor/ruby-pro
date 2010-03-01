@@ -86,18 +86,36 @@ Released   : 20081230
               cgi = CGI.new
               a_params = cgi.params
               params_links = a_params["package"][0].to_a
-              links = Array.new
-              params_links.each do |linha|
-                linha.strip!
-                links.push linha if linha =~ /http:\/\/\S*rapidshare.com\S*\/.+/
-              end
 
               nome_pacote = a_params["name"]
               prioridade = a_params["prioridade"]
               senha = a_params["senha"][0]
+
+              links = Array.new
+              params_links.each do |linha|
+                linha.strip!
+                if linha =~ /.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/
+                  links.push linha.scan(/.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/)[0][0]
+                end
+              end
+
+              if links.size == 0
+                nome_pacote = "Ocorreu um erro."
+                links.push "Nenhum link foi detectado."
+              end
+
+              if nome_pacote == "" or nome_pacote == nil
+                short_link = links[0].split("/")
+                path = short_link[short_link.size - 1]
+                nome_pacote = path.gsub(/\.part\d+.\S+/, "")
+                #if nome_pacote =~ /\.\S{3,4}/
+                  #nome_pacote.gsub!(/\.\S{3,4}/, "")
+                #end
+              end
+
               id_pacote = save_pacote(nome_pacote, prioridade, senha)
               save_links(links, id_pacote)
-            %>
+              %>
               <h1 class="title"><%= nome_pacote %></h1>
               <div class="entry">
                 <p>
