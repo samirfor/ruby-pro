@@ -2,11 +2,11 @@
 require 'dbi'
 require 'src/database'
 
-def update_pacote
-  begin
-    cgi = CGI.new
-    a_params = cgi.params
+cgi = CGI.new
+a_params = cgi.params
 
+def update_pacote a_params
+  begin
     # Testa se algum campo é nulo
     a_params.each do |i|
       if i == nil
@@ -19,6 +19,22 @@ def update_pacote
       sql += ", senha = '#{a_params["senha"]}'"
     end
     sql += " WHERE id = #{a_params["id_pacote"]}"
+    db_statement_do(sql)
+    return "Pacote modificado com sucesso."
+  rescue Exception => e
+    return e
+  end
+end
+
+def cancelar_pacote a_params
+  begin
+    if a_params["cancelado"][0] == "true"
+      sql = "UPDATE rs.pacote SET mostrar = 'false', problema = 'true' WHERE id = #{a_params["id_pacote"]}"
+    elsif a_params["cancelado"][0] == "false"
+      sql = "UPDATE rs.pacote SET mostrar = 'true', problema = 'false' WHERE id = #{a_params["id_pacote"]}"
+    else
+      return
+    end
     db_statement_do(sql)
     return "Pacote modificado com sucesso."
   rescue Exception => e
@@ -77,7 +93,12 @@ Released   : 20081230
             <h1 class="title">Welcome to DownloadRS 1.0b </h1>
             <div class="entry">
               <p>
-                <%= update_pacote %>
+                <%
+                puts update_pacote a_params
+                unless a_params["cancelado"][0] == ""
+                    cancelar_pacote a_params
+                end
+                %>
               </p>
             </div>
             <div class="meta">

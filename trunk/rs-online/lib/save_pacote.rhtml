@@ -104,13 +104,11 @@ Released   : 20081230
                 links.push "Nenhum link foi detectado."
               end
 
+              nome_pacote = nome_pacote.to_s
               if nome_pacote == "" or nome_pacote == nil
                 short_link = links[0].split("/")
                 path = short_link[short_link.size - 1]
-                nome_pacote = path.gsub(/\.part\d+.\S+/, "")
-                #if nome_pacote =~ /\.\S{3,4}/
-                  #nome_pacote.gsub!(/\.\S{3,4}/, "")
-                #end
+                nome_pacote = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+)$/, "")
               end
 
               id_pacote = save_pacote(nome_pacote, prioridade, senha)
