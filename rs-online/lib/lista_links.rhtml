@@ -251,14 +251,24 @@ Released   : 20081230
                   <tr align="right">
                     <td><b>Senha: </b></td>
                     <td><input type="text" name="senha" class="text" size="30" value="<%= a_params["senha"] %>"/></td>
-                    <td>&nbsp;</td>
                     <td>
-                      <% # Implemtentar o Cancelar download do pacote
-                      #print "<a href=\"lista_links.rhtml?id_pacote=#{row["id"]}"
-                      #print "&prioridade=#{row["prioridade"]}&senha=#{row["senha"]}"
-                      #print "&mostrar=#{row["mostrar"]}\">"
-                      #print "Cancelar download do pacote"
-                    %>
+                      <b>Cancelar download: </b>
+                    </td>
+                    <td>
+                      <select name="cancelado" class="select-box">
+                        <option value="" selected="selected">-</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                        <%#
+                        if a_params["cancelado"][0] == "true"
+                          print "<option value=\"true\" selected=\"selected\">Sim<\/option>\n"
+                          print "<option value=\"false\">Não<\/option>\n"
+                        else
+                          print "<option value=\"false\" selected=\"selected\">Não<\/option>\n"
+                          print "<option value=\"true\">Sim<\/option>\n"
+                        end
+                      %>
+                      </select>
                     </td>
                   </tr>
                   <tr align="right">

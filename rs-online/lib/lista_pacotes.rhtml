@@ -97,12 +97,21 @@ Released   : 20081230
                       when Prioridade::ALTA
                       %><img src="images/alta.png" alt="4 - Alta" title="4 - Alta" /><%
                       when Prioridade::MUITO_ALTA
-                      %><img src="images/muito.alta.png" alt="5 - M. Alta" title="5 - M. Alta" /><%
+                      %><img src="images/prioridade.muito.alta-square-16.png" alt="5 - M. Alta" title="5 - M. Alta" /><%
                       end
-                      print "</td>\n"
-                      print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}&prioridade=#{row["prioridade"]}&senha=#{row["senha"]}&mostrar=#{row["mostrar"]}\">"
 
-                      print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"]}&nbsp;(#{sprintf("%.2f MB", row["tamanho"].to_i/1024.0)})</td>\n"
+                      print "</td>\n"
+                      print "<td><a href=\""
+                      print "lista_links.rhtml?id_pacote=#{row["id"]}&"
+                      print "prioridade=#{row["prioridade"]}&"
+                      print "senha=#{row["senha"]}&"
+                      print "mostrar=#{row["mostrar"]}\">"
+
+                      print "<img src=\"images/folder.png\" "
+                      print "alt=\"Folder\" />&nbsp;&nbsp;"
+                      print "#{row["nome"]}&nbsp;("
+                      print "#{sprintf("%.2f MB", row["tamanho"].to_i/1024.0)})</td>\n"
+
                       if row["data_inicio"].class.to_s == "DBI::Timestamp"
                         print "<td>#{row["data_inicio"].to_time.strftime("%d/%m/%Y %H:%M:%S")}</td>"
                       else
