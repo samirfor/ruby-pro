@@ -2,137 +2,168 @@ package perceptron;
 
 import static org.math.io.files.ASCIIFile.readDoubleArray;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Classificação de padrões através de a implementação do algoritmo
- * KNN (K-Nearest Neighbors Algorithm).
+ * Perceptron Simples.
  * @author Samir Coutinho Costa <samirfor@gmail.com>
  */
 public class Main {
+
+    private static boolean isAdicionarPadrao(BancoDados banco, double[][] atributos, int indice) {
+
+        for (int j = 0; j < banco.tamanho(); j++) {
+            Padrao p = banco.getPadrao(j);
+            if (p.getComprimentoSepala() == atributos[indice][0]
+                    && p.getLarguraSepala() == atributos[indice][1]
+                    && p.getComprimentoPetala() == atributos[indice][2]
+                    && p.getLarguraPetala() == atributos[indice][3]) {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
 
     /**
      * Executa o programa.
      * @return percentual - retorna a precisão do algoritmo em porcentagem.
      */
-    public static double run() {
+    public static void main(String[] args) {
 
         BancoDados treinamento = new BancoDados();
         BancoDados teste = new BancoDados();
-        ArrayList<Integer> indicesSorteados = new ArrayList<Integer>();
+        Perceptron perceptron = new Perceptron();
         double[][] atributos = readDoubleArray(new File("iris.data"));
-        boolean foiTreinado, foiTestado;
-        Random numeroRandom = new Random();
-        int indiceAleatorio;
-        final int TAMTREINO = 120;
-        final int TAMTESTE = 5;
+        int[] irisEscolhidas = new int[120];
+        int[] testesEscolhidos = new int[30];
+        int indice, i, linha, cont, quantidade = 10;
+        boolean adicionar = true;
+        double desvioPadrao, acertos, media = 0;
+        double[] percentual = new double[10];
 
-        // Treinamento
-        for (int i = 0; i < TAMTREINO;) {
-            foiTreinado = false;
-            indiceAleatorio = numeroRandom.nextInt(150);
+        System.out.println("\n________________________________________________\n");
 
-            /** Evita que uma mesma iris seja armazenada mais de uma vez
-             *  no treinamento
-             */
-            for (int j = 0; j < indicesSorteados.size(); j++) {
-                if (indiceAleatorio == indicesSorteados.get(j)) {
-                    foiTreinado = true;
-                    break;
+        cont = 0;
+        while (cont < 10) {
+            System.out.println("Treinando Perceptron com iris de: "
+                    + (cont + 1) + "º iteracao");
+            treinamento.clear();
+            teste.clear();
+            System.out.println("Escolhendo Aleatoriamente as iris de Treinamento");
+
+            i = 0;
+            while (i < 120) {
+
+                indice = (int) (Math.random() * 149);
+
+                if (isAdicionarPadrao(treinamento, atributos, indice) || i == 0) {
+
+                    Padrao p = new Padrao(
+                            atributos[indice][0],
+                            atributos[indice][1],
+                            atributos[indice][2],
+                            atributos[indice][3],
+                            Classificacao.SETOSA);
+                    irisEscolhidas[i] = indice;
+
+                    if (atributos[indice][4] == 1.0) {
+                        p.setClassificacao(Classificacao.SETOSA);
+                    } else if (atributos[indice][4] == 2.0) {
+                        p.setClassificacao(Classificacao.VERSICOLOR);
+                    } else if (atributos[indice][4] == 3.0) {
+                        p.setClassificacao(Classificacao.VIRGINICA);
+                    }
+
+                    treinamento.add(p);
+                    i++;
                 }
             }
 
-            // Se o indice não foi treinado, o treinamento é registrado.
-            if (!foiTreinado) {
-                Padrao padrao = new Padrao(atributos[indiceAleatorio][0],
-                        atributos[indiceAleatorio][1],
-                        atributos[indiceAleatorio][2],
-                        atributos[indiceAleatorio][3], Classificacao.SETOSA);
-                if (atributos[indiceAleatorio][4] == 1.0) {
-                    padrao.setTipo(Classificacao.SETOSA);
-                    treinamento.add(padrao);
-                } else if (atributos[indiceAleatorio][4] == 2.0) {
-                    padrao.setTipo(Classificacao.VERSICOLOR);
-                    treinamento.add(padrao);
-                } else { //if (atributos[indice][4] == 3.0) {
-                    padrao.setTipo(Classificacao.VIRGINICA);
-                    treinamento.add(padrao);
+            System.out.println("Treinamento sendo classificado pelo Perceptron");
+
+            perceptron.setTreinamento(treinamento);
+            perceptron.inicializaPesos();
+            perceptron.treinar();
+
+            System.out.println("Escolhendo Aleatoriamente as iris para Teste");
+
+            linha = 0;
+            for (indice = 0; indice < 150; indice++) {
+                adicionar = true;
+                for (i = 0; i < 120; i++) {
+                    if (irisEscolhidas[i] == indice) {
+                        adicionar = false;
+                        break;
+                    }
                 }
-                indicesSorteados.add(indiceAleatorio);
-                i++;
+                if (adicionar) {
+                    testesEscolhidos[linha] = indice;
+                    Padrao p = new Padrao(
+                            atributos[indice][0],
+                            atributos[indice][1],
+                            atributos[indice][2],
+                            atributos[indice][3],
+                            Classificacao.SETOSA);
+                    teste.add(p);
+                    linha++;
+                }
             }
+
+            System.out.println("Classificando as iris de Testes");
+
+            for (indice = 0; indice < teste.tamanho(); indice++) {
+                Padrao p = teste.getPadrao(indice);
+                p.setClassificacao(perceptron.classifica(teste, indice));
+
+            }
+
+            System.out.println("Calculando Percentual de acertos");
+
+            acertos = 0.0;
+            for (int j = 0; j < teste.tamanho(); j++) {
+                Padrao p = teste.getPadrao(j);
+                double classe = 0.0;
+                indice = testesEscolhidos[j];
+
+                if (p.getClassificacao() == Classificacao.SETOSA) {
+                    classe = 1.0;
+                } else if (p.getClassificacao() == Classificacao.VERSICOLOR) {
+                    classe = 2.0;
+                } else if (p.getClassificacao() == Classificacao.VIRGINICA) {
+                    classe = 3.0;
+                }
+
+                if (classe == atributos[indice][4]) {
+                    acertos += 1.0;
+                }
+            }
+
+            percentual[cont] = (double) (acertos / teste.tamanho()) * 100.00;
+            media += percentual[cont];
+            cont++;
         }
 
-        // Cria um objeto knn com o BancoDados treinamento pronto
-        KNN knn = new KNN(treinamento);
+        System.out.println("\n___________________________________________________\n");
+        System.out.println("Resultado da Estatistica: \n");
 
-        // Teste
-        System.out.println("\n=============================\n");
-        System.out.println("TESTE:");
-
-        for (int i = 0; i < TAMTESTE;) {
-            foiTestado = false;
-            indiceAleatorio = numeroRandom.nextInt(150);
-
-            for (int j = 0; j < indicesSorteados.size(); j++) {
-                if (indiceAleatorio == indicesSorteados.get(j)) {
-                    foiTestado = true;
-                    break;
-                }
-            }
-
-            if (!foiTestado) {
-                System.out.println("\nPlanta " + (i + 1) + ":");
-                // Classifica
-                Classificacao tipo = knn.classificar(atributos[indiceAleatorio][0],
-                        atributos[indiceAleatorio][1], atributos[indiceAleatorio][2],
-                        atributos[indiceAleatorio][3]);
-                Padrao padrao = new Padrao(atributos[indiceAleatorio][0],
-                        atributos[indiceAleatorio][1], atributos[indiceAleatorio][2],
-                        atributos[indiceAleatorio][3], tipo);
-                System.out.println("\tCS: " + padrao.getComprimentoSepala() +
-                        " LS: " + padrao.getLarguraSepala() + " CP: " +
-                        padrao.getComprimentoPetala() + " LP: " +
-                        padrao.getLarguraPetala() + "\n\tTipo: " + padrao.getTipo());
-                teste.add(padrao);
-                indicesSorteados.add(indiceAleatorio);
-                i++;
-            }
+        for (indice = 0; indice < quantidade; indice++) {
+            System.out.println("Percentual " + (indice + 1)
+                    + " = " + percentual[indice] + "%");
         }
 
-        System.out.println("\n=============================\n");
-        // Calcula o percentual de acertos
-        double acertos = 0;
-        double tipo = 0;
-        for (int i = 0; i < teste.size(); i++) {
-            Padrao padrao = teste.getPadrao(i);
+        media = media / quantidade;
 
-            if (padrao.getTipo() == Classificacao.SETOSA) {
-                tipo = 1.0;
-            } else if (padrao.getTipo() == Classificacao.VERSICOLOR) {
-                tipo = 2.0;
-            } else if (padrao.getTipo() == Classificacao.VIRGINICA) {
-                tipo = 3.0;
-            }
+        System.out.println("Media = " + media + "%");
 
-            for (int j = 0; j < 150; j++) {
-                if (padrao.getComprimentoSepala() == atributos[j][0] &&
-                        padrao.getLarguraSepala() == atributos[j][1] &&
-                        padrao.getComprimentoPetala() == atributos[j][2] &&
-                        padrao.getLarguraPetala() == atributos[j][3] &&
-                        tipo == atributos[j][4]) {
-                    acertos++;
-                    break;
-                }
-            }
+        desvioPadrao = 0.0;
+        for (indice = 0; indice < quantidade; indice++) {
+            desvioPadrao += Math.pow((percentual[indice] - media), 2);
         }
-
-        double percentual = (acertos / teste.size()) * 100;
-
-        System.out.println("Acertos: " + acertos);
-        System.out.println("Tamanho do teste: " + teste.size());
-        System.out.println("\nPercentual de Acertos: " + percentual + "%");
-        return percentual;
+        desvioPadrao = desvioPadrao / (quantidade - 1.0);
+        desvioPadrao = Math.sqrt(desvioPadrao);
+        System.out.println("Desvio Padrao = " + desvioPadrao);
+        System.out.println("\n________________________________________________\n");
     }
 }
