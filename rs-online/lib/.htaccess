@@ -1,3 +1,4 @@
-Options +FollowSymLinks +ExecCGI
-AddHandler rubypage .rhtml
-DirectoryIndex index.rhtml
+AuthType Basic
+AuthName "Login RS-ONLINE"
+AuthUserFile "/etc/apache2/auth/acesso"
+require valid-user
