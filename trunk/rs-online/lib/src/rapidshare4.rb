@@ -311,85 +311,85 @@ def baixar(link)
     http.read_timeout = 15 #segundos
     to_debug('Abrindo conexão HTTP...')
     headers, body = http.get(url.path)
-    if headers.code == "200"
-      # Requisitando pagina de download
-      to_debug('Conexão HTTPOK 200.')
-
-      return true if error body, link
-      return true if blocked body, link
-
-      servidor_host = body.scan(/rs\w{1,}.rapidshare.com/i)[0]
-      # Testa se identificou o host
-      if servidor_host == nil
-        to_log("Não foi possível capturar o servidor.")
-        to_log("Verifique se a URL está correta. Evitando ...")
-        exit(1)
-      end
-      ARGV.each do |item|
-        if item == "debug"
-          to_log('Servidor ' + servidor_host + ' identificado.')
-        end
-      end
-      servidor_ip = get_ip(servidor_host)
-
-      ## Captura tamanho do arquivo
-      tamanho = body.scan(/\| (\d+) KB/i)[0][0]
-      if tamanho == nil # Testa se identificou o tamanho
-        to_log('Não foi possível capturar o tamanho.')
-        return false
-      else
-        tamanho = tamanho.to_i
-        to_debug("Tamanho #{tamanho} KB ou #{sprintf("%.2f MB", tamanho/1024.0)}")
-      end
-
-      ## Mandando requisição POST
-      to_debug('Enviando requisição de download...')
-      ip_url = URI.parse('http://' + servidor_ip + url.path)
-      resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
-      resposta = resposta.body
-
-      return false if lot_of_users(resposta)
-      return false if respaw(resposta)
-      return false if waiting(resposta)
-      return false if get_no_slot(resposta)
-      return false if simultaneo(resposta)
-      return false if get_justify(resposta)
-
-      ## Captura tempo de espera
-      tempo = resposta.scan(/var c=(\d+)/)[0][0]
-      if tempo == nil # Testa se identificou o contador
-        to_log('Não foi possível capturar o contador.')
-        return false
-      end
-
-      t = Time.utc(0) + tempo.to_i
-      to_debug(t.strftime("Contador identificado: %Hh %Mm %Ss."))
-      contador(tempo.to_i, "O download iniciará em %Hh %Mm %Ss.")
-
-      link = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
-      link.gsub!("dlf.action=\\'","").gsub!("\\","")
-      uri = url_parse(link)
-      ip_host = get_ip(uri.host)
-      download = 'http://' + ip_host + uri.path
-
-      to_log("Baixando: #{download}")
-      inicio = Time.now
-      ## Download com curl
-      baixou = system("curl -LO #{download}")
-      fim = Time.now
-      tempo = Time.local(0) + (fim - inicio)
-      str_tempo = tempo.strftime("%Hh %Mm %Ss")
-      if baixou
-        to_log("Download concluido com sucesso em #{str_tempo}.")
-        to_log("Velocidade média foi de #{sprintf("%.2f KB/s", tamanho.to_i/(fim - inicio))}.")
-      else
-        to_log("Download falhou com #{str_tempo} decorridos.")
-      end
-    else
+    unless headers.code == "200"
       to_log("Não foi possível carregar a página.")
       to_log("#{headers.code} #{headers.message}")
       baixou = false
     end
+    # Requisitando pagina de download
+    to_debug('Conexão HTTPOK 200.')
+
+    return true if error body, link
+    return true if blocked body, link
+
+    servidor_host = body.scan(/rs\w{1,}.rapidshare.com/i)[0]
+    # Testa se identificou o host
+    if servidor_host == nil
+      to_log("Não foi possível capturar o servidor.")
+      to_log("Verifique se a URL está correta. Evitando ...")
+      exit(1)
+    end
+    ARGV.each do |item|
+      if item == "debug"
+        to_log('Servidor ' + servidor_host + ' identificado.')
+      end
+    end
+    servidor_ip = get_ip(servidor_host)
+
+    ## Captura tamanho do arquivo
+    tamanho = body.scan(/\| (\d+) KB/i)[0][0]
+    if tamanho == nil # Testa se identificou o tamanho
+      to_log('Não foi possível capturar o tamanho.')
+      return false
+    else
+      tamanho = tamanho.to_i
+      to_debug("Tamanho #{tamanho} KB ou #{sprintf("%.2f MB", tamanho/1024.0)}")
+    end
+
+    ## Mandando requisição POST
+    to_debug('Enviando requisição de download...')
+    ip_url = URI.parse('http://' + servidor_ip + url.path)
+    resposta = Net::HTTP.post_form(ip_url, {'dl.start'=>'Free'})
+    resposta = resposta.body
+
+    return false if lot_of_users(resposta)
+    return false if respaw(resposta)
+    return false if waiting(resposta)
+    return false if get_no_slot(resposta)
+    return false if simultaneo(resposta)
+    return false if get_justify(resposta)
+
+    ## Captura tempo de espera
+    tempo = resposta.scan(/var c=(\d+)/)[0][0]
+    if tempo == nil # Testa se identificou o contador
+      to_log('Não foi possível capturar o contador.')
+      return false
+    end
+
+    t = Time.utc(0) + tempo.to_i
+    to_debug(t.strftime("Contador identificado: %Hh %Mm %Ss."))
+    contador(tempo.to_i, "O download iniciará em %Hh %Mm %Ss.")
+
+    link = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
+    link.gsub!("dlf.action=\\'","").gsub!("\\","")
+    uri = url_parse(link)
+    ip_host = get_ip(uri.host)
+    download = 'http://' + ip_host + uri.path
+
+    to_log("Baixando: #{download}")
+    inicio = Time.now
+    ## Download com curl
+    baixou = system("curl -LO #{download}")
+    fim = Time.now
+    tempo = Time.local(0) + (fim - inicio)
+    str_tempo = tempo.strftime("%Hh %Mm %Ss")
+    if baixou
+      to_log("Download concluido com sucesso em #{str_tempo}.")
+      to_log("Velocidade média foi de #{sprintf("%.2f KB/s", tamanho.to_i/(fim - inicio))}.")
+    else
+      to_log("Download falhou com #{str_tempo} decorridos.")
+    end
+    
     return baixou
   rescue Timeout::Error
     to_log("Tempo de requisição esgotado. Tentando novamente.")
