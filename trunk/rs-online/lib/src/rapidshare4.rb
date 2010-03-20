@@ -437,7 +437,7 @@ def run
 
       update_tamanho_pacote(id_pacote, $tamanho_total)
       to_log "Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)} MB"
-      tweet "Iniciado download do pacote #{nome_pacote} (#{$tamanho_total/1024.0} MB)"
+      tweet "Iniciado download do pacote #{nome_pacote} (#{sprintf("%.2f MB", $tamanho_total/1024.0)} MB)"
       links_online.each do |link|
         begin
           update_status_link(link.id_link, Status::BAIXANDO)
