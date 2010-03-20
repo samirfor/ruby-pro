@@ -108,25 +108,29 @@ Released   : 20081230
                 <%
                 begin
                   pacote = select_pacote
-                  count = select_count_links pacote["id"]
-                  puts "Pacote baixando/a ser baixado a seguir: "
-                %>
-                </p>
-                <p>
-                  <a href="lista_links.rhtml?id_pacote=<%= pacote["id"] %>">
-                    <img alt="Now Downloading" title="Now Downloading" src="images/now_loading.gif" align="middle" width="80"/>
-                    <b><%= pacote["nome"] %></b></a>
-                </p>
-                <p>
-                  <% restante = count[1] - count[0] %>
-                  <%= count[0] %> de <%= count[1] %> links baixados. Falta só <%= restante %> <% print "link" if restante == 1 %><% print "links" if restante > 1 %>.
-                </p>
-                <p>
-                  <b>Service handler</b><br/>
-                  <a href="service_handler/start.rhtml">Iniciar downloads</a><br/>
-                  <a href="service_handler/stop.rhtml">Parar downloads</a> (termina o download corrente e encerra o serviço)<br/>
-                  <a href="service_handler/kill.rhtml">Matar processo</a> (finaliza o serviço imediatamente)<br/>
-                <%
+                  if pacote == nil
+                    puts "Não pacotes para baixar atualmente."
+                  else
+                    count = select_count_links pacote["id"]
+                    puts "Pacote baixando/a ser baixado a seguir: "
+                  %>
+                  </p>
+                  <p>
+                    <a href="lista_links.rhtml?id_pacote=<%= pacote["id"] %>">
+                      <img alt="Now Downloading" title="Now Downloading" src="images/now_loading.gif" align="middle" width="80"/>
+                      <b><%= pacote["nome"] %></b></a>
+                  </p>
+                  <p>
+                    <% restante = count[1] - count[0] %>
+                    <%= count[0] %> de <%= count[1] %> links baixados. Falta só <%= restante %> <% print "link" if restante == 1 %><% print "links" if restante > 1 %>.
+                  </p>
+                  <p>
+                    <b>Service handler</b><br/>
+                    <a href="service_handler/start.rhtml">Iniciar downloads</a><br/>
+                    <a href="service_handler/stop.rhtml">Parar downloads</a> (termina o download corrente e encerra o serviço)<br/>
+                    <a href="service_handler/kill.rhtml">Matar processo</a> (finaliza o serviço imediatamente)<br/>
+                  <%
+                  end
                 rescue Exception => e
                   puts "Não foi possível detectar um pacote mais prioritário."
                 %>
