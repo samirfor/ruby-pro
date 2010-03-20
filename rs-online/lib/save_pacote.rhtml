@@ -1,6 +1,7 @@
 <%
 require 'dbi'
 require 'cgi'
+require 'src/twitter'
 
 # inserir o pacote e os links no banco
 def save_pacote(name, prioridade, senha)
@@ -113,6 +114,7 @@ Released   : 20081230
 
               id_pacote = save_pacote(nome_pacote, prioridade, senha)
               save_links(links, id_pacote)
+              tweet "Pacote #{nome_pacote} foi inserido na lista de pacotes."
               %>
               <h1 class="title"><%= nome_pacote %></h1>
               <div class="entry">
