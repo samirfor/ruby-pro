@@ -107,6 +107,17 @@ def select_pacote_pendente
   id_pacote
 end
 
+def select_nome_pacote id
+  sql = "SELECT nome FROM rs.pacote WHERE id = #{id}"
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  nome_pacote = rst.fetch[0]
+  rst.finish
+  db_disconnect(conn)
+  nome_pacote
+end
+
 def select_lista_links(id_pacote)
   array = Array.new
   sql = "SELECT l.link, l.id_link, l.id_pacote, l.id_status FROM rs.pacote p, rs.link l " +

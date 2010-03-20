@@ -30,6 +30,7 @@ require 'src/database'
 require 'src/status'
 require 'src/prioridade'
 require 'src/excecoes'
+require 'src/twitter'
 
 # -- Métodos locais
 
@@ -414,12 +415,16 @@ def run
 
       id_pacote = select_pacote_pendente
       if id_pacote == nil
-        to_log "Não há pacotes resgistrados para download."
+        msg = "Não há pacotes para download."
+        to_log msg
+        tweet msg
         exit!(1)
       end
+
+      nome_pacote = select_nome_pacote id_pacote
       links_before_test = select_lista_links(id_pacote)
 
-      to_log "Testando os links........"
+      to_log "Testando os links..."
       update_tamanho_pacote(id_pacote, 0) # zera o tamanho do pacote
       links_online = Array.new
       links_before_test.each do |link|
@@ -432,6 +437,7 @@ def run
 
       update_tamanho_pacote(id_pacote, $tamanho_total)
       to_log "Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)} MB"
+      tweet "Iniciado download do pacote #{nome_pacote} (#{$tamanho_total/1024.0} MB)"
       links_online.each do |link|
         begin
           update_status_link(link.id_link, Status::BAIXANDO)
@@ -444,11 +450,14 @@ def run
           end
         end while !resp
       end
-      to_log("Fim do pacote.")
+      msg = "Concluido o download do pacote #{nome_pacote} (#{$tamanho_total/1024.0} MB)"
+      to_log msg
+      tweet msg
       if select_status_links(id_pacote) == 0
         update_pacote_completado(Time.now.strftime("%d/%m/%Y %H:%M:%S"), id_pacote)
       else
         update_pacote_problema(id_pacote)
+        tweet "Pacote #{nome_pacote} está problema."
       end
     rescue Interrupt
       interrupt
@@ -457,7 +466,9 @@ def run
       retry
     end
   end while id_pacote != nil
-  to_log("Fim do(s) download(s).")
+  msg = 'Fim do(s) download(s). Have a nice day!'
+  to_log msg
+  tweet msg
 end
 
 def singleton?
