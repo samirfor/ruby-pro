@@ -19,7 +19,7 @@
 
 # -- Diretórios de instalação
 $:.push "/home/#{`whoami`.chomp}/NetBeansProjects/rs-online/lib"
-$:.push "/home/#{`whoami`.chomp}/NetBeansProjects/trunk/rs-online/lib"
+$:.push "/home/#{`whoami`.chomp}/NetBeanstweProjects/trunk/rs-online/lib"
 
 # -- Bibliotecas, classes e módulos
 require 'net/http'
@@ -448,7 +448,7 @@ def run
       update_tamanho_pacote(id_pacote, $tamanho_total)
       to_log "Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)} MB"
       run_thread Proc.new {
-        tweet "Iniciado download do pacote #{nome_pacote} (#{sprintf("%.2f MB", $tamanho_total/1024.0)} MB)"
+        tweet "Iniciado download do pacote #{nome_pacote} (#{sprintf("%.2f MB", $tamanho_total/1024.0)})"
       }
       inicio_download_pacote = Time.now # Marca quando o pacote iniciou download
       links_online.each do |link|
@@ -466,7 +466,7 @@ def run
       fim_download_pacote = Time.now
       tempo_download_pacote = Time.utc(0) + (fim_download_pacote - inicio_download_pacote)
       msg = "Concluido o download do pacote #{nome_pacote}"
-      #      msg += " (#{sprintf("%.2f MB", $tamanho_total/1024.0)} MB)"
+      #      msg += " (#{sprintf("%.2f MB", $tamanho_total/1024.0)})"
       msg += " em #{tempo_download_pacote.strftime("%H:%M:%S")} | "
       msg += "V. media = #{sprintf("%.2f KB/s", $tamanho_total/(fim_download_pacote - inicio_download_pacote))} KB/s"
       to_log msg
