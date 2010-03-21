@@ -19,7 +19,7 @@
 
 # -- Diretórios de instalação
 $:.push "/home/#{`whoami`.chomp}/NetBeansProjects/rs-online/lib"
-$:.push "/home/#{`whoami`.chomp}/NetBeanstweProjects/trunk/rs-online/lib"
+$:.push "/home/#{`whoami`.chomp}/NetBeansProjects/trunk/rs-online/lib"
 
 # -- Bibliotecas, classes e módulos
 require 'net/http'
