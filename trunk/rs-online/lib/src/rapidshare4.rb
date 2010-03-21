@@ -36,9 +36,10 @@ require 'src/twitter'
 
 #Usage
 def ajuda()
-  puts "::: Rapidshare V4 :::\n"
+  puts "::: RS-Online Beta :::\n"
   puts ">>> Criado por Samir <samirfor@gmail.com>\n"
-  puts "Banco de Dados PostgreSQL necessário para rodar o programa."
+  puts ">>> Incrementado por Átila <camurca.home@gmail.com>\n"
+  puts "Banco de Dados PostgreSQL é necessário para rodar o programa."
 end
 
 # Traduz hostname da URL para ip
@@ -456,7 +457,7 @@ def run
       fim_download_pacote = Time.now
       tempo_download_pacote = Time.utc(0) + (fim_download_pacote - inicio_download_pacote)
       msg = "Concluido o download do pacote #{nome_pacote}"
-#      msg += " (#{sprintf("%.2f MB", $tamanho_total/1024.0)} MB)"
+      #      msg += " (#{sprintf("%.2f MB", $tamanho_total/1024.0)} MB)"
       msg += " em #{tempo_download_pacote.strftime("%H:%M:%S")} | "
       msg += "V. media = #{sprintf("%.2f KB/s", $tamanho_total/(fim_download_pacote - inicio_download_pacote))} KB/s"
       to_log msg
@@ -485,7 +486,7 @@ def singleton?
     return true
   end
   arq = File.open(fullpath, "r")
-  pid = arq.readline.chomp
+  pid = arq.readline
   arq.close
   ps = `ps -p #{pid} -o command=`.chomp
   if ps =~ /rs-online/i
@@ -498,15 +499,15 @@ end
 # O main do programa
 begin
   ajuda
-  # Guardando o numero do pid
-  arq = File.open("/home/#{`whoami`.chomp}/rs-online.pid", "w")
-  arq.print Process.pid
-  arq.close
   if singleton?
+    # Guardando o numero do pid
+    arq = File.open("/home/#{`whoami`.chomp}/rs-online.pid", "w")
+    arq.print Process.pid
+    arq.close
     run
   else
     puts 'Há outro processo rodando nesta máquina.'
-    abort
+    exit!
   end
 rescue Interrupt
   interrupt
