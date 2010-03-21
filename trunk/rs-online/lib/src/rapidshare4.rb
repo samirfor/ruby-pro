@@ -440,7 +440,7 @@ def run
       update_tamanho_pacote(id_pacote, $tamanho_total)
       to_log "Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)} MB"
       tweet "Iniciado download do pacote #{nome_pacote} (#{sprintf("%.2f MB", $tamanho_total/1024.0)} MB)"
-      tempo_download_pacote = Time.now # Marca quando o pacote iniciou download
+      inicio_download_pacote = Time.now # Marca quando o pacote iniciou download
       links_online.each do |link|
         begin
           update_status_link(link.id_link, Status::BAIXANDO)
@@ -453,10 +453,12 @@ def run
           end
         end while !resp
       end
-      tempo_download_pacote = Time.utc(0) + (Time.now - tempo_download_pacote)
+      fim_download_pacote = Time.now
+      tempo_download_pacote = Time.utc(0) + (fim_download_pacote - inicio_download_pacote)
       msg = "Concluido o download do pacote #{nome_pacote}"
-      msg += " (#{sprintf("%.2f MB", $tamanho_total/1024.0)} MB)"
-      msg += " em #{tempo_download_pacote.strftime("%H:%M:%S")}"
+#      msg += " (#{sprintf("%.2f MB", $tamanho_total/1024.0)} MB)"
+      msg += " em #{tempo_download_pacote.strftime("%H:%M:%S")} | "
+      msg += "V. media = #{sprintf("%.2f KB/s", $tamanho_total/(fim_download_pacote - inicio_download_pacote))} KB/s"
       to_log msg
       tweet msg
       if select_status_links(id_pacote) == 0
@@ -478,27 +480,40 @@ def run
 end
 
 def singleton?
-  arq = File.open("/home/#{`whoami`.chomp}/rs-online.pid", "w")
-  print Process.pid
+  fullpath = "/home/#{`whoami`.chomp}/rs-online.pid"
+  unless FileTest.exist? fullpath
+    return true
+  end
+  arq = File.open(fullpath, "r")
+  pid = arq.readline.chomp
   arq.close
-  ps = `ps -ef | grep rs-online`.to_a
-  return false if ps.size >= 4
-  return true
+  ps = `ps -p #{pid} -o command=`.chomp
+  if ps =~ /rs-online/i
+    return false
+  else
+    return true
+  end
 end
 
 # O main do programa
 begin
   ajuda
+  # Guardando o numero do pid
+  arq = File.open("/home/#{`whoami`.chomp}/rs-online.pid", "w")
+  arq.print Process.pid
+  arq.close
   if singleton?
     run
   else
-    to_log 'Há outro processo "rs-online" rodando nesta máquina.'
+    puts 'Há outro processo rodando nesta máquina.'
     abort
   end
 rescue Interrupt
   interrupt
 rescue SystemExit => err
-  to_log("O programa foi encerrado.")
+  msg = "O programa foi encerrado."
+  to_log msg
+  tweet msg
   exit!
 rescue Exception => err
   to_log err
