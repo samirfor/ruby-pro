@@ -446,7 +446,7 @@ def run
       end
 
       update_tamanho_pacote(id_pacote, $tamanho_total)
-      to_log "Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)} MB"
+      to_log "Tamanho total: #{sprintf("%.2f MB", $tamanho_total/1024.0)}"
       run_thread Proc.new {
         tweet "Iniciado download do pacote #{nome_pacote} (#{sprintf("%.2f MB", $tamanho_total/1024.0)})"
       }
