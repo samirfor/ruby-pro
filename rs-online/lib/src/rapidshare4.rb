@@ -468,7 +468,7 @@ def run
       msg = "Concluido o download do pacote #{nome_pacote}"
       #      msg += " (#{sprintf("%.2f MB", $tamanho_total/1024.0)})"
       msg += " em #{tempo_download_pacote.strftime("%H:%M:%S")} | "
-      msg += "V. media = #{sprintf("%.2f KB/s", $tamanho_total/(fim_download_pacote - inicio_download_pacote))} KB/s"
+      msg += "V. media = #{sprintf("%.2f KB/s", $tamanho_total/(fim_download_pacote - inicio_download_pacote))}"
       to_log msg
       run_thread Proc.new {
         tweet msg
