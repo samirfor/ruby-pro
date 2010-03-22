@@ -1,4 +1,5 @@
 require 'dbi'
+require 'src/pacote'
 
 def db_connect
   begin
@@ -99,22 +100,24 @@ def select_pacote_pendente
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
+  pacote = nil
   begin
-    #    id_pacote = rst.fetch[0]
-    pacote = Pacote.new(rst.fetch[0]["nome"])
-    pacote.fill_db(rst.fetch[0]["id"], false, false, rst.fetch[0]["prioridade"])
+    rst.fetch do |row|
+      pacote = Pacote.new(row["nome"])
+      pacote.id_pacote = row["id_pacote"]
+      pacote.prioridade = row["prioridade"]
+    end
   rescue Exception => err
     puts "Erro no fetch"
     puts err
-    #    id_pacote = nil
     pacote = nil
   end
   rst.finish
   db_disconnect(conn)
-  #  id_pacote
   pacote
 end
 
+# Depracated
 def select_nome_pacote id
   sql = "SELECT nome FROM rs.pacote WHERE id = #{id}"
   db = db_statement_execute(sql)
