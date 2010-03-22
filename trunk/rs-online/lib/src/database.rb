@@ -130,6 +130,9 @@ def select_nome_pacote id
 end
 
 def select_lista_links id_pacote
+  if id_pacote == nil or id_pacote == ""
+    return nil
+  end
   array = Array.new
   sql = "SELECT l.link, l.id_link, l.id_pacote, l.id_status FROM rs.pacote p, rs.link l " +
     "WHERE l.id_pacote = p.id AND p.id = #{id_pacote} AND l.completado = 'false'"

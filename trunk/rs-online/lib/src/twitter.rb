@@ -8,6 +8,9 @@ require 'twitter'
 #   # gem install twitter
 #
 def tweet evento
+  ARGV.each do |e|
+    return if e == "no-twitter"
+  end
   puts "Twittando..."
   autenticacao = Twitter::HTTPAuth.new 'rsonline_', 'rs4all'
   cliente = Twitter::Base.new autenticacao
