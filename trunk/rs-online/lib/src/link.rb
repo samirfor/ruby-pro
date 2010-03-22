@@ -23,8 +23,8 @@ class Link
     @completado = false
     @tamanho = 0
     @id_status = Status::AGUARDANDO
-    @data_inicio = "SELECT now()"
-    @data_fim = 0
+    @data_fim = '2000-01-01'
+    @data_inicio = '2000-01-01'
   end
 
   def fill_db id_link, id_pacote, id_status
@@ -225,13 +225,12 @@ class Link
 
   def update_db
     sql = "UPDATE rs.link SET "
-    sql += "data_inicio = '#{@data_inicio}', "
-    sql += "data_fim = '#{@data_fim}', "
     sql += "id_status = #{@id_status}, "
     sql += "tamanho = #{@tamanho}, "
+    sql += "data_inicio = '#{@data_inicio}', "
+    sql += "data_fim = '#{@data_fim}', "
     sql += "completado = '#{@completado}' "
     sql += "WHERE id_link = #{@id_link}"
     db_statement_do(sql)
   end
-  
 end
