@@ -514,7 +514,6 @@ rescue SystemExit => err
   exit!
 rescue NoMethodError => err
   to_log "Não há método definido."
-  to_log err
   exit!
 rescue Exception => err
   to_log err
