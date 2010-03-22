@@ -140,7 +140,11 @@ def select_lista_links id_pacote
   rst = db[0]
   conn = db[1]
   rst.fetch do |row|
-    array.push Link.new(row["id_link"], row["link"], row["id_pacote"], row["id_status"])
+    link = Link.new(row["link"])
+    link.id_status = row["id_status"]
+    link.id_link = row["id_link"]
+    link.id_pacote = row["id_pacote"]
+    array.push link
   end
   rst.finish
   db_disconnect(conn)
