@@ -117,6 +117,33 @@ def select_pacote_pendente
   pacote
 end
 
+def select_pacotes_pendetes_teste id_pacote_excecao
+  sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
+    "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
+    "AND id != #{id_pacote_excecao} " +
+    "GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc"
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  pacote = nil
+  pacotes = Array.new
+  begin
+    rst.fetch do |row|
+      pacote = Pacote.new(row["nome"])
+      pacote.id_pacote = row["id"]
+      pacote.prioridade = row["prioridade_max"]
+      pacotes.push pacote
+    end
+  rescue Exception => err
+    puts "Erro no fetch"
+    puts err
+    pacotes = nil
+  end
+  rst.finish
+  db_disconnect(conn)
+  pacotes.sort
+end
+
 # Depracated
 def select_nome_pacote id
   sql = "SELECT nome FROM rs.pacote WHERE id = #{id}"
@@ -133,9 +160,10 @@ def select_lista_links id_pacote
   if id_pacote == nil or id_pacote == ""
     return nil
   end
-  array = Array.new
-  sql = "SELECT l.link, l.id_link, l.id_pacote, l.id_status FROM rs.pacote p, rs.link l " +
-    "WHERE l.id_pacote = p.id AND p.id = #{id_pacote}"# AND l.completado = 'false'"
+  lista = Array.new
+  sql = "SELECT l.link, l.id_link, l.id_pacote, l.id_status "
+  sql += "FROM rs.pacote p, rs.link l "
+  sql += "WHERE l.id_pacote = p.id AND p.id = #{id_pacote}"
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
@@ -144,11 +172,11 @@ def select_lista_links id_pacote
     link.id_status = row["id_status"]
     link.id_link = row["id_link"]
     link.id_pacote = row["id_pacote"]
-    array.push link
+    lista.push link
   end
   rst.finish
   db_disconnect(conn)
-  array.sort
+  lista.sort
 end
 
 def select_remaining_links id_pacote

@@ -2,14 +2,7 @@ require 'net/http'
 require 'socket'
 
 class Link
-  attr_accessor :link, :host, :path, :ip, :uri, :id_link, :id_pacote, :completado, :tamanho, :id_status, :tentativas, :max_tentativas, :data_inicio, :data_fim
-
-  #  def initialize(id_link, link, id_pacote, id_status)
-  #    @id_link = id_link
-  #    @link = link
-  #    @id_pacote = id_pacote
-  #    @id_status = id_status
-  #  end
+  attr_accessor :link, :host, :path, :ip, :uri, :id_link, :id_pacote, :completado, :tamanho, :id_status, :tentativas, :max_tentativas, :data_inicio, :data_fim, :testado
 
   def initialize link
     @link = link.strip
@@ -24,6 +17,7 @@ class Link
     @id_status = Status::AGUARDANDO
     @data_fim = '2000-01-01'
     @data_inicio = '2000-01-01'
+    @testado = false
   end
 
   def fill_db id_link, id_pacote, id_status
@@ -58,11 +52,13 @@ class Link
         to_log "ERRO: Link inválido evitado."
         @id_status = Status::OFFLINE
         @data_inicio = timestamp Time.now
+        @data_fim = @data_inicio
         update_db
         return
       end
       @id_status = Status::TESTANDO
       @data_inicio = timestamp Time.now
+      @data_fim = @data_inicio
       update_db
       
       http = Net::HTTP.new(@ip)
@@ -172,7 +168,7 @@ class Link
       to_debug('Enviando requisição de download...')
       resposta = Net::HTTP.post_form(URI.parse("http://#{real_ip}#{@path}"), {'dl.start'=>'Free'})
       resposta = resposta.body
-
+      
       if lot_of_users(resposta) or respaw(resposta) or waiting(resposta) or \
           get_no_slot(resposta) or simultaneo(resposta) or get_justify(resposta)
         retry_
