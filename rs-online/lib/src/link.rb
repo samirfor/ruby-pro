@@ -23,6 +23,8 @@ class Link
     @completado = false
     @tamanho = 0
     @id_status = Status::AGUARDANDO
+    @data_inicio = "SELECT now()"
+    @data_fim = 0
   end
 
   def fill_db id_link, id_pacote, id_status
@@ -211,6 +213,7 @@ class Link
         @id_status = Status::TENTANDO
       end
       update_db
+      return
     rescue Timeout::Error
       to_log("Tempo de requisição esgotado. Tentando novamente.")
       retry

@@ -394,7 +394,6 @@ def run
         tweet evento
         exit!(1)
       end
-      #      nome_pacote = select_nome_pacote id_pacote
       links_before_test = select_lista_links pacote.id_pacote
       if links_before_test == nil
         to_log "Não foi possível selecionar a lista de links."
@@ -408,21 +407,27 @@ def run
       links_online = Array.new
       links_before_test.each do |link|
         cancelar?
-        case link.test
-        when Status::ONLINE
-          link.id_status = Status::ONLINE
-          links_online.push link
-        when Status::OFFLINE
-          link.id_status = Status::OFFLINE
-        when Status::INTERROMPIDO
-          link.id_status = Status::INTERROMPIDO
+        if link.id_status == Status::BAIXADO
+          pacote.tamanho += link.tamanho
+        else
+          link.test
+          case link.id_status
+          when Status::ONLINE
+            link.id_status = Status::ONLINE
+            pacote.tamanho += link.tamanho
+            links_online.push link
+          when Status::OFFLINE
+            link.id_status = Status::OFFLINE
+          when Status::INTERROMPIDO
+            link.id_status = Status::INTERROMPIDO
+          end
+          link.update_db        
         end
-        link.update_db
       end
+      pacote.update_db
       ## Fim do teste
 
       ## Informações do teste
-      update_tamanho_pacote(pacote.id_pacote, pacote.tamanho)
       to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
       run_thread Proc.new {
         tweet "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
@@ -434,8 +439,8 @@ def run
       links_online.each do |link|
         cancelar?
         begin
-          result = link.download
-        end while result == Status::TENTANDO
+          link.download
+        end while link.id_status == Status::TENTANDO
       end
       pacote.data_fim = Time.now
       ## Fim Download do Pacote
