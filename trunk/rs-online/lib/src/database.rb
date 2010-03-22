@@ -52,40 +52,44 @@ def db_disconnect(conn)
 end
 
 
-def update_status_link_tamanho id_link, tamanho, id_status
-  sql = "UPDATE rs.link SET id_status = #{id_status}, tamanho = #{tamanho} WHERE id_link = #{id_link}"
-  db_statement_do(sql)
-end
+#def update_tamanho_pacote id_pacote, tamanho
+#  sql = "UPDATE rs.pacote SET tamanho = #{tamanho} WHERE id = #{id_pacote}"
+#  db_statement_do(sql)
+#end
+#
+#def update_pacote_completado data, id_pacote
+#  sql = "UPDATE rs.pacote SET data_fim = '#{data}', completado = 'true' WHERE id = #{id_pacote}"
+#  db_statement_do(sql)
+#end
+#
+#def update_pacote_problema id_pacote
+#  sql = "UPDATE rs.pacote SET problema = 'true' WHERE id = #{id_pacote}"
+#  db_statement_do(sql)
+#end
 
-def update_tamanho_pacote id_pacote, tamanho
-  sql = "UPDATE rs.pacote SET tamanho = #{tamanho} WHERE id = #{id_pacote}"
-  db_statement_do(sql)
-end
 
-def update_status_link id_link, id_status
-  sql = "UPDATE rs.link SET id_status = #{id_status} WHERE id_link = #{id_link}"
-  db_statement_do(sql)
-end
 
-def update_pacote_completado data, id_pacote
-  sql = "UPDATE rs.pacote SET data_fim = '#{data}', completado = 'true' WHERE id = #{id_pacote}"
-  db_statement_do(sql)
-end
+#def update_status_link_tamanho id_link, tamanho, id_status
+#  sql = "UPDATE rs.link SET id_status = #{id_status}, tamanho = #{tamanho} WHERE id_link = #{id_link}"
+#  db_statement_do(sql)
+#end
+#
+#def update_status_link id_link, id_status
+#  sql = "UPDATE rs.link SET id_status = #{id_status} WHERE id_link = #{id_link}"
+#  db_statement_do(sql)
+#end
+#
+#def update_data_inicio_link id_link, data
+#  sql = "UPDATE rs.link SET data_inicio = '#{data}' WHERE id_link = #{id_link}"
+#  db_statement_do(sql)
+#end
+#
+#def update_link_completado id_link, data, id_status
+#  sql = "UPDATE rs.link SET data_fim = '#{data}', completado = 'true', id_status = #{id_status} WHERE id_link = #{id_link}"
+#  db_statement_do(sql)
+#end
 
-def update_data_inicio_link id_link, data
-  sql = "UPDATE rs.link SET data_inicio = '#{data}' WHERE id_link = #{id_link}"
-  db_statement_do(sql)
-end
 
-def update_link_completado id_link, data, id_status
-  sql = "UPDATE rs.link SET data_fim = '#{data}', completado = 'true', id_status = #{id_status} WHERE id_link = #{id_link}"
-  db_statement_do(sql)
-end
-
-def update_pacote_problema id_pacote
-  sql = "UPDATE rs.pacote SET problema = 'true' WHERE id = #{id_pacote}"
-  db_statement_do(sql)
-end
 
 # --- Retorna o pacote a ser baixado mais prioritário e mais recente.
 def select_pacote_pendente
@@ -96,15 +100,19 @@ def select_pacote_pendente
   rst = db[0]
   conn = db[1]
   begin
-    id_pacote = rst.fetch[0]
+    #    id_pacote = rst.fetch[0]
+    pacote = Pacote.new(rst.fetch[0]["nome"])
+    pacote.fill_db(rst.fetch[0]["id"], false, false, rst.fetch[0]["prioridade"])
   rescue Exception => err
     puts "Erro no fetch"
     puts err
-    id_pacote = nil
+    #    id_pacote = nil
+    pacote = nil
   end
   rst.finish
   db_disconnect(conn)
-  id_pacote
+  #  id_pacote
+  pacote
 end
 
 def select_nome_pacote id
@@ -118,7 +126,7 @@ def select_nome_pacote id
   nome_pacote
 end
 
-def select_lista_links(id_pacote)
+def select_lista_links id_pacote
   array = Array.new
   sql = "SELECT l.link, l.id_link, l.id_pacote, l.id_status FROM rs.pacote p, rs.link l " +
     "WHERE l.id_pacote = p.id AND p.id = #{id_pacote} AND l.completado = 'false'"
@@ -133,7 +141,7 @@ def select_lista_links(id_pacote)
   array.sort
 end
 
-def select_status_links id_pacote
+def select_remaining_links id_pacote
   sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
   db = db_statement_execute(sql)
   rst = db[0]
@@ -158,13 +166,24 @@ def to_log texto
   puts texto
 end
 
-def save_historico(texto)
+def save_historico texto
   # formatar hora
   tempo = Time.new.strftime("%d/%m/%Y %H:%M:%S")
   # processo
   processo = Process.pid.to_s
   sql = "INSERT INTO rs.historico (data, processo, mensagem) values ('#{tempo}', '#{processo}', '#{texto}')"
   db_statement_do(sql)
+end
+
+def select_prioridade
+  sql = "SELECT * FROM rs.prioridade"
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  array = rst.fetch_all.clone
+  rst.finish
+  db_disconnect(conn)
+  array.sort
 end
 
 def select_servico id

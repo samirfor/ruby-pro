@@ -8,4 +8,6 @@ module Status
   BAIXANDO = 4
   AGUARDANDO = 5
   INTERROMPIDO = 6
+  TENTANDO = 7
+  TESTANDO = 8
 end
