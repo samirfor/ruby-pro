@@ -2,31 +2,31 @@
 require 'dbi'
 require 'src/database'
 
-def select_pacote
-  sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
-    "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
-    "GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc LIMIT 1"
-  db = db_statement_execute(sql)
-  rst = db[0]
-  conn = db[1]
-  pacote = Hash.new
-  begin
-    rst.fetch do |row|
-      pacote["nome"] = row["nome"]
-      pacote["id"] = row["id"]
-    end
-  rescue Exception => err
-    puts "Erro no fetch!"
-    puts err
-  end
-  rst.finish
-  db_disconnect(conn)
-  if pacote.size > 0
-    pacote
-  else
-    nil
-  end
-end
+#def select_pacote
+#sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
+#"FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
+#"GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc LIMIT 1"
+#db = db_statement_execute(sql)
+#rst = db[0]
+#conn = db[1]
+#pacote = Hash.new
+#begin
+#rst.fetch do |row|
+#pacote["nome"] = row["nome"]
+#pacote["id"] = row["id"]
+#end
+#rescue Exception => err
+#puts "Erro no fetch!"
+#puts err
+#end
+#rst.finish
+#db_disconnect(conn)
+#if pacote.size > 0
+#pacote
+#else
+#nil
+#end
+#end
 
 def select_count_links id_pacote
   sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
@@ -103,22 +103,21 @@ Released   : 20081230
           <div class="post">
             <h1 class="title">Welcome to RS-Online 1.0b </h1>
             <div class="entry">
-
               <p>
                 <%
                 begin
-                  pacote = select_pacote
+                  pacote = select_pacote_pendente
                   if pacote == nil
                     puts "Não pacotes para baixar atualmente."
                   else
-                    count = select_count_links pacote["id"]
+                    count = select_count_links pacote.id_pacote
                     puts "Pacote baixando/a ser baixado a seguir: "
                   %>
                   </p>
                   <p>
-                    <a href="lista_links.rhtml?id_pacote=<%= pacote["id"] %>">
+                    <a href="lista_links.rhtml?id_pacote=<%= pacote.id_pacote %>">
                       <img alt="Now Downloading" title="Now Downloading" src="images/now_loading.gif" align="middle" width="80"/>
-                      <b><%= pacote["nome"] %></b></a>
+                      <b><%= pacote.nome %></b></a>
                   </p>
                   <p>
                     <% restante = count[1] - count[0] %>

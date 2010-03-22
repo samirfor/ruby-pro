@@ -1,12 +1,18 @@
 require 'rubygems'
 require 'twitter'
 
-def tweet msg
+#
+# Este método depende do RubyGems e da gem "twitter".
+# Eles podem ser instalado assim:
+#   # apt-get install rubygems gem
+#   # gem install twitter
+#
+def tweet evento
   puts "Twittando..."
   autenticacao = Twitter::HTTPAuth.new 'rsonline_', 'rs4all'
   cliente = Twitter::Base.new autenticacao
-  if cliente.user_timeline[0].text == msg
-    msg += "."
+  if cliente.user_timeline[0].text == evento
+    evento += "."
   end
-  cliente.update msg
+  cliente.update evento
 end

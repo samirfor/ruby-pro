@@ -4,17 +4,6 @@ require 'cgi'
 require 'src/database'
 require 'src/status'
 
-def select_prioridade
-  sql = "SELECT * FROM rs.prioridade"
-  db = db_statement_execute(sql)
-  rst = db[0]
-  conn = db[1]
-  array = rst.fetch_all.clone
-  rst.finish
-  db_disconnect(conn)
-  array.sort
-end
-
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -174,6 +163,10 @@ Released   : 20081230
                           %><td align="center"><img src="images/hourglass.png" alt="Aguardando" title="Aguardando" /></td><%
                           when Status::INTERROMPIDO
                           %><td align="center"><img src="images/exclamation.png" alt="Interrompido" title="Interrompido" /></td><%
+                          when Status::TESTANDO
+                          %><td align="center"><img src="images/loading.gif.png" alt="Testando" title="Testando" /></td><%
+                          when Status::TENTANDO
+                          %><td align="center"><img src="images/loading.gif.png" alt="Tentando" title="Tentando" /></td><%
                           end%>
                         </tr><%
                         print "\n"
