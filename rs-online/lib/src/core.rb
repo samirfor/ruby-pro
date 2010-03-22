@@ -406,10 +406,8 @@ def run
       pacote.tamanho = 0
       to_log "Testando os links..."
       links_online = Array.new
-      links_before_test.each do |url|
+      links_before_test.each do |link|
         cancelar?
-        p url
-        link = Link.new url
         case link.test
         when Status::ONLINE
           link.id_status = Status::ONLINE
