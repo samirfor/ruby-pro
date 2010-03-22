@@ -146,7 +146,7 @@ class Link
       end
 
       begin
-        servidor_host = reconhecer_servidor
+        servidor_host = reconhecer_servidor body
         if servidor_host == nil
           if retry_ == Status::OFFLINE
             return
