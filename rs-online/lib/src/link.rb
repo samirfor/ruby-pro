@@ -167,7 +167,7 @@ class Link
 
       ## Mandando requisição POST
       to_debug('Enviando requisição de download...')
-      resposta = Net::HTTP.post_form(@uri, {'dl.start'=>'Free'})
+      resposta = Net::HTTP.post_form(URI.parse("http://#{@ip}#{@path}"), {'dl.start'=>'Free'})
       resposta = resposta.body
 
       if lot_of_users(resposta) or respaw(resposta) or waiting(resposta) or \
