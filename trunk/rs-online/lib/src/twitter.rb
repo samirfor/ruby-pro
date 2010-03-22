@@ -3,7 +3,7 @@ require 'twitter'
 
 #
 # Este método depende do RubyGems e da gem "twitter".
-# Eles podem ser instalado assim:
+# Eles podem ser instalados assim:
 #   # apt-get install rubygems gem
 #   # gem install twitter
 #

@@ -135,7 +135,7 @@ def select_lista_links id_pacote
   end
   array = Array.new
   sql = "SELECT l.link, l.id_link, l.id_pacote, l.id_status FROM rs.pacote p, rs.link l " +
-    "WHERE l.id_pacote = p.id AND p.id = #{id_pacote} AND l.completado = 'false'"
+    "WHERE l.id_pacote = p.id AND p.id = #{id_pacote}"# AND l.completado = 'false'"
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
