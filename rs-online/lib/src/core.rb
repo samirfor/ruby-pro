@@ -396,6 +396,10 @@ def run
       end
       #      nome_pacote = select_nome_pacote id_pacote
       links_before_test = select_lista_links pacote.id_pacote
+      if links_before_test == nil
+        to_log "Não foi possível selecionar a lista de links."
+        exit!(1)
+      end
       ## Fim do Select pacote
 
       ## Inicio do teste
