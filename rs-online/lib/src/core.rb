@@ -43,24 +43,6 @@ def ajuda()
   puts "Banco de Dados PostgreSQL é necessário para rodar o programa."
 end
 
-## Traduz hostname da URL para ip
-## Retorno: String IP
-#def get_ip(host)
-#  begin
-#    return IPSocket.getaddress(host)
-#  rescue Exception
-#    return "195.122.131.2" if host == "rapidshare.com" or host == "www.rapidshare.com"
-#  end
-#end
-
-# Traduz hostname da URL para ip
-# Retorno: URI
-def url_parse(link)
-  url = URI.parse(link)
-  url.host = get_ip(url.host)
-  URI.parse('http://' + url.host + url.path)
-end
-
 # Contador regressivo
 def contador(tempo, mensagem)
   begin
@@ -182,78 +164,11 @@ def get_justify body
   end
 end
 
-#def blocked body, link
-#  str = nil
-#  str = body.scan(/suspected to contain illegal content and has been blocked/i)[0]
-#  if str != nil
-#    to_log("O link foi bloqueado.")
-#    update_status_link(link.id_link, Status::OFFLINE)
-#    return true
-#  else
-#    return false
-#  end
-#end
-
-
-
 def to_html(body)
   arq = File.open("rapid.html", "w")
   arq.print(body)
   arq.close
 end
-
-#def testa_link link
-#  begin
-#    link.link.strip!
-#    to_log "Testando link: " + link.link
-#    if link.link =~ /http:\/\/\S+\/.+/
-#      url = URI.parse link.link
-#    else
-#      to_log "ERRO: Link inválido evitado."
-#      update_status_link link.id_link, Status::OFFLINE
-#      return Status::OFFLINE
-#    end
-#
-#    host_rs = get_ip url.host
-#    http = Net::HTTP.new host_rs
-#    http.read_timeout = 15 #segundos
-#    headers, body = http.get url.path
-#    unless headers.code == "200"
-#      to_log "Não foi possível carregar a página."
-#      to_log "#{headers.code} - #{headers.message}"
-#      return Status::INTERROMPIDO
-#    end
-#    # Requisitando pagina de download
-#    return Status::OFFLINE if error body, link
-#    txt = body.scan /<h1>.*DOWNLOAD.*<\/h1>/i[0]
-#    if txt == nil
-#      to_log "Há algum problema com o link."
-#      update_status_link link.id_link, Status::OFFLINE
-#      return Status::OFFLINE
-#    end
-#    ## Captura tamanho do arquivo
-#    tamanho = body.scan /\| (\d+) KB/i[0][0]
-#    if tamanho == nil # Testa se identificou o tamanho
-#      to_log 'Não foi possível capturar o tamanho.'
-#    else
-#      tamanho = tamanho.to_i
-#      to_log "Tamanho #{tamanho} KB ou #{sprintf "%.2f MB", tamanho/1024.0}"
-#      $tamanho_total += tamanho
-#      update_status_link_tamanho link.id_link, tamanho, Status::ONLINE
-#    end
-#    return Status::ONLINE
-#  rescue Timeout::Error
-#    to_log "Tempo de requisição esgotado. Tentando novamente."
-#    retry
-#  rescue Interrupt
-#    update_status_link link.id_link, Status::INTERROMPIDO
-#    interrupt
-#  rescue Exception => err
-#    update_status_link link.id_link, Status::OFFLINE
-#    to_log err
-#    retry
-#  end
-#end
 
 def cancelar?
   if FileTest.exist?("cancelar") or FileTest.exist?("fechar")
@@ -269,8 +184,12 @@ def fechar?
   cancelar?
 end
 
-# Testa se identificou o host
-
+def get_local_path
+  arq = File.open("/home/#{`whoami`.chomp}/rs-online.conf", "r")
+  local = arq.readlines[1].split('=')[1].chomp
+  arq.close
+  local
+end
 
 def run_thread proc
   while $thread.alive?
@@ -281,6 +200,38 @@ end
 
 def timestamp time
   time.strftime("%Y/%m/%d %H:%M:%S")
+end
+
+def teste_paralelo id_pacote_excecao
+  pacotes = select_pacotes_pendetes_teste(id_pacote_excecao)
+  if pacotes == nil
+    to_log "<T> Não há mais pacotes pendetes para testar."
+    return
+  end
+  pacotes.each do |pacote|
+    to_log "<T> Testando pacote #{pacote.nome}"
+    links_before_test = select_lista_links pacote.id_pacote
+    links_before_test.each do |link|
+      pacote.tamanho = 0
+      if link.id_status == Status::BAIXADO
+        pacote.tamanho += link.tamanho
+      else
+        link.test
+        case link.id_status
+        when Status::ONLINE
+          link.id_status = Status::ONLINE
+          pacote.tamanho += link.tamanho
+        when Status::OFFLINE
+          link.id_status = Status::OFFLINE
+        when Status::INTERROMPIDO
+          link.id_status = Status::INTERROMPIDO
+        end
+        link.update_db
+      end
+    end
+    pacote.update_db
+  end
+  to_log "<T> Fim do teste dos pacotes."
 end
 
 #################
@@ -315,15 +266,9 @@ def run
           pacote.tamanho += link.tamanho
         else
           link.test
-          case link.id_status
-          when Status::ONLINE
-            link.id_status = Status::ONLINE
+          if link.id_status == Status::ONLINE
             pacote.tamanho += link.tamanho
             links_online.push link
-          when Status::OFFLINE
-            link.id_status = Status::OFFLINE
-          when Status::INTERROMPIDO
-            link.id_status = Status::INTERROMPIDO
           end
           link.update_db        
         end
@@ -338,12 +283,21 @@ def run
       }
       ## Fim Informações do teste
 
+      ## Inicio THread Testes
+      thread_testes = Thread.new {
+        teste_paralelo pacote.id_pacote
+      }
+      ## Fim Thread Testes
+
       ## Inicio Download do Pacote
       pacote.data_inicio = Time.now # Marca quando o pacote iniciou download
       links_online.each do |link|
         cancelar?
         begin
           link.download
+          if link.id_status == Status::TENTANDO
+            falhou 10 #segundos
+          end
         end while link.id_status == Status::TENTANDO
       end
       pacote.data_fim = Time.now
@@ -380,12 +334,12 @@ def run
 end
 
 def singleton?
-  fullpath = "/home/#{`whoami`.chomp}/rs-online.pid"
-  unless FileTest.exist? fullpath
+  arq_conf = "/home/#{`whoami`.chomp}/rs-online.conf"
+  unless FileTest.exist? arq_conf
     return true
   end
-  arq = File.open(fullpath, "r")
-  pid = arq.readline
+  arq = File.open(arq_conf, "r")
+  pid = arq.readlines[0].split("=")[1].chomp
   arq.close
   ps = `ps -p #{pid} -o command=`.chomp
   if ps =~ /rs-online/i
@@ -400,8 +354,10 @@ begin
   ajuda
   if singleton?
     # Guardando o numero do pid
-    arq = File.open("/home/#{`whoami`.chomp}/rs-online.pid", "w")
-    arq.print Process.pid
+    arq = File.open("/home/#{`whoami`.chomp}/rs-online.conf", "r+")
+    txt = arq.readlines
+    txt[0] = "Pid (não mexer)=#{Process.pid}\n"
+    arq.puts txt
     arq.close
     $thread = Thread.new {}
     run

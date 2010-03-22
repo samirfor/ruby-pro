@@ -2,22 +2,23 @@
 require 'dbi'
 require 'cgi'
 require 'src/twitter'
+require 'src/pacote'
 
 def timestamp time
   time.strftime("%Y/%m/%d %H:%M:%S")
 end
 
 # inserir o pacote e os links no banco
-def save_pacote(name, prioridade, senha)
+def save_pacote(name, prioridade, pacote.senha)
   data_inicio = Time.now
   sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
-  unless senha == ""
+  unless pacote.senha == ""
     sql += ", senha"
   end
   sql += ") VALUES ('#{name}', '#{timestamp data_inicio}' "
   sql += ", #{prioridade}"
-  unless senha == ""
-    sql += ", '#{senha}'"
+  unless pacote.senha == ""
+    sql += ", '#{pacote.senha}'"
   end
   sql += ") RETURNING id"
 
@@ -92,9 +93,9 @@ Released   : 20081230
               a_params = cgi.params
               params_links = a_params["package"][0].to_a
 
-              nome_pacote = a_params["name"]
-              prioridade = a_params["prioridade"]
-              senha = a_params["senha"][0]
+              pacote = Pacote.new(a_params["name"])
+              pacote.prioridade = a_params["prioridade"]
+              pacote.senha = a_params["senha"][0]
 
               links = Array.new
               params_links.each do |linha|
@@ -105,23 +106,25 @@ Released   : 20081230
               end
 
               if links.size == 0
-                nome_pacote = "Ocorreu um erro."
+                pacote.nome = "Ocorreu um erro."
                 links.push "Nenhum link foi detectado."
               end
 
-              nome_pacote = nome_pacote.to_s
-              if nome_pacote == "" or nome_pacote == nil
+              pacote.nome = pacote.nome.to_s
+              if pacote.nome == "" or pacote.nome == nil
                 short_link = links[0].split("/")
                 path = short_link[short_link.size - 1]
-                nome_pacote = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+)$/, "")
+                pacote.nome = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+)$/, "")
               end
 
-              id_pacote = save_pacote(nome_pacote, prioridade, senha)
+              id_pacote = save_pacote(pacote.nome, pacote.prioridade, pacote.senha)
               save_links(links, id_pacote)
-              tweet "Pacote #{nome_pacote} foi inserido na lista de pacotes."
-              %>
-              <h1 class="title"><%= nome_pacote %></h1>
+            %>
+              <h1 class="title"><%= pacote.nome %></h1>
               <div class="entry">
+                <p>
+                  <% tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes."%>
+                </p>
                 <p>
                   <%
                   links.each do |link| %>
