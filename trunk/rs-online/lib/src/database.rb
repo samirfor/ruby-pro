@@ -104,8 +104,8 @@ def select_pacote_pendente
   begin
     rst.fetch do |row|
       pacote = Pacote.new(row["nome"])
-      pacote.id_pacote = row["id_pacote"]
-      pacote.prioridade = row["prioridade"]
+      pacote.id_pacote = row["id"]
+      pacote.prioridade = row["prioridade_max"]
     end
   rescue Exception => err
     puts "Erro no fetch"
