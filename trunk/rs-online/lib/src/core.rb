@@ -31,6 +31,7 @@ require 'src/status'
 require 'src/prioridade'
 require 'src/excecoes'
 require 'src/twitter'
+require 'src/pacote'
 
 # -- Métodos locais
 
