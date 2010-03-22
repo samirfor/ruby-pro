@@ -9,6 +9,8 @@ class Pacote
     @tamanho = 0
     @problema = false
     @completado = false
+    @data_inicio = '2000-01-01'
+    @data_fim = '2000-01-01'
   end
 
   def fill_db(id_pacote, problema, completado, prioridade)
