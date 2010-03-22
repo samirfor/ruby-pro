@@ -3,14 +3,18 @@ require 'dbi'
 require 'cgi'
 require 'src/twitter'
 
+def timestamp time
+  time.strftime("%Y/%m/%d %H:%M:%S")
+end
+
 # inserir o pacote e os links no banco
 def save_pacote(name, prioridade, senha)
-  data_ini = Time.now
+  data_inicio = Time.now
   sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
   unless senha == ""
     sql += ", senha"
   end
-  sql += ") VALUES ('#{name}', '#{data_ini.strftime("%Y/%m/%d %H:%M:%S")}' "
+  sql += ") VALUES ('#{name}', '#{timestamp data_inicio}' "
   sql += ", #{prioridade}"
   unless senha == ""
     sql += ", '#{senha}'"

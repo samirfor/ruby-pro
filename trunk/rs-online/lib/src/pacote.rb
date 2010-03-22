@@ -2,7 +2,7 @@
 # and open the template in the editor.
 
 class Pacote
-  attr_accessor :id_pacote, :tamanho, :data, :problema, :nome, :completado, :prioridade, :data_inicio, :data_fim
+  attr_accessor :id_pacote, :tamanho, :data, :problema, :nome, :completado, :prioridade, :senha, :data_inicio, :data_fim
 
   def initialize nome
     @nome = nome
