@@ -1,4 +1,6 @@
+AuthUserFile "/home/multi/www/rs-online/.htpasswd"
+AuthGroupFile /dev/null
+AuthName "Autenticacao"
 AuthType Basic
-AuthName "Login RS-ONLINE"
-AuthUserFile "/etc/apache2/auth/acesso"
+
 require valid-user
