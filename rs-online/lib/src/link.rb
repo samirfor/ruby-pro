@@ -17,7 +17,6 @@ class Link
     @host = @uri.host
     @path = @uri.path
     set_ip
-    @uri = URI.parse("http://#{@ip}#{@path}")
     @tentativas = 0
     @max_tentativas = 5
     @completado = false
