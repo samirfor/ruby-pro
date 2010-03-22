@@ -57,10 +57,12 @@ class Link
       unless @link =~ /http:\/\/\S+\/.+/
         to_log "ERRO: Link inválido evitado."
         @id_status = Status::OFFLINE
+        @data_inicio = timestamp Time.now
         update_db
         return
       end
       @id_status = Status::TESTANDO
+      @data_inicio = timestamp Time.now
       update_db
       
       http = Net::HTTP.new(@ip)
@@ -70,7 +72,7 @@ class Link
         unless headers.code == "200"
           to_log "Não foi possível carregar a página."
           to_log "#{headers.code} - #{headers.message}"
-          if retry_ == Status::OFFLINE 
+          if retry_ == Status::OFFLINE
             return
           end
         end
@@ -195,17 +197,19 @@ class Link
       download = "http://#{real_ip}#{real_uri.path}"
 
       to_log("Baixando: #{download}")
-      @data_inicio = Time.now
+      time_inicio = Time.now
+      @data_inicio = timestamp time_inicio
       @id_status = Status::BAIXANDO
       update_db
       ## Download com curl
       baixou = system("curl -LO #{download}")
-      @data_fim = Time.now
-      duracao = Time.local(0) + (@data_fim - @data_inicio)
+      time_fim = Time.now
+      @data_fim = timestamp time_fim
+      duracao = Time.local(0) + (time_fim - time_inicio)
       duracao_str = duracao.strftime("%Hh %Mm %Ss")
       if baixou
         to_log("Download concluido com sucesso em #{duracao_str}.")
-        to_log("Velocidade média foi de #{sprintf("%.2f KB/s", @tamanho.to_i/(@data_fim - @data_inicio))}.")
+        to_log("Velocidade média foi de #{sprintf("%.2f KB/s", @tamanho.to_i/(time_fim - time_inicio))}.")
         @id_status = Status::BAIXADO
       else
         to_log("Download falhou com #{duracao_str} decorridos.")
