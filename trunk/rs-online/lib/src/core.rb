@@ -513,7 +513,7 @@ rescue SystemExit => err
   tweet evento
   exit!
 rescue NoMethodError => err
-  to_log "Não há método definido."
+  to_log "FATAL: Não há método definido."
   exit!
 rescue Exception => err
   to_log err
