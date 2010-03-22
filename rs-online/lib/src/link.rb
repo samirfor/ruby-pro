@@ -83,7 +83,7 @@ class Link
         return
       end
       ## Captura tamanho do arquivo
-      @tamanho = body.scan /\| (\d+) KB/i[0][0]
+      @tamanho = body.scan(/\| (\d+) KB/i)[0][0]
       if @tamanho == nil # Testa se identificou o tamanho
         to_log 'Não foi possível capturar o tamanho.'
         # Download ainda pode ser feito.

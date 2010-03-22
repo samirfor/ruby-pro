@@ -35,7 +35,7 @@ def error body
 end
 
 def error2 body
-  expressao = body.scan /<h1>.*DOWNLOAD.*<\/h1>/i[0]
+  expressao = body.scan(/<h1>.*DOWNLOAD.*<\/h1>/i)[0]
   if expressao == nil
     to_log "Há algum problema com o link."
     return true
