@@ -152,6 +152,7 @@ class Link
           end
         end
       end while servidor_host == nil
+      real_ip = IPSocket.getaddress servidor_host
       @tentativas = 0
 
       ## Captura tamanho do arquivo
@@ -167,7 +168,7 @@ class Link
 
       ## Mandando requisição POST
       to_debug('Enviando requisição de download...')
-      resposta = Net::HTTP.post_form(URI.parse("http://#{servidor_host}#{@path}"), {'dl.start'=>'Free'})
+      resposta = Net::HTTP.post_form(URI.parse("http://#{real_ip}#{@path}"), {'dl.start'=>'Free'})
       resposta = resposta.body
 
       if lot_of_users(resposta) or respaw(resposta) or waiting(resposta) or \
@@ -191,7 +192,6 @@ class Link
       expressao = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
       expressao.gsub!("dlf.action=\\'","").gsub!("\\","")
       real_uri = URI.parse expressao
-      real_ip = IPSocket.getaddress real_uri.host
       download = "http://#{real_ip}#{real_uri.path}"
 
       to_log("Baixando: #{download}")
