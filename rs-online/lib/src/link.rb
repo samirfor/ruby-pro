@@ -1,5 +1,6 @@
 require 'net/http'
 require 'socket'
+require "src/status"
 
 class Link
   attr_accessor :link, :host, :path, :ip, :uri, :id_link, :id_pacote, :completado, :tamanho, :id_status, :tentativas, :max_tentativas, :data_inicio, :data_fim, :testado
@@ -15,8 +16,8 @@ class Link
     @completado = false
     @tamanho = 0
     @id_status = Status::AGUARDANDO
-    @data_fim = '2000-01-01'
-    @data_inicio = '2000-01-01'
+    @data_fim = nil
+    @data_inicio = nil
     @testado = false
   end
 
@@ -226,8 +227,8 @@ class Link
     sql = "UPDATE rs.link SET "
     sql += "id_status = #{@id_status}, "
     sql += "tamanho = #{@tamanho}, "
-    sql += "data_inicio = '#{@data_inicio}', "
-    sql += "data_fim = '#{@data_fim}', "
+    sql += "data_inicio = '#{@data_inicio}', " unless @data_inicio == nil
+    sql += "data_fim = '#{@data_fim}', " unless @data_fim == nil
     sql += "completado = '#{@completado}' "
     sql += "WHERE id_link = #{@id_link}"
     db_statement_do(sql)

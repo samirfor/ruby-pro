@@ -3,6 +3,35 @@ require 'dbi'
 require 'cgi'
 require 'src/database'
 require 'src/status'
+require "src/pacote"
+require "src/link"
+
+cgi = CGI.new
+a_params = cgi.params
+id_pacote = a_params["id_pacote"][0].to_i
+
+def action_links id_pacote
+  lista = select_lista_links(id_pacote)
+  if lista == nil
+    return nil
+  end
+  return lista
+
+  #sql = "SELECT l.*, (l.data_fim - l.data_inicio) AS intervalo, l.tamanho, s.status, s.id_status " +
+  #"FROM rs.link l, rs.status s WHERE id_pacote =  #{id_pacote} AND l.id_status = s.id_status"
+  #db = db_statement_execute(sql)
+  #rst = db[0]
+  #conn = db[1]
+end
+
+def action_pacote id_pacote
+  pacote = select_pacote(id_pacote)
+  if pacote == nil
+    return nil
+  end
+  return pacote
+end
+
 
 %>
 
@@ -67,214 +96,227 @@ Released   : 20081230
       <div id="page">
         <!--<div id="header-pic"></div>-->
         <div id="content">
-          <div class="post">
-            <h1 class="title">Lista de Links</h1>
-            <div class="entry">
-              <div id="demo"><br/>
-                <table id="example" border="0" cellpadding="0" class="display" align="center">
-                  <thead>
-                    <tr>
-                      <th width="5%">#</th>
-                      <th>Nome</th>
-                      <th>Tamanho</th>
-                      <th width="9%">Inicio</th>
-                      <th width="9%">Fim</th>
-                      <th width="12%">Intervalo</th>
-                      <th width="10%">Completado</th>
-                      <th width="6%">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <%
-                    begin
-                      cgi = CGI.new
-                      a_params = cgi.params
-                      id_pacote = a_params["id_pacote"]
-
-                      sql = "SELECT l.*, (l.data_fim - l.data_inicio) AS intervalo, l.tamanho, s.status, s.id_status " +
-                        "FROM rs.link l, rs.status s WHERE id_pacote =  #{id_pacote} AND l.id_status = s.id_status"
-                      db = db_statement_execute(sql)
-                      rst = db[0]
-                      conn = db[1]
-                      rst.fetch do |row|
-                        short_link = row["link"].split("/")
-                        path = short_link[short_link.size - 1]
-                      %>
+          <%
+          begin
+            lista = action_links id_pacote
+            pacote = action_pacote id_pacote
+          %>
+            <div class="post">
+              <h1 class="title">Lista de Links</h1>
+              <div class="entry"> <%
+                if lista == nil %>
+                  <p>Houve algum problema com a leitura dos links.</p>
+                  <p>Tente novamente!</p> <%
+                elsif pacote == nil %>
+                  <p>Houve algum problema com a leitura do pacote.</p>
+                  <p>Tente novamente!</p> <%
+                else
+                %>
+                  <div id="demo"><br/>
+                    <table id="example" border="0" cellpadding="0" class="display" align="center">
+                      <thead>
                         <tr>
-                          <td><%=row["id_link"] %></td>
-                          <td align="left">
-                            <a href="<%=row["link"].gsub("rapidshare.com","195.122.131.2") %>"><img alt="link" src="images/link.png" border="0"/></a>&nbsp;&nbsp;
-                            <%= path %>
-                          </td>
-                          <%
-                          # tamanho
-                          unless row["tamanho"] == nil
-                          %><td><%=sprintf("%.2f", row["tamanho"]/1024.0) %> MB</td><%
-                          else
-                          %><td align="center"> --- </td><%
-                          end
-                        %>
-                          <%
-                          print "\n"
-                          # data inicio
-                          if row["data_inicio"] == nil
-                          %><td align="center"><img src="images/hourglass.png" alt="Progress" /></td><%
-                          else
-                            if row["data_inicio"].class.to_s == "DBI::Timestamp"
-                            %><td><%=row["data_inicio"].to_time.strftime("%d/%m/%Y %H:%M:%S") %></td><%
+                          <th width="5%">#</th>
+                          <th>Nome</th>
+                          <th>Tamanho</th>
+                          <th width="9%">Inicio</th>
+                          <th width="9%">Fim</th>
+                          <th width="12%">Intervalo</th>
+                          <th width="10%">Completado</th>
+                          <th width="6%">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <%
+                        lista.each do |link|
+                          short_link = link.link.split("/")
+                          path = short_link[short_link.size - 1]%>
+                          <tr>
+                            <td><%= link.id_link %></td>
+                            <td align="left">
+                              <a href="<%= link.link.gsub("rapidshare.com","195.122.131.2") %>">
+                                <img alt="link" src="images/link.png" border="0"/></a>&nbsp;&nbsp;
+                              <%= path %>
+                            </td>
+                            <%
+                            # tamanho
+                            unless link.tamanho == nil %>
+                              <td><%=sprintf("%.2f", link.tamanho/1024.0) %> MB</td><%
                             else
-                            %><td><%=row["data_inicio"].strftime("%d/%m/%Y %H:%M:%S") %></td><%
+                            %><td align="center"> --- </td><%
                             end
-                          end
-                          # data fim
-                          if row["data_fim"] == nil
-                          %><td align="center"><img src="images/hourglass.png" alt="Progress" /></td><%
-                          else
-                            if row["data_fim"].class.to_s == "DBI::Timestamp"
-                            %><td><%=row["data_fim"].to_time.strftime("%d/%m/%Y %H:%M:%S") %></td><%
+                            print "\n"
+
+                            # data inicio
+                            if link.data_inicio == nil
+                            %>
+                              <td align="center"><img src="images/hourglass.png" alt="Progress" /></td>
+                            <%
                             else
-                            %><td><%=row["data_fim"].strftime("%d/%m/%Y %H:%M:%S") %></td><%
+                              if link.data_inicio.class.to_s == "DBI::Timestamp"
+                                data_inicio_to_s = link.data_inicio.to_time.strftime("%d/%m/%Y %H:%M:%S")
+                              else
+                                data_inicio_to_s = link.data_inicio.strftime("%d/%m/%Y %H:%M:%S")
+                              end
+                            %>
+                              <td><%=data_inicio_to_s%></td>
+                            <%
                             end
-                          end
-                          # intervalo
-                          if row["intervalo"] == nil
-                          %><td align="center"> --- </td><%
-                          else
-                            intervalo = row["intervalo"].split(".")
-                          %><td><%=intervalo[0] %></td><%
-                          end
-                          # completado
-                          if row["completado"] == false
-                          %><td align="center"><img src="images/cancel.png" alt="Não" /></td><%
-                          else
-                          %><td align="center"><img src="images/accept.png" alt="Não" /></td><%
-                          end
-                          # --- STATUS
-                          case row["id_status"]
-                          when Status::BAIXADO
-                          %><td align="center"><img src="images/drive_disk.png" alt="Baixado" title="Baixado" /></td><%
-                          when Status::OFFLINE
-                          %><td align="center"><img src="images/database_error.png" alt="Offline" title="Offline" /></td><%
-                          when Status::ONLINE
-                          %><td align="center"><img src="images/database_connect.png" alt="Online" title="Online" /></td><%
-                          when Status::BAIXANDO
-                          %><td align="center"><img src="images/loading.gif" alt="Baixando" title="Baixando" /></td><%
-                          when Status::AGUARDANDO
-                          %><td align="center"><img src="images/hourglass.png" alt="Aguardando" title="Aguardando" /></td><%
-                          when Status::INTERROMPIDO
-                          %><td align="center"><img src="images/exclamation.png" alt="Interrompido" title="Interrompido" /></td><%
-                          when Status::TESTANDO
-                          %><td align="center"><img src="images/loading.gif" alt="Testando" title="Testando" /></td><%
-                          when Status::TENTANDO
-                          %><td align="center"><img src="images/loading.gif" alt="Tentando" title="Tentando" /></td><%
-                          end%>
-                        </tr><%
-                        print "\n"
-                      end
-                      rst.finish
-                      ## update?
-                      #acao = a_params["do"].to_s
-                      #if acao != nil and acao == "update"
-                      #up_sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}', "
-                      #up_sql += "senha = '#{a_params["senha"]}' WHERE id = #{a_params["id_pacote"]}"
-                      #db_statement_do(up_sql)
-                      #end
-                      %>
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <th colspan="8" align="center">RS-Online ~ version 1.0b ~ Powered by eRuby</th>
-                      </tr>
-                    </tfoot>
-                  </table>
-                  <%
-                  db_disconnect(conn)
-                rescue Exception => err %>
-                  <h1 class="title">Ocorreu um erro.</h1>
-                  <h2>Não foi possível carregar a página. Contate o administrador!</h2>
-                  <p> <%= err %> </p>
-                <%
-                end
-              %>
+
+                            # data fim
+                            if link.data_fim == nil
+                            %>
+                              <td align="center"><img src="images/hourglass.png" alt="Progress" /></td>
+                            <%
+                            else
+                              if link.data_fim.class.to_s == "DBI::Timestamp"
+                                data_fim_to_s = link.data_fim.to_time.strftime("%d/%m/%Y %H:%M:%S")
+                              else
+                                data_fim_to_s = link.data_fim.strftime("%d/%m/%Y %H:%M:%S")
+                              end
+                            %>
+                              <td><%= data_fim_to_s %></td>
+                            <%
+                            end
+                            #end
+
+                            # intervalo
+                            unless link.data_fim == nil or link.data_inicio == nil
+                              intervalo = Time.local(0) + (link.data_fim - link.data_inicio)
+                            end
+                            if intervalo == nil
+                            %>
+                              <td align="center"> --- </td>
+                            <%
+                            else
+                            %>
+                              <td><%= intervalo.strftime("%Hh %Mm %Ss") %></td>
+                            <%
+                            end
+                            # completado
+                            if link.completado == false
+                            %><td align="center"><img src="images/cancel.png" alt="Não" /></td><%
+                            else
+                            %><td align="center"><img src="images/accept.png" alt="Não" /></td><%
+                            end
+                            # --- STATUS
+                            case link.id_status
+                            when Status::BAIXADO
+                            %><td align="center"><img src="images/drive_disk.png" alt="Baixado" title="Baixado" /></td><%
+                            when Status::OFFLINE
+                            %><td align="center"><img src="images/database_error.png" alt="Offline" title="Offline" /></td><%
+                            when Status::ONLINE
+                            %><td align="center"><img src="images/database_connect.png" alt="Online" title="Online" /></td><%
+                            when Status::BAIXANDO
+                            %><td align="center"><img src="images/loading.gif" alt="Baixando" title="Baixando" /></td><%
+                            when Status::AGUARDANDO
+                            %><td align="center"><img src="images/hourglass.png" alt="Aguardando" title="Aguardando" /></td><%
+                            when Status::INTERROMPIDO
+                            %><td align="center"><img src="images/exclamation.png" alt="Interrompido" title="Interrompido" /></td><%
+                            when Status::TESTANDO
+                            %><td align="center"><img src="images/loading.gif" alt="Testando" title="Testando" /></td><%
+                            when Status::TENTANDO
+                            %><td align="center"><img src="images/loading.gif" alt="Tentando" title="Tentando" /></td><%
+                            end
+                          %>
+                          </tr>
+                        <%
+                        end
+                        print "\n" %>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th colspan="8" align="center">
+                            RS-Online ~ version 1.0b ~ Powered by eRuby
+                          </th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                <% end %>
+              </div>
+              <div class="meta">
+                <p class="links"></p>
               </div>
             </div>
-            <div class="meta">
-              <p class="links"></p>
-            </div>
-          </div>
-          <div class="post">
-            <h1 class="title">Editar Pacote</h1>
-            <div class="entry">
-              <form action="resp_lista_links.rhtml" method="post">
-                <table width="90%" border="0" cellpadding="5">
-                  <tr align="right">
-                    <td><b>Prioridade: </b></td>
-                    <td>
-                      <select name="prioridade" class="select-box">
-                        <%
-                        select_prioridade.each do |p|
-                          print "<option value=\"" + p[0].to_s + "\""
-                          if a_params["prioridade"][0] == p[0].to_s
-                            print " selected=\"selected\">"
-                          else
-                            print ">"
+            <div class="post">
+              <h1 class="title">Editar Pacote</h1>
+              <div class="entry">
+                <form action="resp_lista_links.rhtml" method="post">
+                  <table width="90%" border="0" cellpadding="5">
+                    <tr align="right">
+                      <td><b>Prioridade: </b></td>
+                      <td>
+                        <select name="prioridade" class="select-box">
+                          <%
+                          select_prioridade.each do |p|
+                            print "<option value=\"" + p[0].to_s + "\""
+                            if a_params["prioridade"][0] == p[0].to_s
+                              print " selected=\"selected\">"
+                            else
+                              print ">"
+                            end
+                            print p[1].capitalize + "<\/option>\n"
                           end
-                          print p[1].capitalize + "<\/option>\n"
-                        end
-                      %>
-                      </select>
-                    </td>
-                    <td>
-                      <b>Mostrar na Lista: </b>
-                    </td>
-                    <td>
-                      <select name="mostrar" class="select-box">
-                        <%
-                        if a_params["mostrar"][0] == "true"
-                          print "<option value=\"true\" selected=\"selected\">Sim<\/option>\n"
-                          print "<option value=\"false\">Não<\/option>\n"
-                        else
-                          print "<option value=\"false\" selected=\"selected\">Não<\/option>\n"
-                          print "<option value=\"true\">Sim<\/option>\n"
-                        end
-                      %>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr align="right">
-                    <td><b>Senha: </b></td>
-                    <td><input type="text" name="senha" class="text" size="30" value="<%= a_params["senha"] %>"/></td>
-                    <td>
-                      <b>Cancelar download: </b>
-                    </td>
-                    <td>
-                      <select name="cancelado" class="select-box">
-                        <option value="" selected="selected">-</option>
-                        <option value="true">Sim</option>
-                        <option value="false">Não</option>
-                        <%#
-                        if a_params["cancelado"][0] == "true"
-                          print "<option value=\"true\" selected=\"selected\">Sim<\/option>\n"
-                          print "<option value=\"false\">Não<\/option>\n"
-                        else
-                          print "<option value=\"false\" selected=\"selected\">Não<\/option>\n"
-                          print "<option value=\"true\">Sim<\/option>\n"
-                        end
-                      %>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr align="right">
-                    <td colspan="4">
-                      <input type="hidden" name="id_pacote" value="<%= id_pacote %>" />
-                      <input type="reset" value="Limpar" class="sLimpar"/>&nbsp;
-                      <input type="submit" value=" OK   &raquo; " class="sPacote"/>
-                    </td>
-                  </tr>
-                </table>
-              </form>
-            </div>
-          </div>
+                        %>
+                        </select>
+                      </td>
+                      <td>
+                        <b>Mostrar na Lista: </b>
+                      </td>
+                      <td>
+                        <select name="mostrar" class="select-box"> <%
+                          if pacote.mostrar.to_s == "true"
+                            print "<option value=\"true\" selected=\"selected\">Sim<\/option>\n"
+                            print "<option value=\"false\">Não<\/option>\n"
+                          else
+                            print "<option value=\"false\" selected=\"selected\">Não<\/option>\n"
+                            print "<option value=\"true\">Sim<\/option>\n"
+                          end  %>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr align="right">
+                      <td><b>Senha: </b></td>
+                      <td>
+                        <input type="text" name="senha" class="text" size="30" value="<%= pacote.senha %>"/>
+                      </td>
+                      <td>
+                        <b>Cancelar download: </b>
+                      </td>
+                      <td>
+                        <select name="cancelado" class="select-box">
+                          <option value="" selected="selected">-</option>
+                          <option value="true">Sim</option>
+                          <option value="false">Não</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr align="right">
+                      <td colspan="4">
+                        <input type="hidden" name="id_pacote" value="<%= pacote.id_pacote %>" />
+                        <input type="reset" value="Limpar" class="sLimpar"/>&nbsp;
+                        <input type="submit" value=" OK   &raquo; " class="sPacote"/>
+                      </td>
+                    </tr>
+                  </table>
+                </form>
+              </div>
+            </div> <%
+          rescue Exception => err %>
+            <div class="post">
+              <div class="entry">
+                <h1 class="title">Ocorreu um erro.</h1>
+                <p>Não foi possível carregar a página. Contate o administrador!</p>
+                <p>
+                  <b>Erro:</b> <%= err %><br/><br/>
+                  <% err.backtrace.each do |i| %>
+                    <%= i %><br/>
+                  <%end%>
+                </p>
+              </div>
+            </div><%
+          end %>
         </div>
         <!-- end #content -->
         <div id="sidebar">
