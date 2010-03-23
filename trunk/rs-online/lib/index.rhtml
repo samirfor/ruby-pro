@@ -1,56 +1,7 @@
 <%
 require 'dbi'
-require 'src/database'
-require 'src/pacote'
-
-#def select_pacote
-#sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
-#"FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
-#"GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc LIMIT 1"
-#db = db_statement_execute(sql)
-#rst = db[0]
-#conn = db[1]
-#pacote = Hash.new
-#begin
-#rst.fetch do |row|
-#pacote["nome"] = row["nome"]
-#pacote["id"] = row["id"]
-#end
-#rescue Exception => err
-#puts "Erro no fetch!"
-#puts err
-#end
-#rst.finish
-#db_disconnect(conn)
-#if pacote.size > 0
-#pacote
-#else
-#nil
-#end
-#end
-
-def select_count_links id_pacote
-  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
-  db = db_statement_execute(sql)
-  rst = db[0]
-  conn = db[1]
-  count_total = rst.fetch[0]
-  rst.finish
-  db_disconnect(conn)
-
-  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} AND id_status = 1 "
-  db = db_statement_execute(sql)
-  rst = db[0]
-  conn = db[1]
-  count_baixados = rst.fetch[0]
-  rst.finish
-  db_disconnect(conn)
-
-  count = []
-  count.push count_baixados
-  count.push count_total
-  count
-end
+require "src/pacote"
+require "src/database"
 
 
 %>
@@ -135,10 +86,10 @@ Released   : 20081230
                   puts "Não foi possível detectar um pacote mais prioritário."
                 %>
                 </p>
-                <p><%
-                  puts e
-                  puts e.line
-                %>
+                <p><b>Erro: </b><%= e %><br/><br/>
+                  <% e.backtrace.each do |b| %>
+                    <%= b %><br/>
+                  <% end %>
                 </p><%
               end
             %>

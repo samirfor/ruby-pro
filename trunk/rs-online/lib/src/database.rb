@@ -1,6 +1,8 @@
 require 'dbi'
 require 'src/pacote'
+require 'src/link'
 
+# Faz a conexão com o banco de dados.
 def db_connect
   begin
     DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
@@ -12,6 +14,7 @@ def db_connect
   end
 end
 
+# Executa algum query SQL e retorna os resultados
 def db_statement_execute(sql)
   begin
     conn = db_connect
@@ -28,6 +31,7 @@ def db_statement_execute(sql)
   end
 end
 
+# Executa alguma ação sem retorno, como o UPDATE
 def db_statement_do(sql)
   begin
     conn = db_connect
@@ -41,6 +45,7 @@ def db_statement_do(sql)
   end
 end
 
+# Disconecta-se do banco de dados.
 def db_disconnect(conn)
   begin
     conn.disconnect
@@ -52,47 +57,31 @@ def db_disconnect(conn)
   end
 end
 
+def select_count_links id_pacote
+  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  count_total = rst.fetch[0]
+  rst.finish
+  db_disconnect(conn)
 
-#def update_tamanho_pacote id_pacote, tamanho
-#  sql = "UPDATE rs.pacote SET tamanho = #{tamanho} WHERE id = #{id_pacote}"
-#  db_statement_do(sql)
-#end
-#
-#def update_pacote_completado data, id_pacote
-#  sql = "UPDATE rs.pacote SET data_fim = '#{data}', completado = 'true' WHERE id = #{id_pacote}"
-#  db_statement_do(sql)
-#end
-#
-#def update_pacote_problema id_pacote
-#  sql = "UPDATE rs.pacote SET problema = 'true' WHERE id = #{id_pacote}"
-#  db_statement_do(sql)
-#end
+  sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} AND id_status = 1 "
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  count_baixados = rst.fetch[0]
+  rst.finish
+  db_disconnect(conn)
 
+  count = []
+  count.push count_baixados
+  count.push count_total
+  count
+end
 
-
-#def update_status_link_tamanho id_link, tamanho, id_status
-#  sql = "UPDATE rs.link SET id_status = #{id_status}, tamanho = #{tamanho} WHERE id_link = #{id_link}"
-#  db_statement_do(sql)
-#end
-#
-#def update_status_link id_link, id_status
-#  sql = "UPDATE rs.link SET id_status = #{id_status} WHERE id_link = #{id_link}"
-#  db_statement_do(sql)
-#end
-#
-#def update_data_inicio_link id_link, data
-#  sql = "UPDATE rs.link SET data_inicio = '#{data}' WHERE id_link = #{id_link}"
-#  db_statement_do(sql)
-#end
-#
-#def update_link_completado id_link, data, id_status
-#  sql = "UPDATE rs.link SET data_fim = '#{data}', completado = 'true', id_status = #{id_status} WHERE id_link = #{id_link}"
-#  db_statement_do(sql)
-#end
-
-
-
-# --- Retorna o pacote a ser baixado mais prioritário e mais recente.
+# Retorna o pacote a ser baixado mais prioritário e mais recente.
+# Retorno: Objeto Pacote
 def select_pacote_pendente
   sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
     "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
@@ -117,6 +106,53 @@ def select_pacote_pendente
   pacote
 end
 
+# Captura no BD um pacote específico.
+def select_pacote(id)
+  sql = "SELECT * FROM rs.pacote WHERE id = #{id}"
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+=begin
+  id bigserial NOT NULL,
+  nome character varying(100) NOT NULL,
+  completado boolean DEFAULT false,
+  mostrar boolean DEFAULT true,
+  problema boolean DEFAULT false,
+  data_inicio timestamp without time zone DEFAULT now(),
+  data_fim timestamp without time zone,
+  senha character varying(50),
+  prioridade integer DEFAULT 3,
+  tamanho integer,
+=end
+  begin
+#    if rst.fetch_all == nil
+#      return nil
+#    end
+    rst.fetch do |row|
+      pacote = Pacote.new(row["nome"])
+      pacote.id_pacote = row["id"]
+      pacote.completado = row["completado"]
+      pacote.mostrar = row["mostrar"]
+      pacote.problema = row["problema"]
+      pacote.data_inicio = row["data_inicio"]
+      pacote.data_fim = row["data_fim"]
+      pacote.senha = row["senha"]
+      pacote.prioridade = row["prioridade_max"]
+      pacote.tamanho = row["tamanho"]
+    end
+  rescue Exception => err
+    puts "Erro no fetch"
+    puts err
+    pacote = nil
+  end
+  rst.finish
+  db_disconnect(conn)
+  return pacote
+end
+
+# Captura os pacotes que estão para ser baixado com exceção de um, o qual
+# é passado como parâmetro.
+# Retorno: Objeto Pacote
 def select_pacotes_pendetes_teste id_pacote_excecao
   sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
     "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
@@ -125,7 +161,6 @@ def select_pacotes_pendetes_teste id_pacote_excecao
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
-  pacote = nil
   pacotes = Array.new
   begin
     rst.fetch do |row|
@@ -144,41 +179,54 @@ def select_pacotes_pendetes_teste id_pacote_excecao
   pacotes.sort
 end
 
-# Depracated
-def select_nome_pacote id
-  sql = "SELECT nome FROM rs.pacote WHERE id = #{id}"
-  db = db_statement_execute(sql)
-  rst = db[0]
-  conn = db[1]
-  nome_pacote = rst.fetch[0]
-  rst.finish
-  db_disconnect(conn)
-  nome_pacote
-end
-
+# Captura a lista de links.
+# Retorna um Array de Objetos Link
 def select_lista_links id_pacote
   if id_pacote == nil or id_pacote == ""
     return nil
   end
+=begin
+  id_link bigserial NOT NULL,
+  id_pacote integer NOT NULL,
+  link character varying(300) NOT NULL,
+  completado boolean DEFAULT false,
+  tamanho integer,
+  id_status integer NOT NULL DEFAULT 5,
+  data_inicio timestamp without time zone,
+  data_fim timestamp without time zone,
+  testado boolean NOT NULL DEFAULT false,
+=end
   lista = Array.new
-  sql = "SELECT l.link, l.id_link, l.id_pacote, l.id_status "
+  sql = "SELECT l.id_link, l.id_pacote, l.link, l.completado, l.tamanho, "
+  sql += "l.id_status, l.data_inicio, l.data_fim, l.testado "
   sql += "FROM rs.pacote p, rs.link l "
   sql += "WHERE l.id_pacote = p.id AND p.id = #{id_pacote}"
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
-  rst.fetch do |row|
-    link = Link.new(row["link"])
-    link.id_status = row["id_status"]
-    link.id_link = row["id_link"]
-    link.id_pacote = row["id_pacote"]
-    lista.push link
+  begin
+    rst.fetch do |row|
+      link = Link.new(row["link"])
+      link.id_link = row["id_link"]
+      link.id_pacote = row["id_pacote"]
+      link.completado = row["completado"]
+      link.tamanho = row["tamanho"]
+      link.id_status = row["id_status"]
+      link.testado = row["testado"]
+      lista.push link
+    end
+    rst.finish
+    db_disconnect(conn)
+    lista.sort
+  rescue Exception => e
+    puts "Houve erro => #{e}"
+    puts e.backtrace.join "\n"
+    return nil
   end
-  rst.finish
-  db_disconnect(conn)
-  lista.sort
 end
 
+# Verifica a quantidade de pacotes e a quantidade de pacotes baixado.
+# O retorno é a diferença entre as respectivas quantidades.
 def select_remaining_links id_pacote
   sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
   db = db_statement_execute(sql)
@@ -199,11 +247,12 @@ def select_remaining_links id_pacote
   return count_pacotes - count_baixados
 end
 
-def to_log texto
-  save_historico texto
-  puts texto
-end
+#def to_log texto
+#  save_historico texto
+#  puts texto
+#end
 
+# Insere o log no banco de dados
 def save_historico texto
   # formatar hora
   tempo = Time.new.strftime("%d/%m/%Y %H:%M:%S")
@@ -213,6 +262,8 @@ def save_historico texto
   db_statement_do(sql)
 end
 
+
+# Captura os dados da tabela prioridade
 def select_prioridade
   sql = "SELECT * FROM rs.prioridade"
   db = db_statement_execute(sql)
@@ -224,6 +275,7 @@ def select_prioridade
   array.sort
 end
 
+# Deprecated
 def select_servico id
   sql = "SELECT id, descricao FROM rs.servico WHERE id = #{id}"
   db = db_statement_execute(sql)

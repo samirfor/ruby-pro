@@ -67,11 +67,10 @@ def to_log texto
   puts texto
 end
 
-# Gera linhas de log debug
+# Gera linhas de log para debug
 def to_debug texto
   ARGV.each do |arg|
     if arg == "debug"
-      save_historico texto
       puts texto
     end
   end
@@ -86,92 +85,16 @@ def falhou(segundos)
   end
 end
 
-## -- Captura de erros
-
-def get_no_slot(body)
-  str = nil
-  str = body.scan(/no more download slots available/)[0]
-  if str != nil
-    to_log("Não há slots disponíveis no momento.")
-    return true
-  else
-    return false
-  end
-end
-
-def server_maintenance(body)
-  str = nil
-  str = body.scan(/The server \d+.rapidshare.com is momentarily not available/i)[0]
-  if str != nil
-    server = str.scan(/\d+/)[0]
-    to_log("O servidor do rapidshare #{server} está em manutenção. Evitando")
-    return true
-  else
-    return false
-  end
-end
-
-def respaw(body)
-  minutos = nil
-  minutos = body.scan(/try again in about \d+ minutes/i)[0]
-  if minutos != nil
-    minutos.gsub!("try again in about ","").gsub!(" minutes","")
-    to_log("Respaw de #{minutos} minutos.")
-    minutos = minutos.to_i
-    contador(60*minutos, "Falta #{"%M min e " if minutos >= 1}%S seg.")
-    return true
-  else
-    return false
-  end
-end
-
-def waiting(body)
-  minutos = body.scan(/Please try again in \d+ minutes/i)[0]
-  if minutos != nil
-    minutos.gsub!("Please try again in ","").gsub!(" minutes","")
-    to_log("Tentando novamente em #{minutos.to_s} minutos.")
-    minutos = minutos.to_i
-    contador(60*minutos.to_i, "Falta #{"%M min e " if minutos >= 1}%S seg.")
-    return true
-  else
-    return false
-  end
-end
-
-def simultaneo(body)
-  str = nil
-  minutos = 2
-  str = body.scan(/already downloading a file/i)[0]
-  if str != nil
-    to_log("Ja existe um download corrente.")
-    to_log("Tentando novamente em #{minutos} minutos.")
-    contador(60*minutos, "Falta #{"%M min e " if minutos >= 1}%S seg.")
-    return true
-  else
-    return false
-  end
-end
-
-def get_justify body
-  justify = nil
-  justify = body.scan(/<p align=\"justify\">.+<\/p>/i)[0]
-  if justify != nil
-    justify.gsub!("<p align=\"justify\">", "").gsub!("</p>", "")
-    to_log(justify)
-    return true
-  else
-    return false
-  end
-end
-
 def to_html(body)
   arq = File.open("rapid.html", "w")
   arq.print(body)
   arq.close
 end
 
+# Verifica se existe algum arquivo chamado "cancelar" ou "fechar" no local
 def cancelar?
-  if FileTest.exist?("cancelar") or FileTest.exist?("fechar")
+  fullpath = get_local_path
+  if FileTest.exist?("#{fullpath}/cancelar") or FileTest.exist?("#{fullpath}/fechar")
     evento = "Downloads cancelado pelo usuário."
     to_log evento
     tweet evento
@@ -184,6 +107,7 @@ def fechar?
   cancelar?
 end
 
+# Retorna onde o caminho completo de onde os downloads serão salvos.
 def get_local_path
   arq = File.open("/home/#{`whoami`.chomp}/rs-online.conf", "r")
   local = arq.readlines[1].split('=')[1].chomp
@@ -191,6 +115,7 @@ def get_local_path
   local
 end
 
+# Usado para mandar tweet em paralelo. Assim, não perdemos tempo.
 def run_thread proc
   while $thread.alive?
     sleep 1
@@ -198,10 +123,25 @@ def run_thread proc
   $thread = Thread.new {proc.call}
 end
 
+# Retorna uma string na forma ideal para o UPDATE no BD.
 def timestamp time
   time.strftime("%Y/%m/%d %H:%M:%S")
 end
 
+# Método para reconhecimento do servidor de download do rapidshare
+def reconhecer_servidor body
+  servidor_host = nil
+  servidor_host = body.scan(/rs\w{1,}.rapidshare.com/i)[0]
+  if servidor_host == nil
+    to_log("Não foi possível reconhecer o servidor.")
+    to_log("Verifique se a URL está correta. Evitando ...")
+    return nil
+  end
+  to_debug('Servidor ' + servidor_host + ' identificado.')
+  servidor_host
+end
+
+# Testa os outros links que estão submetidos à download
 def teste_paralelo id_pacote_excecao
   pacotes = select_pacotes_pendetes_teste(id_pacote_excecao)
   if pacotes == nil
@@ -333,6 +273,7 @@ def run
   tweet evento
 end
 
+# Verifica se outro processo deste programa está sendo executado.
 def singleton?
   arq_conf = "/home/#{`whoami`.chomp}/rs-online.conf"
   unless FileTest.exist? arq_conf
@@ -349,7 +290,7 @@ def singleton?
   end
 end
 
-# O main do programa
+# O método main do programa
 begin
   ajuda
   if singleton?
