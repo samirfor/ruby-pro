@@ -32,6 +32,11 @@ def action_pacote id_pacote
   return pacote
 end
 
+def show_lista_links
+
+end
+
+
 
 %>
 
@@ -106,18 +111,21 @@ Released   : 20081230
                 <h1 class="title">Ocorreu um erro!</h1>
                 <div class="entry">
                   <p>Houve algum problema com a leitura dos links.</p>
+                  <p><b>Lista DUMP: </b><%= p lista %></p>
                   <p>Tente novamente!</p>
                 </div>
               </div><%
+              raise
             elsif pacote == nil %>
               <div class="post">
                 <h1 class="title">Ocorreu um erro!</h1>
                 <div class="entry">
                   <p>Houve algum problema com a leitura do pacote.</p>
+                  <p><b>Pacote DUMP: </b><%= p pacote %></p>
                   <p>Tente novamente!</p>
                 </div>
-              </div>
-            <%
+              </div> <%
+              raise
             else
             %>
               <div class="post">
@@ -152,7 +160,7 @@ Released   : 20081230
                             <%
                             # tamanho
                             unless link.tamanho == nil %>
-                              <td><%=sprintf("%.2f", link.tamanho/1024.0) %> MB</td><%
+                              <td><%=sprintf("%.2f MB", link.tamanho/1024.0) %></td><%
                             else
                             %><td align="center"> --- </td><%
                             end
@@ -258,18 +266,16 @@ Released   : 20081230
                     <tr align="right">
                       <td><b>Prioridade: </b></td>
                       <td>
-                        <select name="prioridade" class="select-box">
-                          <%
+                        <select name="prioridade" class="select-box"> <%
                           select_prioridade.each do |p|
                             print "<option value=\"" + p[0].to_s + "\""
-                            if a_params["prioridade"][0] == p[0].to_s
+                            if pacote.prioridade == p[0].to_s
                               print " selected=\"selected\">"
                             else
                               print ">"
                             end
                             print p[1].capitalize + "<\/option>\n"
-                          end
-                        %>
+                          end %>
                         </select>
                       </td>
                       <td>
@@ -277,12 +283,12 @@ Released   : 20081230
                       </td>
                       <td>
                         <select name="mostrar" class="select-box"> <%
-                          if pacote.mostrar.to_s == "true"
-                            print "<option value=\"true\" selected=\"selected\">Sim<\/option>\n"
-                            print "<option value=\"false\">Não<\/option>\n"
-                          else
-                            print "<option value=\"false\" selected=\"selected\">Não<\/option>\n"
-                            print "<option value=\"true\">Sim<\/option>\n"
+                          if pacote.mostrar.to_s == "true" %>
+                            <option value="true" selected="selected">Sim</option>
+                            <option value="false">Não</option> <%
+                          else %>
+                            <option value="false" selected="selected">Não</option>
+                            <option value="true">Sim</option> <%
                           end  %>
                         </select>
                       </td>
