@@ -134,7 +134,7 @@ def select_pacote(id)
       pacote.data_inicio = row["data_inicio"]
       pacote.data_fim = row["data_fim"]
       pacote.senha = row["senha"]
-      pacote.prioridade = row["prioridade_max"]
+      pacote.prioridade = row["prioridade"]
       pacote.tamanho = row["tamanho"]
     end
   rescue Exception => err
@@ -238,7 +238,7 @@ def select_lista_pacotes
       pacote.data_inicio = row["data_inicio"]
       pacote.data_fim = row["data_fim"]
       pacote.senha = row["senha"]
-      pacote.prioridade = row["prioridade_max"]
+      pacote.prioridade = row["prioridade"]
       pacote.tamanho = row["tamanho"]
       pacotes.push pacote
     end

@@ -1,23 +1,27 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
+require "src/prioridade"
 
 class Pacote
-  attr_accessor :id_pacote, :tamanho, :data, :problema, :nome, :completado, :mostrar, :prioridade, :senha, :data_inicio, :data_fim
+  attr_accessor :id_pacote, :tamanho, :problema, :nome, :completado, \
+    :mostrar, :prioridade, :senha, :data_inicio, :data_fim
 
   def initialize nome
     @nome = nome
     @tamanho = 0
     @problema = false
     @completado = false
-    @data_inicio = '2000-01-01'
-    @data_fim = '2000-01-01'
+    @data_inicio = nil
+    @data_fim = nil
   end
 
   def update_db
     sql = "UPDATE rs.pacote SET "
-    sql += "tamanho = #{@tamanho}, "
-    sql += "data_fim = '#{@data_fim}', "
-    sql += "completado = '#{@completado}', "
+    sql += "tamanho = #{@tamanho}, " unless @tamanho == nil
+    sql += "data_fim = '#{@data_fim}', " unless @data_fim == nil
+    sql += "data_inicio = '#{@data_inicio}', " unless @data_inicio == nil
+    sql += "prioridade = #{@prioridade}, " unless @prioridade == nil
+    sql += "completado = '#{@completado}', " unless @completado == nil
+    sql += "mostrar = '#{@mostrar}', " unless @mostrar == nil
+    sql += "senha = '#{@senha}', " unless @senha == nil
     sql += "problema = '#{@problema}' "
     sql += "WHERE id = #{@id_pacote}"
     db_statement_do(sql)
