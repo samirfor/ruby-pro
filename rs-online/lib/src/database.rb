@@ -125,9 +125,6 @@ def select_pacote(id)
   tamanho integer,
 =end
   begin
-#    if rst.fetch_all == nil
-#      return nil
-#    end
     rst.fetch do |row|
       pacote = Pacote.new(row["nome"])
       pacote.id_pacote = row["id"]
@@ -223,6 +220,36 @@ def select_lista_links id_pacote
     puts e.backtrace.join "\n"
     return nil
   end
+end
+
+def select_lista_pacotes
+  sql = "SELECT * FROM rs.pacote WHERE mostrar = 'true' "
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  pacotes = Array.new
+  begin
+    rst.fetch do |row|
+      pacote = Pacote.new(row["nome"])
+      pacote.id_pacote = row["id"]
+      pacote.completado = row["completado"]
+      pacote.mostrar = row["mostrar"]
+      pacote.problema = row["problema"]
+      pacote.data_inicio = row["data_inicio"]
+      pacote.data_fim = row["data_fim"]
+      pacote.senha = row["senha"]
+      pacote.prioridade = row["prioridade_max"]
+      pacote.tamanho = row["tamanho"]
+      pacotes.push pacote
+    end
+  rescue Exception => err
+    puts "Erro no fetch"
+    puts err
+    pacotes = nil
+  end
+  rst.finish
+  db_disconnect(conn)
+  return pacotes
 end
 
 # Verifica a quantidade de pacotes e a quantidade de pacotes baixado.
