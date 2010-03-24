@@ -100,18 +100,29 @@ Released   : 20081230
           begin
             lista = action_links id_pacote
             pacote = action_pacote id_pacote
-          %>
-            <div class="post">
-              <h1 class="title">Lista de Links</h1>
-              <div class="entry"> <%
-                if lista == nil %>
+
+            if lista == nil %>
+              <div class="post">
+                <h1 class="title">Ocorreu um erro!</h1>
+                <div class="entry">
                   <p>Houve algum problema com a leitura dos links.</p>
-                  <p>Tente novamente!</p> <%
-                elsif pacote == nil %>
+                  <p>Tente novamente!</p>
+                </div>
+              </div><%
+            elsif pacote == nil %>
+              <div class="post">
+                <h1 class="title">Ocorreu um erro!</h1>
+                <div class="entry">
                   <p>Houve algum problema com a leitura do pacote.</p>
-                  <p>Tente novamente!</p> <%
-                else
-                %>
+                  <p>Tente novamente!</p>
+                </div>
+              </div>
+            <%
+            else
+            %>
+              <div class="post">
+                <h1 class="title">Lista de Links</h1>
+                <div class="entry">
                   <div id="demo"><br/>
                     <table id="example" border="0" cellpadding="0" class="display" align="center">
                       <thead>
