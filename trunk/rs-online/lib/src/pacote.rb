@@ -2,7 +2,7 @@
 # and open the template in the editor.
 
 class Pacote
-  attr_accessor :id_pacote, :tamanho, :data, :problema, :nome, :completado, :prioridade, :senha, :data_inicio, :data_fim
+  attr_accessor :id_pacote, :tamanho, :data, :problema, :nome, :completado, :mostrar, :prioridade, :senha, :data_inicio, :data_fim
 
   def initialize nome
     @nome = nome
@@ -11,13 +11,6 @@ class Pacote
     @completado = false
     @data_inicio = '2000-01-01'
     @data_fim = '2000-01-01'
-  end
-
-  def fill_db(id_pacote, problema, completado, prioridade)
-    @id_pacote = id_pacote
-    @problema = problema
-    @completado = completado
-    @prioridade = prioridade
   end
 
   def update_db

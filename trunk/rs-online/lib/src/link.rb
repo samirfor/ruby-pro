@@ -21,12 +21,6 @@ class Link
     @testado = false
   end
 
-  def fill_db id_link, id_pacote, id_status
-    @id_link = id_link
-    @id_pacote = id_pacote
-    @id_status = id_status
-  end
-
   # Traduz hostname da URL para ip.
   # Retorno: String IP
   def set_ip
