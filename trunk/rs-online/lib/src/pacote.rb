@@ -11,6 +11,8 @@ class Pacote
     @completado = false
     @data_inicio = nil
     @data_fim = nil
+    @mostrar = nil
+    @senha = nil
   end
 
   def update_db

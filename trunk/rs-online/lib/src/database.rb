@@ -155,7 +155,8 @@ def select_pacotes_pendetes_teste id_pacote_excecao
   sql = "SELECT id, nome, MAX(prioridade) AS prioridade_max " +
     "FROM rs.pacote WHERE completado = 'false' AND problema = 'false' " +
     "AND id != #{id_pacote_excecao} " +
-    "GROUP BY id, nome, prioridade ORDER BY prioridade desc, id desc"
+    "GROUP BY id, nome, prioridade " +
+    "ORDER BY prioridade desc, id desc"
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
@@ -198,7 +199,7 @@ def select_lista_links id_pacote
   sql = "SELECT l.id_link, l.id_pacote, l.link, l.completado, l.tamanho, "
   sql += "l.id_status, l.data_inicio, l.data_fim, l.testado "
   sql += "FROM rs.pacote p, rs.link l "
-  sql += "WHERE l.id_pacote = p.id AND p.id = #{id_pacote}"
+  sql += "WHERE l.id_pacote = p.id AND p.id = #{id_pacote} AND l.testado = 'F'"
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
