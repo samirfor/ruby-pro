@@ -178,18 +178,8 @@ Released   : 20081230
             begin
               show_pacotes pacotes
             rescue Exception => err %>
-              <div class="post">
-                <div class="entry">
-                  <h1 class="title">Ocorreu um erro.</h1>
-                  <p>Não foi possível carregar a página. Contate o administrador!</p>
-                  <p>
-                    <b>Erro:</b> <%= err %><br/><br/>
-                    <% err.backtrace.each do |i| %>
-                      <%= i %><br/>
-                    <%end%>
-                  </p>
-                </div>
-              </div> <%
+              <h1 class="title">Ocorreu um erro!</h1>
+              <p>Não foi possível carregar a página. Contate o administrador!</p> <%
             end # => begin - rescue
           end %>
         </div>

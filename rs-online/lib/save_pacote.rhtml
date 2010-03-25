@@ -9,17 +9,13 @@ def timestamp time
 end
 
 # inserir o pacote e os links no banco
-def save_pacote(name, prioridade, pacote.senha)
+def save_pacote(name, prioridade, senha)
   data_inicio = Time.now
   sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
-  unless pacote.senha == ""
-    sql += ", senha"
-  end
+  sql += ", senha" unless senha == ""
   sql += ") VALUES ('#{name}', '#{timestamp data_inicio}' "
   sql += ", #{prioridade}"
-  unless pacote.senha == ""
-    sql += ", '#{pacote.senha}'"
-  end
+  sql += ", '#{senha}'" unless senha == ""
   sql += ") RETURNING id"
 
   db = db_statement_execute(sql)
@@ -85,9 +81,7 @@ Released   : 20081230
       <div id="page">
         <!--<div id="header-pic"></div>-->
         <div id="content">
-          <div class="post">
-
-            <%
+          <div class="post"> <%
             begin
               cgi = CGI.new
               a_params = cgi.params

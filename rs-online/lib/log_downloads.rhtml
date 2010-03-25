@@ -1,3 +1,44 @@
+<%
+require 'src/historico'
+require 'src/database'
+
+def show_logs_msg historicos %>
+  <div class="post">
+    <h1 class="title">Log de Downloads </h1>
+    <div class="entry">
+      <div id="demo"><br/>
+        <table id="example" border="0" cellpadding="0" class="display" align="center">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Data</th>
+              <th>Processo</th>
+              <th>Mensagem</th>
+            </tr>
+          </thead>
+          <tbody> <%
+            historicos.each do |h|
+              print "<tr>\n<td>#{h.id}</td>\n";
+              print "<td>#{h.data}</td>\n"
+              print "<td>#{h.processo}</td>\n"
+              print "<td>#{h.mensagem}</td>\n</tr>\n"
+            end %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="4" align="center">RS-Online ~ version 1.0b ~ Powered by eRuby</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="meta">
+        <p class="links"></p>
+      </div>
+    </div>
+  </div> <%
+end %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 Design by Free CSS Templates
@@ -58,50 +99,43 @@ Released   : 20081230
       <!-- end #header -->
       <div id="page">
         <!--<div id="header-pic"></div>-->
-        <div id="content">
-          <div class="post">
-            <h1 class="title">Log de Downloads </h1>
-            <div class="entry">
-              <div id="demo"><br/>
-                <table id="example" border="0" cellpadding="0" class="display" align="center">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Data</th>
-                      <th>Processo</th>
-                      <th>Mensagem</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <%
-                    require "dbi"
-                    sql = "SELECT * FROM rs.historico ORDER BY id desc LIMIT 100 "
-                    db = db_statement_execute(sql)
-                    rst = db[0]
-                    conn = db[1]
-                    rst.fetch do |row|
-                      print "<tr>\n<td>#{row["id"]}</td>\n";
-                      print "<td>#{row["data"]}</td>\n"
-                      print "<td>#{row["processo"]}</td>\n"
-                      print "<td>#{row["mensagem"]}</td>\n</tr>\n"
-                    end
-                    rst.finish
-                    db_disconnect(conn)
-                  %>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th colspan="4" align="center">RS-Online ~ version 1.0b ~ Powered by eRuby</th>
-                    </tr>
-                  </tfoot>
-                </table>
+        <div id="content"> <%
+          historicos = select_historico
+          if historicos == nil %>
+            <div class="post">
+              <div class="entry">
+                <h1 class="title">Ocorreu um erro!</h1>
+                <p>Não foi ler os históricos. Contate o administrador!</p>
+                <p>
+                  <b>Erro:</b> <%= err %><br/><br/>
+                  <% err.backtrace.each do |i| %>
+                    <%= i %><br/>
+                  <%end%>
+                </p>
               </div>
+            </div> <%
+            raise
+          else
+            begin
+              show_logs_msg historicos
+            rescue Exception => err %>
+              <div class="post">
+                <div class="entry">
+                  <h1 class="title">Ocorreu um erro.</h1>
+                  <p>Não foi possível carregar a página. Contate o administrador!</p>
+                  <p>
+                    <b>Erro:</b> <%= err %><br/><br/>
+                    <% err.backtrace.each do |i| %>
+                      <%= i %><br/>
+                    <%end%>
+                  </p>
+                </div>
+              </div> <%
+            end # => begin - rescue
+          end
+        %>
 
-              <div class="meta">
-                <p class="links"></p>
-              </div>
-            </div>
-          </div>
+
         </div>
         <!-- end #content -->
         <div id="sidebar">
