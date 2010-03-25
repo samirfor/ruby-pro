@@ -223,7 +223,7 @@ def run
       }
       ## Fim Informações do teste
 
-      ## Inicio THread Testes
+      ## Inicio Thread Testes
       thread_testes = Thread.new {
         teste_paralelo pacote.id_pacote
       }
@@ -298,6 +298,7 @@ begin
     arq = File.open("/home/#{`whoami`.chomp}/rs-online.conf", "r+")
     txt = arq.readlines
     txt[0] = "Pid (não mexer)=#{Process.pid}\n"
+    arq.seek(0)
     arq.puts txt
     arq.close
     $thread = Thread.new {}

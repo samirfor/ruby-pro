@@ -1,6 +1,7 @@
 require 'net/http'
 require 'socket'
 require "src/status"
+require "src/erros_rapidshare"
 
 class Link
   attr_accessor :link, :host, :path, :ip, :uri, :id_link, :id_pacote, \
@@ -61,6 +62,7 @@ class Link
       unless @link =~ /http:\/\/\S+\/.+/
         to_log "ERRO: Link inválido evitado."
         @id_status = Status::OFFLINE
+        @testado = true
         @data_inicio = timestamp Time.now
         @data_fim = @data_inicio
         update_db
@@ -88,6 +90,7 @@ class Link
       # Requisitando pagina de download
       if error body or error2 body
         @id_status = Status::OFFLINE
+        @testado = true
         update_db
         return
       end
@@ -100,6 +103,7 @@ class Link
         @tamanho = @tamanho.to_i
         to_log "Tamanho #{@tamanho} KB ou #{sprintf "%.2f MB", @tamanho/1024.0}"
         @id_status = Status::ONLINE
+        @testado = true
         update_db
       end
       return
@@ -108,6 +112,7 @@ class Link
       retry
     rescue Exception
       @id_status = Status::INTERROMPIDO
+      @testado = true
       update_db
       raise
     end
