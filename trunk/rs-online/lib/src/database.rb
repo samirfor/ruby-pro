@@ -124,9 +124,10 @@ def select_pacote(id)
   prioridade integer DEFAULT 3,
   tamanho integer,
 =end
+  pacote = nil
   begin
     rst.fetch do |row|
-      pacote = Pacote.new(row["nome"])
+      pacote = Pacote.new row["nome"]
       pacote.id_pacote = row["id"]
       pacote.completado = row["completado"]
       pacote.mostrar = row["mostrar"]
@@ -159,6 +160,7 @@ def select_pacotes_pendetes_teste id_pacote_excecao
   rst = db[0]
   conn = db[1]
   pacotes = Array.new
+  pacote = nil
   begin
     rst.fetch do |row|
       pacote = Pacote.new(row["nome"])
@@ -193,7 +195,6 @@ def select_lista_links id_pacote
   data_fim timestamp without time zone,
   testado boolean NOT NULL DEFAULT false,
 =end
-  lista = Array.new
   sql = "SELECT l.id_link, l.id_pacote, l.link, l.completado, l.tamanho, "
   sql += "l.id_status, l.data_inicio, l.data_fim, l.testado "
   sql += "FROM rs.pacote p, rs.link l "
@@ -201,6 +202,8 @@ def select_lista_links id_pacote
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
+  lista = Array.new
+  link = nil
   begin
     rst.fetch do |row|
       link = Link.new(row["link"])
@@ -228,6 +231,7 @@ def select_lista_pacotes
   rst = db[0]
   conn = db[1]
   pacotes = Array.new
+  pacote = nil
   begin
     rst.fetch do |row|
       pacote = Pacote.new(row["nome"])
@@ -300,6 +304,22 @@ def select_prioridade
   rst.finish
   db_disconnect(conn)
   array.sort
+end
+
+def select_historico
+  sql = "SELECT * FROM rs.historico ORDER BY id desc LIMIT 100 "
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  historicos = Array.new
+  historico = nil
+  rst.fetch do |row|
+    historico = Historico.new(row["id"], row["data"], row["processo"], row["mensagem"])
+    historicos.push historico
+  end
+  rst.finish
+  db_disconnect(conn)
+  historicos
 end
 
 # Deprecated

@@ -2,7 +2,7 @@
 # and open the template in the editor.
 
 class Historico
-  attr_writer :id, :data, :processo, :mensagem
+  attr_accessor :id, :data, :processo, :mensagem
 
   def initialize(id, data, processo, mensagem)
     @id = id
