@@ -188,7 +188,7 @@ def run
 
       ## Verifica se teste é necessário
       pular_teste = false
-      links_before_test.each do |i|
+      links_before_test.foreach do |i|
         if i.testado
           pular_teste = true
           break
