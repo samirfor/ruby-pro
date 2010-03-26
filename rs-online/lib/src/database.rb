@@ -217,7 +217,6 @@ def select_lista_links id_pacote
       link.data_inicio = row["data_inicio"]
       link.data_fim = row["data_fim"]
       lista.push link
-      p link
     end
     rst.finish
     db_disconnect(conn)
