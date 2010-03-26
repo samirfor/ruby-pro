@@ -194,7 +194,8 @@ def run
         end
       end
       ## Fim Verifica se teste é necessário
-
+p pacote
+p links_before_test
       ## Inicio do teste
       unless pular_teste
         to_debug "Teste inicial não foi evitado."
