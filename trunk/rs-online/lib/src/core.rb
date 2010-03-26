@@ -223,10 +223,10 @@ def run
       ## Informações do teste
       #      to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
       msg = "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
+      to_log msg
       run_thread Proc.new {
         tweet msg
       }
-      to_log msg
       ## Fim Informações do teste
       #    end
 
