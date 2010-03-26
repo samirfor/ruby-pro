@@ -196,32 +196,45 @@ def run
       end
       ## Fim do Select pacote
 
-      ## Inicio do teste
-      pacote.tamanho = 0
-      to_log "Testando os links..."
-      links_online = Array.new
-      links_before_test.each do |link|
-        cancelar?
-        if link.id_status == Status::BAIXADO
-          pacote.tamanho += link.tamanho
-        else
-          link.test
-          if link.id_status == Status::ONLINE
-            pacote.tamanho += link.tamanho
-            links_online.push link
-          end
-          link.update_db        
+      ## Verifica se teste é necessário
+      pular_teste = false
+      links_before_test.each do |i|
+        if i.testado
+          pular_teste = true
+          break
         end
       end
-      pacote.update_db
-      ## Fim do teste
+      ## Fim Verifica se teste é necessário
 
-      ## Informações do teste
-      to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
-      run_thread Proc.new {
-        tweet "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
-      }
-      ## Fim Informações do teste
+      ## Inicio do teste
+      unless pular_teste
+        pacote.tamanho = 0
+        to_log "Testando os links..."
+        links_online = Array.new
+        links_before_test.each do |link|
+          cancelar?
+          if link.id_status == Status::BAIXADO
+            pacote.tamanho += link.tamanho
+          else
+            link.test
+            if link.id_status == Status::ONLINE
+              pacote.tamanho += link.tamanho
+              links_online.push link
+            end
+            link.update_db
+          end
+        end
+        pacote.update_db
+      
+        ## Fim do teste
+
+        ## Informações do teste
+        to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
+        run_thread Proc.new {
+          tweet "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
+        }
+        ## Fim Informações do teste
+      end
 
       ## Inicio Thread Testes
       thread_testes = Thread.new {
@@ -231,6 +244,7 @@ def run
 
       ## Inicio Download do Pacote
       pacote.data_inicio = Time.now # Marca quando o pacote iniciou download
+      pacote.update_db
       links_online.each do |link|
         cancelar?
         begin
@@ -241,6 +255,7 @@ def run
         end while link.id_status == Status::TENTANDO
       end
       pacote.data_fim = Time.now
+      pacote.update_db
       ## Fim Download do Pacote
 
       ## Informações do download
