@@ -1,3 +1,106 @@
+<%
+require "src/database"
+require "src/pacote"
+require "src/prioridade"
+
+
+def show_pacotes pacotes
+%>
+  <div class="post">
+    <h1 class="title">Lista de Pacotes</h1>
+    <div class="entry">
+      <div id="demo"><br/>
+        <table id="example" border="0" cellpadding="0" class="display" align="center">
+          <thead>
+            <tr>
+              <th width="5%">#</th>
+              <th width="3%">&nbsp;</th>
+              <th>Nome</th>
+              <th width="15%">Inicio</th>
+              <th width="15%">Fim</th>
+              <th width="10%">Completado</th>
+              <th width="6%">Status</th>
+            </tr>
+          </thead>
+          <tbody> <%
+            pacotes.each do |pacote| %>
+              <tr>
+                <td><%= pacote.id_pacote %></td>
+                <td> <%
+                  case pacote.prioridade
+                  when Prioridade::NORMAL
+                  %><img src="images/normal.png" alt="3 - Normal" title="3 - Normal" /><%
+                  when Prioridade::BAIXA
+                  %><img src="images/baixa.png" alt="2 - Baixa" title="2 - Baixa" /><%
+                  when Prioridade::NENHUMA
+                  %><img src="images/nenhum.png" alt="1 - Nenhuma" title="1 - Nenhuma" /><%
+                  when Prioridade::ALTA
+                  %><img src="images/alta.png" alt="4 - Alta" title="4 - Alta" /><%
+                  when Prioridade::MUITO_ALTA
+                  %><img src="images/prioridade.muito.alta-square-16.png" alt="5 - M. Alta" title="5 - M. Alta" /><%
+                  end %>
+                </td>
+                <td> <%
+                  url = "lista_links.rhtml?id_pacote=#{pacote.id_pacote}"
+                  #url += "&prioridade=#{pacote.prioridade}"
+                  #url += "&senha=#{pacote.senha}"
+                  #url += "&mostrar=#{pacote.mostrar}" %>
+                  <a href=<%= url %>>
+                    <img src="images/folder.png" alt="Folder"/>
+                    &nbsp;&nbsp;<%= pacote.nome %>&nbsp;(<%= sprintf("%.2f MB", pacote.tamanho.to_i/1024.0) %>)
+                  </a>
+                </td> <%
+                begin
+                  data_inicio_to_s = pacote.data_inicio.to_time.strftime("%d/%m/%Y %H:%M:%S")
+                rescue Exception
+                  begin
+                    data_inicio_to_s = pacote.data_inicio.strftime("%d/%m/%Y %H:%M:%S")
+                  rescue Exception
+                    data_inicio_to_s = "<img src=\"images\/hourglass.png\" alt=\"Progress\" \/>"
+                  end
+                end %>
+                <td align="center"><%= data_inicio_to_s %> </td> <%
+                if pacote.data_fim == nil %>
+                  <td align="center"><img src="images/hourglass.png" alt="Progress" /></td> <%
+                else
+                  if pacote.data_fim.class.to_s == "DBI::Timestamp"
+                    data_fim_to_s = pacote.data_fim.to_time.strftime("%d/%m/%Y %H:%M:%S")
+                  else
+                    data_fim_to_s = pacote.data_fim.strftime("%d/%m/%Y %H:%M:%S")
+                  end %>
+                  <td align="center"><%= data_fim_to_s %> </td> <%
+                end
+                # completado
+                unless pacote.completado %>
+                  <td align="center"><img src="images/cancel.png" alt="Não" /></td> <%
+                else %>
+                  <td align="center"><img src="images/accept.png" alt="Não" /></td> <%
+                end
+                # status
+                unless pacote.problema %>
+                  <td align="center"><img src="images/accept.png" alt="Não" /></td> <%
+                else %>
+                  <td align="center"><img src="images/exclamation.png" alt="Não" /></td> <%
+                end
+                print "\n" %>
+              </tr> <%
+            end # => pacotes.each %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="7" align="center">RS-Online ~ version 1.0b ~ Powered by eRuby</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <div class="meta">
+      <p class="links"></p>
+    </div>
+  </div> <%
+end
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 Design by Free CSS Templates
@@ -59,104 +162,26 @@ Released   : 20081230
       <div id="page">
         <!--<div id="header-pic"></div>-->
         <div id="content">
-          <div class="post">
-            <h1 class="title">Lista de Pacotes</h1>
-            <div class="entry">
-              <div id="demo"><br/>
-                <table id="example" border="0" cellpadding="0" class="display" align="center">
-                  <thead>
-                    <tr>
-                      <th width="5%">#</th>
-                      <th width="3%">&nbsp;</th>
-                      <th>Nome</th>
-                      <th width="15%">Inicio</th>
-                      <th width="15%">Fim</th>
-                      <th width="10%">Completado</th>
-                      <th width="6%">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <%
-                    require "dbi"
-                    require 'src/prioridade'
-
-                    sql = "SELECT * FROM rs.pacote WHERE mostrar = 'false' "
-                    db = db_statement_execute(sql)
-                    rst = db[0]
-                    conn = db[1]
-                    rst.fetch do |row|
-                      print "<tr>\n<td>#{row["id"]}</td>\n";
-                      print "<td>";
-                      case row["prioridade"]
-                      when Prioridade::NORMAL
-                      %><img src="images/normal.png" alt="3 - Normal" title="3 - Normal" /><%
-                      when Prioridade::BAIXA
-                      %><img src="images/baixa.png" alt="2 - Baixa" title="2 - Baixa" /><%
-                      when Prioridade::NENHUMA
-                      %><img src="images/nenhum.png" alt="1 - Nenhuma" title="1 - Nenhuma" /><%
-                      when Prioridade::ALTA
-                      %><img src="images/alta.png" alt="4 - Alta" title="4 - Alta" /><%
-                      when Prioridade::MUITO_ALTA
-                      %><img src="images/muito.alta.png" alt="5 - M. Alta" title="5 - M. Alta" /><%
-                      end
-                      print "</td>\n"
-                      print "<td><a href=\"lista_links.rhtml?id_pacote=#{row["id"]}\">"
-
-                      print "<img src=\"images/folder.png\" alt=\"Folder\" />&nbsp;&nbsp;#{row["nome"]}</td>\n"
-                      #print row["data_inicio"].class
-                      if row["data_inicio"].class.to_s == "DBI::Timestamp"
-                        print "<td>#{row["data_inicio"].to_time.strftime("%d/%m/%Y %H:%M:%S")}</td>"
-                      else
-                        print "<td>#{row["data_inicio"].strftime("%d/%m/%Y %H:%M:%S")}</td>"
-                      end
-                      if row["data_fim"] == nil
-                        print "<td align=\"center\"><img src=\"images/hourglass.png\" alt=\"Progress\" /></td>"
-                      else
-                        if row["data_fim"].class.to_s == "DBI::Timestamp"
-                          print "<td>#{row["data_fim"].to_time.strftime("%d/%m/%Y %H:%M:%S")}</td>"
-                        else
-                          print "<td>#{row["data_fim"].strftime("%d/%m/%Y %H:%M:%S")}</td>"
-                        end
-                      end
-                      # completado
-                      unless row["completado"]
-                      %>
-                        <td align="center"><img src="images/cancel.png" alt="Não" /></td>
-                      <%
-                      else
-                      %>
-                        <td align="center"><img src="images/accept.png" alt="Não" /></td>
-                      <%
-                      end
-                      # status
-                      unless row["problema"]
-                      %>
-                        <td align="center"><img src="images/accept.png" alt="Não" /></td>
-                      <%
-                      else
-                      %>
-                        <td align="center"><img src="images/exclamation.png" alt="Não" /></td>
-                      <%
-                      end
-                      print "\n"
-                      print "</tr>\n"
-                    end
-                    rst.finish
-                    db_disconnect(conn)
-                  %>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th colspan="7" align="center">RS-Online ~ version 1.0b ~ Powered by eRuby</th>
-                    </tr>
-                  </tfoot>
-                </table>
+          <%
+          pacotes = select_lista_pacotes false
+          if pacotes == nil %>
+            <div class="post">
+              <h1 class="title">Ocorreu um erro!</h1>
+              <div class="entry">
+                <p>
+                  Houve algum erro com a listagem dos pacotes.<br/>
+                  Contate o administrador!
+                </p>
               </div>
-            </div>
-            <div class="meta">
-              <p class="links"></p>
-            </div>
-          </div>
+            </div> <%
+          else
+            begin
+              show_pacotes pacotes
+            rescue Exception => err %>
+              <h1 class="title">Ocorreu um erro!</h1>
+              <p>Não foi possível carregar a página. Contate o administrador!</p> <%
+            end # => begin - rescue
+          end %>
         </div>
         <!-- end #content -->
         <div id="sidebar">
