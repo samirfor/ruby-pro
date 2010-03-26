@@ -31,7 +31,8 @@ def cancelar_pacote a_params
     if a_params["cancelado"][0] == "true"
       sql = "UPDATE rs.pacote SET mostrar = 'false', problema = 'true' WHERE id = #{a_params["id_pacote"]}"
     elsif a_params["cancelado"][0] == "false"
-      sql = "UPDATE rs.pacote SET mostrar = 'true', problema = 'false' WHERE id = #{a_params["id_pacote"]}"
+      sql = "UPDATE rs.pacote SET mostrar = 'true', problema = 'false', \
+      completado = 'false' WHERE id = #{a_params["id_pacote"]}"
     else
       return
     end

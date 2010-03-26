@@ -221,6 +221,7 @@ class Link
         to_log("D. link concluído com sucesso em #{duracao_str}.")
         to_log("Velocidade média do link foi de #{sprintf("%.2f KB/s", @tamanho.to_i/(time_fim - time_inicio))}.")
         @id_status = Status::BAIXADO
+        @completado = true
       else
         to_log("Download do link falhou com #{duracao_str} decorridos.")
         @id_status = Status::TENTANDO
