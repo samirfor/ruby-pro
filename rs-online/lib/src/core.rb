@@ -187,12 +187,12 @@ def run
       ## Fim do Select pacote
 
       ## Verifica se teste é necessário
-#      pular_teste = false
-#      links_before_test.each do |i|
-#        if i.testado
-#          pular_teste = true
-#        end
-#      end
+      #      pular_teste = false
+      #      links_before_test.each do |i|
+      #        if i.testado
+      #          pular_teste = true
+      #        end
+      #      end
       ## Fim Verifica se teste é necessário
 
       ## Inicio do teste
@@ -219,7 +219,7 @@ def run
       ## Fim do teste
 
       ## Informações do teste
-#      to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
+      #      to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
       msg = "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
       run_thread Proc.new {
         tweet msg
@@ -253,6 +253,7 @@ def run
         end while link.id_status == Status::TENTANDO
       end
       pacote.data_fim = Time.now
+      pacote.completado = true
       pacote.update_db
       ## Fim Download do Pacote
       p pacote
@@ -266,15 +267,13 @@ def run
       run_thread Proc.new {
         tweet evento
       }
-      if select_remaining_links(pacote.id_pacote) == 0
-        pacote.data_fim = Time.now.strftime("%d/%m/%Y %H:%M:%S")
-      else
+      unless select_remaining_links(pacote.id_pacote) == 0
         pacote.problema = true
+        pacote.update_db
         run_thread Proc.new {
           tweet "Pacote #{pacote.nome} está problema."
         }
       end
-      pacote.update_db
       ## Fim Informações do download
     rescue Interrupt
       raise

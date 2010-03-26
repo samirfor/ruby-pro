@@ -218,11 +218,11 @@ class Link
       duracao = Time.local(0) + (time_fim - time_inicio)
       duracao_str = duracao.strftime("%Hh %Mm %Ss")
       if baixou
-        to_log("Download concluido com sucesso em #{duracao_str}.")
-        to_log("Velocidade média foi de #{sprintf("%.2f KB/s", @tamanho.to_i/(time_fim - time_inicio))}.")
+        to_log("D. link concluído com sucesso em #{duracao_str}.")
+        to_log("Velocidade média do link foi de #{sprintf("%.2f KB/s", @tamanho.to_i/(time_fim - time_inicio))}.")
         @id_status = Status::BAIXADO
       else
-        to_log("Download falhou com #{duracao_str} decorridos.")
+        to_log("Download do link falhou com #{duracao_str} decorridos.")
         @id_status = Status::TENTANDO
       end
       update_db
