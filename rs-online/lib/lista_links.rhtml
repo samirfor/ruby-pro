@@ -51,32 +51,36 @@ def show_lista_links lista, pacote%>
 
                 # data inicio
                 begin
-                  data_inicio_to_s = link.data_inicio.to_time
+                  time_data_inicio = link.data_inicio.to_time
+                  data_inicio_to_s = time_data_inicio.strftime("%d/%m/%Y %H:%M:%S")
                 rescue Exception
                   begin
-                    data_inicio_to_s = link.data_inicio
+                    time_data_inicio = link.data_inicio
+                    data_inicio_to_s = time_data_inicio.strftime("%d/%m/%Y %H:%M:%S")
                   rescue Exception
-                    data_inicio_to_s = "<img src=\"images\/hourglass.png\" alt=\"Progress\" \/>"
+                    data_inicio_to_s = "<img src=\"images\/exclamation.png\" alt=\"Erro\" \/>"
                   end
                 end %>
-                <td align="center"><%= data_inicio_to_s.strftime("%d/%m/%Y %H:%M:%S") %> </td> <%
+                <td align="center"><%= data_inicio_to_s %> </td> <%
 
                 # data fim
                 begin
-                  data_fim_to_s = link.data_fim.to_time
+                  time_data_fim = link.data_fim.to_time
+                  data_fim_to_s = link.data_fim.to_time.strftime("%d/%m/%Y %H:%M:%S")
                 rescue Exception
                   begin
-                    data_fim_to_s = link.data_fim
+                    time_data_fim = link.data_fim
+                    data_fim_to_s = time_data_fim.strftime("%d/%m/%Y %H:%M:%S")
                   rescue Exception
-                    data_fim_to_s = "<img src=\"images\/hourglass.png\" alt=\"Progress\" \/>"
+                    data_fim_to_s = "<img src=\"images\/exclamation.png.png\" alt=\"Erro\" \/>"
                   end
                 end %>
-                <td align="center"><%= data_fim_to_s.strftime("%d/%m/%Y %H:%M:%S") %> </td> <%
+                <td align="center"><%= data_fim_to_s %> </td> <%
 
                 # intervalo
                 unless link.data_fim == nil or link.data_inicio == nil
                   begin
-                    intervalo = Time.local(0) + (data_fim_to_s - data_inicio_to_s)
+                    intervalo = Time.local(0) + (time_data_fim - time_data_inicio)
                   rescue Exception
                     intervalo = nil
                   end
