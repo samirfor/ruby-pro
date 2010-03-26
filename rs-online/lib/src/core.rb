@@ -174,7 +174,7 @@ def run
       ## Select pacote
       pacote = select_pacote_pendente
       if pacote == nil
-        evento = "Não há pacotes para download."
+        evento = 'Fim do(s) download(s). Have a nice day!'
         to_log evento
         tweet evento
         exit!(1)
@@ -194,8 +194,8 @@ def run
         end
       end
       ## Fim Verifica se teste é necessário
-p pacote
-p links_before_test
+      p pacote
+      p links_before_test
       ## Inicio do teste
       unless pular_teste
         to_debug "Teste inicial não foi evitado."
@@ -280,9 +280,6 @@ p links_before_test
       raise
     end
   end while pacote != nil
-  evento = 'Fim do(s) download(s). Have a nice day!'
-  to_log evento
-  tweet evento
 end
 
 # Verifica se outro processo deste programa está sendo executado.
