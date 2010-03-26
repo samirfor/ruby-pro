@@ -199,7 +199,7 @@ def select_lista_links id_pacote
   sql = "SELECT l.id_link, l.id_pacote, l.link, l.completado, l.tamanho, "
   sql += "l.id_status, l.data_inicio, l.data_fim, l.testado "
   sql += "FROM rs.pacote p, rs.link l "
-  sql += "WHERE l.id_pacote = p.id AND p.id = #{id_pacote} AND l.testado = 'F'"
+  sql += "WHERE l.id_pacote = p.id AND p.id = #{id_pacote}"
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
