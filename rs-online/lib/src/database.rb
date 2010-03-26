@@ -228,8 +228,8 @@ def select_lista_links id_pacote
   end
 end
 
-def select_lista_pacotes
-  sql = "SELECT * FROM rs.pacote WHERE mostrar = 'true' "
+def select_lista_pacotes mostrar
+  sql = "SELECT * FROM rs.pacote WHERE mostrar = '#{mostrar}' "
   db = db_statement_execute(sql)
   rst = db[0]
   conn = db[1]
