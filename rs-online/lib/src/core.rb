@@ -155,6 +155,8 @@ def teste_paralelo id_pacote_excecao
     links_before_test.each do |link|
       if link.id_status == Status::BAIXADO
         pacote.tamanho += link.tamanho
+      elsif link.testado and link.tamanho != nil and link.tamanho == 0
+        pacote.tamanho += link.tamanho
       else
         link.test
       end
@@ -256,8 +258,7 @@ def run
       pacote.completado = true
       pacote.update_db
       ## Fim Download do Pacote
-      p pacote
-      p links_online
+
       ## Informações do download
       duracao = Time.local(0) + (pacote.data_fim - pacote.data_inicio)
       evento = "Concluido o download do pacote #{pacote.nome}"
