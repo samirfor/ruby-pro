@@ -1,0 +1,20 @@
+# 25-03-2010
+
+- Retest para um determinado pacote acionado pelo website
+- Usar método singleton
+- Implementar acesso individualizado. (cada usuário com seus links)
+- Implenentar um sistema de administração geral
+- Implementar estatísticas de download.
+- Implementar uma possível descrição ou observação para cada pacote.
+- Implementar uma busca no site legendas.tv para cada pacote com sugestões
+  sobre possíveis legendas para o mesmo.
+- Implementar status do core no banco de dados. Imformações como:
+  > Local para download
+  > Pacote em andamento
+  > Pacote a seguir
+  > Velocidade máxima (estatísticas)
+  > Velocidade mínima (estatísticas)
+  > Programa finalizado
+  > Último PID
+  > Nome do processo
+- Reformular o service handler. (start, stop, close)

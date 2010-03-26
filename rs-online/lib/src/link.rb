@@ -58,19 +58,17 @@ class Link
   #   TESTANDO
   def test
     begin
-      to_log "Testando link: " + @link
+      to_log "Testando link: #{@link}"
       unless @link =~ /http:\/\/\S+\/.+/
         to_log "ERRO: Link inválido evitado."
         @id_status = Status::OFFLINE
         @testado = true
         @data_inicio = timestamp Time.now
-        @data_fim = @data_inicio
         update_db
         return
       end
       @id_status = Status::TESTANDO
       @data_inicio = timestamp Time.now
-      @data_fim = @data_inicio
       update_db
       
       http = Net::HTTP.new(@ip)
@@ -112,7 +110,7 @@ class Link
       retry
     rescue Exception
       @id_status = Status::INTERROMPIDO
-      @testado = true
+      @testado = false
       update_db
       raise
     end
@@ -122,6 +120,7 @@ class Link
     @tentativas += 1
     if @tentativas > @max_tentativas
       @id_status = Status::OFFLINE
+      @testado = true
       update_db
       return Status::OFFLINE
     end
