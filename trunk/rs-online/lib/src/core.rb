@@ -187,19 +187,19 @@ def run
       ## Fim do Select pacote
 
       ## Verifica se teste é necessário
-      pular_teste = false
-      links_before_test.each do |i|
-        if i.testado
-          pular_teste = true
-        end
-      end
+#      pular_teste = false
+#      links_before_test.each do |i|
+#        if i.testado
+#          pular_teste = true
+#        end
+#      end
       ## Fim Verifica se teste é necessário
 
       ## Inicio do teste
       #      unless pular_teste
       #        to_debug "Teste inicial não foi evitado."
       pacote.tamanho = 0
-      to_log "Testando os links..."
+      to_log "Testando os links do \"#{pacote.nome}\"..."
       links_online = Array.new
       links_before_test.each do |link|
         cancelar?
@@ -219,10 +219,12 @@ def run
       ## Fim do teste
 
       ## Informações do teste
-      to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
+#      to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
+      msg = "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
       run_thread Proc.new {
-        tweet "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
+        tweet msg
       }
+      to_log msg
       ## Fim Informações do teste
       #    end
 
