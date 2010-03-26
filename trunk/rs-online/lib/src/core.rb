@@ -194,38 +194,37 @@ def run
         end
       end
       ## Fim Verifica se teste é necessário
-      p pacote
-      p links_before_test
-      ## Inicio do teste
-      unless pular_teste
-        to_debug "Teste inicial não foi evitado."
-        pacote.tamanho = 0
-        to_log "Testando os links..."
-        links_online = Array.new
-        links_before_test.each do |link|
-          cancelar?
-          if link.id_status == Status::BAIXADO
-            pacote.tamanho += link.tamanho
-          else
-            link.test
-            if link.id_status == Status::ONLINE
-              pacote.tamanho += link.tamanho
-              links_online.push link
-            end
-            link.update_db
-          end
-        end
-        pacote.update_db
-      
-        ## Fim do teste
 
-        ## Informações do teste
-        to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
-        run_thread Proc.new {
-          tweet "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
-        }
-        ## Fim Informações do teste
+      ## Inicio do teste
+      #      unless pular_teste
+      #        to_debug "Teste inicial não foi evitado."
+      pacote.tamanho = 0
+      to_log "Testando os links..."
+      links_online = Array.new
+      links_before_test.each do |link|
+        cancelar?
+        if link.id_status == Status::BAIXADO
+          pacote.tamanho += link.tamanho
+        else
+          link.test
+          if link.id_status == Status::ONLINE
+            pacote.tamanho += link.tamanho
+            links_online.push link
+          end
+          link.update_db
+        end
       end
+      pacote.update_db
+      
+      ## Fim do teste
+
+      ## Informações do teste
+      to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
+      run_thread Proc.new {
+        tweet "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
+      }
+      ## Fim Informações do teste
+      #    end
 
       ## Inicio Thread Testes
       avoid_tests = false
