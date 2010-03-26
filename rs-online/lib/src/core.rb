@@ -151,22 +151,12 @@ def teste_paralelo id_pacote_excecao
   pacotes.each do |pacote|
     to_log "<T> Testando pacote #{pacote.nome}"
     links_before_test = select_lista_links pacote.id_pacote
+    pacote.tamanho = 0
     links_before_test.each do |link|
-      pacote.tamanho = 0
       if link.id_status == Status::BAIXADO
         pacote.tamanho += link.tamanho
       else
         link.test
-        case link.id_status
-        when Status::ONLINE
-          link.id_status = Status::ONLINE
-          pacote.tamanho += link.tamanho
-        when Status::OFFLINE
-          link.id_status = Status::OFFLINE
-        when Status::INTERROMPIDO
-          link.id_status = Status::INTERROMPIDO
-        end
-        link.update_db
       end
     end
     pacote.update_db
@@ -208,6 +198,7 @@ def run
 
       ## Inicio do teste
       unless pular_teste
+        to_debug "Teste inicial não foi evitado."
         pacote.tamanho = 0
         to_log "Testando os links..."
         links_online = Array.new
