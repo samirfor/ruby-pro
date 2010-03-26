@@ -228,9 +228,15 @@ def run
       end
 
       ## Inicio Thread Testes
+      avoid_tests = false
+      ARGV.each do |a|
+        if a == "avoid-tests"
+          avoid_tests = true
+        end
+      end
       thread_testes = Thread.new {
         teste_paralelo pacote.id_pacote
-      }
+      } unless avoid_tests
       ## Fim Thread Testes
 
       ## Inicio Download do Pacote
