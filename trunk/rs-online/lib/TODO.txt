@@ -18,3 +18,6 @@
   > Último PID
   > Nome do processo
 - Reformular o service handler. (start, stop, close)
+- Implementar uma tabela no BD onde será salvo os hostname dos servidores com
+  seus respectivos IPs. (caso venha acontecer de bloquearem o DNS pro RS hehehe)
+- Precisamos colocar uma senha de gente no BD
