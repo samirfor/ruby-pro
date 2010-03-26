@@ -75,7 +75,11 @@ def show_lista_links lista, pacote%>
 
                 # intervalo
                 unless link.data_fim == nil or link.data_inicio == nil
+                  begin
                   intervalo = Time.local(0) + (link.data_fim - link.data_inicio)
+                  rescue Exception
+                    intervalo = nil
+                  end
                 end %>
                 <td align="center"> <%
                   if intervalo == nil %>
