@@ -10,28 +10,6 @@ cgi = CGI.new
 a_params = cgi.params
 id_pacote = a_params["id_pacote"][0].to_i
 
-def action_links id_pacote
-  lista = select_lista_links(id_pacote)
-  if lista == nil
-    return nil
-  end
-  return lista
-
-  #sql = "SELECT l.*, (l.data_fim - l.data_inicio) AS intervalo, l.tamanho, s.status, s.id_status " +
-  #"FROM rs.link l, rs.status s WHERE id_pacote =  #{id_pacote} AND l.id_status = s.id_status"
-  #db = db_statement_execute(sql)
-  #rst = db[0]
-  #conn = db[1]
-end
-
-def action_pacote id_pacote
-  pacote = select_pacote(id_pacote)
-  if pacote == nil
-    return nil
-  end
-  return pacote
-end
-
 def show_lista_links lista, pacote%>
   <div class="post">
     <h1 class="title">Lista de Links</h1>
@@ -81,7 +59,7 @@ def show_lista_links lista, pacote%>
                     data_inicio_to_s = "<img src=\"images\/hourglass.png\" alt=\"Progress\" \/>"
                   end
                 end %>
-                <td align="center"><%= data_inicio_to_s %> </td> <%
+                <td align="center"><% p link.data_inicio #data_inicio_to_s %> </td> <%
 
                 # data fim
                 begin
@@ -93,7 +71,7 @@ def show_lista_links lista, pacote%>
                     data_fim_to_s = "<img src=\"images\/hourglass.png\" alt=\"Progress\" \/>"
                   end
                 end %>
-                <td align="center"><%= data_fim_to_s %> </td> <%
+                <td align="center"><% p link.data_fim #data_fim_to_s %> </td> <%
 
                 # intervalo
                 unless link.data_fim == nil or link.data_inicio == nil
@@ -280,8 +258,8 @@ Released   : 20081230
         <div id="content">
           <%
           begin
-            lista = action_links id_pacote
-            pacote = action_pacote id_pacote
+            lista = select_lista_links(id_pacote)
+            pacote = select_pacote(id_pacote)
 
             if lista == nil %>
               <div class="post">
