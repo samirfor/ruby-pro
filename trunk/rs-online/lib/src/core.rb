@@ -199,7 +199,7 @@ def run
       #      unless pular_teste
       #        to_debug "Teste inicial não foi evitado."
       pacote.tamanho = 0
-      to_log "Testando os links do \"#{pacote.nome}\"..."
+      to_log "Testando os links de \"#{pacote.nome}\"..."
       links_online = Array.new
       links_before_test.each do |link|
         cancelar?
@@ -255,7 +255,8 @@ def run
       pacote.data_fim = Time.now
       pacote.update_db
       ## Fim Download do Pacote
-
+      p pacote
+      p links_online
       ## Informações do download
       duracao = Time.local(0) + (pacote.data_fim - pacote.data_inicio)
       evento = "Concluido o download do pacote #{pacote.nome}"
