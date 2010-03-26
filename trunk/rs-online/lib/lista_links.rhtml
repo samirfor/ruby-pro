@@ -58,7 +58,7 @@ def show_lista_links lista, pacote%>
                     time_data_inicio = link.data_inicio
                     data_inicio_to_s = time_data_inicio.strftime("%d/%m/%Y %H:%M:%S")
                   rescue Exception
-                    data_inicio_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" \/>"
+                    data_inicio_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" title=\"Não informado\" \/>"
                   end
                 end %>
                 <td align="center"><%= data_inicio_to_s %> </td> <%
@@ -72,7 +72,7 @@ def show_lista_links lista, pacote%>
                     time_data_fim = link.data_fim
                     data_fim_to_s = time_data_fim.strftime("%d/%m/%Y %H:%M:%S")
                   rescue Exception
-                    data_fim_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" \/>"
+                    data_fim_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" title=\"Não informado\" \/>"
                   end
                 end %>
                 <td align="center"><%= data_fim_to_s %> </td> <%
