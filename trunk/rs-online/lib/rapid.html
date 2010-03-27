@@ -1,0 +1,881 @@
+<html>
+<head>
+	<title>LEGENDAS.TV - </title>
+	<link href="estilos.css" rel="stylesheet" type="text/css" />
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta name="title" content="Legendas.tv" />
+	<meta name="description" content="Portal de legendas para filmes, séries, anime e desenhos em português e diversas outras línguas." />
+	<meta name="keywords" content="legenda, legendas, dialogo, tradução, subtitle, sincronia, filme, seriado, filmes, seriados, smallville, small ville, house, supernatural, lost, prison break, vanished, the OC, the o.c, heroes, dexter, jericho, CSI, The Office, theOffice, my name is earl, nip tuck, bones, criminal minds, weeds, desperates housewives, numbers, numb3rs, simpsons, 24, 24 Horas, Séries, Tv, FOX, galeria, fotos, CBS, ABC, NBC, CW, Série, My name is Earl, Stargate, Atlantis, Jack, Kate, Boone, Locke, Dharma, Ilha, Oceanic Air, legendas.tv, www.legendas.tv, Equipe Legendas, Enquete, Everwood, Lana, Clark, Lex, One Tree Hill, OTH, Peyton, Brooke, Invasion, Four Kings, The Office, Season Finale, American Idol, American Dad, C.S.I., CSI, DH, Desperate Housewives, Everybody Hates Chris, Ghost Whisperer, Gilmore girls, Greys's Anatomy, How I Met Your Mother, Medium,  Supernatural, The Unit, Veronica Mars, Big Love, Close to Home, N.C.I.S, Nip/Tuck, Robot Chicken, Sleeper Cell, Sopranos, The 4400, Two and a Half Men, Without a Trace" />
+	<meta name="classification" content="Internet" />
+	<meta name="robots" content="index,follow" />
+	<meta name="googlebot" content="index,follow" />
+	<meta name="ratting" content="General" />
+	<meta name="geo.region" content="BR" />
+	<meta name="author" content="legendas.tv" />
+	<meta name="language" content="pt-br" />
+	<meta name="generator" content="http://www.legendas.tv">
+	<link rel="alternate" type="application/rss+xml" title="LEGENDAS.TV - Ultimas Legendas" href="http://www.legendas.tv/rss.html">
+	<link rel="alternate" type="application/rss+xml" title="LEGENDAS.TV - Ultimos Destaques" href="http://www.legendas.tv/rss-destaques.html">    
+    <link rel="alternate" type="application/rss+xml" title="LEGENDAS.TV - Ultimos Destaques - Series" href="http://www.legendas.tv/rss-destaques-series.html"> 
+    <link rel="alternate" type="application/rss+xml" title="LEGENDAS.TV - Ultimos Destaques - Filmes" href="http://www.legendas.tv/rss-destaques-filmes.html"> 
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<script language="JavaScript" type="text/javascript" src="javascript/ajax.js"></script>
+<script type="text/JavaScript">
+	<!--
+	function MM_swapImgRestore() { //v3.0
+	  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+	}
+
+	function MM_preloadImages() { //v3.0
+	  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+		var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+		if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+	}
+
+	function MM_findObj(n, d) { //v4.01
+	  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+		d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+	  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+	  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+	  if(!x && d.getElementById) x=d.getElementById(n); return x;
+	}
+
+	function MM_swapImage() { //v3.0
+	  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+	   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+	}
+	//-->
+</script>
+<script src="AC_RunActiveContent.js" type="text/javascript"></script>
+<script src="swfobject.js" type="text/javascript"></script>
+<script type="text/javascript">
+function gpop(p1,p2,p3,p4,p5,p6,p7,p8,p9) {
+return '<div class=\'pop\' style=\'background:#009999\'><h3>'+p1+'<br />'+p2+'</h3><p>'+p3+'</p><ul><li><strong>Cds:</strong> '+p4+'</li><li><strong>FPS:</strong> '+p5+'</li><li><strong>Tamanho:</strong> '+p6+'</li></ul><ul><li><strong>Downloads:</strong> '+p7+'</li><li><strong>'+p8+'</strong></li><li>'+p9+'</li></ul></div>';
+}
+function poptraducao(release,user,filmeint,filmenac,eobs,obs,cor,inicio,previsao,termino,progresso,porcentagem,atu) {
+result = '<div class="thread"><div class="hd">'+release+' <span class="user">('+user+')</span></div><div class="filme">'+filmeint+filmenac+'</div><div class="more">';
+if (eobs == 1) {
+result = result + '<div class="obs"><strong>Observações:</strong> '+obs+'</div>';
+}
+result = result + '<div class="adicional">Tradu&ccedil;&atilde;o Iniciada <b style="color:'+cor+'">'+inicio+'</b>, ';
+if (previsao == 1) {
+result = result+'sem previs&atilde;o de conclus&atilde;o.';
+} else if (previsao == 2) {
+result = result+'provavelmente j&aacute; conclu&iacute;da. ';
+} else if ( previsao == 3) {
+result = result+'<b>Tradu&ccedil;&atilde;o conclu&iacute;da!</b>';
+} else {
+result = result+'previsão de conclusão em <b>'+termino+'</b>';
+}
+result = result + '</div><div class="progresso">Status da tradução: (atualizado '+atu+')';
+if (progresso == 2) {	  
+result = result +'Sem informa&ccedil;&atilde;o';
+} else {
+result = result+'<div class="restante"><div class="overlay" align="center">'+porcentagem+'%</div><div class="did" style="width:'+porcentagem+'%"></div></div>';
+}
+result = result +'</div></div></div>';
+return result;
+}
+</script>
+<style type="text/css">
+<!--
+#peticao {
+	position:absolute;
+	left:121px;
+	top:195px;
+	width:532px;
+	height:404px;
+	z-index:1;
+	background-color: #FFFFFF;
+	border:solid 1px #CCCCCC;
+}
+-->
+</style>
+</head>
+<body onLoad="MM_preloadImages('images/ainicio.gif','images/alegendas.gif')">
+<script type="text/javascript">
+
+function abredown(download) {
+	window.open('info.php?d='+download,'','width=510,height=550,left=250,top=50,screenX=250,screenY=50,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=no,name=infolegenda');
+}
+
+function abremail() {
+	window.open('email.php','','width=480,height=250,left=250,top=50,screenX=250,screenY=50,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=no,name=infolegenda');
+}
+
+function abrerec() {
+	window.open('formulario.php','','width=500,height=520,left=250,top=50,screenX=250,screenY=50,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=no');
+}
+
+function abreforum() {
+	window.open('http://forum.legendas.tv','','width=750,height=550,left=10,top=10,screenX=250,screenY=50,toolbar=yes,location=yes,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes');
+}
+
+function abreup(download) {
+	window.open('upload.php','','width=617,height=500,left=250,top=50,screenX=250,screenY=50,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=no,name=upload');
+}
+
+function todosonline() {
+	window.open('allonline.php','','width=270,height=380,left=250,top=50,screenX=250,screenY=50,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=no,name=allonline');
+}
+
+function abrechat() {
+	window.open('chat/index.php','','width=800,height=500,left=250,top=50,screenX=250,screenY=50,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=no,name=chat');
+}
+
+function abreinfousuario(u) {
+	window.open('usuario_info.php?u='+u,'','width=550,height=500,left=250,top=50,screenX=250,screenY=50,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=no,resizable=no,name=InfoUsuario');
+}
+</script>
+<table width="790" border="0" align="left" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><table id="Table_01" width="780" height="153" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td height="153" rowspan="2">
+		<script type="text/javascript">
+AC_FL_RunContent( 'codebase','http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0','name','logo','width','157','height','153','id','logo','src','flash','quality','high','pluginspage','http://www.macromedia.com/go/getflashplayer','movie','flash' ); //end AC code
+</script><noscript><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" name="logo" width="157" height="153" id="logo">
+          <param name="movie" value="flash.swf">
+          <param name="quality" value="high">
+          <embed src="flash.swf" width="157" height="153" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" name="logo"></embed></object></noscript></td><td width="138" height="114" background="images/header_04.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="25"><table width="84%" border="0" align="left" cellpadding="0" cellspacing="0">
+              <tr>
+                <td><div align="center"><a href="#"></a><a href="index.php" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Inicio','','images/ainicio.gif',1)"><img src="images/inicio.gif" alt="Início" name="Inicio" width="92" height="23" border="0"></a></div></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="25"><table width="98%" border="0" align="left" cellpadding="0" cellspacing="0">
+              <tr>
+                <td><div align="center"><a href="#"></a><a href="index.php?opcao=legenda" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Legendas','','images/alegendas.gif',1)"><img src="images/legendas.gif" alt="Legendas" name="Legendas" width="92" height="23" border="0"></a></div></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="25"><table width="90%" border="0" align="left" cellpadding="0" cellspacing="0">
+              <tr>
+                <td><div align="right"><a href="javascript:abreforum();" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Forum','','images/aforum.gif',1)"><img src="images/forum.gif" alt="Forum" name="Forum" width="92" height="23" border="0"></a></div></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="25"><table width="97%" border="0" align="left" cellpadding="0" cellspacing="0">
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        <td width="477" height="153" rowspan="2" valign="top" background="images/sitebackup_05.gif"><li style="margin: 10px 0px 0px 5px; padding: 0px; height: 115px; float: left; display: block; width: 100px; list-style-type: none; text-align: center; background-color: white;overflow:hidden">
+<a style="color:#158ba8;text-decoration:none" href="http://pmstrk.mercadolivre.com.br/jm/PmsTrk?tool=5439616&go=/jm/item?site=MLB$$id=138433570"><img height="67" border="0" width="67" src="http://img2.mlstatic.com/jm/img?s=MLB&amp;f=117436742_6557.jpg&amp;v=I"/>
+<span style="display: block; font-family: 'Trebuchet MS',Arial,sans-serif; font-size: 12px; text-align: center; line-height: 10px;">Notebook Aspire 1410 Intel Core2solo 3gb Hd250gb 11.6   6cel</span></a></li>
+<li style="margin: 10px 0px 0px 5px; padding: 0px; height: 115px; float: left; display: block; width: 100px; list-style-type: none; text-align: center; background-color: white;overflow:hidden">
+<a style="color:#158ba8;text-decoration:none" href="http://pmstrk.mercadolivre.com.br/jm/PmsTrk?tool=5439616&go=/jm/item?site=MLB$$id=133316547"><img height="67" border="0" width="67" src="http://img1.mlstatic.com/jm/img?s=MLB&amp;f=104547151_722.jpg&amp;v=I"/>
+<span style="display: block; font-family: 'Trebuchet MS',Arial,sans-serif; font-size: 12px; text-align: center; line-height: 10px;">Note Hp Dv6 1247 C2d 2.0ghz 4gb 320gb 16 Blu-Ray  Hdmi</span></a></li>
+<li style="margin: 10px 0px 0px 5px; padding: 0px; height: 115px; float: left; display: block; width: 100px; list-style-type: none; text-align: center; background-color: white;overflow:hidden">
+<a style="color:#158ba8;text-decoration:none" href="http://pmstrk.mercadolivre.com.br/jm/PmsTrk?tool=5439616&go=/jm/item?site=MLB$$id=137392499"><img height="67" border="0" width="67" src="http://img1.mlstatic.com/jm/img?s=MLB&amp;f=137392499_2369.jpg&amp;v=I"/>
+<span style="display: block; font-family: 'Trebuchet MS',Arial,sans-serif; font-size: 12px; text-align: center; line-height: 10px;">Netbook Asus Eeepc 1005pe 10' 2gb Atom N450 1.66ghz 250gb W7</span></a></li>
+<li style="margin: 10px 0px 0px 5px; padding: 0px; height: 115px; float: left; display: block; width: 100px; list-style-type: none; text-align: center; background-color: white;overflow:hidden">
+<a style="color:#158ba8;text-decoration:none" href="http://pmstrk.mercadolivre.com.br/jm/PmsTrk?tool=5439616&go=/jm/item?site=MLB$$id=131548403"><img height="67" border="0" width="67" src="http://img1.mlstatic.com/jm/img?s=MLB&amp;f=120530184_3389.jpg&amp;v=I"/>
+<span style="display: block; font-family: 'Trebuchet MS',Arial,sans-serif; font-size: 12px; text-align: center; line-height: 10px;">Notebook Acer X2 2,1 4gb 320gb Tela 15 Cam Wireles Windows 7</span></a></li>
+</td>
+        <td width="8" height="153" rowspan="2" valign="top" background="images/header_06.gif">&nbsp;</td>
+      </tr>
+      <tr>
+        <td><img src="images/header_07.gif" width="138" height="39" alt=""></td>
+      </tr>
+    </table></td>
+    <td width="10" rowspan="4" background="images/borda.gif">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="424" align="left" valign="top"><table id="Table_01" width="780" height="26" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><img src="images/faixa_01.gif" width="295" height="26" alt=""></td>
+        <td><img src="images/faixa_02.gif" width="278" height="26" alt=""></td>
+        <td width="207" height="26" valign="bottom" background="images/faixa_03.gif"><div align="right" class="style3">
+       <div align="center"></div>
+        </div></td>
+      </tr>
+    </table>
+      <table width="780" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="153" valign="top" class="bgesquerda"><table width="127" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td height="13" background="images/entrarcima.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td align="center" valign="middle"><div align="center" class="brancob">Entrar</div></td>
+                    </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td class="login">                  <table width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td>
+							<form name="form1" method="post" action="login_verificar.php">
+							  <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+							  <tr>
+								<td class="fonte">Login:</td>
+							  </tr>
+							  <tr>
+								<td><div align="center">
+									<input name="txtLogin" type="text" class="campos" size="15" maxlength="15">
+								</div></td>
+							  </tr>
+							  <tr>
+								<td class="fonte">Senha:</td>
+							  </tr>
+							  <tr>
+								<td><div align="center">
+									<input name="txtSenha" type="password" class="campos" size="15" maxlength="32">
+								</div></td>
+							  </tr>
+							  <tr>
+								<td><div align="center">
+								  <input name="entrar" type="image" id="entrar" src="images/entrarbt.png" align="middle">
+								</div></td>
+							  </tr>
+							  <tr>
+								<td><div align="left">
+							  		Lembrar senha?<input id="chkLogin" name="chkLogin" type="checkbox" value="1">
+								</div></td>
+							  </tr>
+
+							  <tr>
+								<td><span class="rosa"><br>
+								  *</span> <span class="fonte"><a href="index.php?opcao=cadastrarusuario">Cadastre-se</a></span><br>
+								  <span class="rosa">*</span> <span class="fonte"><a href="index.php?opcao=reenviarsenha">Esqueceu a senha?</a></span>								</td>								  
+							  </tr>
+							  <tr>
+								  <td align="center"><span class="rosa"><br>
+   									  <span class="rosa">*</span> <span class="fonte"><b><a href="index.php?opcao=reenviaremail"><font color="#FF0000">Reenviar e-mail de confirmação?</font></a></b></span>								  </td>
+							  </tr>
+							</table>
+						</form></td>
+                      </tr>
+                  </table>
+				  </td></tr>
+              </table>
+            <div align="center"><br /><iframe src="http://smartad.mercadolivre.com.br/jm/SmartAd?tool=5084105&creativity=40601&new=N&ovr=N&bgcol=f0f0f0&brdcol=46cad6&txtcol=006600&lnkcol=000080&hvrcol=FF0000&prccol=FF0000&word=mp3&word=notebook&word=nokia&site=MLB" width="125" height="125" scrolling="no" frameborder="0" marginheight="0" marginwidth="0">
+</iframe><br /><br />            </div>
+            <table width="125" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td><img src="images/busca.png" alt="Busca" width="127" height="13"></td>
+                </tr>
+                <tr>
+                  <td class="login"><table width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td><form name="form1" method="post" action="index.php?opcao=buscarlegenda">
+                            <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+							  <tr>
+                      			<td><script language="javascript" src="AnchorPosition.js"></script><div id="divbanner" style="position: absolute; display: none;"><table width="224" border="0" cellspacing="0" cellpadding="0" class="filmresult">
+  <tr>
+    <td width="224"><strong>Busca Inteligente Legendas.TV</strong><br />
+      Digite o nome do filme ou nome da legenda e escolha o idioma caso queira, ap&oacute;s isso clique em OK. </td>
+  </tr>
+</table></div></td>
+                    		  </tr>
+                              <tr>
+                                <td align="left" class="fonte">Busca:</td>
+                              </tr>
+                              <tr>
+                                <td><div align="center"><span class="fonte">
+                                  <input name="txtLegenda" id="txtLegenda" type="text" class="campos" size="15" maxlength="50">
+                                </span></div></td>
+                              </tr>
+                              <tr>
+                                <td align="left" class="fonte">Tipo:</td>
+                              </tr>
+                              <tr>
+                                <td align="center" class="fonte"><select name="selTipo" id="selTipo" class="campos">
+                                  <option value="1">Release</option>
+                                  <option value="2">Filme</option>
+                                  <option value="3">Usuario</option>
+                                </select>                                </td>
+                              </tr>
+                              <tr>
+                                <td align="left" class="fonte">Idioma:</td>
+                              </tr>
+                              <tr>
+                                <td><div align="center">
+                                  <select name="int_idioma" class="campos" id="int_idioma">
+                                    <option value="1" selected>Portugu&ecirc;s-BR</option>
+                                    <option value="10">Portugu&ecirc;s-PT</option>
+                                    <option value="2">Ingl&ecirc;s</option>
+                                    <option value="3">Espanhol</option>
+                                    <option value="100">Outros</option>
+                                    <option value="99">Todos</option>
+                                  </select>
+                                </div></td>
+                              </tr>
+                              <tr>
+                                <td><div align="center"> <br>
+                                        <input name="btn_buscar" type="image" src="images/entrarbt.png" align="middle" >
+                                </div></td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                              </tr>
+                            </table>
+                        </form></td>
+                      </tr>
+                  </table></td>
+                </tr>
+            </table>
+              <div align="center"><br>
+                <table width="140" border="0" cellpadding="0" cellspacing="0" class="confirmcad">
+                  <tr>
+                    <td><div align="center"><img src="tiosam.gif" alt="Recrutamento" border="0" onClick="javascript:abrerec();" title="Clique aqui para preencher o formulario de recrutamento!" style="cursor:hand;"></div></td>
+                  </tr>
+                  <tr>
+                    <td><div align="center"><span onClick="javascript:abrerec();">Sabe traduzir e quer ajudar?<br>
+                      Clique aqui!</span></div></td>
+                  </tr>
+                </table>
+                <br>
+              <table width="135" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="135" height="13" background="images/ativos.gif"><table width="127" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td><div align="center" class="style17">Membros Online </div></td>
+                    </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td class="login">
+				    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+					<tr>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr bgcolor="#DDDDDD">                      <td bgcolor="#F0F0F0"><div align="center">1116 visitante(s)</div></td>
+                    </tr>
+                    <tr bgcolor="#DDDDDD">
+                      <td bgcolor="#F0F0F0"><div align="center">1846 registrado(s)</div></td>
+                    </tr>
+                    <tr bgcolor="#DDDDDD">
+                      <td bgcolor="#F0F0F0"><div align="center"><b>Total</b>: 2962</div></td>
+                    </tr>
+                    
+                    <tr>
+                      <td bgcolor="#F0F0F0"><div align="center"><strong><a href="javascript:todosonline();">ver todos</a></strong></div></td>
+                    </tr>
+					<tr>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </table></td>
+                </tr>
+              </table>
+          </div>
+
+              <br>
+              <div align="center">
+                <table width="140" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="177" height="20" valign="middle" background="images/template.gif"><table width="114" border="0" align="left" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="114"><div align="right"><span class="style17">Top Uploaders</span></div></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td class="noticias"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr bgcolor="#E5E5E5">
+        <td height="12"><strong><img src="images/seta.gif" width="12" height="10" /> <a href="javascript:abreinfousuario(241436)">AARAO_REIS</a></strong></td>
+      </tr>
+      <tr>
+        <td height="12"><span class="style16">Envios: <strong>
+          3633        </strong></span> </td>
+      </tr>
+            <tr bgcolor="#E5E5E5">
+        <td height="12"><strong><img src="images/seta.gif" width="12" height="10" /> <a href="javascript:abreinfousuario(3939)">uploader008</a></strong></td>
+      </tr>
+      <tr>
+        <td height="12"><span class="style16">Envios: <strong>
+          2432        </strong></span> </td>
+      </tr>
+            <tr bgcolor="#E5E5E5">
+        <td height="12"><strong><img src="images/seta.gif" width="12" height="10" /> <a href="javascript:abreinfousuario(549848)">PT-Subs</a></strong></td>
+      </tr>
+      <tr>
+        <td height="12"><span class="style16">Envios: <strong>
+          2262        </strong></span> </td>
+      </tr>
+            <tr bgcolor="#E5E5E5">
+        <td height="12"><strong><img src="images/seta.gif" width="12" height="10" /> <a href="javascript:abreinfousuario(10293)">gitobeto</a></strong></td>
+      </tr>
+      <tr>
+        <td height="12"><span class="style16">Envios: <strong>
+          2227        </strong></span> </td>
+      </tr>
+          </table></td>
+  </tr>
+</table>
+<br />
+<iframe src="http://smartad.mercadolivre.com.br/jm/SmartAd?tool=5082124&creativity=38002&new=N&ovr=N&bgcol=46cad6&brdcol=000000&txtcol=FFFFFF&lnkcol=000000&hvrcol=FFFFFF&prccol=FFFF00&word=divx&word=dvd-r&word=notebook&site=MLB" width="120" height="600" scrolling="no" frameborder="0" marginheight="0" marginwidth="0">
+</iframe><br />          </div></td>
+          <td valign="top"><div align="center">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><div align="right">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td height="24" class="smembros"></td>
+                      </tr>
+                  </table>
+                </div></td>
+              </tr>
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            	<tr>
+                	<td width="100%" valign="top">
+					  <div align="center">
+							<br>
+								<table width="400"  height="50" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><img src="images/noticiasup.gif" alt="Not&iacute;cias" width="403" height="23"></td>
+  </tr>
+  <tr>
+    <td class="noticias"><div style="overflow:auto;height:150px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:10px">
+                <div style="margin-bottom:3px;padding:3px;background-color:#F9F9F9">
+        <div style="background-color:#46cad6;font-weight:bold;">legendas.tv no Twitter</div>
+        <div align="justify">Para informa&ccedil;&atilde;o das &uacute;ltimas legendas em destaque:<br />
+<small><a href="http://twitter.com/legendas" target="_blank" rel="nofollow">http://twitter.com/legendas</a></small></div>
+        <div style="text-align:right;padding-right:5px;font-size:9px;font-weight:bold;border-top:1px dotted #CCCCCC">LegendasTV @ 08/09/2009 06:16</div>
+        </div>        <div style="margin-bottom:3px;padding:3px;background-color:#F8F8F8">
+        <div style="background-color:#46cad6;font-weight:bold;">Libera&ccedil;&atilde;o de legendas - ATEN&Ccedil;&Atilde;O UPLOADERS</div>
+        <div align="justify">Legendas de seriados antigos, em qualquer idioma, s&oacute; ser&atilde;o liberadas se enviadas em packs com todas as legendas de uma mesma temporada.<br />
+<br />
+Legendas postadas separadamente ser&atilde;o deletadas.<br />
+<br />
+OBSERVA&Ccedil;&Atilde;O: TAL MEDIDA N&Atilde;O SE APLICA A NOVAS TRADU&Ccedil;&Otilde;ES!</div>
+        <div style="text-align:right;padding-right:5px;font-size:9px;font-weight:bold;border-top:1px dotted #CCCCCC">LegendasTV @ 04/05/2008 21:28</div>
+        </div>        <div style="margin-bottom:3px;padding:3px;background-color:#F9F9F9">
+        <div style="background-color:#46cad6;font-weight:bold;">Libera&ccedil;&atilde;o de legendas</div>
+        <div align="justify">Quando algum usu&aacute;rio posta uma legenda que j&aacute; conste no banco de dados do site, n&atilde;o explicando nos coment&aacute;rios caso tenha feita alguma melhoria, n&oacute;s n&atilde;o as aceitamos para que n&atilde;o gere duplicidade de arquivos.<br />
+Ao enviar legendas de s&eacute;ries, siga o padr&atilde;o adotado no site: Nome da s&eacute;rie.SXXEXX.HDTV.XviD-Grupo </div>
+        <div style="text-align:right;padding-right:5px;font-size:9px;font-weight:bold;border-top:1px dotted #CCCCCC">LegendasTV @ 24/11/2007 17:00</div>
+        </div>      </div></td>
+  </tr>
+</table>
+<br>
+						<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+						  <tr>
+						    <td height="15" colspan="3"><div align="center"><img src="images/bordafilm.gif" width="100%" height="15"></div></td>
+						  </tr>
+						  <tr>
+						    <td width="5">&nbsp;</td>
+									  <td id="conteudodest" width="100%" bgcolor="#46CAD6">
+									    <div align="center">
+									      <script type="text/javascript" src="topd.js"></script>
+<div style="width:430px;height:145px;background-color:#FFFFFF;border:solid 1px #EBEBEB;margin:0px 2px">
+<div class="topdsetad" rolagem="rcont, maisbaixados, dir" onclick="this.blur(); return false;"></div>
+<div class="topdsetae" rolagem="rcont, maisbaixados, esq" onclick="this.blur(); return false;"></div>
+<div style="float:left;margin-left:5px"><strong>Destaques mais baixados na semana:</strong></div>
+<div id="rcont" style="width:430px;height:133px;overflow:hidden;display:block;clear:both">
+  <div id="maisbaixados" style="width:2975px;height:133px;;display:block"><div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Lost - 6th Season','Lost - 6&ordf; Temporada','Lost.S06E09.REPACK.HDTV.XviD-NoTV/720p/DIMENSION','1','23','349MB','45908','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 01:34'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('f50d81747d115cdb4607222509ac0b6f');"><span id="topdf50d81747d115cdb4607222509ac0b6f"><img src="destaques/167808-66dfdfacffccea521b45949c2f670649.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/LegendasTV.jpg" width="132" height="18" alt="Equipe Legendas.tv"/></div>
+<div class="destrlsb"><small>HDTV.XviD-NoTV/720p/DIMENSION</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('The Big Bang Theory - 3rd Season','Big Bang: A Teoria - 3&ordf; Temporada','The.Big.Bang.Theory.S03E18.HDTV.XviD-FQM/CTU','1','23','179MB','19138','<img src=\'images/flag_br.gif\' border=\'0\'>','23/03/2010 - 06:49'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('8e348c6f59499c05b87e351ebaa4646a');"><span id="topd8e348c6f59499c05b87e351ebaa4646a"><img src="destaques/167695-ea66842835b48ea16b52fb82a8dd6f6d.jpg" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/N.E.R.D.S..jpg" width="132" height="18" alt="Equipe N.E.R.D.S."/></div>
+<div class="destrlsb"><small>HDTV.XviD-FQM/CTU</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Shutter Island','Ilha do Medo','Shutter.Island.R5.MAXSPEED/IMAGINE/V2-IMAGINE/UNDEAD-NoRar/FUSION/Rx/VISION/MENTION/PrisM/DuAL/lOVE/BDRip-VISION','1','25','1MB','14766','<img src=\'images/flag_br.gif\' border=\'0\'>','20/03/2010 - 17:47'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('98fe23290897d7000981faad22a24dcc');"><span id="topd98fe23290897d7000981faad22a24dcc"><img src="destaques/167439-7dbbca5f0e5b78fa265f850bb1ae05f4.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/UnitedTeam.jpg" width="132" height="18" alt="Equipe United"/></div>
+<div class="destrlsb"><small>R5.MAXSPEED/IMAGINE/V2-IMAGINE/UNDEAD-NoRar/FUSION/Rx/VISION/MENTION/PrisM/DuAL/lOVE/BDRip-VISION</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('24 - 8th Season','24 horas - 8&ordf; Temporada','24.S08E13.HDTV.XviD-2HD/CTU','1','23','350MB','10934','<img src=\'images/flag_br.gif\' border=\'0\'>','23/03/2010 - 08:54'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('72d931570782c2c3ee995d803e59f9c5');"><span id="topd72d931570782c2c3ee995d803e59f9c5"><img src="destaques/167716-92b504ca71b18363c1acdeab9a69c804.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-2HD/CTU</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Two and a Half Men - 7th Season','Two and a Half Men - 7&ordf; Temporada','Two.and.a.Half.Men.S07E18.HDTV.XviD-LOL/DIMENSION','1','23','175MB','7795','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 02:21'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('c98c76e80ab1d3c1cf2002b960c7742c');"><span id="topdc98c76e80ab1d3c1cf2002b960c7742c"><img src="destaques/167810-a0a36835bcee195bf52b570a4db12c53.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-LOL/DIMENSION</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('The Pacific - Miniss&eacute;rie','The Pacific - Miniss&eacute;rie','The.Pacific.Pt.II.HDTV.XviD-NoTV/DIMENSION','1','23','550MB','7187','<img src=\'images/flag_br.gif\' border=\'0\'>','23/03/2010 - 10:57'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('c1dcd346886b64ac7bd6d6dae62b6553');"><span id="topdc1dcd346886b64ac7bd6d6dae62b6553"><img src="destaques/167720-2116a6e2f434ca39e88a49d416c3079b.jpg" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/_DARKSIDE_.jpg" width="132" height="18" alt="Equipe DarkSide"/></div>
+<div class="destrlsb"><small>HDTV.XviD-NoTV/DIMENSION</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Chuck - 3rd Season','Chuck - 3&ordf; Temporada','Chuck.S03E11.HDTV.XviD-LOL/DIMENSION','1','23','350MB','6783','<img src=\'images/flag_br.gif\' border=\'0\'>','23/03/2010 - 08:49'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('4b30c4bc176d60bdb0c0a3ebbcea03e8');"><span id="topd4b30c4bc176d60bdb0c0a3ebbcea03e8"><img src="destaques/167714-99985ea1102ea25d5e94189ec6103796.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-LOL/DIMENSION</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('FlashForward - 1st Season','FlashForward - 1&ordf; Temporada','Flashforward.S01E11-E12.HDTV.XviD-2HD/2HD','1','23','700MB','6702','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 07:23'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('de504899adf002e042a697bbc5226d36');"><span id="topdde504899adf002e042a697bbc5226d36"><img src="destaques/167836-c40eba51d03929e68e3ad2c381e49e35.jpg" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/_DARKSIDE_.jpg" width="132" height="18" alt="Equipe DarkSide"/></div>
+<div class="destrlsb"><small>HDTV.XviD-2HD/2HD</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Spartacus: Blood and Sand - 1st Season','Spartacus: Blood and Sand - 1&ordf; Temporada','Spartacus.Blood.and.Sand.S01E09.HDTV.XviD-SYS/720p','1','23','550MB','6412','<img src=\'images/flag_br.gif\' border=\'0\'>','20/03/2010 - 09:11'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('670619bc2f885ef3bc0ef569eece1b13');"><span id="topd670619bc2f885ef3bc0ef569eece1b13"><img src="destaques/167345-d258156b969a4a1c1815f33d5b823884.jpg" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/_DARKSIDE_.jpg" width="132" height="18" alt="Equipe DarkSide"/></div>
+<div class="destrlsb"><small>HDTV.XviD-SYS/720p</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('How I Met Your Mother - 5th Season','How I Met Your Mother - 5&ordf; Temporada','How.I.Met.Your.Mother.S05E18.HDTV.XviD-FQM/CTU','1','23','175MB','6034','<img src=\'images/flag_br.gif\' border=\'0\'>','23/03/2010 - 16:14'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('13eb4855b98559de0c16020482461408');"><span id="topd13eb4855b98559de0c16020482461408"><img src="destaques/167745-fff3aa4b46db7bb5a34d58cd2ebbc729.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-FQM/CTU</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('FlashForward - 1st Season','FlashForward - 1&ordf; Temporada','FlashForward.S01E00.Special.What.Did.You.See.HDTV.XviD-2HD','1','23','350MB','5952','<img src=\'images/flag_br.gif\' border=\'0\'>','20/03/2010 - 12:28'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('8813d6943dd50db1242322853919c6d7');"><span id="topd8813d6943dd50db1242322853919c6d7"><img src="destaques/167383-dd3024844f8eaca5ae3ddf0d3eeb33b6.jpg" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/_DARKSIDE_.jpg" width="132" height="18" alt="Equipe DarkSide"/></div>
+<div class="destrlsb"><small>HDTV.XviD-2HD</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Gossip Girl - 3rd Season','Gossip Girl - 3&ordf; temporada','Gossip.Girl.S03E15.HDTV.XviD-FQM/IMMERSE','1','23','350MB','5426','<img src=\'images/flag_br.gif\' border=\'0\'>','23/03/2010 - 18:05'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('b567bfad1d91174ef013d8e18942c080');"><span id="topdb567bfad1d91174ef013d8e18942c080"><img src="destaques/167749-b6124f7cc340efc9879c5025ae350417.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-FQM/IMMERSE</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Defendor','Defendor','Defendor.2009.LiMiTED.DVDRip.XViD-BULLDOZER/FXG/ViSiON','1','23','696MB','3846','<img src=\'images/flag_br.gif\' border=\'0\'>','20/03/2010 - 14:22'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('d241d9826a7db9530fd1dd8c1a33ef01');"><span id="topdd241d9826a7db9530fd1dd8c1a33ef01"><img src="destaques/167400-891faefed34d1d7de1eef315a610f045.jpg" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/virtualnet.jpg" width="132" height="18" alt="Virtualnet"/></div>
+<div class="destrlsb"><small>DVDRip.XViD-BULLDOZER/FXG/ViSiON</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('V 2009 - 1st season','V 2009 - 1&ordf; temporada','V.2009.S01.Special.The.Arrival.HDTV.XviD-2HD','1','23','350MB','3750','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 14:48'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('097e2925918c740d23143e0635b73395');"><span id="topd097e2925918c740d23143e0635b73395"><img src="destaques/167870-f0f8bf01e9995302f9e12a3801d4b18a.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-2HD</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Legend Of The Seeker - 2nd Season','Legend Of The Seeker - 2&ordf; Temporada','Legend.of.the.Seeker.S02E14.HDTV.XviD-LOL/720p','1','23','350MB','3491','<img src=\'images/flag_br.gif\' border=\'0\'>','21/03/2010 - 11:19'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('607e4fc219f1d058ce05afd4c42416e2');"><span id="topd607e4fc219f1d058ce05afd4c42416e2"><img src="destaques/167527-5f11657198634daef1e2bb8a5f4bad89.jpg" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/_DARKSIDE_.jpg" width="132" height="18" alt="Equipe DarkSide"/></div>
+<div class="destrlsb"><small>HDTV.XviD-LOL/720p</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Grey\\\'s Anatomy - 6th Season','Grey\\\'s Anatomy - 6th Season','Greys.Anatomy.S06E18.HDTV.XviD-NoTV/CTU','1','23','350MB','3472','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 11:48'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('e2dfa91198e43cdc44273051d10888a0');"><span id="topde2dfa91198e43cdc44273051d10888a0"><img src="destaques/168070-d03124f31124cbe3300c02784240851b.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-NoTV/CTU</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Desperate Housewives - 6th Season','Desperate Housewives - 6&ordf; Temporada','Desperate.Housewives.S06E18.HDTV.XviD-2HD/2HD','1','23','350MB','3313','<img src=\'images/flag_br.gif\' border=\'0\'>','23/03/2010 - 08:52'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('210dfaf72ef45c35cd080ec1e6504007');"><span id="topd210dfaf72ef45c35cd080ec1e6504007"><img src="destaques/167715-0cde2ea0c09af4afae2798ff07805b94.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-2HD/2HD</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Caprica - 1st Season','Caprica - 1&ordf; Temporada','Caprica.S01E08.HDTV.XviD-FQM/ORENJI','1','23','350MB','3081','<img src=\'images/flag_br.gif\' border=\'0\'>','21/03/2010 - 20:18'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('caae914f15bf4178d8c0b6abb6bdcd29');"><span id="topdcaae914f15bf4178d8c0b6abb6bdcd29"><img src="destaques/167592-8449b02e434d617138286656029fba8f.jpg" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/jluizsd.jpg" width="132" height="18" alt="jluizsd"/></div>
+<div class="destrlsb"><small>HDTV.XviD-FQM/ORENJI</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('The Simpsons - 21th Season','Os Simpsons - 21&ordf; Temporada','The.Simpsons.S21E15.HDTV.XviD-XII/720p','1','0','175MB','2592','<img src=\'images/flag_br.gif\' border=\'0\'>','23/03/2010 - 17:52'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('835f9239f900422c8095327d82f50e10');"><span id="topd835f9239f900422c8095327d82f50e10"><img src="destaques/167748-2007bb3ea204a28fb2f96e50d78c8a88.jpg" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/Tuunz.jpg" width="132" height="18" alt="Equipe Tuunz"/></div>
+<div class="destrlsb"><small>HDTV.XviD-XII/720p</small></div>
+</div>
+  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Star Wars: The Clone Wars - 2nd Season','Guerra Nas Estrelas: A Guerra dos Clones - 2&ordf; Temporada','Star.Wars.The.Clone.Wars.S02E16.HDTV.XviD-ThV-DEMENTA','1','25','228MB','2330','<img src=\'images/flag_br.gif\' border=\'0\'>','21/03/2010 - 13:32'))" class="Ldestaque" style="width:134px;cursor:pointer;float:left;margin-left:5px" onclick="javascript:abredown('9095a01380e48668fd82de6dde3a9d77');"><span id="topd9095a01380e48668fd82de6dde3a9d77"><img src="destaques/167545-f7ecba5f90b47e21d621b3c4cf6b8f66.gif" width="132" height="80" border="0" /></span>
+    <div align="center" style="height:18px;"><img src="images/equipes/the_tozz.gif" width="132" height="18" alt="The Tozz"/></div>
+<div class="destrlsb"><small>HDTV.XviD-ThV-DEMENTA</small></div>
+</div>
+  </div>
+</div>
+</div>
+<style type="text/css">
+<!--
+.borda {
+	color: #EEEEEE;
+	border: 1px solid #000000;
+}
+.pequeno {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	color: #000000;
+}
+.bgrls {
+	background-attachment: fixed;
+	background-image: url(images/bgrls.gif);
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	font-family: Verdana;
+	font-size: 10px;
+	color: #000000;
+}
+.bordam {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	color: #000000;
+	border: 1px solid #999999;
+}
+.style2 {font-size: 9}
+-->
+</style>
+ <div align="center"><strong>&Uacute;ltimos Destaques[Filmes e S&eacute;ries]:</strong><br>
+ </div>
+ <div align="center"><strong><font color="#000000"><span style="cursor:pointer; background-color:#CCCCCC;" onclick="ajaxGet('destaques.php?show=1',document.getElementById('conteudodest'),true);">[Filmes]</span> <span style="cursor:pointer; background-color:#CCCCCC;" onclick="ajaxGet('destaques.php?show=2',document.getElementById('conteudodest'),true);">[Seriados]</span></font></strong> <strong><font color="#000000"><span onclick="ajaxGet('destaques.php?show=3',document.getElementById('conteudodest'),true);" style="cursor:pointer; background-color:#FF9900;">[Ambos]</span></font></strong>
+  <strong><font color="#000000"><span onclick="ajaxGet('destaques.php?show=4',document.getElementById('conteudodest'),true);" style="cursor:pointer; background-color:#CCCCCC;">[Portugu&ecirc;s-PT]</span></font></strong>
+    <br />
+ </div>
+ <div style="margin:2px auto">
+   <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Survivor: Palau - 10th Season (2005)','Survivor: Palau - 10&ordf; Temporada','Survivor.Palau.S10.E01.dvd.xvid','1','23','350MB','1','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 20:50'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('a8cf1bbd63e7a6a54fbf85c3586908f1');">
+  <span id="imgda8cf1bbd63e7a6a54fbf85c3586908f1">
+<img src="destaques/168161-1a8579dc4b67b9b973fdecc87eb95fdb.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/survivors.team.jpg" width="132" height="18" alt="Survivors Team"/></div>
+<div class="destrlsb"><small>dvd.xvid</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('The Vampire Diaries - 1st Season','The Vampire Diaries - 1&ordf; Temporada','The.Vampire.Diaries.S01E15.HDTV.XviD-2HD/720p','1','23','350MB','1645','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 19:41'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('31de8926d81a9ba9c09d227384dd36e3');">
+  <span id="imgd31de8926d81a9ba9c09d227384dd36e3">
+<img src="destaques/168137-3e3b3d1ae52d19dc353e0e2316b15489.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/N.E.R.D.S..jpg" width="132" height="18" alt="Equipe N.E.R.D.S."/></div>
+<div class="destrlsb"><small>HDTV.XviD-2HD/720p</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Cougar Town - 1st season','Cougar Town - 1&ordf; temporada','Cougar.Town.S01E18.HDTV.XviD-2HD/CTU','1','23','175MB','617','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 17:39'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('014111dcd3dbf5ef0a9eeec40c2718ea');">
+  <span id="imgd014111dcd3dbf5ef0a9eeec40c2718ea">
+<img src="destaques/168122-dfcca22d26a58b944e8cbf936e7185e2.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-2HD/CTU</small></div>
+</div>
+  <div class="quebra"></div>  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Joan of Arcadia - 2nd Season','Joan of Arcadia - 2&ordf; Temporada','Joan.of.Arcadia.S02E14.HDTV.XviD.LoL','1','23','350MB','57','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 16:23'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('2c7b8943e769843a9a489db380218808');">
+  <span id="imgd2c7b8943e769843a9a489db380218808">
+<img src="destaques/168109-65580c446396a9626acf891433223687.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/SecretTeam.gif" width="132" height="18" alt="Secret Subs"/></div>
+<div class="destrlsb"><small>XviD.LoL</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Grey\\\'s Anatomy - 6th Season','Grey\\\'s Anatomy - 6th Season','Greys.Anatomy.S06E18.HDTV.XviD-NoTV/CTU','1','23','350MB','3472','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 11:48'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('e2dfa91198e43cdc44273051d10888a0');">
+  <span id="imgde2dfa91198e43cdc44273051d10888a0">
+<img src="destaques/168070-d03124f31124cbe3300c02784240851b.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-NoTV/CTU</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Modern Family - 1st Season','Fam&iacute;lia Moderna - 1&ordf; Temporada','Modern.Family.S01E18.HDTV.XviD-NoTV','1','23','175MB','1092','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 05:31'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('a41a63cef66ecf4573f693dd0e85aaac');">
+  <span id="imgda41a63cef66ecf4573f693dd0e85aaac">
+<img src="destaques/168029-4fd5fb4926d6b8c146990d20c536b6bf.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/_DARKSIDE_.jpg" width="132" height="18" alt="Equipe DarkSide"/></div>
+<div class="destrlsb"><small>HDTV.XviD-NoTV</small></div>
+</div>
+  <div class="quebra"></div>  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Castle - 2nd Season','Castle - 2&ordf; Temporada','Castle.2009.S02E17.HDTV.XviD-FQM/CTU','1','24','350MB','1240','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 02:03'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('410924f8cf23a10e8296435a88c7507b');">
+  <span id="imgd410924f8cf23a10e8296435a88c7507b">
+<img src="destaques/168016-2b43920289d88c0699a917fc02aa856a.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/_DARKSIDE_.jpg" width="132" height="18" alt="Equipe DarkSide"/></div>
+<div class="destrlsb"><small>HDTV.XviD-FQM/CTU</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Melrose Place 2009 - 1st Season','Melrose Place 2009 - 1&ordf; Temporada','Melrose.Place.2009.S01E15.PROPER.HDTV.XviD-FQM / P0W4 / IMMERSIVE','1','25','350MB','825','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 01:41'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('0a7bcbb2ce924ecc9336988a61ff4098');">
+  <span id="imgd0a7bcbb2ce924ecc9336988a61ff4098">
+<img src="destaques/168014-9eb251622dafd711a75db3c6dbcbe915.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/4Elements.gif" width="132" height="18" alt="4Elements"/></div>
+<div class="destrlsb"><small>HDTV.XviD-FQM / P0W4 / IMMERSIVE</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Ugly americans','Ugly americans','Ugly Americans.S01E01.HDTV XviD-FQM','1','23','172MB','246','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 01:24'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('0a3073e58e2e67a9e479a96dd5be19bc');">
+  <span id="imgd0a3073e58e2e67a9e479a96dd5be19bc">
+<img src="destaques/168013-b8532abda4560efde25e3724099a8aae.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/SubsFreak.gif" width="132" height="18" alt="Equipe SubsFreak"/></div>
+<div class="destrlsb"><small>S01E01.HDTV XviD-FQM</small></div>
+</div>
+  <div class="quebra"></div>  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Lark Rise to Candleford - 1th Season','Lark Rise to Candleford - 1&ordf; Temporada','lark.rise.to.candleford.s01e08.dvdrip.xvid-haggis','1','25','697MB','171','<img src=\'images/flag_br.gif\' border=\'0\'>','25/03/2010 - 22:28'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('85287a3be065c54d20417ac7aea43733');">
+  <span id="imgd85287a3be065c54d20417ac7aea43733">
+<img src="destaques/168001-170221c334ad3b279d59a3865f835646.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/Victorians.jpg" width="132" height="18" alt="Victorians"/></div>
+<div class="destrlsb"><small>dvdrip.xvid-haggis</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Greek - 3rd Season','Greek - 3&ordf; Temporada','GREEK.S03E19.HDTV.XviD-FQM/CTU','1','24','350MB','1484','<img src=\'images/flag_br.gif\' border=\'0\'>','25/03/2010 - 21:13'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('dd31ceb07dec80a698458828b672b96d');">
+  <span id="imgddd31ceb07dec80a698458828b672b96d">
+<img src="destaques/167994-a00b1b02b5d15ada302b5e8a34e438e3.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/_DARKSIDE_.jpg" width="132" height="18" alt="Equipe DarkSide"/></div>
+<div class="destrlsb"><small>HDTV.XviD-FQM/CTU</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Wanted: dead or alive','Procura-se morto ou vivo','Wanted Dead Or Alive [Rutger Hauer] (1986) DvDrip Oldies','1','25','700MB','149','<img src=\'images/flag_br.gif\' border=\'0\'>','25/03/2010 - 21:13'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('71914b6f74c57e533f749de36bccaedf');">
+  <span id="imgd71914b6f74c57e533f749de36bccaedf">
+<img src="destaques/167993-bad611f6c0402f01cb850083483c55a6.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/trx.jpg" width="132" height="18" alt="trx"/></div>
+<div class="destrlsb"><small>.Wanted Dead Or Alive [Rutger Hauer] (1986) DvDrip Oldies</small></div>
+</div>
+  <div class="quebra"></div>  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Nurse Jackie - 2nd Season','Nurse Jackie - 2&ordf; Temporada','Nurse.Jackie.S02E02.DVDSCR.XviD-DIMENSION','1','23','230MB','551','<img src=\'images/flag_br.gif\' border=\'0\'>','25/03/2010 - 18:27'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('3b8d7859cbb8e0b01f3ba8be9a16c020');">
+  <span id="imgd3b8d7859cbb8e0b01f3ba8be9a16c020">
+<img src="destaques/167969-faf63e5b95484a65bda0863a18997379.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/_outsiders_.jpg" width="132" height="18" alt="Outsiders"/></div>
+<div class="destrlsb"><small>DVDSCR.XviD-DIMENSION</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Breaking Bad - 3th Season','Breaking Bad - 3&ordf; Temporada','Breaking.Bad.S03E01.HDTV.XviD-LOL/DIMENSION','1','23','350MB','756','<img src=\'images/flag_br.gif\' border=\'0\'>','25/03/2010 - 17:45'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('798ee33d9da4a1682dd5897ec952d622');">
+  <span id="imgd798ee33d9da4a1682dd5897ec952d622">
+<img src="destaques/167963-e05232940099ffdf1435436592b44528.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/UnitedTeam.jpg" width="132" height="18" alt="Equipe United"/></div>
+<div class="destrlsb"><small>HDTV.XviD-LOL/DIMENSION</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Blue Mountain State - 1st Season','Blue Mountain State - 1&ordf; Temporada','Blue.Mountain.State.S01E12.HDTV.XviD-XII/720P','1','23','174MB','672','<img src=\'images/flag_br.gif\' border=\'0\'>','25/03/2010 - 17:30'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('7a5f001a9440ffa91fc1dfe0b595a501');">
+  <span id="imgd7a5f001a9440ffa91fc1dfe0b595a501">
+<img src="destaques/167961-9b4dc34e98de9e4c3d5575682683b826.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/SubsFreak.gif" width="132" height="18" alt="Equipe SubsFreak"/></div>
+<div class="destrlsb"><small>HDTV.XviD-XII/720P</small></div>
+</div>
+  <div class="quebra"></div>  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Hustle - 1st Season','O Golpe - 1&ordf; Temporada','Hustle.S01E02.UNCUT.DVDRip.XviD-FUtV / MEDiEVAL','1','25','699MB','185','<img src=\'images/flag_br.gif\' border=\'0\'>','25/03/2010 - 17:11'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('b4cfe7bbe8af067ea2a3a8b1bd17291c');">
+  <span id="imgdb4cfe7bbe8af067ea2a3a8b1bd17291c">
+<img src="destaques/167960-4c274d23b8357cc89eb2019bb5a3ccd3.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/SubsFreak.gif" width="132" height="18" alt="Equipe SubsFreak"/></div>
+<div class="destrlsb"><small>DVDRip.XviD-FUtV / MEDiEVAL</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Third Watch - 1st Season','Parceiros da Vida - 1a Temporada','Third.Watch.S01E16.DVDRip.DivX-Equinox','1','23','350MB','117','<img src=\'images/flag_br.gif\' border=\'0\'>','25/03/2010 - 16:30'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('733ee0ba5d7b6aac69957b6f5b0842c8');">
+  <span id="imgd733ee0ba5d7b6aac69957b6f5b0842c8">
+<img src="destaques/167959-a3d57cd1fdc12108c5edafe1d7e9f4d2.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/SubsOTF.gif" width="132" height="18" alt="Equipe SubsOTF"/></div>
+<div class="destrlsb"><small>DVDRip.DivX-Equinox</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Lebanon','L&iacute;bano','Lebanon.2009.PROPER.DVDRip.XviD.HORiZON-ArtSubs','1','25','1360MB','684','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 23:48'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('83b5870e1e7765902254872589698a8f');">
+  <span id="imgd83b5870e1e7765902254872589698a8f">
+<img src="destaques/167909-9a35e639c75a817f2e935b7469aa2839.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/art_subs.jpg" width="132" height="18" alt="Equipe Art Subs"/></div>
+<div class="destrlsb"><small>XviD.HORiZON-ArtSubs</small></div>
+</div>
+  <div class="quebra"></div>  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Teen Titans','Jovens Tit&atilde;s','Teen.Titans.S05E08.Isohunt','1','23','176MB','56','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 21:42'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('d02303e9c8315a71ad2e14404e1acf5a');">
+  <span id="imgdd02303e9c8315a71ad2e14404e1acf5a">
+<img src="destaques/167897-1076a5e258fbd58a5182dd594d9d8378.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/dres.jpg" width="132" height="18" alt="Dres"/></div>
+<div class="destrlsb"><small>S05E08.Isohunt</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Damages - 3th Season','Damages - 3&ordf; Temporada','Damages.S03E09.HDTV.XviD-LOL/DIMENSION','1','23','350MB','1410','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 20:38'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('dad97b8dd7e00442dcb8781eb459be4d');">
+  <span id="imgddad97b8dd7e00442dcb8781eb459be4d">
+<img src="destaques/167893-718a88e60dad8855c8761eacec67fba2.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-LOL/DIMENSION</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Trauma - 1st Season','Trauma - 1&ordf; Temporada','Trauma.S01E11.HDTV.XviD-LOL/DIMENSION','1','23','350MB','872','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 18:46'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('baf0ea18954ac425b3ba291f9486aa5d');">
+  <span id="imgdbaf0ea18954ac425b3ba291f9486aa5d">
+<img src="destaques/167883-5c6e0a53b1b19f3eb565908a059228a1.jpg" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/UnitedTeam.jpg" width="132" height="18" alt="Equipe United"/></div>
+<div class="destrlsb"><small>HDTV.XviD-LOL/DIMENSION</small></div>
+</div>
+  <div class="quebra"></div>  <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Galaxy Rangers - 1st Season','Cavaleiros da Gal&aacute;xia - 1&ordf; temporada','Galaxy.Rangers.S01E57.Isohunt','1','23','174MB','137','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 16:43'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('d9d8289b68223e4708ba282742dac738');">
+  <span id="imgdd9d8289b68223e4708ba282742dac738">
+<img src="destaques/167878-5c549d45a7e4c6b34114b3e6d5f3bf26.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/dres.jpg" width="132" height="18" alt="Dres"/></div>
+<div class="destrlsb"><small>S01E57.Isohunt</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Teen Titans','Jovens Tit&atilde;s','Teen.Titans.S05E07.Isohunt','1','23','175MB','53','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 16:40'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('7068e5d62624fd7d28180766b2ce17c7');">
+  <span id="imgd7068e5d62624fd7d28180766b2ce17c7">
+<img src="destaques/167876-6c23be584fa69b4670b3f79cbeaa2f32.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/dres.jpg" width="132" height="18" alt="Dres"/></div>
+<div class="destrlsb"><small>S05E07.Isohunt</small></div>
+</div>
+    <div align="center" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Mercy - 1st Season','Mercy - 1&ordf; Temporada','Mercy.S01E17.HDTV.XviD-LOL/DIMENSION','1','23','350MB','621','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 15:55'))" class="Ldestaque" style="width:134px;cursor:pointer" onclick="javascript:abredown('f8e0be6012536cac6484ad8eefcb6770');">
+  <span id="imgdf8e0be6012536cac6484ad8eefcb6770">
+<img src="destaques/167873-88a2b208ac2c7cfde38b171cdb7168ac.gif" width="132" height="80" border="0" />
+</span>
+<div align="center" style="height:18px;"><img src="images/equipes/InSUBs.jpg" width="132" height="18" alt="Equipe InSUBs"/></div>
+<div class="destrlsb"><small>HDTV.XviD-LOL/DIMENSION</small></div>
+</div>
+  <div class="quebra"></div> </div>
+<div align="center"><span onclick="ajaxGet('destaques.php?start=0',document.getElementById('conteudodest'),true);" style="cursor:pointer; background-color:#CCCCCC;">&lt; Anterior</span> :: <span onclick="ajaxGet('destaques.php?start=24',document.getElementById('conteudodest'),true);" style="cursor:pointer; background-color:#CCCCCC;">Pr&oacute;xima &gt;</span><br /><a href="index.php?opcao=legenda&amp;lista=3"><strong>[Todos os Destaques]</strong></a></div>
+ 								        </div>									  </td>
+									  <td width="5">&nbsp;</td>
+						  </tr>
+						  <tr>
+						    <td height="15" colspan="3"><div align="center"><img src="images/bordafilm.gif" width="100%" height="15"></div></td>
+						  </tr>
+					    </table>
+			            <br>
+					    <iframe src="http://smartad.mercadolivre.com.br/jm/SmartAd?tool=5084110&creativity=40401&new=N&ovr=N&bgcol=FFFFFF&brdcol=000000&txtcol=006600&lnkcol=0000FF&hvrcol=FF0000&prccol=FF0000&word=cybershot&word=pendrive&word=mp4&site=MLB" width="300" height="250" scrolling="no" frameborder="0" marginheight="0" marginwidth="0">
+</iframe>					  </div></td>
+                	<td width="184" valign="top" style="">                	  <div align="center">
+                      
+<!-- INICIO FORMULARIO BOTAO PAGSEGURO
+ <form target="pagseguro" action="https://pagseguro.uol.com.br/checkout/doacao.jhtml" method="post">
+ <input type="hidden" name="email_cobranca" value="ajude@legendas.tv">
+ <input type="hidden" name="moeda" value="BRL">
+ <input type="image" src="https://p.simg.uol.com.br/out/pagseguro/i/botoes/doacao/btndoar.jpg" name="submit" alt="Pague com PagSeguro - é rápido, grátis e seguro!">
+ </form>
+FINAL FORMULARIO BOTAO PAGSEGURO -->
+                      
+                      
+                      <div class="traducoes" style="border:solid 1px #46cad6;background-color:#f7f7f7">
+                      <div style="background-image:url(template1.gif);width:177px;height:20px;line-height:20px;color:#FFFFFF;margin-top:-10px;float:left;font-weight:bold">Tradu&ccedil;&otilde;es em Andamento</div>
+                        <div class="itemtrad" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('A.Call.Girl.2009.DVDRip.XviD-EPiSODE - Previs&atilde;o 26 de abril','Claudio_Cacstim','A Call Girl ',' - Garota Eslovena ','1','Feita a partir do subpack em ingl&ecirc;s','black','10 horas atr&aacute;s','2','-1269723304 segundo','1','8','6 horas atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24324" target="_blank"><span class="nomefilme">A Call Girl </span> - Claudio_Cacstim</a></div>
+    <div class="itemtrad itemtradb" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('Holly.2006.LiMiTED.DVDRip.XviD-iFN - Previs&atilde;o 25 de abril','cffcosta','Holly(2006)',' - ','1','N&atilde;o deixem de assistir.','black','1 dia atr&aacute;s','4','4 semanas','1','73','1 hora atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24299" target="_blank"><span class="nomefilme">Holly(2006)</span> - cffcosta</a></div>
+    <div class="itemtrad" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('Remember.Me.CAM.XVID-PrisM - Previs&atilde;o 10 de abril','SubsHeaven','Remember Me',' - Lembran&ccedil;as','1','tradu&ccedil;&atilde;o a partir do &aacute;udio.','black','8 horas atr&aacute;s','4','1 semana','1','8','6 horas atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24325" target="_blank"><span class="nomefilme">Remember Me</span> - SubsHeaven</a></div>
+    <div class="itemtrad itemtradb" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('lark.rise.to.candleford.s01e09.dvdrip.xvid-haggis - Previs&atilde;o 25 de abril','Victorians','Lark Rise to Candleford',' - ','1','9&ordm; epis&oacute;dio desta excelente miniss&eacute;rie brit&acirc;nica de &eacute;poca','black','22 horas atr&aacute;s','4','4 dias','1','10','22 horas atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24311" target="_blank"><span class="nomefilme">Lark Rise to Candleford</span> - Victorians</a></div>
+    <div class="itemtrad" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('Cargo.2009.DVDRip.AC3.German.XviD-PP-Elite - Previs&atilde;o 25 de abril','virtualnet','Cargo',' - Cargo','1','Subpack','black','1 dia atr&aacute;s','4','2 semanas','1','42','1 dia atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24303" target="_blank"><span class="nomefilme">Cargo</span> - virtualnet</a></div>
+    <div class="itemtrad itemtradb" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('How.Earth.Made.Us.S01E05.HDTV.XviD-FTP - Previs&atilde;o 24 de abril','musketeers','How Earth Made Us',' - Como A Terra Nos Fez','1','Epis&oacute;dio 5 - O Planeta Humano','black','2 dias atr&aacute;s','4','5 dias','1','49','2 horas atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24279" target="_blank"><span class="nomefilme">How Earth Made Us</span> - musketeers</a></div>
+    <div class="itemtrad" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('Tenacious D - HBO Movies - HBO episodes - Previs&atilde;o 25 de abril','IrioMk','Tenacious D (HBO series)',' - ','1','(Com Jack Black) Tradu&ccedil;&atilde;o do &aacute;udio. Sync com aux&iacute;lio de legenda em espanhol.','black','1 dia atr&aacute;s','4','4 semanas','1','5','21 horas atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24301" target="_blank"><span class="nomefilme">Tenacious D (HBO series)</span> - IrioMk</a></div>
+    <div class="itemtrad itemtradb" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('The.Reeds.2009.DVDRip.XVID-lOVE - Previs&atilde;o 24 de abril','HellSubs','The Reeds',' - The Reeds','0','','black','2 dias atr&aacute;s','2','-1269723304 segundo','1','39','1 dia atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24276" target="_blank"><span class="nomefilme">The Reeds</span> - HellSubs</a></div>
+    <div class="itemtrad" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('More.Than.A.Game.2008.DVDRip.XviD-VoMiT - Previs&atilde;o 26 de mar&ccedil;o','ivanzsantana','More Than a Game',' - More Than a Game','1','Tradu&ccedil;&atilde;o da legenda em ingl&ecirc;s.','red','3 semanas atr&aacute;s','4','1 semana','1','22','4 horas atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=23682" target="_blank"><span class="nomefilme">More Than a Game</span> - ivanzsantana</a></div>
+    <div class="itemtrad itemtradb" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('Repo Men TS XViD - IMAGiNE - Previs&atilde;o 07 de abril','sfsubs','Repo Men',' - Repo Men','1','Tradu&ccedil;&atilde;o do &aacute;udio com apoio no script','black','2 dias atr&aacute;s','4','1 semana','1','0','2 dias atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24266" target="_blank"><span class="nomefilme">Repo Men</span> - sfsubs</a></div>
+    <div class="itemtrad" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('Blink.(1994).Madeleine.Stowe.DVDRip.Oldies - Previs&atilde;o 18 de abril','Equipe_Oldies','Blink',' - Blink - Num Piscar de Olhos','1','Suspense com Madeleine Stowe e Aidan Quinn.','orange','1 semana atr&aacute;s','4','5 dias','1','13','1 semana atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24157" target="_blank"><span class="nomefilme">Blink</span> - Equipe_Oldies</a></div>
+    <div class="itemtrad itemtradb" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('When in Rome CAM XViD - IMAGiNE - Previs&atilde;o 03 de abril','Nat24','When in Rome',' - Quando em Roma','1','A legenda ser&aacute; feita a partir do &aacute;udio, ainda, no momento, sem legenda-guia.','red','3 semanas atr&aacute;s','4','1 semana','1','71','23 horas atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=23758" target="_blank"><span class="nomefilme">When in Rome</span> - Nat24</a></div>
+    <div class="itemtrad" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('Green.Zone.2010.Cam.Xvid-WBZ - Previs&atilde;o 30 de mar&ccedil;o','lilicca','Green zone',' - zona verde','1','do &aacute;udio ...agora para o rls Green Zone TS XViD - IMAGiNE','red','1 semana atr&aacute;s','4','4 dias','1','35','1 dia atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24087" target="_blank"><span class="nomefilme">Green zone</span> - lilicca</a></div>
+    <div class="itemtrad itemtradb" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('The.Bounty.Hunter.2010.Cam.Eng.Lu - Previs&atilde;o 06 de abril','paranhosgomes','The Bounty Hunter',' - O Ca&ccedil;ador de Recompensas','1','Legenda feita do &aacute;udio. Com Gerard Butler e Jennifer Anniston.','black','4 dias atr&aacute;s','4','1 semana','1','0','3 dias atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24223" target="_blank"><span class="nomefilme">The Bounty Hunter</span> - paranhosgomes</a></div>
+    <div class="itemtrad" onMouseOver="this.T_OPACITY=100; this.T_WIDTH=500; this.T_BGCOLOR='#F7F7F7'; return escape(poptraducao('La.France.FRENCH.DVDRiP.XViD-NTK - Previs&atilde;o 25 de abril','art_subs','La France',' - A Fran&ccedil;a','1','Filme vencedor do pr&ecirc;mio Jean Vigo no Festival de Cannes 2007. Exibido na Mostra de SP do mesmo ano. ','black','1 dia atr&aacute;s','4','4 semanas','1','23','1 dia atr&aacute;s'))"><a href="http://forum.legendas.tv/showthread.php?t=24300" target="_blank"><span class="nomefilme">La France</span> - art_subs</a></div>
+                        </div>
+                	    <br>
+               	      <table width="177" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="177" height="20" background="images/template.gif"><table width="123" border="0" align="left" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="123"><div align="right"><span class="style17">&Uacute;ltimas legendas </span></div></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td class="noticias"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('5bdc014a3b32475515c765291d7c8623');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('The Diary of Anne Frank (2009)','O Di&aacute;rio de Anne Frank','O.Diario.de.Anne.Frank.2009.DVDRip.XviD-EVO','1','25','0MB','0','<img src=\'images/flag_pt.gif\' border=\'0\'>','26/03/2010 - 20:53'));"><span title="O.Diario.de.Anne.Frank.2009.DVDRip.XviD-EVO"><img src='images/flag_pt.gif' border='0'>The Diary of Anne Frank (2009)</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(549848)"> <strong>PT-Subs</strong></a></span></td></tr><tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('a8cf1bbd63e7a6a54fbf85c3586908f1');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Survivor: Palau - 10th Season (2005)','Survivor: Palau - 10&ordf; Temporada','Survivor.Palau.S10.E01.dvd.xvid','1','23','350MB','1','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 20:50'));"><span title="Survivor.Palau.S10.E01.dvd.xvid"><img src='images/flag_br.gif' border='0'>Survivor: Palau - 10th Season (2005)</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(916733)"> <strong>survivors.team</strong></a></span></td></tr><tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('34346662ff612816adb26d9a114729d7');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Raising The Bar - 2nd Season','Raising The Bar - 2&ordf; Temporada','Raising.the.Bar.S02E14.Say.Can.You.Pee.HDTV.XviD-FQM','1','23','350MB','0','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 20:36'));"><span title="Raising.the.Bar.S02E14.Say.Can.You.Pee.HDTV.XviD-FQM"><img src='images/flag_br.gif' border='0'>Raising The Bar - 2nd Season</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(1320908)"> <strong>Omimau</strong></a></span></td></tr><tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('ba247e05b0b87550369bd0562b02e4ef');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Cabin Fever 2: Spring Fever','Cabana do Inferno 2','Cabin.Fever.2.Spring.Fever.DVDRip.XviD-VOMiT','1','0','700MB','0','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 20:21'));"><span title="Cabin.Fever.2.Spring.Fever.DVDRip.XviD-VOMiT"><img src='images/flag_br.gif' border='0'>Cabin Fever 2: Spring Fever</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(21972)"> <strong>nino</strong></a></span></td></tr><tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('bac9e895a2a223d9a26f3f2e87bfe45c');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Spartacus: Blood and Sand - 1st Season','Spartacus: Blood and Sand - 1&ordf; Temporada','Spartacus.Blood.and.Sand.S01E08.HDTV.XviD-SYS/DIMENSION','1','23','550MB','0','<img src=\'images/flag_pt.gif\' border=\'0\'>','26/03/2010 - 20:09'));"><span title="Spartacus.Blood.and.Sand.S01E08.HDTV.XviD-SYS/DIMENSION"><img src='images/flag_pt.gif' border='0'>Spartacus: Blood and Sand - 1st Season</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(1009636)"> <strong>OmniSubs</strong></a></span></td></tr><tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('fe09c7d770989315113d727c279e1c33');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Nine Dead','Nine Dead','Nine.Dead.2010.PROPER.DVDRip.XviD-MOViERUSH','1','23','718MB','0','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 20:04'));"><span title="Nine.Dead.2010.PROPER.DVDRip.XviD-MOViERUSH"><img src='images/flag_br.gif' border='0'>Nine Dead</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(996282)"> <strong>fbaeumle</strong></a></span></td></tr><tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('695a5432de497d0fb7afa9c8ba3d8ae0');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Law and Order: Special Victims Unit - 5th Season','Lei e Ordem: Unidade de V&iacute;timas Especiais - 5a Temporada','Law.And.Order.SVU.S05E01.Tragedy.DVDRip.XviD.AC3-FQM','1','0','0MB','0','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 19:58'));"><span title="Law.And.Order.SVU.S05E01.Tragedy.DVDRip.XviD.AC3-FQM"><img src='images/flag_br.gif' border='0'>Law and Order: Special Victims Unit - 5th Season</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(1337773)"> <strong>oreves49</strong></a></span></td></tr><tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('d0c8fc546bca452cc0fbf7643183345d');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Law and Order: Special Victims Unit - 6th Season','Lei e Ordem: Unidade de V&iacute;timas Especiais - 6a Temporada','Law.And.Order.SVU.S06E23.Goliath.DVDRip.XviD-WiDE','1','0','0MB','0','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 19:51'));"><span title="Law.And.Order.SVU.S06E23.Goliath.DVDRip.XviD-WiDE"><img src='images/flag_br.gif' border='0'>Law and Order: Special Victims Unit - 6th Season</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(1337773)"> <strong>oreves49</strong></a></span></td></tr><tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('f2b462d774df9f8831fb6aa74518fe74');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Law and Order: Special Victims Unit - 6th Season','Lei e Ordem: Unidade de V&iacute;timas Especiais - 6a Temporada','Law.And.Order.SVU.S06E22.Parts.DVDRip.XviD-WiDE','1','0','0MB','0','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 19:49'));"><span title="Law.And.Order.SVU.S06E22.Parts.DVDRip.XviD-WiDE"><img src='images/flag_br.gif' border='0'>Law and Order: Special Victims Unit - 6th Season</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(1337773)"> <strong>oreves49</strong></a></span></td></tr><tr bgcolor="#E5E5E5">
+<td><strong><a href="javascript:abredown('a608d54d1f7610b6bfd20ae3954eab59');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Law and Order: Special Victims Unit - 6th Season','Lei e Ordem: Unidade de V&iacute;timas Especiais - 6a Temporada','Law.And.Order.SVU.S06E21.Blood.DVDRip.XviD-WiDE','1','0','0MB','0','<img src=\'images/flag_br.gif\' border=\'0\'>','26/03/2010 - 19:47'));"><span title="Law.And.Order.SVU.S06E21.Blood.DVDRip.XviD-WiDE"><img src='images/flag_br.gif' border='0'>Law and Order: Special Victims Unit - 6th Season</span></a></strong></td></tr><tr><td><span class="style16">Enviada por: <a href="javascript:abreinfousuario(1337773)"> <strong>oreves49</strong></a></span></td></tr>    </table></td>
+  </tr>
+</table>
+                	      <br>
+                	    <br><table width="177" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="177" height="20" background="images/template.gif"><table width="123" border="0" align="left" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="123"><div align="right"><span class="style17">Top da Semana </span></div></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td class="noticias"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('2b09cca5b6cd9475bb35da63b4da6a29');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('FlashForward - 1st Season','FlashForward - 1&ordf; Temporada','Flashforward.S01E11-E12.HDTV.XviD-2HD','1','23','699MB','4478','<img src=\'images/flag_br.gif\' border=\'0\'>','21/03/2010 - 11:27'))"><span title="Flashforward.S01E11-E12.HDTV.XviD-2HD"><img src='images/flag_br.gif' border='0'>FlashForward - 1st Season</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('952ca6d210e3ae5a72e7744cc0d6580b');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Edge of Darkness','O Fim da Escurid&atilde;o','Edge.Of.Darkness.2010.DVDRip.XviD.AC3-ViSiON','1','25','1400MB','1624','<img src=\'images/flag_br.gif\' border=\'0\'>','22/03/2010 - 00:23'))"><span title="Edge.Of.Darkness.2010.DVDRip.XviD.AC3-ViSiON"><img src='images/flag_br.gif' border='0'>Edge of Darkness</span></a></strong></td></tr><tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('9dc02e52e920ebc8f6835c0ca693771e');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('A Christmas Carol (2009)','Os Fantasmas de Scrooge','A.Christmas.Carol.(2009).DVDRip.XviD-MC8','1','23','714MB','1612','<img src=\'images/flag_br.gif\' border=\'0\'>','21/03/2010 - 12:52'))"><span title="A.Christmas.Carol.(2009).DVDRip.XviD-MC8"><img src='images/flag_br.gif' border='0'>A Christmas Carol (2009)</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('d86298d14fbd1b7c06b4011038066908');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('FlashForward - 1st Season','FlashForward - 1&ordf; Temporada','flashforward.s01e11-e12.hdtv.xvid-2hd','1','23','701MB','1172','<img src=\'images/flag_br.gif\' border=\'0\'>','19/03/2010 - 22:31'))"><span title="flashforward.s01e11-e12.hdtv.xvid-2hd"><img src='images/flag_br.gif' border='0'>FlashForward - 1st Season</span></a></strong></td></tr><tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('c961331a6254d37c16349d8f6a7a9f32');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('FlashForward - 1st Season','FlashForward - 1&ordf; Temporada','Flashforward.S01E11-E12.REPACK.720p.HDTV.X264-2HD','1','23','2232MB','1102','<img src=\'images/flag_br.gif\' border=\'0\'>','21/03/2010 - 18:47'))"><span title="Flashforward.S01E11-E12.REPACK.720p.HDTV.X264-2HD"><img src='images/flag_br.gif' border='0'>FlashForward - 1st Season</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('05a4a96f0c814c96d050a2290b40f637');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Da bing xiao jiang','Little Big Soldier','Little.Big.Soldier.2010.DVDRip','1','25','700MB','1100','<img src=\'images/flag_br.gif\' border=\'0\'>','20/03/2010 - 00:33'))"><span title="Little.Big.Soldier.2010.DVDRip"><img src='images/flag_br.gif' border='0'>Da bing xiao jiang</span></a></strong></td></tr><tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('09ca68793c89ed588550b27100f4c2cd');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Shutter Island','Ilha do Medo','Shutter.Island.(2010).R5.DVDRip.XviD-MAXSPEED','1','25','1400MB','1049','<img src=\'images/flag_pt.gif\' border=\'0\'>','20/03/2010 - 11:33'))"><span title="Shutter.Island.(2010).R5.DVDRip.XviD-MAXSPEED"><img src='images/flag_pt.gif' border='0'>Shutter Island</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('07b16d28df297fe09121693127887b3e');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Nine Dead','Nine Dead','Nine.Dead.2010.DVDRip.XviD-ViSiON','1','23','700MB','894','<img src=\'images/flag_br.gif\' border=\'0\'>','19/03/2010 - 22:50'))"><span title="Nine.Dead.2010.DVDRip.XviD-ViSiON"><img src='images/flag_br.gif' border='0'>Nine Dead</span></a></strong></td></tr><tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('30c1e4b115154cc569115e69a646f190');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Shutter Island','Ilha do Medo','Shutter Island.2010.R5.LiNE.Xvid {1337x}-Noir','1','23','1360MB','846','<img src=\'images/flag_br.gif\' border=\'0\'>','22/03/2010 - 11:39'))"><span title="Shutter Island.2010.R5.LiNE.Xvid {1337x}-Noir"><img src='images/flag_br.gif' border='0'>Shutter Island</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('8680b61ea37fd80c0a055bf2f8be1da4');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('FlashForward - 1st Season','FlashForward - 1&ordf; Temporada','Flashforward.S01E11-E12.HDTV.XviD-2HD','1','23','700MB','829','<img src=\'images/flag_br.gif\' border=\'0\'>','21/03/2010 - 00:15'))"><span title="Flashforward.S01E11-E12.HDTV.XviD-2HD"><img src='images/flag_br.gif' border='0'>FlashForward - 1st Season</span></a></strong></td></tr><tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('87be866073755670694f6c3387e9d096');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('The Office - 6th Season','The Office - 6&ordf; Temporada','The.Office.US.S06E19.HDTV.XviD-LOL','1','23','175MB','724','<img src=\'images/flag_br.gif\' border=\'0\'>','19/03/2010 - 15:26'))"><span title="The.Office.US.S06E19.HDTV.XviD-LOL"><img src='images/flag_br.gif' border='0'>The Office - 6th Season</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('4321854c4c35dabe0d4b8d75d14171af');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('FlashForward - 1st Season','FlashForward - 1&ordf; Temporada','Flashforward.S01E11-E12.HDTV.XviD-2HD','1','23','700MB','605','<img src=\'images/flag_us.gif\' border=\'0\'>','19/03/2010 - 06:31'))"><span title="Flashforward.S01E11-E12.HDTV.XviD-2HD"><img src='images/flag_us.gif' border='0'>FlashForward - 1st Season</span></a></strong></td></tr><tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('8b314f2a716f5ffc630078617e7ed0fd');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('The Pacific - Miniss&eacute;rie','The Pacific - Miniss&eacute;rie','The.Pacific.Pt.II.720p.HDTV.x264-IMMERSE','1','24','1528MB','516','<img src=\'images/flag_br.gif\' border=\'0\'>','23/03/2010 - 13:42'))"><span title="The.Pacific.Pt.II.720p.HDTV.x264-IMMERSE"><img src='images/flag_br.gif' border='0'>The Pacific - Miniss&eacute;rie</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('a492cff00af9a2aade13a2b4ff2ccb51');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Crazy Heart (2009)','Cora&ccedil;&atilde;o Louco','Crazy.Heart.2009.BDRip.XviD-iMBT','2','24','1400MB','467','<img src=\'images/flag_br.gif\' border=\'0\'>','24/03/2010 - 16:52'))"><span title="Crazy.Heart.2009.BDRip.XviD-iMBT"><img src='images/flag_br.gif' border='0'>Crazy Heart (2009)</span></a></strong></td></tr><tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('7fe59d62cd5a2f88528373808de9be0f');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Caprica - 1st Season','Caprica - 1&ordf; Temporada','Caprica.S01E08.Ghosts.in.the.Machine.HDTV.XviD-FQM','1','0','350MB','453','<img src=\'images/flag_br.gif\' border=\'0\'>','21/03/2010 - 11:23'))"><span title="Caprica.S01E08.Ghosts.in.the.Machine.HDTV.XviD-FQM"><img src='images/flag_br.gif' border='0'>Caprica - 1st Season</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('7b247e7559998507d9fd847cacffc7c9');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('FlashForward - 1st Season','FlashForward - 1&ordf; Temporada','FlashForward.S01E11-E12.REPACK.HDTV.XviD-2HD','1','23','701MB','420','<img src=\'images/flag_br.gif\' border=\'0\'>','20/03/2010 - 15:31'))"><span title="FlashForward.S01E11-E12.REPACK.HDTV.XviD-2HD"><img src='images/flag_br.gif' border='0'>FlashForward - 1st Season</span></a></strong></td></tr><tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('7513c91ebe28987e91b447e090321fe1');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('A Christmas Carol (2009)','Os Fantasmas de Scrooge','Os.Fantasmas.de.Scrooge.DVDRip.XViD.MP3.DUAL-ZAMENGO','1','23','700MB','403','<img src=\'images/flag_br.gif\' border=\'0\'>','20/03/2010 - 09:12'))"><span title="Os.Fantasmas.de.Scrooge.DVDRip.XViD.MP3.DUAL-ZAMENGO"><img src='images/flag_br.gif' border='0'>A Christmas Carol (2009)</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('1a11251b9e4dcdefe8ae462568bc55cf');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Supernatural - 5th Season','Supernatural - 5&ordf; Temporada','Supernatural.S05E15.Dead.Men.Dont.Wear.Plaid.HDTV.XviD-FQM','1','0','358MB','346','<img src=\'images/flag_us.gif\' border=\'0\'>','26/03/2010 - 08:27'))"><span title="Supernatural.S05E15.Dead.Men.Dont.Wear.Plaid.HDTV.XviD-FQM"><img src='images/flag_us.gif' border='0'>Supernatural - 5th Season</span></a></strong></td></tr><tr bgcolor="#E5E5E5"><td><strong><a href="javascript:abredown('8af13ca0f1ed610850b24906535eee26');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('Lost - 6th Season','Lost - 6&ordf; Temporada','Lost.S06E09.REPACK.HDTV.XviD-NoTV/DIMENSION','1','23','350MB','314','<img src=\'images/flag_us.gif\' border=\'0\'>','24/03/2010 - 08:03'))"><span title="Lost.S06E09.REPACK.HDTV.XviD-NoTV/DIMENSION"><img src='images/flag_us.gif' border='0'>Lost - 6th Season</span></a></strong></td></tr><tr><td><strong><a href="javascript:abredown('8e060a5b2b2408ed869b6966a154f3cb');" onmouseover="this.T_OPACITY=95; this.T_WIDTH=350; return escape(gpop('New Moon','Lua Nova','New Moon {2009} DVDRIP. Jaybob','1','29','1064MB','313','<img src=\'images/flag_br.gif\' border=\'0\'>','19/03/2010 - 10:45'))"><span title="New Moon {2009} DVDRIP. Jaybob"><img src='images/flag_br.gif' border='0'>New Moon</span></a></strong></td></tr>      </table></td>
+  </tr>
+</table>
+                	  </div>
+                	   <div align="center">
+                          <a href="http://up.tl" target="Up.tl" onClick="javascript:urchinTracker('/banner/uptl');"><br /><img style="border:1px solid #999999" src="http://up.tl/images/banner120x60.jpg" alt="Up.tl" width="120" height="60" border="0" /></a><br />
+			  <a href="http://www.insubs.com" target="insubs" onClick="javascript:urchinTracker('/banner/insubs');"><br /><img src="insubs.jpg" alt="InSubs" width="156" height="63" border="0" style="border:1px solid #999999" /></a><br />
+                          <a href="http://www.united4ever.tv" target="united" onClick="javascript:urchinTracker('/banner/united');"><br /><img src="/united.jpg" alt="United4Ever" width="156" height="63" border="0" style="border:1px solid #999999" /></a><br/>
+                          <a href="http://www.darksite.tv" target="united" onClick="javascript:urchinTracker('/banner/darlkside');"><br /><img src="/darkltv1.jpg" alt="DarkSide" border="0" style="border:1px solid #999999" /></a>
+                       </div></td></tr>
+			</table>
+            </div>          </td>
+  </tr>
+  </table></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td bgcolor="#F0F0F0"></td>
+      </tr>
+      <tr>
+        <td bgcolor="#F0F0F0"><div align="center"></div></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="5" align="left" valign="top" bgcolor="#46CAD6"><div align="center"><strong>LEGENDAS.TV: <a href="http://forum.legendas.tv" target="_blank">Fórum</a> | <a href="http://faq.legendas.tv" target="_blank">Ajuda</a> | <a href="http://faq.legendas.tv/contact" target="_blank">Contato</a> | <a href="http://legendas.tv/podcast" target="_blank">PODCAST!</a></strong>
+    </div></td>
+  </tr>
+</table>
+<script language="JavaScript" type="text/javascript" src="javascript/wz_tooltip.js"></script>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+	_uacct = "UA-880954-1";
+	urchinTracker();
+</script></body>
+</html>
+<div style="display:none">
+<a href="http://whos.amung.us/show/fgjfh5xc"><img 
+src="http://whos.amung.us/widget/fgjfh5xc.png" alt="web counter" 
+width="81" height="29" border="0" /></a>
+</div>

@@ -188,18 +188,7 @@ def run
       end
       ## Fim do Select pacote
 
-      ## Verifica se teste é necessário
-      #      pular_teste = false
-      #      links_before_test.each do |i|
-      #        if i.testado
-      #          pular_teste = true
-      #        end
-      #      end
-      ## Fim Verifica se teste é necessário
-
       ## Inicio do teste
-      #      unless pular_teste
-      #        to_debug "Teste inicial não foi evitado."
       pacote.tamanho = 0
       to_log "Testando os links de \"#{pacote.nome}\"..."
       links_online = Array.new
@@ -221,25 +210,17 @@ def run
       ## Fim do teste
 
       ## Informações do teste
-      #      to_log "Tamanho total: #{sprintf("%.2f MB", pacote.tamanho/1024.0)}"
       msg = "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
       to_log msg
       run_thread Proc.new {
         tweet msg
       }
       ## Fim Informações do teste
-      #    end
 
       ## Inicio Thread Testes
-      avoid_tests = false
-      ARGV.each do |a|
-        if a == "avoid-tests"
-          avoid_tests = true
-        end
-      end
       thread_testes = Thread.new {
         teste_paralelo pacote.id_pacote
-      } unless avoid_tests
+      }
       ## Fim Thread Testes
 
       ## Inicio Download do Pacote
