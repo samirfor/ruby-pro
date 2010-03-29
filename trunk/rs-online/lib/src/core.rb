@@ -159,6 +159,7 @@ def teste_paralelo id_pacote_excecao
         pacote.tamanho += link.tamanho
       else
         link.test
+        pacote.tamanho += link.tamanho if link.id_status == Status::ONLINE
       end
     end
     pacote.problema = true if pacote.tamanho == 0

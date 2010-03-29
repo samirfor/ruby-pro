@@ -47,9 +47,9 @@ class Server
     conn = db[1]
     begin
       server = rst.fetch_all[0]
-      p server
     rescue Exception => e
       to_log "Erro do fetch"
+      raise
     end
     @ip = server["ip"]
     @data = server["data_modificacao"].to_time
