@@ -155,7 +155,7 @@ def teste_paralelo id_pacote_excecao
     links_before_test.each do |link|
       if link.id_status == Status::BAIXADO
         pacote.tamanho += link.tamanho
-      elsif link.testado and link.tamanho != nil and link.tamanho == 0
+      elsif link.testado and (link.tamanho != nil or link.tamanho != 0)
         pacote.tamanho += link.tamanho
       else
         link.test
