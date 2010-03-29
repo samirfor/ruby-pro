@@ -161,6 +161,7 @@ def teste_paralelo id_pacote_excecao
         link.test
       end
     end
+    pacote.problema = true if pacote.tamanho == 0
     pacote.update_db
   end
   to_log "<T> Fim do teste dos pacotes."
@@ -205,6 +206,7 @@ def run
           link.update_db
         end
       end
+      pacote.problema = true if pacote.tamanho == 0
       pacote.update_db
       
       ## Fim do teste
@@ -311,5 +313,5 @@ rescue NoMethodError => err
   exit!
 rescue Exception => err
   to_log err
-  abort
+  exit!
 end

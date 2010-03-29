@@ -57,6 +57,10 @@ def db_disconnect(conn)
   end
 end
 
+def timestamp time
+  time.strftime("%Y/%m/%d %H:%M:%S")
+end
+
 def select_count_links id_pacote
   sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
   db = db_statement_execute(sql)
@@ -176,7 +180,7 @@ def select_pacotes_pendetes_teste id_pacote_excecao
   end
   rst.finish
   db_disconnect(conn)
-  pacotes.sort
+  return pacotes
 end
 
 # Captura a lista de links.
@@ -325,7 +329,6 @@ def select_historico
   historicos
 end
 
-# Deprecated
 def select_servico id
   sql = "SELECT id, descricao FROM rs.servico WHERE id = #{id}"
   db = db_statement_execute(sql)
