@@ -44,7 +44,14 @@ class Link
     begin
       @ip = IPSocket.getaddress @host
     rescue Exception
-      @ip = "195.122.131.2" if @host == "rapidshare.com" or @host == "www.rapidshare.com"
+      if @host == "rapidshare.com" or @host == "www.rapidshare.com"
+        @ip = "195.122.131.2"
+      elsif @host =~ /rs\d+.rapidshare.com/
+        server = Server.new(@host.scan(/\d+/)[0].to_i)
+        @ip = server.ip
+      else
+        raise
+      end
     end
   end
 

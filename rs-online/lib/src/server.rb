@@ -1,3 +1,7 @@
+require "src/database"
+require 'net/http'
+require 'socket'
+
 class Server
   attr_accessor :id, :ip, :data
 
@@ -7,14 +11,13 @@ class Server
       generator
       insert_db
     else
-      # Verificar se o IP mudou.
-      # Se mudou, update DB
+      # Se o host estiver cadastrado no BD, apenas faz o SELECT.
       select_db
-      new_ip = IPSocket.getaddress "rs#{@id}.rapidshare.com"
-      unless new_ip == @ip
-        @ip = new_ip
-        update_db
-      end
+#      new_ip = IPSocket.getaddress "rs#{@id}.rapidshare.com"
+#      unless new_ip == @ip
+#        @ip = new_ip
+#        update_db
+#      end
     end
   end
 
@@ -69,7 +72,7 @@ class Server
     rst = db[0]
     conn = db[1]
     begin
-      if rst.fetch_all == nil
+      if rst.fetch_all == nil or rst.fetch_all == []
         return false
       else
         return true
