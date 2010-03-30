@@ -2,15 +2,19 @@ require 'dbi'
 require 'src/pacote'
 require 'src/link'
 
+# Gera linhas de log
+def to_log texto
+  save_historico texto
+  puts texto
+end
+
 # Faz a conexão com o banco de dados.
 def db_connect
   begin
     DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
   rescue DBI::DatabaseError => e
     to_log "Ocorreu erro ao se conectar no banco de dados."
-    to_log "Código do erro: #{e.err}"
-    to_log "#{e.errstr}"
-    to_log "SQLSTATE: #{e.state}"
+    to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
   end
 end
 
@@ -24,10 +28,8 @@ def db_statement_execute(sql)
     retorno.push conn
     retorno
   rescue DBI::DatabaseError => e
-    to_log "Ocorreu erro consultando o banco de dados."
-    to_log "Código do erro: #{e.err}"
-    to_log "#{e.errstr}"
-    to_log "SQLSTATE: #{e.state}"
+    to_log "Ocorreu erro ao se conectar no banco de dados."
+    to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
   end
 end
 
@@ -38,10 +40,8 @@ def db_statement_do(sql)
     conn.do(sql)
     db_disconnect(conn)
   rescue DBI::DatabaseError => e
-    to_log "Ocorreu erro ao modificar o banco de dados."
-    to_log "Código do erro: #{e.err}"
-    to_log "#{e.errstr}"
-    to_log "SQLSTATE: #{e.state}"
+    to_log "Ocorreu erro ao se conectar no banco de dados."
+    to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
   end
 end
 
@@ -50,10 +50,8 @@ def db_disconnect(conn)
   begin
     conn.disconnect
   rescue DBI::DatabaseError => e
-    to_log "Ocorreu na disconexão do banco de dados."
-    to_log "Código do erro: #{e.err}"
-    to_log "#{e.errstr}"
-    to_log "SQLSTATE: #{e.state}"
+    to_log "Ocorreu erro ao se conectar no banco de dados."
+    to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
   end
 end
 
@@ -226,8 +224,7 @@ def select_lista_links id_pacote
     db_disconnect(conn)
     lista.sort
   rescue Exception => e
-    puts "Houve erro => #{e}"
-    puts e.backtrace.join "\n"
+    to_log "Houve erro => #{e}"
     return nil
   end
 end
@@ -285,11 +282,6 @@ def select_remaining_links id_pacote
   return count_pacotes - count_baixados
 end
 
-#def to_log texto
-#  save_historico texto
-#  puts texto
-#end
-
 # Insere o log no banco de dados
 def save_historico texto
   # formatar hora
@@ -299,7 +291,6 @@ def save_historico texto
   sql = "INSERT INTO rs.historico (data, processo, mensagem) values ('#{tempo}', '#{processo}', '#{texto}')"
   db_statement_do(sql)
 end
-
 
 # Captura os dados da tabela prioridade
 def select_prioridade

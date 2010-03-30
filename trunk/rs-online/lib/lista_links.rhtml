@@ -6,9 +6,24 @@ require 'src/status'
 require "src/pacote"
 require "src/link"
 
-cgi = CGI.new
-a_params = cgi.params
-id_pacote = a_params["id_pacote"][0].to_i
+begin
+  cgi = CGI.new
+  a_params = cgi.params
+  id_pacote = a_params["id_pacote"][0].to_i
+rescue Exception => err %>
+  <html>
+    <head>
+      <title>Redirecionando...</title>
+      <meta http-equiv="Refresh" content="0;url=error.rhtml"/>
+    </head>
+    <body>
+      <p>
+        Redirecionando... <a href="error.rhtml">ou clique aqui</a>.
+      </p>
+    </body>
+  </html> <%
+  raise
+end # => begin - rescue
 
 def show_lista_links lista, pacote%>
   <div class="post">
@@ -179,13 +194,14 @@ def show_lista_links lista, pacote%>
               <input type="text" name="senha" class="text" size="30" value="<% pacote.senha unless pacote.senha == nil %>"/>
             </td>
             <td>
-              <b>Cancelar download: </b>
+              <b>Ações: </b>
             </td>
             <td>
-              <select name="cancelado" class="select-box">
+              <select name="action" class="select-box">
                 <option value="" selected="selected">-</option>
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
+                <option value="cancelar">Cancelar</option>
+                <option value="reiniciar">Reiniciar</option>
+                <option value="retestar">Retestar</option>
               </select>
             </td>
           </tr>

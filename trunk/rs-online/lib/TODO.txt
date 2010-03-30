@@ -1,6 +1,5 @@
 # 25-03-2010
 
-- Retest para um determinado pacote acionado pelo website
 - Usar método singleton
 - Implementar acesso individualizado. (cada usuário com seus links)
 - Implenentar um sistema de administração geral
@@ -18,6 +17,4 @@
   > Último PID
   > Nome do processo
 - Reformular o service handler. (start, stop, close)
-- Implementar uma tabela no BD onde será salvo os hostname dos servidores com
-  seus respectivos IPs. (caso venha acontecer de bloquearem o DNS pro RS hehehe)
 - Precisamos colocar uma senha de gente no BD

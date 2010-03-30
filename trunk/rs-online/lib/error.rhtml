@@ -1,92 +1,3 @@
-<%
-require 'dbi'
-require 'cgi'
-require 'src/database'
-
-
-begin
-  cgi = CGI.new
-  a_params = cgi.params
-rescue Exception => err %>
-  <html>
-    <head>
-      <title>Redirecionando...</title>
-      <meta http-equiv="Refresh" content="0;url=error.rhtml"/>
-    </head>
-    <body>
-      <p>
-        Redirecionando... <a href="error.rhtml">ou clique aqui</a>.
-      </p>
-    </body>
-  </html> <%
-  raise
-end # => begin - rescue
-
-
-def update_pacote a_params
-  begin
-    # Testa se algum campo é nulo
-    a_params.each do |i|
-      if i == nil
-        return "Algum parâmetro é nulo. Por favor, preencha todos os campos."
-      end
-    end
-
-    sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}'"
-    unless a_params["senha"][0] == ""
-      sql += ", senha = '#{a_params["senha"]}'"
-    end
-    sql += " WHERE id = #{a_params["id_pacote"]}"
-    db_statement_do(sql)
-    return "Pacote modificado com sucesso."
-  rescue Exception => e
-    return e
-  end
-end
-
-def action_pacote a_params
-  begin
-    if a_params["action"][0] == "cancelar"
-      sql = "UPDATE rs.pacote SET mostrar = 'false', problema = 'true' \
-      WHERE id = #{a_params["id_pacote"]} "
-      msg = "ACTION = Cancelar => Pacote modificado com sucesso."
-    elsif a_params["action"][0] == "reiniciar"
-      # UPDATE link
-      sql = "UPDATE rs.link SET "
-      sql += "testado = 'false', "
-      sql += "id_status = 5 "
-      sql += "WHERE id_pacote = #{a_params["id_pacote"]} "
-      db_statement_do(sql)
-      # UPDATE pacote
-      sql = "UPDATE rs.pacote SET "
-      sql += "mostrar = 'true', problema = 'false', "
-      sql += "completado = 'false' "
-      sql += "WHERE id = #{a_params["id_pacote"]} "
-      msg = "ACTION = Reiniciar => Pacote modificado com sucesso."
-    elsif a_params["action"][0] == "retestar"
-      # UPDATE link
-      sql = "UPDATE rs.link SET "
-      sql += "testado = 'false', "
-      sql += "id_status = 5 "
-      sql += "WHERE id_pacote = #{a_params["id_pacote"]} "
-      sql += "AND l.completado = 'false' "
-      db_statement_do(sql)
-      # UPDATE pacote
-      sql = "UPDATE rs.pacote SET "
-      sql += "problema = 'false' "
-      sql += "WHERE id = #{a_params["id_pacote"]} "
-      msg = "ACTION = Retestar => Pacote modificado com sucesso."
-    else
-      msg = "NO ACTION => Pacote não modificado."
-    end
-    db_statement_do(sql)
-    return msg
-  rescue Exception => e
-    return "#{e}<br\/>#{e.backtrace.join("<br\/>")}"
-  end
-end
-%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 Design by Free CSS Templates
@@ -134,11 +45,10 @@ Released   : 20081230
         <!--<div id="header-pic"></div>-->
         <div id="content">
           <div class="post">
-            <h1 class="title">Welcome to RS-Online 1.0b </h1>
+            <h1 class="title">Ocorreu um erro fatal!</h1>
             <div class="entry">
-              <p> <%= update_pacote a_params %> </p>
-              <p> <%
-                puts action_pacote a_params unless a_params["acao"][0] == "" %>
+              <p>Não foi possível carregar a página. Por favor, tente novamente.<br/>
+                Se o erro persistir, contate o administrador!
               </p>
             </div>
             <div class="meta">
