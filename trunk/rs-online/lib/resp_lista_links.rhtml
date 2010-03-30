@@ -3,7 +3,6 @@ require 'dbi'
 require 'cgi'
 require 'src/database'
 
-
 begin
   cgi = CGI.new
   a_params = cgi.params
@@ -11,7 +10,8 @@ rescue Exception => err %>
   <html>
     <head>
       <title>Redirecionando...</title>
-      <meta http-equiv="Refresh" content="0;url=error.rhtml"/>
+      <meta http-equiv="Refresh" content="5;url=error.rhtml"/>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body>
       <p>
@@ -49,6 +49,7 @@ def action_pacote a_params
     if a_params["action"][0] == "cancelar"
       sql = "UPDATE rs.pacote SET mostrar = 'false', problema = 'true' \
       WHERE id = #{a_params["id_pacote"]} "
+      db_statement_do(sql)
       msg = "ACTION = Cancelar => Pacote modificado com sucesso."
     elsif a_params["action"][0] == "reiniciar"
       # UPDATE link
@@ -62,6 +63,7 @@ def action_pacote a_params
       sql += "mostrar = 'true', problema = 'false', "
       sql += "completado = 'false' "
       sql += "WHERE id = #{a_params["id_pacote"]} "
+      db_statement_do(sql)
       msg = "ACTION = Reiniciar => Pacote modificado com sucesso."
     elsif a_params["action"][0] == "retestar"
       # UPDATE link
@@ -75,11 +77,11 @@ def action_pacote a_params
       sql = "UPDATE rs.pacote SET "
       sql += "problema = 'false' "
       sql += "WHERE id = #{a_params["id_pacote"]} "
+      db_statement_do(sql)
       msg = "ACTION = Retestar => Pacote modificado com sucesso."
     else
-      msg = "NO ACTION => Pacote não modificado."
+      msg = "NO ACTION."
     end
-    db_statement_do(sql)
     return msg
   rescue Exception => e
     return "#{e}<br\/>#{e.backtrace.join("<br\/>")}"
@@ -105,6 +107,7 @@ Released   : 20081230
     <link rel="icon" href="images/favicon.png" type="image/x-icon" />
     <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     <meta http-equiv="Refresh" content="3;url=lista_links.rhtml?id_pacote=<%= a_params["id_pacote"] %> "/>
     <title>RS-Online ~ version 1.0b ~ Powered by eRuby</title>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
   </head>
@@ -134,12 +137,13 @@ Released   : 20081230
         <!--<div id="header-pic"></div>-->
         <div id="content">
           <div class="post">
-            <h1 class="title">Welcome to RS-Online 1.0b </h1>
+            <h1 class="title">Alterações no pacote</h1>
             <div class="entry">
               <p> <%= update_pacote a_params %> </p>
               <p> <%
                 puts action_pacote a_params unless a_params["acao"][0] == "" %>
               </p>
+              <p>Redirecionando para lista de links em 5 segundos...</p>
             </div>
             <div class="meta">
               <p class="links">RS-Online is powered by eRuby.</p>
