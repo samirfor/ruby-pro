@@ -20,15 +20,18 @@ require 'net/https'
 require "socket"
 
 @user = 'samirfor@gmail.com'
-@pass = '200811080024'
+@pass = ''
 
 @google = Net::HTTP.new 'www.google.com', 443
 @google.use_ssl = true
 @google.verify_mode = OpenSSL::SSL::VERIFY_NONE
-auth = @google.get("/accounts/ClientLogin?Email=#{@user}&Passwd=#{@pass}&service=orkut").body.split("\n")[2].gsub('Auth', 'auth')
+auth = @google.get("/accounts/ClientLogin?Email=#{@user}&Passwd=#{@pass}&service=orkut").body.split("\n")[2].gsub('Auth=', 'auth=')
 
-@orkut = Net::HTTP.new(IPSocket.getaddress 'www.orkut.com')
-cookie_parts = @orkut.get("/RedirLogin.aspx?msg=0&#{auth}")['set-cookie'].split(';')
+#@orkut = Net::HTTP.new(IPSocket.getaddress 'www.orkut.com')
+@orkut = Net::HTTP.new 'www.orkut.com'
+cookie_parts = @orkut.get("/RedirLogin.aspx?msg=0&#{auth}").response#['set-cookie']#.split(';')
+p cookie_parts
+exit!
 @cookie = "#{cookie_parts[0]};#{cookie_parts[3]};"
 
 resp = @orkut.get('/Home.aspx', 'Cookie' => @cookie).body
