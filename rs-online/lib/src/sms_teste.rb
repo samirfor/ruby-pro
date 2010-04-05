@@ -2,7 +2,7 @@ require "src/sms"
 
 LIMITE = 116
 
-txt = "açúcar pão xícara café içú nação país corações lingüiça ídolos feijó jô jânio nós"
+txt = "Esta é uma mensagem automática. LOL"
 if txt.size > LIMITE
   puts "Tamanho ultrapassou o limite."
   return

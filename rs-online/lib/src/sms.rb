@@ -25,13 +25,13 @@ module Captcha
   def self.recognize(path)
     system("convert #{path} -colorspace Gray #{path}")
     system("convert #{path} -negate #{path}")
-    `gocr #{path}`.chomp.delete(" ")
+    `gocr #{path}`.chomp.delete(" ").strip
   end
 
   # App WGET is necessary
   def self.save source_url, filename
-    system "wget \"#{source_url}\" -O #{filename}"
-    system("cp #{filename} #{filename}.bk")
+    system "wget -q \"#{source_url}\" -O #{filename}"
+#    system("cp #{filename} #{filename}.bk")
   end
 end
 
@@ -63,7 +63,7 @@ module SMS
     torpedo = HTTPClient.new webhost
     action = URI.parse "#{webhost}/sms.php"
     remetente = Celular.new("RSOnline", "85", "88016247")
-    destinatario = Celular.new("Samir", "85", "88041544")
+    destinatario = Celular.new("", "85", "88499416")
     form = Hash.new
     form["operadora"] = 'oi'
     form['ddd'] = destinatario.ddd
