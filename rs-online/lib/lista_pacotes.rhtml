@@ -29,22 +29,19 @@ def show_pacotes pacotes
                 <td> <%
                   case pacote.prioridade
                   when Prioridade::NORMAL
-                  %><img src="images/normal.png" alt="3 - Normal" title="3 - Normal" /><%
+                  %><img src="images/3-normal.png" alt="3 - Normal" title="3 - Normal" /><%
                   when Prioridade::BAIXA
-                  %><img src="images/baixa.png" alt="2 - Baixa" title="2 - Baixa" /><%
+                  %><img src="images/2-baixa.png" alt="2 - Baixa" title="2 - Baixa" /><%
                   when Prioridade::NENHUMA
-                  %><img src="images/nenhum.png" alt="1 - Nenhuma" title="1 - Nenhuma" /><%
+                  %><img src="images/1-nenhum.png" alt="1 - Nenhuma" title="1 - Nenhuma" /><%
                   when Prioridade::ALTA
-                  %><img src="images/alta.png" alt="4 - Alta" title="4 - Alta" /><%
+                  %><img src="images/4-alta.png" alt="4 - Alta" title="4 - Alta" /><%
                   when Prioridade::MUITO_ALTA
-                  %><img src="images/prioridade.muito.alta-square-16.png" alt="5 - M. Alta" title="5 - M. Alta" /><%
-                  end %>
+                  %><img src="images/5-muito.alta.png" alt="5 - M. Alta" title="5 - M. Alta" /><%
+                  end
+                  url = "lista_links.rhtml?id_pacote=#{pacote.id_pacote}" %>
                 </td>
-                <td> <%
-                  url = "lista_links.rhtml?id_pacote=#{pacote.id_pacote}"
-                  #url += "&prioridade=#{pacote.prioridade}"
-                  #url += "&senha=#{pacote.senha}"
-                  #url += "&mostrar=#{pacote.mostrar}" %>
+                <td>
                   <a href=<%= url %>>
                     <img src="images/folder.png" alt="Folder"/>
                     &nbsp;&nbsp;<%= pacote.nome %>&nbsp;(<%= sprintf("%.2f MB", pacote.tamanho.to_i/1024.0) %>)

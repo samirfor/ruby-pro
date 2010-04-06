@@ -159,7 +159,7 @@ def show_lista_links lista, pacote%>
     <div class="entry">
       <form action="resp_lista_links.rhtml" method="post">
         <table width="90%" border="0" cellpadding="5">
-          <tr align="right">
+          <tr align="left">
             <td><b>Prioridade: </b></td>
             <td>
               <select name="prioridade" class="select-box"> <%
@@ -189,7 +189,7 @@ def show_lista_links lista, pacote%>
               </select>
             </td>
           </tr>
-          <tr align="right">
+          <tr align="left">
             <td><b>Senha: </b></td>
             <td>
               <input type="text" name="senha" class="text" size="30" value="<% pacote.senha unless pacote.senha == nil %>"/>
@@ -204,6 +204,18 @@ def show_lista_links lista, pacote%>
                 <option value="reiniciar">Reiniciar</option>
                 <option value="retestar">Retestar</option>
               </select>
+            </td>
+          </tr>
+          <tr>
+            <td><b>Descrição: </b><br/></td>
+            <td>
+              <textarea name="descricao" cols="30" rows="5" class="area-wide" title="Insira um pequena descrição sobre o pacote" ><%= pacote.descricao unless pacote.descricao == nil %></textarea>
+            </td>
+            <td>
+              &nbsp;
+            </td>
+            <td>
+              &nbsp;
             </td>
           </tr>
           <tr align="right">
