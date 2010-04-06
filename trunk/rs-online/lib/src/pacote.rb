@@ -2,7 +2,7 @@ require "src/prioridade"
 
 class Pacote
   attr_accessor :id_pacote, :tamanho, :problema, :nome, :completado, \
-    :mostrar, :prioridade, :senha, :data_inicio, :data_fim
+    :mostrar, :prioridade, :senha, :data_inicio, :data_fim, :descricao
 
   def initialize nome
     @nome = nome

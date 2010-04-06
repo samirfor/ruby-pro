@@ -49,26 +49,29 @@ Released   : 20081230
             <div class="entry">
               <form action="save_pacote.rhtml" method="post">
                 <table width="90%" border="0" cellpadding="5">
-                  <tr>
-                    <td align="right"><b>Nome do Pacote (Opcional): </b><input type="text" name="name" class="text" size="50" /></td>
-                    <td>&nbsp;</td>
+                  <tr align="left">
+                    <td align="left"><b>Nome do Pacote (Opcional): </b><br/><input type="text" name="name" class="text" size="50" /></td>
+                    <td>
+                      <b>Senha: </b><br/><input type="text" name="senha" class="text" size="50" />
+                    </td>
                   </tr>
                   <tr>
-                    <td align="right">
-                      <b>Senha: </b><input type="text" name="senha" class="text" size="50" />
+                    <td align="left">
+                      <b>Descrição: </b><br/><input type="text" name="descricao" class="text" size="50" />
                     </td>
-                    <td><b>Prioridade: </b>
+                    <td><b>Prioridade: </b><br/>
                       <select name="prioridade" class="select-box">
                         <option value="1" selected="selected">Nenhuma</option>
                         <option value="2">Baixa</option>
                         <option value="3">Normal</option>
                         <option value="4">Alta</option>
                         <option value="5">Muito Alta</option>
-                      </select></td>
+                      </select>
+                    </td>
                   </tr>
                   <tr>
-                    <td colspan="2">
-                      <b>Links: </b><textarea name="package" cols="120" rows="15" class="area-wide"></textarea>
+                    <td colspan="2" align="left">
+                      <b>Links: </b><br/><textarea name="package" cols="120" rows="15" class="area-wide"></textarea>
                     </td>
                   </tr>
                   <tr>

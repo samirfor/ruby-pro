@@ -139,6 +139,7 @@ def select_pacote(id)
       pacote.senha = row["senha"]
       pacote.prioridade = row["prioridade"]
       pacote.tamanho = row["tamanho"]
+      pacote.descricao = row["descricao"]
     end
   rescue Exception => err
     puts "Erro no fetch"
@@ -248,6 +249,7 @@ def select_lista_pacotes mostrar
       pacote.senha = row["senha"]
       pacote.prioridade = row["prioridade"]
       pacote.tamanho = row["tamanho"]
+      pacote.descricao = row["descricao"]
       pacotes.push pacote
     end
   rescue Exception => err

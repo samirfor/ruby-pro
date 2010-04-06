@@ -63,7 +63,7 @@ module SMS
     torpedo = HTTPClient.new webhost
     action = URI.parse "#{webhost}/sms.php"
     remetente = Celular.new("RSOnline", "85", "88016247")
-    destinatario = Celular.new("", "85", "88499416")
+    destinatario = Celular.new("", "85", "87678424")
     form = Hash.new
     form["operadora"] = 'oi'
     form['ddd'] = destinatario.ddd

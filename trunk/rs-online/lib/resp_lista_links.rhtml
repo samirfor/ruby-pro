@@ -33,9 +33,8 @@ def update_pacote a_params
     end
 
     sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}'"
-    unless a_params["senha"][0] == ""
-      sql += ", senha = '#{a_params["senha"]}'"
-    end
+    sql += ", senha = '#{a_params["senha"]}'" unless a_params["senha"][0] == ""
+    sql += ", descricao = '#{a_params["descricao"]}'" unless a_params["descricao"][0] == ""
     sql += " WHERE id = #{a_params["id_pacote"]}"
     db_statement_do(sql)
     return "Pacote modificado com sucesso."
