@@ -3,6 +3,7 @@ require "src/sms"
 LIMITE = 116
 
 txt = "Esta é uma mensagem automática. LOL"
+
 if txt.size > LIMITE
   puts "Tamanho ultrapassou o limite."
   return

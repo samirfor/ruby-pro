@@ -31,7 +31,7 @@ module Captcha
   # App WGET is necessary
   def self.save source_url, filename
     system "wget -q \"#{source_url}\" -O #{filename}"
-#    system("cp #{filename} #{filename}.bk")
+    #system("cp #{filename} #{filename}.bk")
   end
 end
 
@@ -59,32 +59,33 @@ module SMS
     end
     webhost = "http://www.torpedogratis.net"
 
-    ## Send form by POST
-    torpedo = HTTPClient.new webhost
-    action = URI.parse "#{webhost}/sms.php"
-    remetente = Celular.new("RSOnline", "85", "88016247")
-    destinatario = Celular.new("", "85", "87678424")
-    form = Hash.new
-    form["operadora"] = 'oi'
-    form['ddd'] = destinatario.ddd
-    form['numero'] = destinatario.numero
-    form['dddr'] = remetente.ddd
-    form['numeror'] = remetente.numero
-    form['nomer'] = remetente.nome
-    form["sms"] = texto
-    resposta = torpedo.post(action, form)
+    begin
+        ## Send form by POST
+      torpedo = HTTPClient.new webhost
+      action = URI.parse "#{webhost}/sms.php"
+      remetente = Celular.new("RSOnline", "85", "88016247")
+      destinatario = Celular.new("", "85", "87678424")
+      form = Hash.new
+      form["operadora"] = 'oi'
+      form['ddd'] = destinatario.ddd
+      form['numero'] = destinatario.numero
+      form['dddr'] = remetente.ddd
+      form['numeror'] = remetente.numero
+      form['nomer'] = remetente.nome
+      form["sms"] = texto
+      resposta = torpedo.post(action, form)
     
-    # Redirect (knowing ID)
-    begin
-      id = resposta.body.content.scan(/id=(\d+)/)[0][0]
-    rescue Exception => e
-      puts "Erro ao detectar ID"
-      puts e.to_s
-      exit
-    end
-    puts "ID = #{id}"
+      # Redirect (knowing ID)
+      begin
+        id = resposta.body.content.scan(/id=(\d+)/)[0][0]
+      rescue Exception => e
+        puts "Erro ao detectar ID"
+        puts e.to_s
+        exit
+      end
+      puts "ID = #{id}"
 
-    begin
+      #    begin
       action = URI.parse "#{webhost}/envia.php"
       query = {
         "id" => "#{id}",
@@ -93,7 +94,6 @@ module SMS
       torpedo = HTTPClient.new webhost
       resposta = torpedo.get(action, query)
 
-      #    begin # do-while
       # Redirect
       action = URI.parse "#{webhost}/confirma.php"
       query = {
@@ -133,7 +133,16 @@ module SMS
       form["sms"] = texto
       torpedo = HTTPClient.new webhost
       resposta = torpedo.post(action, form)
-    end while ocr.size != 4 or resposta.body.content.scan(/enviada/) == []
-    return resposta.body.content
+    end while ocr.size != 4
+    #    puts resposta.body.content
+
+    if resposta.body.content.scan(/enviada/) != []
+      return "Mensagem enviada com sucesso."
+    elsif resposta.body.content.scan(/alert\(\".+\"\)/) != []
+      erro = resposta.body.content.scan(/alert\(\"(.+)\"\)/)[0][0]
+      return "Ocorreu um erro no servidor: #{erro}"
+    else
+      return "Erro desconhecido."
+    end
   end
 end
