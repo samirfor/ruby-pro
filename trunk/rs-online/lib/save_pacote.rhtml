@@ -14,7 +14,7 @@ def save_pacote(pacote)
   sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
   sql += ", senha" unless pacote.senha == ""
   sql += ", descricao" unless pacote.descricao == ""
-  sql += ") VALUES ('#{pacote.nome}', '#{timestamp pacote.data_inicio}' "
+  sql += ") VALUES ('#{pacote.nome}', '#{timestamp data_inicio}' "
   sql += ", #{pacote.prioridade}"
   sql += ", '#{pacote.senha}'" unless pacote.senha == ""
   sql += ", '#{pacote.descricao}'" unless pacote.descricao == ""
@@ -83,7 +83,9 @@ Released   : 20081230
       <div id="page">
         <!--<div id="header-pic"></div>-->
         <div id="content">
-          <div class="post"> <%
+          <div class="post">
+
+            <%
             begin
               cgi = CGI.new
               a_params = cgi.params

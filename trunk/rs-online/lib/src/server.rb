@@ -72,12 +72,13 @@ class Server
     rst = db[0]
     conn = db[1]
     begin
-      if rst.fetch_all == nil or rst.fetch_all == []
+      if rst.fetch_all == [] or rst.fetch_all == nil
         return false
       else
         return true
       end
     rescue Exception => ex
+      to_log "Erro no fetch_all. Função is_exist?"
       return false
     end
   end
