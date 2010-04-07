@@ -43,6 +43,32 @@ def update_pacote a_params
   end
 end
 
+def live_test_links id_pacote
+  begin
+    pacote = select_pacote(id_pacote)
+    if pacote == nil
+      return "Não foi possível obter o pacote para teste."
+    end
+    links_before_test = select_lista_links pacote.id_pacote
+    pacote.tamanho = 0
+    links_before_test.each do |link|
+      if link.id_status == Status::BAIXADO
+        pacote.tamanho += link.tamanho
+      elsif link.testado and (link.tamanho != nil or link.tamanho != 0)
+        pacote.tamanho += link.tamanho
+      else
+        link.test
+        pacote.tamanho += link.tamanho if link.id_status == Status::ONLINE
+      end
+    end
+    pacote.problema = true if pacote.tamanho == 0
+    pacote.update_db
+    return "Pacote testado com sucesso."
+  rescue Exception => e
+    return "Ocorreu um erro no teste do pacote. #{e.message}"
+  end
+end
+
 def action_pacote a_params
   begin
     if a_params["action"][0] == "cancelar"
@@ -64,6 +90,8 @@ def action_pacote a_params
       sql += "WHERE id = #{a_params["id_pacote"]} "
       db_statement_do(sql)
       msg = "ACTION = Reiniciar => Pacote modificado com sucesso."
+    elsif a_params["action"][0] == "testarNow"
+      live_test_links a_params["id_pacote"]
     elsif a_params["action"][0] == "retestar"
       # UPDATE link
       sql = "UPDATE rs.link SET "
@@ -106,7 +134,7 @@ Released   : 20081230
     <link rel="icon" href="images/favicon.png" type="image/x-icon" />
     <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-     <meta http-equiv="Refresh" content="3;url=lista_links.rhtml?id_pacote=<%= a_params["id_pacote"] %> "/>
+    <meta http-equiv="Refresh" content="3;url=lista_links.rhtml?id_pacote=<%= a_params["id_pacote"] %> "/>
     <title>RS-Online ~ version 1.0b ~ Powered by eRuby</title>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
   </head>
