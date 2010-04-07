@@ -136,7 +136,7 @@ class Link
 
   def download
     begin
-      to_log("Baixando o link: #{@link}")
+      to_log("Tentando baixar o link: #{@link}")
       @id_status = Status::TENTANDO
       @tentativas = 0
       update_db
