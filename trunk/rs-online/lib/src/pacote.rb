@@ -13,6 +13,7 @@ class Pacote
     @data_fim = nil
     @mostrar = nil
     @senha = nil
+    @descricao = nil
   end
 
   def update_db
