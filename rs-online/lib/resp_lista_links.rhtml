@@ -91,7 +91,7 @@ def action_pacote a_params
       db_statement_do(sql)
       msg = "ACTION = Reiniciar => Pacote modificado com sucesso."
     elsif a_params["action"][0] == "testarNow"
-      live_test_links a_params["id_pacote"]
+      msg = "ACTION = Testar agora => #{live_test_links a_params["id_pacote"]}"
     elsif a_params["action"][0] == "retestar"
       # UPDATE link
       sql = "UPDATE rs.link SET "
