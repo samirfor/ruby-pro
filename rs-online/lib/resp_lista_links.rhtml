@@ -54,8 +54,6 @@ def live_test_links id_pacote
     links_before_test.each do |link|
       if link.id_status == Status::BAIXADO
         pacote.tamanho += link.tamanho
-      elsif link.testado and (link.tamanho != nil or link.tamanho != 0)
-        pacote.tamanho += link.tamanho
       else
         link.test
         pacote.tamanho += link.tamanho if link.id_status == Status::ONLINE
@@ -90,9 +88,9 @@ def action_pacote a_params
       sql += "WHERE id = #{a_params["id_pacote"]} "
       db_statement_do(sql)
       msg = "ACTION = Reiniciar => Pacote modificado com sucesso."
-    elsif a_params["action"][0] == "testarNow"
+    elsif a_params["action"][0] == "retestarNow"
       txt = live_test_links a_params["id_pacote"]
-      msg = "ACTION = Testar agora => #{txt}"
+      msg = "ACTION = Retestar agora => #{txt}"
     elsif a_params["action"][0] == "retestar"
       # UPDATE link
       sql = "UPDATE rs.link SET "
