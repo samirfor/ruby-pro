@@ -2,37 +2,13 @@ require 'net/http'
 require 'uri'
 require "rubygems"
 require "httpclient" # gem install httpclient
+require "src/captcha"
 
 # For debug only
 def to_html(body)
   arq = File.open("sms.html", "w")
   arq.print(body)
   arq.close
-end
-
-class Celular
-  attr_accessor :nome, :ddd, :numero
-
-  def initialize nome, ddd, numero
-    @nome = nome
-    @ddd = ddd
-    @numero = numero
-  end
-end
-
-module Captcha
-  # App GOCR is necessary
-  def self.recognize(path)
-    system("convert #{path} -colorspace Gray #{path}")
-    system("convert #{path} -negate #{path}")
-    `gocr #{path}`.chomp.delete(" ").strip
-  end
-
-  # App WGET is necessary
-  def self.save source_url, filename
-    system "wget -q \"#{source_url}\" -O #{filename}"
-    #system("cp #{filename} #{filename}.bk")
-  end
 end
 
 module SMS
@@ -53,7 +29,7 @@ module SMS
     texto
   end
 
-  def self.enviar(texto)
+  def self.enviar(celular, texto)
     if texto.size > 115
       raise ArgumentError
     end
@@ -63,15 +39,15 @@ module SMS
         ## Send form by POST
       torpedo = HTTPClient.new webhost
       action = URI.parse "#{webhost}/sms.php"
-      remetente = Celular.new("RSOnline", "85", "88016247")
-      destinatario = Celular.new("", "85", "87678424")
+      remetente = Celular.new(85, 88016247)
+      destinatario = celular
       form = Hash.new
       form["operadora"] = 'oi'
-      form['ddd'] = destinatario.ddd
-      form['numero'] = destinatario.numero
-      form['dddr'] = remetente.ddd
-      form['numeror'] = remetente.numero
-      form['nomer'] = remetente.nome
+      form['ddd'] = destinatario.ddd.to_s
+      form['numero'] = destinatario.numero.to_s
+      form['dddr'] = remetente.ddd.to_s
+      form['numeror'] = remetente.numero.to_s
+      form['nomer'] = "RSOnline"
       form["sms"] = texto
       resposta = torpedo.post(action, form)
     
@@ -126,10 +102,10 @@ module SMS
       form = Hash.new
       form["myid"] = id
       form['cap'] = ocr
-      form['numero'] = destinatario.numero
-      form['dddr'] = remetente.ddd
-      form['numeror'] = remetente.numero
-      form['nomer'] = remetente.nome
+      form['numero'] = destinatario.numero.to_s
+      form['dddr'] = remetente.ddd.to_s
+      form['numeror'] = remetente.numero.to_s
+      form['nomer'] = "RSOnline"
       form["sms"] = texto
       torpedo = HTTPClient.new webhost
       resposta = torpedo.post(action, form)

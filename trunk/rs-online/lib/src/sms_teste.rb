@@ -10,5 +10,5 @@ if txt.size > LIMITE
 end
 txt = SMS::trata_caracteres_invalidos(txt)
 puts "Texto tratado:\n\"#{txt}\""
-sms = SMS::enviar(txt)
+sms = SMS::enviar(Celular.new(85, 88001111), txt)
 puts sms
