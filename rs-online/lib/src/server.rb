@@ -8,16 +8,13 @@ class Server
   def initialize id
     @id = id
     unless is_exist?
+      to_debug "Servidor não registrado. Registrando..."
       generator
       insert_db
     else
       # Se o host estiver cadastrado no BD, apenas faz o SELECT.
+      to_debug "Servidor registrado. Evitando resolução de nome."
       select_db
-#      new_ip = IPSocket.getaddress "rs#{@id}.rapidshare.com"
-#      unless new_ip == @ip
-#        @ip = new_ip
-#        update_db
-#      end
     end
   end
 

@@ -97,7 +97,7 @@ def cancelar?
   if FileTest.exist?("#{fullpath}/cancelar") or FileTest.exist?("#{fullpath}/fechar")
     evento = "Downloads cancelado pelo usuário."
     to_log evento
-    tweet evento
+    Twitter.tweet evento
     exit!(1)
   end
 end
@@ -180,7 +180,7 @@ def run
       if pacote == nil
         evento = 'Fim do(s) download(s). Have a nice day!'
         to_log evento
-        tweet evento
+        Twitter.tweet evento
         exit!(1)
       end
       links_before_test = select_lista_links pacote.id_pacote
@@ -216,7 +216,7 @@ def run
       msg = "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
       to_log msg
       run_thread Proc.new {
-        tweet msg
+        Twitter.tweet msg
       }
       ## Fim Informações do teste
 
@@ -250,13 +250,13 @@ def run
       evento += "V. media = #{sprintf("%.2f KB/s", pacote.tamanho/(pacote.data_fim - pacote.data_inicio))}"
       to_log evento
       run_thread Proc.new {
-        tweet evento
+        Twitter.tweet evento
       }
       unless select_remaining_links(pacote.id_pacote) == 0
         pacote.problema = true
         pacote.update_db
         run_thread Proc.new {
-          tweet "Pacote #{pacote.nome} está problema."
+          Twitter.tweet "Pacote #{pacote.nome} está problema."
         }
       end
       ## Fim Informações do download
@@ -307,7 +307,7 @@ rescue Interrupt
 rescue SystemExit => err
   evento = "O programa foi encerrado."
   to_log evento
-  tweet evento
+  Twitter.tweet evento
   exit!
 rescue NoMethodError => err
   to_log "FATAL: Não há método definido."
