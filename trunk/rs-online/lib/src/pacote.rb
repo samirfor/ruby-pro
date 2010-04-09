@@ -1,4 +1,4 @@
-require "src/prioridade"
+require "src/database"
 
 class Pacote
   attr_accessor :id_pacote, :tamanho, :problema, :nome, :completado, \
