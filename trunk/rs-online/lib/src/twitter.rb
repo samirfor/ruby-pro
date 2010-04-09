@@ -20,4 +20,6 @@ module Twitter
     end
     cliente.update evento
   end
+
+  public :tweet
 end
