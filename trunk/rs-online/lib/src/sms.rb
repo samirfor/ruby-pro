@@ -110,7 +110,6 @@ module SMS
       torpedo = HTTPClient.new webhost
       resposta = torpedo.post(action, form)
     end while ocr.size != 4
-    #    puts resposta.body.content
 
     if resposta.body.content.scan(/enviada/) != []
       return "Mensagem enviada com sucesso."
