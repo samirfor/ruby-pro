@@ -210,7 +210,7 @@ def show_lista_links lista, pacote%>
           <tr>
             <td><b>Descrição: </b><br/></td>
             <td>
-              <textarea name="descricao" cols="30" rows="5" class="area-wide" title="Insira um pequena descrição sobre o pacote" ><% pacote.descricao unless pacote.descricao == nil %></textarea>
+              <textarea name="descricao" cols="30" rows="5" class="area-wide" title="Insira um pequena descrição sobre o pacote" ><% print pacote.descricao unless pacote.descricao == nil %></textarea>
             </td>
             <td>
               &nbsp;
