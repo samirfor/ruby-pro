@@ -25,6 +25,7 @@ class Pacote
     sql += "completado = '#{@completado}', " unless @completado == nil
     sql += "mostrar = '#{@mostrar}', " unless @mostrar == nil
     sql += "senha = '#{@senha}', " unless @senha == nil
+    sql += "descricao = '#{@descricao}', " unless @descricao == nil
     sql += "problema = '#{@problema}' "
     sql += "WHERE id = #{@id_pacote}"
     db_statement_do(sql)
