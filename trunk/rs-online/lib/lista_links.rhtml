@@ -192,7 +192,7 @@ def show_lista_links lista, pacote%>
           <tr align="left">
             <td><b>Senha: </b></td>
             <td>
-              <input type="text" name="senha" class="text" size="30" value="<% pacote.senha unless pacote.senha == nil %>"/>
+              <input type="text" name="senha" class="text" size="30" value="<% print pacote.senha unless pacote.senha == nil %>"/>
             </td>
             <td>
               <b>Ações: </b>
