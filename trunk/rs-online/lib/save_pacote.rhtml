@@ -5,6 +5,7 @@ require 'src/twitter'
 require 'src/pacote'
 
 $erro = false
+$backtrace = nil
 
 def timestamp time
   time.strftime("%Y/%m/%d %H:%M:%S")
@@ -37,6 +38,71 @@ def save_links(links, id_pacote)
     db_statement_do(sql)
   end
 end
+
+def erro_fatal %>
+  <html>
+    <head>
+      <meta http-equiv="Refresh" content="0;url=error.rhtml"/>
+    </head>
+  </html> <%
+  exit!
+end
+
+def show_response
+  begin
+    cgi = CGI.new
+    a_params = cgi.params
+    params_links = a_params["package"][0].to_a
+
+    pacote = Pacote.new(a_params["name"])
+    pacote.prioridade = a_params["prioridade"]
+    pacote.senha = a_params["senha"][0]
+    pacote.descricao = a_params["descricao"][0]
+
+    links = Array.new
+    params_links.each do |linha|
+      linha.strip!
+      if linha =~ /.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/
+        links.push linha.scan(/.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/)[0][0]
+      end
+    end
+
+    retorna = Array.new
+    unless links.size == 0
+      pacote.nome = pacote.nome.to_s
+      if pacote.nome == "" or pacote.nome == nil
+        short_link = links[0].split("/")
+        path = short_link[short_link.size - 1]
+        pacote.nome = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+)$/, "")
+      end
+      id_pacote = save_pacote(pacote)
+      save_links(links, id_pacote)
+      retorna.push pacote
+      retorna.push links
+    else
+      $erro = true
+      retorna = nil
+    end
+    retorna
+  rescue Exception => err
+    $erro = true
+    $backtrace = e.backtrace.join("<br\/>")
+    return nil
+  end
+end
+
+show = show_response
+if show == nil
+  erro_fatal
+end
+
+begin
+  pacote = show[0]
+  links = show[1]
+rescue Exception => ex
+  erro_fatal
+end
+
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -86,72 +152,36 @@ Released   : 20081230
         <!--<div id="header-pic"></div>-->
         <div id="content">
           <div class="post">
-
-            <%
-            begin
-              cgi = CGI.new
-              a_params = cgi.params
-              params_links = a_params["package"][0].to_a
-
-              pacote = Pacote.new(a_params["name"])
-              pacote.prioridade = a_params["prioridade"]
-              pacote.senha = a_params["senha"][0]
-              pacote.descricao = a_params["descricao"][0]
-
-              links = Array.new
-              params_links.each do |linha|
-                linha.strip!
-                if linha =~ /.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/
-                  links.push linha.scan(/.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/)[0][0]
-                end
-              end
-
-              unless links.size == 0
-                pacote.nome = pacote.nome.to_s
-                if pacote.nome == "" or pacote.nome == nil
-                  short_link = links[0].split("/")
-                  path = short_link[short_link.size - 1]
-                  pacote.nome = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+)$/, "")
-                end
-                id_pacote = save_pacote(pacote)
-                save_links(links, id_pacote)
-              else
-                $erro = true
-              end
-            %>
-              <h1 class="title"><%
-                if $erro
-                  print "Ocorreu um erro."
-                else
-                  print pacote.nome
-                end %></h1>
+            <% if $erro %>
+              <h1 class="title">Ocorreu um erro.</h1>
               <div class="entry">
                 <p>
-                  <% RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes." unless $erro %>
+                  Não foi possível completar a operação. Por favor, tente novamente.<br/>
+                  Se o erro persistir, contate o adiminstrador.
+                </p>
+                <p>
+                  <b>Erro: </b><br/>
+                  <%= $backtrace %>
+                </p>
+              </div>
+            <% else %>
+              <h1 class="title"><%= pacote.nome %></h1>
+              <div class="entry">
+                <p>
+                  <% RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes." %>
                 </p>
                 <p>
                   <%
-                  if links.size == 0
-                    print "Nenhum link foi detectado."
-                  else
-                    links.each do |link| %>
-                      <%= link %><br/>
-                    <%
-                    end
+                  links.each do |link| %>
+                    <%= link %><br/>
+                  <%
                   end %>
                 </p>
               </div>
               <div class="meta">
-                <p class="links"><% print "Pacote adicionado." unless $erro %></p>
-              </div> <%
-            rescue Exception => err
-              $erro = true %>
-              <h1 class="title">Ocorreu um erro.</h1>
-              <h2>Não foi possível carregar a página. Contate o administrador!</h2>
-              <p> <%= err %> </p>
-            <%
-            end
-          %>
+                <p class="links"><% print "Pacote adicionado." %></p>
+              </div>
+            <% end %>
           </div>
         </div>
         <!-- end #content -->
