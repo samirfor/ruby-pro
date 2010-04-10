@@ -45,7 +45,7 @@ def erro_fatal %>
       <meta http-equiv="Refresh" content="0;url=error.rhtml"/>
     </head>
   </html> <%
-  exit!
+  exit
 end
 
 def show_response
@@ -53,12 +53,10 @@ def show_response
     cgi = CGI.new
     a_params = cgi.params
     params_links = a_params["package"][0].to_a
-
     pacote = Pacote.new(a_params["name"])
     pacote.prioridade = a_params["prioridade"]
     pacote.senha = a_params["senha"][0]
     pacote.descricao = a_params["descricao"][0]
-
     links = Array.new
     params_links.each do |linha|
       linha.strip!
@@ -66,7 +64,6 @@ def show_response
         links.push linha.scan(/.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/)[0][0]
       end
     end
-
     retorna = Array.new
     unless links.size == 0
       pacote.nome = pacote.nome.to_s
@@ -79,24 +76,19 @@ def show_response
       save_links(links, id_pacote)
       retorna.push pacote
       retorna.push links
+      return retorna
     else
       $erro = true
-      retorna = nil
     end
-    retorna
   rescue Exception => err
     $erro = true
     $backtrace = err.backtrace.join("<br\/>")
-    return nil
   end
 end
 
-
 begin
   show = show_response
-  if show == nil
-    erro_fatal
-  else
+  unless show == nil
     pacote = show[0]
     links = show[1]
   end
