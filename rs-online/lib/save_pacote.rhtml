@@ -4,6 +4,8 @@ require 'cgi'
 require 'src/twitter'
 require 'src/pacote'
 
+$erro = false
+
 def timestamp time
   time.strftime("%Y/%m/%d %H:%M:%S")
 end
@@ -104,39 +106,41 @@ Released   : 20081230
                 end
               end
 
-              if links.size == 0
-                pacote.nome = "Ocorreu um erro."
-                links.push "Nenhum link foi detectado."
+              unless links.size == 0
+                pacote.nome = pacote.nome.to_s
+                if pacote.nome == "" or pacote.nome == nil
+                  short_link = links[0].split("/")
+                  path = short_link[short_link.size - 1]
+                  pacote.nome = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+)$/, "")
+                end
+                id_pacote = save_pacote(pacote)
+                save_links(links, id_pacote)
+              else
+                $erro = true
               end
-
-              pacote.nome = pacote.nome.to_s
-              if pacote.nome == "" or pacote.nome == nil
-                short_link = links[0].split("/")
-                path = short_link[short_link.size - 1]
-                pacote.nome = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+)$/, "")
-              end
-
-              id_pacote = save_pacote(pacote)
-              save_links(links, id_pacote)
             %>
               <h1 class="title"><%= pacote.nome %></h1>
               <div class="entry">
                 <p>
-                  <% RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes."%>
+                  <% RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes." unless $erro %>
                 </p>
                 <p>
                   <%
-                  links.each do |link| %>
-                    <%= link %><br/>
-                  <%
+                  if links.size == 0
+                    print "Nenhum link foi detectado."
+                  else
+                    links.each do |link| %>
+                      <%= link %><br/>
+                    <%
+                    end
                   end %>
                 </p>
               </div>
               <div class="meta">
-                <p class="links">Pacote adicionado.</p>
-              </div>
-            <%
-            rescue Exception => err %>
+                <p class="links"><% print "Pacote adicionado." unless $erro %></p>
+              </div> <%
+            rescue Exception => err
+              $erro = true %>
               <h1 class="title">Ocorreu um erro.</h1>
               <h2>Não foi possível carregar a página. Contate o administrador!</h2>
               <p> <%= err %> </p>
