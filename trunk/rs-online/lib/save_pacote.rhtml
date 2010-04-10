@@ -86,19 +86,20 @@ def show_response
     retorna
   rescue Exception => err
     $erro = true
-    $backtrace = e.backtrace.join("<br\/>")
+    $backtrace = err.backtrace.join("<br\/>")
     return nil
   end
 end
 
-show = show_response
-if show == nil
-  erro_fatal
-end
 
 begin
-  pacote = show[0]
-  links = show[1]
+  show = show_response
+  if show == nil
+    erro_fatal
+  else
+    pacote = show[0]
+    links = show[1]
+  end
 rescue Exception => ex
   erro_fatal
 end
