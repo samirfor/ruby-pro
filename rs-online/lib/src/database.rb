@@ -332,3 +332,59 @@ def select_servico id
   db_disconnect(conn)
   id_servico
 end
+
+# inserir o pacote e os links no banco
+def save_pacote(pacote)
+  data_inicio = Time.now
+  sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
+  sql += ", senha" unless pacote.senha == ""
+  sql += ", descricao" unless pacote.descricao == ""
+  sql += ") VALUES ('#{pacote.nome}', '#{timestamp data_inicio}' "
+  sql += ", #{pacote.prioridade}"
+  sql += ", '#{pacote.senha}'" unless pacote.senha == ""
+  sql += ", '#{pacote.descricao}'" unless pacote.descricao == ""
+  sql += ") RETURNING id"
+
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  resultado = rst.fetch[0]
+  rst.finish
+  db_disconnect(conn)
+  return resultado
+end
+
+def save_links(links, id_pacote)
+  links.each do |line|
+    sql = "INSERT INTO rs.link (id_pacote, link) VALUES (#{id_pacote}, '#{line}')"
+    db_statement_do(sql)
+  end
+end
+
+def select_full_links
+  sql = "SELECT * FROM rs.link "
+  db = db_statement_execute(sql)
+  rst = db[0]
+  conn = db[1]
+  lista = Array.new
+  begin
+    rst.fetch do |row|
+      link = Link.new(row["link"])
+      link.id_link = row["id_link"]
+      link.id_pacote = row["id_pacote"]
+      link.completado = row["completado"]
+      link.tamanho = row["tamanho"]
+      link.id_status = row["id_status"]
+      link.testado = row["testado"]
+      link.data_inicio = row["data_inicio"]
+      link.data_fim = row["data_fim"]
+      lista.push link
+    end
+    rst.finish
+    db_disconnect(conn)
+    lista.sort
+  rescue Exception => e
+    to_log "Houve erro => #{e.message}"
+    return nil
+  end
+end
