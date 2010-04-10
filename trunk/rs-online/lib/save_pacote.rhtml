@@ -79,10 +79,12 @@ def show_response
       return retorna
     else
       $erro = true
+      return nil
     end
   rescue Exception => err
     $erro = true
     $backtrace = err.backtrace.join("<br\/>")
+    return nil
   end
 end
 
@@ -150,7 +152,7 @@ Released   : 20081230
               <div class="entry">
                 <p>
                   Não foi possível completar a operação. Por favor, tente novamente.<br/>
-                  Se o erro persistir, contate o adiminstrador.
+                  Se o erro persistir, contate o adminstrador.
                 </p>
                 <p>
                   <b>Erro: </b><br/>
