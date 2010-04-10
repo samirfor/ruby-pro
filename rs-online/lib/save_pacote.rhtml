@@ -119,7 +119,12 @@ Released   : 20081230
                 $erro = true
               end
             %>
-              <h1 class="title"><%= pacote.nome %></h1>
+              <h1 class="title"><%
+                if $erro
+                  print "Ocorreu um erro."
+                else
+                  print pacote.nome
+                end %></h1>
               <div class="entry">
                 <p>
                   <% RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes." unless $erro %>
