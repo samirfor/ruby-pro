@@ -54,7 +54,7 @@ def show_lista_links lista, pacote%>
                 <td align="left">
                   <a href="<%= link.link.gsub("rapidshare.com","195.122.131.2") %>">
                     <img alt="link" src="images/link.png" border="0"/></a>&nbsp;&nbsp;
-                  <%= path %>
+                    <a href="<%= link.link %>"><%= path %></a>
                 </td>
                 <%
                 # tamanho
