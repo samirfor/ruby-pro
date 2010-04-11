@@ -370,16 +370,17 @@ def select_full_links
   link = nil
   begin
     rst.fetch do |row|
-      p row
-      link = Link.new(row["link"])
-      link.id_link = row["id_link"]
-      link.id_pacote = row["id_pacote"]
-      link.completado = row["completado"]
-      link.tamanho = row["tamanho"]
-      link.id_status = row["id_status"]
-      link.testado = row["testado"]
-      link.data_inicio = row["data_inicio"]
-      link.data_fim = row["data_fim"]
+      link = row["link"].strip
+#      p row
+#      link = Link.new(row["link"])
+#      link.id_link = row["id_link"]
+#      link.id_pacote = row["id_pacote"]
+#      link.completado = row["completado"]
+#      link.tamanho = row["tamanho"]
+#      link.id_status = row["id_status"]
+#      link.testado = row["testado"]
+#      link.data_inicio = row["data_inicio"]
+#      link.data_fim = row["data_fim"]
       lista.push link
     end
     rst.finish
