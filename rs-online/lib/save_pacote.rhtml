@@ -158,9 +158,9 @@ Released   : 20081230
               <div class="entry">
                 <p>
                   <% if links_duplicados.size > 1 %>
-                    O seguinte link já foi anteriormente adicionado ao banco de dados.
-                  <% else %>
                     Os seguintes links já foram anteriormente adicionados ao banco de dados.
+                  <% else %>
+                    O seguinte link já foi anteriormente adicionado ao banco de dados.
                   <% end %>
                 </p>
                 <p>
@@ -168,7 +168,7 @@ Released   : 20081230
                     <%= link %><br/>
                   <% end %>
                 </p>
-                <p>O pacote não será salvo até que não haja nenhum link duplicado.</p>
+                <p><b>O pacote somente será salvo quando não houver link duplicado.</b></p>
               </div>
             <% else %>
               <h1 class="title"><%= pacote.nome %></h1>
