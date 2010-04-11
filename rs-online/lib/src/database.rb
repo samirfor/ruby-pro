@@ -383,7 +383,8 @@ def select_full_links
     end
     rst.finish
     db_disconnect(conn)
-    if lista.size == lista.nitems
+    lista.delete_if { |l| l == [] or l == nil }
+    if lista == []
       nil
     else
       lista.sort

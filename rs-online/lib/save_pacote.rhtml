@@ -26,17 +26,24 @@ def show_response
     pacote.prioridade = a_params["prioridade"]
     pacote.senha = a_params["senha"][0]
     pacote.descricao = a_params["descricao"][0]
-    links = Array.new
+    links_validos = Array.new
     links_duplicados = Array.new
     links_db = select_full_links
     params_links.each do |linha|
       linha.strip!
       if linha =~ /.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/
-        links.push linha.scan(/.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/)[0][0]
+        links_validos.push linha.scan(/.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/)[0][0]
       end
     end
+    # Verifica se links_db é válido
+    if links_db == nil
+      $erro = true
+      $backtrace = "Não foi possível obter todos os links do banco de dados."
+      return nil
+    end
+
     # Verifica links duplicados
-    links.each do |link|
+    links_validos.each do |link|
       links_db.each do |db|
         if link == db.link
           links_duplicados.push db
@@ -45,10 +52,10 @@ def show_response
     end
 
     retorna = Array.new
-    unless links.size == 0
+    unless links_validos.size == 0
       pacote.nome = pacote.nome.to_s
       if pacote.nome == "" or pacote.nome == nil
-        short_link = links[0].split("/")
+        short_link = links_validos[0].split("/")
         path = short_link[short_link.size - 1]
         pacote.nome = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+)$/, "")
       end
@@ -56,9 +63,9 @@ def show_response
       # Só aceita o pacote se não houver nenhum link duplicado
       unless links_duplicados.size > 0
         id_pacote = save_pacote(pacote)
-        save_links(links, id_pacote)
+        save_links(links_validos, id_pacote)
       end
-      retorna.push(pacote, links, links_duplicados)
+      retorna.push(pacote, links_validos, links_duplicados)
       return retorna
     else
       $erro = true
