@@ -52,7 +52,7 @@ def show_response
     # Verifica links duplicados
     links_validos.each do |link|
       links_db.each do |db|
-        if link == db.link
+        if link == db
           links_duplicados.push db
         end
       end
@@ -165,7 +165,7 @@ Released   : 20081230
                 </p>
                 <p>
                   <% links_duplicados.each do |link| %>
-                    <%= link.link %><br/>
+                    <%= link %><br/>
                   <% end %>
                 </p>
                 <p>O pacote não será salvo até que não haja nenhum link duplicado.</p>
