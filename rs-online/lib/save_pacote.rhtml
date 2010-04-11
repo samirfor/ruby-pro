@@ -58,10 +58,7 @@ def show_response
         id_pacote = save_pacote(pacote)
         save_links(links, id_pacote)
       end
-
-      retorna.push pacote
-      retorna.push links
-      retorna.push links_duplicados
+      retorna.push(pacote, links, links_duplicados)
       return retorna
     else
       $erro = true

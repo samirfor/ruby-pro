@@ -367,6 +367,7 @@ def select_full_links
   rst = db[0]
   conn = db[1]
   lista = Array.new
+  link = nil
   begin
     rst.fetch do |row|
       link = Link.new(row["link"])
@@ -382,7 +383,11 @@ def select_full_links
     end
     rst.finish
     db_disconnect(conn)
-    lista.sort
+    if lista.size == lista.nitems
+      nil
+    else
+      lista.sort
+    end
   rescue Exception => e
     to_log "Houve erro => #{e.message}"
     return nil
