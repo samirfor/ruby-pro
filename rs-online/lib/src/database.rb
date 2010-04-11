@@ -370,6 +370,7 @@ def select_full_links
   link = nil
   begin
     rst.fetch do |row|
+      p row
       link = Link.new(row["link"])
       link.id_link = row["id_link"]
       link.id_pacote = row["id_pacote"]
