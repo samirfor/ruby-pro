@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define SIZE 10
+#define SIZE 100
 
 /*
  * Faça um programa em C que aloque dinamicamente memória capaz de armazenar
@@ -42,7 +42,7 @@ int *fill(int *vetor, int size) {
     int i;
     srand(time(NULL));
     for (i = 0; i < size; i++) {
-        *(vetor + i) = rand() % 100;
+        *(vetor + i) = rand() % 101;
     }
     return vetor;
 }
