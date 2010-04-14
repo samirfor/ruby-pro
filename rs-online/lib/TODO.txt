@@ -18,3 +18,9 @@
   > Nome do processo
 - Reformular o service handler. (start, stop, close)
 - Precisamos colocar uma senha de gente no BD
+
+# 13-04-2010
+
+- Cadastrar os usuários para poder receber SMS com informações sobre suas séries
+  preferidas e aviso de exibição com hora programável e quando as legendas
+  estiverem disponíveis.
