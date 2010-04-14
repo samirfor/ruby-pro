@@ -26,11 +26,14 @@ module SMS
     texto.gsub!("ô", "o")
     texto.gsub!("ü", "u")
     texto.gsub!("_", " ")
+    texto.delete!("^")
+    texto.delete!("~")
+    texto.delete!("'")
     texto
   end
 
   def self.enviar(celular, texto)
-    if texto.size > 115
+    if texto.size > 116
       raise ArgumentError
     end
     webhost = "http://www.torpedogratis.net"
@@ -95,7 +98,7 @@ module SMS
       path = "/tmp/captcha.png"
       image = Captcha::save(url, path)
       ocr = Captcha::recognize(path)
-      puts "Captcha reconhecido => #{ocr}"
+      puts "Captcha reconhecido => #{p ocr}"
 
       ## Send form by POST
       action = URI.parse "#{webhost}/send.php?id=#{id}&op=oi"
