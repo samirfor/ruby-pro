@@ -1,0 +1,86 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+        <style>
+            @import url("../widgets.css");
+            @import url("_css/estrutura.css");
+        </style>
+        <link type="text/css" href="_css/componentes.css" rel="stylesheet">
+        <script src="_js/componentes.js" type="text/javascript"></script>
+        <script src="/_js/midiaweb.js" type="text/javascript"></script>
+        <!--[if IE 6]>
+				<style type="text/css">
+				img, div.tooltip, div.espcompdestaqueshome a, div.tooltipDestaqueHome, a.imgplayvideo span,
+				div.baseImg h2, div.baseStar ul li { behavior: url("/_css/iepngfix.htc") }
+				 </style>
+				<![endif]-->
+    </head>
+    <body>
+
+        <div class="wgMoldura fotos">
+            <div id="wgOitorpedoContent" class="wgMolduraContent">
+
+                <iframe width="327" scrolling="no" height="405" frameborder="0" style="border: medium none ; width: 327px; height: 395px; display: block;" vspace="0" marginwidth="0" marginheight="0" name="telaTorpedo" id="telaTorpedo"></iframe>
+
+                <form name="frmTorpedoInt" target="telaTorpedo" action="http://torpedo.oiloja.com.br/oitorpedo/EnviaSMSController" method="post">
+                    <input type="hidden" value="LIBERADO" name="hidParametro">
+                </form>
+
+                <div id="banners">
+                    <a target="_blank" href="http://bandalarga.oi.com.br?utm_source=oi&amp;utm_medium=pop-torpedo&amp;utm_content=bandalarga&amp;utm_campaign=home&amp;utm_nooverride=1"><img width="300" height="100" src="/arquivos/banda_larga/12816_bandalarga_300x100.jpg"></a>
+
+
+                </div>
+            </div>
+
+
+        </div>
+        <script>
+            function wgTorpedoRedirInt(){
+                var f = document.frmTorpedoInt;
+                f.target = 'telaTorpedo';
+                f.action =  'http://torpedo.oiloja.com.br/oitorpedo/EnviaSMSController';
+                f.method = 'post';
+                f.submit();
+            }
+
+            wgTorpedoRedirInt();
+
+        </script>
+
+        <!-- Predicta Atmosphere 2007 - Nao remover esta parte do codigo -->
+        <script type="text/javascript">
+            //&lt;![CDATA[[
+            _ATM = {su:'https://oitorpedo.ig.atmo.predicta.com.br/atmo',si:302}
+            //]]&gt;
+        </script>
+        <script src="http://images.ig.com.br/predicta/atm.js" type="text/javascript"></script>
+        <noscript>
+            &lt;div style="height:1px;"&gt;&lt;img src='https://oitorpedo.ig.atmo.predicta.com.br/atmo/cap/$s=302$jsv=0' width="1" height="1" /&gt;&lt;/div&gt;
+        </noscript>
+        <!-- Predicta Atmosphere 2007 - Nao remover esta parte do codigo -->
+        <script src="http://s3.amazonaws.com/new.cetrk.com/pages/scripts/0010/1277.js" type="text/javascript">&lt;!--//--&gt;</script>
+
+        <script type="text/javascript">
+
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+        </script><script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+
+        <script type="text/javascript">
+
+            try {
+
+                var pageTracker = _gat._getTracker("UA-5263530-1");
+
+                pageTracker._trackPageview();
+
+            } catch(err) {}</script>
+    </body></html>
