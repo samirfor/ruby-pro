@@ -1,6 +1,6 @@
 require 'dbi'
-require 'src/pacote'
-require 'src/link'
+require 'pacote'
+require 'link'
 
 # Gera linhas de log
 def to_log texto
