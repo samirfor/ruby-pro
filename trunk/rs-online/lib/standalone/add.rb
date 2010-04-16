@@ -45,14 +45,6 @@ class RsOnline2Glade
   end
   def on_submit_clicked(widget)
     begin
-      pacote = Pacote.new @nome.text
-      pacote.prioridade = @prioridade.active + 1
-      pacote.senha = @senha.text
-      pacote.descricao = @descricao.buffer.text
-      links_validos = Array.new
-      links_duplicados = Array.new
-      links_db = select_full_links
-
       lista = @links.buffer.get_text(nil, nil, false).split("\n")
       links_validos = verify_list(lista)
 
@@ -61,6 +53,15 @@ class RsOnline2Glade
         show_erro "Não foi detectado link válido."
         return nil
       end
+    
+      pacote = Pacote.new @nome.text
+      pacote.prioridade = @prioridade.active + 1
+      pacote.senha = @senha.text
+      pacote.descricao = @descricao.buffer.text
+      links_validos = Array.new
+      links_duplicados = Array.new
+      links_db = select_full_links
+
       # Verifica se links_db é válido
       if links_db == nil
         show_erro "Não foi possível obter todos os links do banco de dados."
