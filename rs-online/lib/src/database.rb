@@ -140,6 +140,8 @@ def select_pacote(id)
       pacote.prioridade = row["prioridade"]
       pacote.tamanho = row["tamanho"]
       pacote.descricao = row["descricao"]
+      pacote.url_fonte = row["url_fonte"]
+      pacote.legenda = row["legenda"]
     end
   rescue Exception => err
     puts "Erro no fetch"
@@ -250,6 +252,8 @@ def select_lista_pacotes mostrar
       pacote.prioridade = row["prioridade"]
       pacote.tamanho = row["tamanho"]
       pacote.descricao = row["descricao"]
+      pacote.url_fonte = row["url_fonte"]
+      pacote.legenda = row["legenda"]
       pacotes.push pacote
     end
   rescue Exception => err
@@ -339,10 +343,14 @@ def save_pacote(pacote)
   sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
   sql += ", senha" unless pacote.senha == ""
   sql += ", descricao" unless pacote.descricao == ""
+  sql += ", url_fonte" unless pacote.url_fonte == ""
+  sql += ", legenda" unless pacote.legenda == ""
   sql += ") VALUES ('#{pacote.nome}', '#{timestamp data_inicio}' "
   sql += ", #{pacote.prioridade}"
   sql += ", '#{pacote.senha}'" unless pacote.senha == ""
   sql += ", '#{pacote.descricao}'" unless pacote.descricao == ""
+  sql += ", '#{pacote.url_fonte}'" unless pacote.url_fonte == ""
+  sql += ", '#{pacote.legenda}'" unless pacote.legenda == ""
   sql += ") RETURNING id"
 
   db = db_statement_execute(sql)
@@ -371,16 +379,16 @@ def select_full_links
   begin
     rst.fetch do |row|
       link = row["link"].strip
-#      p row
-#      link = Link.new(row["link"])
-#      link.id_link = row["id_link"]
-#      link.id_pacote = row["id_pacote"]
-#      link.completado = row["completado"]
-#      link.tamanho = row["tamanho"]
-#      link.id_status = row["id_status"]
-#      link.testado = row["testado"]
-#      link.data_inicio = row["data_inicio"]
-#      link.data_fim = row["data_fim"]
+      #      p row
+      #      link = Link.new(row["link"])
+      #      link.id_link = row["id_link"]
+      #      link.id_pacote = row["id_pacote"]
+      #      link.completado = row["completado"]
+      #      link.tamanho = row["tamanho"]
+      #      link.id_status = row["id_status"]
+      #      link.testado = row["testado"]
+      #      link.data_inicio = row["data_inicio"]
+      #      link.data_fim = row["data_fim"]
       lista.push link
     end
     rst.finish
