@@ -35,6 +35,8 @@ def update_pacote a_params
     sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}'"
     sql += ", senha = '#{a_params["senha"]}'" unless a_params["senha"][0] == ""
     sql += ", descricao = '#{a_params["descricao"]}'" unless a_params["descricao"][0] == ""
+    sql += ", url_fonte = '#{a_params["url_fonte"]}'" unless a_params["url_fonte"][0] == ""
+    sql += ", legenda = '#{a_params["legenda"]}'" unless a_params["legenda"][0] == ""
     sql += " WHERE id = #{a_params["id_pacote"]}"
     db_statement_do(sql)
     return "Pacote modificado com sucesso."
