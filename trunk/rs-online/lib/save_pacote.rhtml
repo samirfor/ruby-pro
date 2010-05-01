@@ -186,7 +186,12 @@ Released   : 20081230
               <h1 class="title"><%= pacote.nome %></h1>
               <div class="entry">
                 <p>
-                  <% RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes." if $twitter %>
+                  <%
+                  if $twitter
+                    RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes."
+                  else
+                    print "Não foi possível twittar. Veja o log para detalhes."
+                  end%>
                 </p>
                 <p>
                   <%
