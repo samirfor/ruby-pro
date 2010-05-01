@@ -11,7 +11,11 @@ end
 # Faz a conexão com o banco de dados.
 def db_connect
   begin
-    DBI.connect("DBI:Pg:postgres:localhost", "postgres", "postgres")
+    database = "postgres"
+#    host = "multi.samir.remobo.com"
+    host = "localhost"
+    port = 5432
+    DBI.connect("DBI:Pg:dbname=#{database};host=#{host};port=#{port}", "postgres", "postgres")
   rescue DBI::DatabaseError => e
     to_log "Ocorreu erro ao se conectar no banco de dados."
     to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"

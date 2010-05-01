@@ -32,6 +32,8 @@ class RsOnline2Glade
     @local.current_folder = "/home/multi/www/videos_scene"
     @submit_erro = @glade.get_widget("submit_erro")
     @submit_ok = @glade.get_widget("submit_ok")
+    @url_fonte = ""
+    @legenda = ""
   end
   
   def on_window_destroy(widget)
@@ -58,7 +60,9 @@ class RsOnline2Glade
       pacote.prioridade = @prioridade.active + 1
       pacote.senha = @senha.text
       pacote.descricao = @descricao.buffer.text
-      links_validos = Array.new
+      pacote.url_fonte = @url_fonte
+      pacote.legenda = @legenda
+      
       links_duplicados = Array.new
       links_db = select_full_links
 
@@ -88,7 +92,7 @@ class RsOnline2Glade
         pacote.id_pacote = save_pacote(pacote)
         save_links(links_validos, pacote.id_pacote)
         puts "Pacote salvo com sucesso\!"
-        @submit_ok.set_secondary_text(lista.join("\n"))
+        @submit_ok.set_secondary_text(links_validos.join("\n"))
         @submit_ok.show_all
       else
         show_erro "Foi detectado um ou mais link duplicado.\n \
