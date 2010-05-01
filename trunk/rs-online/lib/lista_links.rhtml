@@ -208,22 +208,22 @@ def show_lista_links lista, pacote%>
             </td>
           </tr>
           <tr>
+            <td><b>Link fonte: </b><br/></td>
+            <td>
+              <input type="text" name="url_fonte" class="text" size="30" value="<% print pacote.url_fonte unless pacote.url_fonte == nil %>"/>
+            </td>
+            <td><b>Legenda: </b><br/></td>
+            <td>
+              <input type="text" name="legenda" class="text" size="30" value="<% print pacote.legenda unless pacote.legenda == nil %>"/>
+            </td>
+          </tr>
+          <tr>
             <td><b>Descrição: </b><br/></td>
             <td>
               <textarea name="descricao" cols="30" rows="5" class="area-wide" title="Insira um pequena descrição sobre o pacote" ><% print pacote.descricao unless pacote.descricao == nil %></textarea>
             </td>
-            <td>
-              <td><b>Link fonte: </b><br/></td>
-              <td><b>Legenda: </b><br/></td>
-            </td>
-            <td>
-              <td>
-                <input type="text" name="url_fonte" class="text" size="30" value="<% print pacote.url_fonte unless pacote.url_fonte == nil %>"/>
-              </td>
-              <td>
-                <input type="text" name="legenda" class="text" size="30" value="<% print pacote.legenda unless pacote.legenda == nil %>"/>
-              </td>
-            </td>
+            <td> &nbsp; </td>
+            <td> &nbsp; </td>
           </tr>
           <tr align="right">
             <td colspan="4">
