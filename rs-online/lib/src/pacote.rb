@@ -1,4 +1,6 @@
 require "src/database"
+require "rubygems"
+require "shorturl"
 
 class Pacote
   attr_accessor :id_pacote, :tamanho, :problema, :nome, :completado, \
@@ -20,6 +22,9 @@ class Pacote
   end
 
   def update_db
+    @legenda = encurta_url(@legenda)
+    @url_fonte = encurta_url(@url_fonte)
+
     sql = "UPDATE rs.pacote SET "
     sql += "tamanho = #{@tamanho}, " unless @tamanho == nil
     sql += "data_fim = '#{@data_fim}', " unless @data_fim == nil
@@ -35,4 +40,15 @@ class Pacote
     sql += "WHERE id = #{@id_pacote}"
     db_statement_do(sql)
   end
+
+  def encurta_url text
+    text_original = text
+    text.strip!
+    if text =~ /http:\/\/.+/i and not text =~ /http:\/\/tinyurl.+/i
+      return ShortURL.shorten(text, :tinyurl)
+    else
+      return text_original
+    end
+  end
+
 end
