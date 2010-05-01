@@ -22,6 +22,7 @@ def erro_fatal %>
       <meta http-equiv="Refresh" content="0;url=error.rhtml"/>
     </head>
   </html> <%
+  to_log "Erro fatal em [save_pacote]"
   exit
 end
 
@@ -88,6 +89,7 @@ def show_response
   rescue Exception => err
     $erro = true
     $backtrace = err.backtrace.join("<br\/>")
+    to_log "Erro ao responder add_pacote: #{e.message}"
     return nil
   end
 end
