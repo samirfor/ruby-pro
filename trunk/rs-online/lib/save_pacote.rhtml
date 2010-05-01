@@ -1,9 +1,17 @@
 <%
 require 'dbi'
 require 'cgi'
-require 'src/twitter'
 require 'src/pacote'
 require "src/database"
+
+$twitter = true
+begin
+  require 'src/twitter'
+rescue Exception => e
+  $twitter = false
+  to_log "Não foi possível carregar o twitter: #{e.message}"
+end
+
 
 $erro = false
 $backtrace = nil
@@ -178,7 +186,7 @@ Released   : 20081230
               <h1 class="title"><%= pacote.nome %></h1>
               <div class="entry">
                 <p>
-                  <% RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes." %>
+                  <% RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes." if $twitter %>
                 </p>
                 <p>
                   <%
