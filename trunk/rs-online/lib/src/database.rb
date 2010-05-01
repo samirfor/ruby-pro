@@ -378,7 +378,12 @@ def select_full_links
   link = nil
   begin
     rst.fetch do |row|
-      link = row["link"].strip
+      begin
+        link = row["link"].strip
+      rescue URI::InvalidURIError => i
+        to_log "URI inválido, pulando link."
+        link = nil
+      end
       #      p row
       #      link = Link.new(row["link"])
       #      link.id_link = row["id_link"]
