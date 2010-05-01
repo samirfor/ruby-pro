@@ -42,6 +42,7 @@ class Pacote
   end
 
   def encurta_url text
+    return nil if text == nil
     text_original = text
     text.strip!
     if text =~ /http:\/\/.+/i and not text =~ /http:\/\/tinyurl.+/i
