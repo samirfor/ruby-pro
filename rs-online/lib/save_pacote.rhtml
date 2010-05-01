@@ -26,6 +26,8 @@ def show_response
     pacote.prioridade = a_params["prioridade"]
     pacote.senha = a_params["senha"][0]
     pacote.descricao = a_params["descricao"][0]
+    pacote.url_fonte = a_params["url_fonte"][0]
+    pacote.legenda = a_params["legenda"][0]
     links_validos = Array.new
     links_duplicados = Array.new
     links_db = select_full_links
