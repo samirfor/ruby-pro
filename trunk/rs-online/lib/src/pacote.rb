@@ -2,7 +2,8 @@ require "src/database"
 
 class Pacote
   attr_accessor :id_pacote, :tamanho, :problema, :nome, :completado, \
-    :mostrar, :prioridade, :senha, :data_inicio, :data_fim, :descricao
+    :mostrar, :prioridade, :senha, :data_inicio, :data_fim, :descricao, \
+    :url_fonte, :legenda
 
   def initialize nome
     @nome = nome
@@ -14,6 +15,8 @@ class Pacote
     @mostrar = nil
     @senha = nil
     @descricao = nil
+    @url_fonte = nil
+    @legenda = nil
   end
 
   def update_db
@@ -26,6 +29,8 @@ class Pacote
     sql += "mostrar = '#{@mostrar}', " unless @mostrar == nil
     sql += "senha = '#{@senha}', " unless @senha == nil
     sql += "descricao = '#{@descricao}', " unless @descricao == nil
+    sql += "url_fonte = '#{@url_fonte}', " unless @url_fonte == nil
+    sql += "legenda = '#{@legenda}', " unless @legenda == nil
     sql += "problema = '#{@problema}' "
     sql += "WHERE id = #{@id_pacote}"
     db_statement_do(sql)
