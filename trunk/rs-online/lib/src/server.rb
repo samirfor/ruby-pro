@@ -1,6 +1,8 @@
 require "src/database"
 require 'net/http'
 require 'socket'
+require "date"
+require "time"
 
 class Server
   attr_accessor :id, :ip, :data
@@ -52,7 +54,7 @@ class Server
       raise
     end
     @ip = server["ip"]
-    @data = server["data_modificacao"].to_time
+    @data = Time.parse server["data_modificacao"].to_s
     rst.finish
     db_disconnect(conn)
   end
