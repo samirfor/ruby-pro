@@ -12,8 +12,14 @@ end
 def db_connect
   begin
     database = "postgres"
-#    host = "multi.samir.remobo.com"
-    host = "localhost"
+    hostname = `hostname`.chomp
+    if hostname == "samir-desktop"
+      host = "localhost"
+    elsif hostname == "samir-home"
+      host = "multi.samir.remobo.com"
+    else
+      host = "10.50.0.141"
+    end
     port = 5432
     DBI.connect("DBI:Pg:dbname=#{database};host=#{host};port=#{port}", "postgres", "postgres")
   rescue DBI::DatabaseError => e
