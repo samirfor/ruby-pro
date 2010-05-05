@@ -19,98 +19,101 @@ Released   : 20081230
 <%
 def kill_processo
   begin
-    Process.kill(9, select_last_pid)
+    pid = select_last_pid
+    Process.kill(9, pid)
+    return "Processo PID #{pid} matado com sucesso."
   rescue Exception => e
-    e
+    return e.message
   end
+end
 %>
 
-  <html>
-    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-      <title>RS-Online ~ version 1.0b ~ Powered by eRuby</title>
-      <link rel="stylesheet" type="text/css" href="../style.css" media="screen" />
-    </head>
-    <body>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>RS-Online ~ version 1.0b ~ Powered by eRuby</title>
+    <link rel="stylesheet" type="text/css" href="../style.css" media="screen" />
+  </head>
+  <body>
 
-      <div id="wrapper">
+    <div id="wrapper">
 
-        <div id="header">
-          <div id="logo">
-            <h1><a href="#">RS-Online Beta</a></h1>
-            <p>version 1.0b ~ Powered by eRuby</p>
-          </div>
-          <!-- end #logo -->
-          <div id="menu">
-            <ul>
-              <li class="active"><a href="../index.rhtml">Home</a></li>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Products</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">Contact Us</a></li>
-            </ul>
-          </div>
-          <!-- end #menu -->
+      <div id="header">
+        <div id="logo">
+          <h1><a href="#">RS-Online Beta</a></h1>
+          <p>version 1.0b ~ Powered by eRuby</p>
         </div>
-        <!-- end #header -->
-        <div id="page">
-          <!--<div id="header-pic"></div>-->
-          <div id="content">
-            <div class="post">
-              <h1 class="title">Finalizando serviço</h1>
-              <div class="entry">
-                <p>
-                  <%= kill_processo %>
-                </p>
-              </div>
-              <div class="meta">
-                <p class="links"></p>
-              </div>
+        <!-- end #logo -->
+        <div id="menu">
+          <ul>
+            <li class="active"><a href="../index.rhtml">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <!-- end #menu -->
+      </div>
+      <!-- end #header -->
+      <div id="page">
+        <!--<div id="header-pic"></div>-->
+        <div id="content">
+          <div class="post">
+            <h1 class="title">Matando o serviço</h1>
+            <div class="entry">
+              <p>
+                <%= kill_processo %>
+              </p>
+            </div>
+            <div class="meta">
+              <p class="links"></p>
             </div>
           </div>
-          <!-- end #content -->
-          <div id="sidebar">
-            <div id="sidebar-bgtop"></div>
-            <div id="sidebar-content">
-              <div id="sidebar-bgbtm">
-                <ul>
-                  <li id="search">
-                    <h2>Search</h2>
-                    <form method="get" action="">
-                      <fieldset>
-                        <input type="text" id="s" name="s" value="" />
-                        <input type="submit" id="x" value="Search" />
-                      </fieldset>
-                    </form>
-                  </li>
-                  <li>
-                    <h2>Pacotes</h2>
-                    <ul>
-                      <li><a href="../add_pacote.rhtml"><img alt="novo" src="../images/package_add.png"/>&nbsp;Novo Pacote</a></li>
-                      <li><a href="../lista_pacotes.rhtml"><img alt="novo" src="../images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
-                    </ul>
-                  </li>
-                  <li>
-                    <h2>Downloads</h2>
-                    <ul>
-                      <li><a href="#">Estatística (em construção)</a></li>
-                      <li><a href="../log_downloads.rhtml"><img alt="novo" src="../images/report.png"/>&nbsp;Log de Downloads</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
+        </div>
+        <!-- end #content -->
+        <div id="sidebar">
+          <div id="sidebar-bgtop"></div>
+          <div id="sidebar-content">
+            <div id="sidebar-bgbtm">
+              <ul>
+                <li id="search">
+                  <h2>Search</h2>
+                  <form method="get" action="">
+                    <fieldset>
+                      <input type="text" id="s" name="s" value="" />
+                      <input type="submit" id="x" value="Search" />
+                    </fieldset>
+                  </form>
+                </li>
+                <li>
+                  <h2>Pacotes</h2>
+                  <ul>
+                    <li><a href="../add_pacote.rhtml"><img alt="novo" src="../images/package_add.png"/>&nbsp;Novo Pacote</a></li>
+                    <li><a href="../lista_pacotes.rhtml"><img alt="novo" src="../images/drive_web.png"/>&nbsp;Lista de pacotes</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2>Downloads</h2>
+                  <ul>
+                    <li><a href="#">Estatística (em construção)</a></li>
+                    <li><a href="../log_downloads.rhtml"><img alt="novo" src="../images/report.png"/>&nbsp;Log de Downloads</a></li>
+                  </ul>
+                </li>
+              </ul>
             </div>
           </div>
-          <!-- end #sidebar -->
-          <div style="clear:both; margin:0;"></div>
         </div>
-        <!-- end #page -->
-
+        <!-- end #sidebar -->
+        <div style="clear:both; margin:0;"></div>
       </div>
+      <!-- end #page -->
 
-      <div id="footer">
-        <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. RS-Online is powered by eRuby.</p>
-      </div>
-      <!-- end #footer -->
-    </body>
-  </html>
+    </div>
+
+    <div id="footer">
+      <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. RS-Online is powered by eRuby.</p>
+    </div>
+    <!-- end #footer -->
+  </body>
+</html>

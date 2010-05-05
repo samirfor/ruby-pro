@@ -18,11 +18,11 @@ Released   : 20081230
 <%
 def stop_download
   begin
-    File.new "/home/multi/www/videos_scene/cancelar", "w"
+    File.new "/media/AUX1/Scene/videos_scene/cancelar", "w"
     RSTwitter.tweet "Alguém ativou o cancelamento dos downloads."
     return "Download cancelado pelo usuário."
   rescue Exception => e
-    return e
+    return e.message
   end
 end
 %>
