@@ -3,15 +3,7 @@ require 'dbi'
 require 'cgi'
 require 'src/pacote'
 require "src/database"
-
-$twitter = true
-begin
-  require 'src/twitter'
-rescue Exception => e
-  $twitter = false
-  to_log "Não foi possível carregar o twitter: #{e.message}"
-end
-
+require 'src/twitter'
 
 $erro = false
 $backtrace = nil
@@ -23,7 +15,6 @@ def erro_fatal %>
     </head>
   </html> <%
   to_log "Erro fatal em [save_pacote]"
-  exit
 end
 
 def show_response
@@ -189,24 +180,24 @@ Released   : 20081230
               <div class="entry">
                 <p>
                   <%
-                  
-                    RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes."
-                  else
-                    print "Não foi possível twittar. Veja o log para detalhes."
-                  end%>
-                </p>
-                <p>
-                  <%
-                  links.each do |link| %>
-                    <%= link %><br/>
-                  <%
-                  end %>
-                </p>
-              </div>
-              <div class="meta">
-                <p class="links"><% print "Pacote adicionado." %></p>
-              </div>
-            <% end %>
+
+                  RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes."
+                else
+                  print "Não foi possível twittar. Veja o log para detalhes."
+                end%>
+              </p>
+              <p>
+                <%
+                links.each do |link| %>
+                  <%= link %><br/>
+                <%
+                end %>
+              </p>
+            </div>
+            <div class="meta">
+              <p class="links"><% print "Pacote adicionado." %></p>
+            </div>
+          <% end %>
           </div>
         </div>
         <!-- end #content -->
