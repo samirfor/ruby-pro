@@ -31,14 +31,7 @@ require 'src/status'
 require 'src/prioridade'
 require 'src/excecoes'
 require 'src/pacote'
-
-$twitter = true
-begin
-  require 'src/twitter'
-rescue Exception => e
-  $twitter = false
-  to_log "Não foi possível carregar o twitter: #{e.message}"
-end
+require 'src/twitter'
 
 # -- Métodos locais
 
@@ -105,7 +98,7 @@ def cancelar?
   if FileTest.exist?("#{fullpath}/cancelar") or FileTest.exist?("#{fullpath}/fechar")
     evento = "Downloads cancelado pelo usuário."
     to_log evento
-    RSTwitter.tweet evento if $twitter
+    RSTwitter.tweet evento 
     exit!(1)
   end
 end
@@ -188,7 +181,7 @@ def run
       if pacote == nil
         evento = 'Fim do(s) download(s). Have a nice day!'
         to_log evento
-        RSTwitter.tweet evento if $twitter
+        RSTwitter.tweet evento 
         exit!(1)
       end
       links_before_test = select_lista_links pacote.id_pacote
@@ -224,7 +217,7 @@ def run
       msg = "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
       to_log msg
       run_thread Proc.new {
-        RSTwitter.tweet msg  if $twitter
+        RSTwitter.tweet msg  
       }
       ## Fim Informações do teste
 
@@ -258,13 +251,13 @@ def run
       evento += "V. media = #{sprintf("%.2f KB/s", pacote.tamanho/(pacote.data_fim - pacote.data_inicio))}"
       to_log evento
       run_thread Proc.new {
-        RSTwitter.tweet evento  if $twitter
+        RSTwitter.tweet evento  
       }
       unless select_remaining_links(pacote.id_pacote) == 0
         pacote.problema = true
         pacote.update_db
         run_thread Proc.new {
-          RSTwitter.tweet "Pacote #{pacote.nome} está problema." if $twitter
+          RSTwitter.tweet "Pacote #{pacote.nome} está problema." 
         }
       end
       ## Fim Informações do download
@@ -315,7 +308,7 @@ rescue Interrupt
 rescue SystemExit => err
   evento = "O programa foi encerrado."
   to_log evento
-  RSTwitter.tweet evento  if $twitter
+  RSTwitter.tweet evento  
   exit!
 rescue NoMethodError => err
   to_log "FATAL: Não há método definido."

@@ -19,17 +19,18 @@ Released   : 20081230
 <%
 def start_download
   begin
-    cancelar = "/home/multi/www/videos_scene/cancelar"
-    fechar = "/home/multi/www/videos_scene/fechar"
+    cancelar = "/media/AUX1/Scene//videos_scene/cancelar"
+    fechar = "/media/AUX1/Scene//videos_scene/fechar"
     if File.exist?(cancelar)
       File.delete(cancelar)
     end
     if File.exist?(fechar)
       File.delete(fechar)
     end
-    return system("rs-online")
+    `cd /media/AUX1/Scene//videos_scene/ && rs-online &`
+    return "Download iniciado com sucesso."
   rescue Exception => e
-    return e
+    return e.message
   end
 end
 %>
