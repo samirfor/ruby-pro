@@ -16,7 +16,7 @@ require "pacote"
 
 class RsOnline2Glade
   include GetText
-
+  
   attr :glade
 
   def initialize(path_or_data, root = nil, domain = nil, localedir = nil, flag = GladeXML::FILE)
@@ -60,8 +60,8 @@ class RsOnline2Glade
       pacote.prioridade = @prioridade.active + 1
       pacote.senha = @senha.text
       pacote.descricao = @descricao.buffer.text
-      pacote.url_fonte = @url_fonte
-      pacote.legenda = @legenda
+      pacote.url_fonte = @url_fonte.text
+      pacote.legenda = @legenda.text
       
       links_duplicados = Array.new
       links_db = select_full_links
@@ -113,6 +113,9 @@ class RsOnline2Glade
     @links.buffer =  Gtk::TextBuffer.new
     @nome.set_text("")
     @senha.set_text("")
+    @prioridade.active = 0
+    @url_fonte.set_text("")
+    @legenda.set_text("")
     @descricao.buffer = Gtk::TextBuffer.new
     @local.current_folder = GLib.home_dir
   end
