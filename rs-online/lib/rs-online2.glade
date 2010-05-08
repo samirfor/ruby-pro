@@ -26,11 +26,34 @@
                 <property name="visible">True</property>
                 <property name="spacing">5</property>
                 <child>
-                  <widget class="GtkLabel" id="label_nome">
+                  <widget class="GtkHBox" id="hbox7">
                     <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="yalign">0</property>
-                    <property name="label" translatable="yes">Nome</property>
+                    <property name="spacing">10</property>
+                    <property name="homogeneous">True</property>
+                    <child>
+                      <widget class="GtkLabel" id="label_nome">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="yalign">0</property>
+                        <property name="label" translatable="yes">Nome</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label_status">
+                        <property name="visible">True</property>
+                        <property name="xalign">1</property>
+                        <property name="yalign">0</property>
+                        <property name="label" translatable="yes">Conex&#xE3;o com banco: </property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -124,7 +147,7 @@ Muito Alta</property>
                     <property name="spacing">10</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <widget class="GtkLabel" id="url_fonte">
+                      <widget class="GtkLabel" id="label_url_fonte">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="yalign">0</property>
@@ -136,7 +159,7 @@ Muito Alta</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label_prioridade1">
+                      <widget class="GtkLabel" id="label_legenda">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="yalign">0</property>
@@ -159,7 +182,7 @@ Muito Alta</property>
                     <property name="spacing">10</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <widget class="GtkEntry" id="url_font">
+                      <widget class="GtkEntry" id="url_fonte">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">&#x25CF;</property>

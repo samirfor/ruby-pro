@@ -32,8 +32,11 @@ class RsOnline2Glade
     @local.current_folder = "/home/multi/www/videos_scene"
     @submit_erro = @glade.get_widget("submit_erro")
     @submit_ok = @glade.get_widget("submit_ok")
-    @url_fonte = ""
-    @legenda = ""
+    @url_fonte = @glade.get_widget("url_fonte")
+    @legenda = @glade.get_widget("legenda")
+    @label_status = @glade.get_widget("label_status")
+    @host = get_host_db
+    @label_status.set_label "#{@label_status.text}#{@host}"
   end
   
   def on_window_destroy(widget)
