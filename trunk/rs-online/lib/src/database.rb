@@ -8,20 +8,25 @@ def to_log texto
   puts texto
 end
 
+def get_host_db
+  hostname = `hostname`.chomp
+  if hostname == "samir-desktop"
+    return "localhost"
+  elsif hostname == "samir-home"
+    return "multi.samir.remobo.com"
+  else
+    return "10.50.0.141"
+  end
+end
+
 # Faz a conexão com o banco de dados.
 def db_connect
   begin
     database = "postgres"
-    hostname = `hostname`.chomp
-    if hostname == "samir-desktop"
-      host = "localhost"
-    elsif hostname == "samir-home"
-      host = "multi.samir.remobo.com"
-    else
-      host = "10.50.0.141"
-    end
+    db_name = "postgres"
+    passwd = "postgres"
     port = 5432
-    DBI.connect("DBI:Pg:dbname=#{database};host=#{host};port=#{port}", "postgres", "postgres")
+    DBI.connect("DBI:Pg:dbname=#{database};host=#{get_host_db};port=#{port}", db_name, passwd)
   rescue DBI::DatabaseError => e
     to_log "Ocorreu erro ao se conectar no banco de dados."
     to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
