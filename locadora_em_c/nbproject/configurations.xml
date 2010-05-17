@@ -4,19 +4,21 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Arquivos de cabeçalho"
                    projectFiles="true">
+      <itemPath>client.h</itemPath>
+      <itemPath>dvd.h</itemPath>
+      <itemPath>file_handle.h</itemPath>
+      <itemPath>location.h</itemPath>
+      <itemPath>movie.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Arquivos de código-fonte"
                    projectFiles="true">
       <itemPath>client.c</itemPath>
-      <itemPath>client.h</itemPath>
       <itemPath>dvd.c</itemPath>
-      <itemPath>dvd.h</itemPath>
+      <itemPath>file_handle.c</itemPath>
       <itemPath>location.c</itemPath>
-      <itemPath>location.h</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>movie.c</itemPath>
-      <itemPath>movie.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Arquivos de recurso"

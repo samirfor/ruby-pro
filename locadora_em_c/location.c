@@ -1,8 +1,8 @@
 /* 
- * File:   movie.c
+ * File:   alocacao.c
  * Author: samir
  *
- * Created on 5 de Maio de 2010, 16:22
+ * Created on 5 de Maio de 2010, 16:23
  */
 
 #include <stdio.h>
@@ -11,4 +11,3 @@
 /*
  * 
  */
-
