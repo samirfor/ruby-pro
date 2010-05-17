@@ -16,7 +16,7 @@ require "pacote"
 
 class RsOnline2Glade
   include GetText
-  
+
   attr :glade
 
   def initialize(path_or_data, root = nil, domain = nil, localedir = nil, flag = GladeXML::FILE)
@@ -38,7 +38,7 @@ class RsOnline2Glade
     @host = get_host_db
     @label_status.set_label "#{@label_status.text}#{@host}"
   end
-  
+
   def on_window_destroy(widget)
     puts "Good bye\!"
     Gtk.main_quit
@@ -58,14 +58,14 @@ class RsOnline2Glade
         show_erro "Não foi detectado link válido."
         return nil
       end
-    
+
       pacote = Pacote.new @nome.text
       pacote.prioridade = @prioridade.active + 1
       pacote.senha = @senha.text
       pacote.descricao = @descricao.buffer.text
       pacote.url_fonte = @url_fonte.text
       pacote.legenda = @legenda.text
-      
+
       links_duplicados = Array.new
       links_db = select_full_links
 
@@ -108,7 +108,7 @@ class RsOnline2Glade
       return nil
     end
   end
-  
+
   def on_clipboard_clicked(widget)
     @links.buffer.paste_clipboard(Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD), nil, true)
   end

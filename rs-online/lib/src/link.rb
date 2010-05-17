@@ -2,7 +2,8 @@ require 'net/http'
 require 'socket'
 require "src/status"
 require "src/erros_rapidshare"
-require "src/server"
+require "src/server_rs"
+require "src/server_mu"
 
 class Link
   attr_accessor :link, :host, :path, :ip, :uri, :id_link, :id_pacote, \
@@ -47,7 +48,10 @@ class Link
       if @host == "rapidshare.com" or @host == "www.rapidshare.com"
         @ip = "195.122.131.2"
       elsif @host =~ /rs\d+.rapidshare.com/
-        server = Server.new(@host.scan(/\d+/)[0].to_i)
+        server_rs = ServerRS.new(@host.scan(/\d+/)[0].to_i)
+        @ip = server.ip
+      elsif @host =~ /wwwq\d+.megaupload.com/
+        server_mu = ServerMU.new(@host.scan(/\d+/)[0].to_i)
         @ip = server.ip
       else
         raise

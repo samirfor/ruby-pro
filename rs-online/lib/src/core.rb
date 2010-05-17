@@ -286,9 +286,23 @@ def singleton?
   end
 end
 
+def run_single_link(link)
+  down = Link.new link
+  down.test
+  down.download
+end
+
 # O método main do programa
 begin
   ajuda
+  if ARGV[0] == "-1"
+    if ARGV[1] == ""
+      run_single_link ARGV[1].chomp
+    else
+      puts "Link não detectado."
+    end
+    exit!
+  end
   if singleton?
     # Guardando o numero do pid
     arq = File.open("/home/#{`whoami`.chomp}/rs-online.conf", "r+")

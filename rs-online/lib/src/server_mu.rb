@@ -4,7 +4,7 @@ require 'socket'
 require "date"
 require "time"
 
-class Server
+class ServerMU
   attr_accessor :id, :ip, :data
 
   def initialize id
@@ -22,7 +22,7 @@ class Server
 
   def generator
     @data = Time.now
-    @ip = IPSocket.getaddress "rs#{@id}.rapidshare.com"
+    @ip = IPSocket.getaddress "wwwq#{@id}.megaupload.com"
   end
 
   def timestamp time
@@ -30,7 +30,7 @@ class Server
   end
 
   def update_db
-    sql = "UPDATE rs.servidores SET "
+    sql = "UPDATE rs.servidores_mu SET "
     sql += "data_modificacao = '#{timestamp(@data)}', " unless @data == nil
     sql += "ip = '#{@ip}' "
     sql += "WHERE id = #{@id}"
@@ -43,7 +43,7 @@ class Server
   ip inet NOT NULL,
   data_modificacao timestamp without time zone
 =end
-    sql = "SELECT * FROM rs.servidores WHERE id = #{@id}"
+    sql = "SELECT * FROM rs.servidores_mu WHERE id = #{@id}"
     db = db_statement_execute(sql)
     rst = db[0]
     conn = db[1]
@@ -60,13 +60,13 @@ class Server
   end
 
   def insert_db
-    sql = "INSERT INTO rs.servidores (id, ip, data_modificacao) "
+    sql = "INSERT INTO rs.servidores_mu (id, ip, data_modificacao) "
     sql += "VALUES (#{@id}, '#{@ip}', '#{timestamp(@data)}')"
     db_statement_do(sql)
   end
 
   def is_exist?
-    sql = "SELECT * FROM rs.servidores WHERE id = #{@id}"
+    sql = "SELECT * FROM rs.servidores_mu WHERE id = #{@id}"
     db = db_statement_execute(sql)
     rst = db[0]
     conn = db[1]
