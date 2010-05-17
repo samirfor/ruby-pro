@@ -1,4 +1,4 @@
-require "src/server"
+require "src/server_rs"
 
 for i in 1..995
   begin
