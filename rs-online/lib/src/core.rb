@@ -87,7 +87,7 @@ def falhou(segundos)
 end
 
 def to_html(body)
-  arq = File.open("rapid.html", "w")
+  arq = File.open("test.html", "w")
   arq.print(body)
   arq.close
 end
@@ -127,19 +127,6 @@ end
 # Retorna uma string na forma ideal para o UPDATE no BD.
 def timestamp time
   time.strftime("%Y/%m/%d %H:%M:%S")
-end
-
-# Método para reconhecimento do servidor de download do rapidshare
-def reconhecer_servidor body
-  servidor_host = nil
-  servidor_host = body.scan(/rs\w{1,}.rapidshare.com/i)[0]
-  if servidor_host == nil
-    to_log("Não foi possível reconhecer o servidor.")
-    to_log("Verifique se a URL está correta. Evitando ...")
-    return nil
-  end
-  to_debug('Servidor ' + servidor_host + ' identificado.')
-  servidor_host
 end
 
 # Testa os outros links que estão submetidos à download

@@ -1,5 +1,45 @@
 # => Captura de erros
 
+module ErrorMU
+  def self.indisponivel(body)
+    expressao = nil
+    expressao = body.scan(/Link que escolheu já não está disponível/i)[0]
+    if expressao == nil
+      return false
+    end
+    to_log("Link que escolheu já não está disponível reconhecido pelo MU.")
+    return true
+  end
+  def self.invalido(body)
+    expressao = nil
+    expressao = body.scan(/Link inválido/i)[0]
+    if expressao == nil
+      return false
+    end
+    to_log("Link inválido reconhecido pelo MU.")
+    return true
+  end
+  def self.deletado(body)
+    expressao = nil
+    expressao = body.scan(/Este arquivo foi deletado porque violou nossos.*Termos de Serviço/i)[0]
+    if expressao == nil
+      return false
+    end
+    to_log("Este arquivo foi deletado porque violou os Termos de Serviço do MU.")
+    return true
+  end
+end
+
+
+
+=begin
+	<TD>- Link inválido</TD>
+</TR>
+<TR>
+	<TD>- Este arquivo foi deletado porque violou nossos <a href="?c=terms">Termos de Serviço</a>.</TD>
+
+
+
 # Retorna true quando não há slots disponíveis.
 def get_no_slot(body)
   expressao = nil
@@ -127,3 +167,5 @@ def lot_of_users(body)
   contador(60*minutos, "Falta #{"%M min e " if minutos >= 1}%S seg.")
   return true
 end
+
+=end
