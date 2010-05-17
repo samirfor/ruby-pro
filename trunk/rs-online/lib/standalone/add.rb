@@ -136,8 +136,10 @@ def verify_list lista
   links_validos = []
   lista.each do |linha|
     linha.strip!
-    if linha =~ /.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/
-      links_validos.push linha.scan(/.*(http:\/\/S*rapidshare.com\/\S+\/\S+).*/)[0][0]
+    if linha =~ /.*(http:\/\/\S*rapidshare.com\/\S+\/\S+).*/
+      links_validos.push linha.scan(/.*(http:\/\/\S*rapidshare.com\/\S+\/\S+).*/)[0][0]
+    elsif linha =~ /.*(http:\/\/\S*megaupload.com\/\S+).*/
+      links_validos.push linha.scan(/.*(http:\/\/\S*megaupload.com\/\S+).*/)[0][0]
     end
   end
   links_validos
