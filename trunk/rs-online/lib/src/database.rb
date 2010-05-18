@@ -13,7 +13,7 @@ def get_host_db
   if hostname == "samir-multi"
     return "localhost"
   elsif hostname == "samir-home"
-    return "multi.samir.remobo.com"
+    return "localhost"
   else
     return "10.50.0.141"
   end
@@ -23,19 +23,13 @@ end
 def db_connect
   begin
     database = "postgres"
-    hostname = `hostname`.chomp
-    if hostname == "samir-multi"
-      host = "localhost"
-    elsif hostname == "samir-home"
-      host = "multi.samir.remobo.com"
-    else
-      host = "10.50.0.141"
-    end
+    password = "postgres"
+    hostname = get_host_db
     port = 5432
-    DBI.connect("DBI:Pg:dbname=#{database};host=#{get_host_db};port=#{port}", db_name, passwd)
+    DBI.connect("DBI:Pg:dbname=#{database};host=#{hostname};port=#{port}", database, password)
   rescue DBI::DatabaseError => e
-    to_log "Ocorreu erro ao se conectar no banco de dados."
-    to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
+    to_log "Ocorreu erro ao se conectar no banco de dados.\nStack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
+    sleep 1
   end
 end
 
@@ -49,8 +43,8 @@ def db_statement_execute(sql)
     retorno.push conn
     retorno
   rescue DBI::DatabaseError => e
-    to_log "Ocorreu erro ao se conectar no banco de dados."
-    to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
+    to_log "Ocorreu erro ao executar uma SQL.\nStack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
+    sleep 1
   end
 end
 
@@ -61,8 +55,8 @@ def db_statement_do(sql)
     conn.do(sql)
     db_disconnect(conn)
   rescue DBI::DatabaseError => e
-    to_log "Ocorreu erro ao se conectar no banco de dados."
-    to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
+    to_log "Ocorreu erro ao consultar o BD.\nStack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
+    sleep 1
   end
 end
 
@@ -71,8 +65,8 @@ def db_disconnect(conn)
   begin
     conn.disconnect
   rescue DBI::DatabaseError => e
-    to_log "Ocorreu erro ao se conectar no banco de dados."
-    to_log "Stack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
+    to_log "Ocorreu erro ao se disconectar no banco de dados.\nStack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
+    sleep 1
   end
 end
 
@@ -362,16 +356,16 @@ end
 def save_pacote(pacote)
   data_inicio = Time.now
   sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
-  sql += ", senha" unless pacote.senha == ""
-  sql += ", descricao" unless pacote.descricao == ""
-  sql += ", url_fonte" unless pacote.url_fonte == ""
-  sql += ", legenda" unless pacote.legenda == ""
+  sql += ", senha" unless pacote.senha == "" or pacote.senha == nil
+  sql += ", descricao" unless pacote.descricao == "" or pacote.descricao == nil
+  sql += ", url_fonte" unless pacote.url_fonte == "" or pacote.url_fonte == nil
+  sql += ", legenda" unless pacote.legenda == "" or pacote.legenda == nil
   sql += ") VALUES ('#{pacote.nome}', '#{timestamp data_inicio}' "
   sql += ", #{pacote.prioridade}"
-  sql += ", '#{pacote.senha}'" unless pacote.senha == ""
-  sql += ", '#{pacote.descricao}'" unless pacote.descricao == ""
-  sql += ", '#{pacote.url_fonte}'" unless pacote.url_fonte == ""
-  sql += ", '#{pacote.legenda}'" unless pacote.legenda == ""
+  sql += ", '#{pacote.senha}'" unless pacote.senha == "" or pacote.senha == nil
+  sql += ", '#{pacote.descricao}'" unless pacote.descricao == "" or pacote.descricao == nil
+  sql += ", '#{pacote.url_fonte}'" unless pacote.url_fonte == "" or pacote.url_fonte == nil
+  sql += ", '#{pacote.legenda}'" unless pacote.legenda == "" or pacote.legenda == nil
   sql += ") RETURNING id"
 
   db = db_statement_execute(sql)
@@ -384,10 +378,18 @@ def save_pacote(pacote)
 end
 
 def save_links(links, id_pacote)
+  retorno = []
   links.each do |line|
-    sql = "INSERT INTO rs.link (id_pacote, link) VALUES (#{id_pacote}, '#{line}')"
-    db_statement_do(sql)
+    sql = "INSERT INTO rs.link (id_pacote, link) VALUES (#{id_pacote}, '#{line}') RETURNING id_link"
+    db = db_statement_execute(sql)
+    rst = db[0]
+    conn = db[1]
+    retorno.push rst.fetch[0]
+    rst.finish
+    db_disconnect(conn)
   end
+  return retorno
+  return
 end
 
 def select_full_links
