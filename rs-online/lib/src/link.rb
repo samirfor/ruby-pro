@@ -1,10 +1,14 @@
 require 'net/http'
 require 'socket'
 require "src/status"
+require "src/database"
 require "src/error_rs"
 require "src/error_mu"
 require "src/server_rs"
 require "src/server_mu"
+require "src/tipo_servidor"
+require "src/megaupload"
+require "src/rapidshare"
 
 class Link
   attr_accessor :link, :host, :path, :ip, :uri, :id_link, :id_pacote, \
@@ -16,6 +20,7 @@ class Link
     @uri = URI.parse link
     @host = @uri.host
     @path = @uri.path
+    @id_link = nil
     set_ip
     @tentativas = 0
     @max_tentativas = 5
@@ -63,6 +68,29 @@ class Link
     sql += "id_status = #{@id_status} "
     sql += "WHERE id_link = #{@id_link}"
     db_statement_do(sql)
+  end
+
+  def insert_db
+    sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
+    sql += ", senha" unless pacote.senha == ""
+    sql += ", descricao" unless pacote.descricao == ""
+    sql += ", url_fonte" unless pacote.url_fonte == ""
+    sql += ", legenda" unless pacote.legenda == ""
+    sql += ") VALUES ('#{pacote.nome}', '#{timestamp data_inicio}' "
+    sql += ", #{pacote.prioridade}"
+    sql += ", '#{pacote.senha}'" unless pacote.senha == ""
+    sql += ", '#{pacote.descricao}'" unless pacote.descricao == ""
+    sql += ", '#{pacote.url_fonte}'" unless pacote.url_fonte == ""
+    sql += ", '#{pacote.legenda}'" unless pacote.legenda == ""
+    sql += ") RETURNING id"
+
+    db = db_statement_execute(sql)
+    rst = db[0]
+    conn = db[1]
+    resultado = rst.fetch[0]
+    rst.finish
+    db_disconnect(conn)
+    return resultado
   end
 
   # Traduz hostname da URL para ip.
@@ -293,6 +321,7 @@ class Link
       @data_inicio = timestamp Time.now
       update_db
       body = get_body
+      to_html body
       # Verificando erros
       if ErrorMU::indisponivel(body) or ErrorMU::deletado(body) or ErrorMU::invalido(body)
         @id_status = Status::OFFLINE
@@ -315,7 +344,9 @@ class Link
     rescue Timeout::Error
       to_log "Tempo de requisição esgotado. Tentando novamente."
       retry
-    rescue Exception
+    rescue Exception => e
+      to_log "Erro: #{e.message}"
+      ##\nBacktrace: #{e.backtrace.join("\n")}"
       @id_status = Status::INTERROMPIDO
       @testado = false
       update_db

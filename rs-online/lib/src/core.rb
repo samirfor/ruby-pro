@@ -274,7 +274,12 @@ def singleton?
 end
 
 def run_single_link(link)
+  pacote = Pacote.new("SingleMode")
+  pacote.prioridade = Prioridade::MUITO_ALTA
+  id_pacote = save_pacote(pacote)
   down = Link.new link
+  down.id_link = save_links([link], id_pacote)[0]
+  
   down.test
   down.download
 end
@@ -283,7 +288,7 @@ end
 begin
   ajuda
   if ARGV[0] == "-1"
-    if ARGV[1] == ""
+    unless ARGV[1] == ""
       run_single_link ARGV[1].chomp
     else
       puts "Link não detectado."
