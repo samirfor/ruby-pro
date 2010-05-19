@@ -70,29 +70,6 @@ class Link
     db_statement_do(sql)
   end
 
-  def insert_db
-    sql = "INSERT INTO rs.pacote (nome, data_inicio, prioridade "
-    sql += ", senha" unless pacote.senha == ""
-    sql += ", descricao" unless pacote.descricao == ""
-    sql += ", url_fonte" unless pacote.url_fonte == ""
-    sql += ", legenda" unless pacote.legenda == ""
-    sql += ") VALUES ('#{pacote.nome}', '#{timestamp data_inicio}' "
-    sql += ", #{pacote.prioridade}"
-    sql += ", '#{pacote.senha}'" unless pacote.senha == ""
-    sql += ", '#{pacote.descricao}'" unless pacote.descricao == ""
-    sql += ", '#{pacote.url_fonte}'" unless pacote.url_fonte == ""
-    sql += ", '#{pacote.legenda}'" unless pacote.legenda == ""
-    sql += ") RETURNING id"
-
-    db = db_statement_execute(sql)
-    rst = db[0]
-    conn = db[1]
-    resultado = rst.fetch[0]
-    rst.finish
-    db_disconnect(conn)
-    return resultado
-  end
-
   # Traduz hostname da URL para ip.
   # Retorno: String IP
   def set_ip
@@ -103,11 +80,11 @@ class Link
         @ip = "195.122.131.2"
       elsif @host == "megaupload.com" or @host == "www.megaupload.com"
         @ip = "174.140.154.12"
-      elsif @host =~ /rs\d+.rapidshare.com/
-        server_rs = ServerRS.new(@host.scan(/\d+/)[0].to_i)
+      elsif @host =~ /rs\d+\.rapidshare\.com/
+        server = ServerRS.new(@host.scan(/\d+/)[0].to_i)
         @ip = server.ip
-      elsif @host =~ /wwwq\d+.megaupload.com/
-        server_mu = ServerMU.new(@host.scan(/\d+/)[0].to_i)
+      elsif @host =~ /www\d+\.megaupload\.com/
+        server = ServerMU.new(@host.scan(/\d+/)[0].to_i)
         @ip = server.ip
       else
         raise
@@ -322,6 +299,7 @@ class Link
       update_db
       body = get_body
       to_html body
+      
       # Verificando erros
       if ErrorMU::indisponivel(body) or ErrorMU::deletado(body) or ErrorMU::invalido(body)
         @id_status = Status::OFFLINE
@@ -363,6 +341,7 @@ class Link
       update_db
 
       body = get_body
+      to_html(body)
 
       # Requisitando pagina de download
       to_debug 'Conexão HTTPOK 200.'
@@ -375,24 +354,12 @@ class Link
 
       ## Captura tamanho do arquivo
       @tamanho = Megaupload::get_size body
-      expressao = body.scan(/\| (\d+) KB/i)[0][0]
       if @tamanho == nil
         to_log('Não foi possível capturar o tamanho.')
         retry_
         return
       else
         to_debug("Tamanho #{@tamanho} KB ou #{sprintf("%.2f MB", @tamanho/1024.0)}")
-      end
-      @tentativas = 0
-
-      ## Captura captcha
-      captcha = Megaupload::get_captcha(body)
-      if captcha == nil
-        to_log('Não foi possível capturar o captcha.')
-        retry_
-        return
-      else
-        to_log "Captcha reconhecido => #{captcha}"
       end
       @tentativas = 0
 
@@ -418,6 +385,17 @@ class Link
       end
       @tentativas = 0
 
+      ## Captura captcha
+      captcha = Megaupload::get_captcha(body)
+      if captcha == nil
+        to_log('Não foi possível capturar o captcha.')
+        retry_
+        return
+      else
+        to_log "Captcha reconhecido => #{captcha}"
+      end
+      @tentativas = 0
+
       ## Mandando requisição POST
       to_debug('Enviando requisição de download...')
       hash = {
@@ -425,7 +403,7 @@ class Link
         "megavar" => megavar,
         "captcha" => captcha
       }
-      resposta = Net::HTTP.post_form(URI.parse("http://#{server.ip}#{@path}"), hash)
+      resposta = Net::HTTP.post_form(URI.parse("http://#{@ip}#{@path}"), hash)
       resposta = resposta.body
 
       #      if lot_of_users(resposta) or respaw(resposta) or waiting(resposta) or \

@@ -289,7 +289,7 @@ begin
   ajuda
   if ARGV[0] == "-1"
     unless ARGV[1] == ""
-      run_single_link ARGV[1].chomp
+      run_single_link ARGV[1].strip
     else
       puts "Link não detectado."
     end
