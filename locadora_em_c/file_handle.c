@@ -18,6 +18,6 @@ void insert_client(Client * c) {
     FILE *file = NULL;
     if (file = fopen("client_db.dat", "rb+") == NULL) {
         fseek(file, sizeof (Client), SEEK_END);
-        fwrite(c, sizeof(Client), 1, file);
+        fwrite(c, sizeof (Client), 1, file);
     }
 }

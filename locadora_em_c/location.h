@@ -8,16 +8,12 @@
 #ifndef _ALOCACAO_H
 #define	_ALOCACAO_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-
-
-
-#ifdef	__cplusplus
-}
-#endif
+/*
+ * -> ALOCAÇÃO(ID,IDCLIENTE,DATA)
+ * - ALOCAR DIVERSOS DVDS PARA UM CLIENTE.
+ * - DEVOLVER FILME
+ * - ITENS ALOCADOS
+ */
 
 #endif	/* _ALOCACAO_H */
 
