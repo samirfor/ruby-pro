@@ -28,6 +28,7 @@ module Megaupload
     search = body.scan(/name=\"captchacode\" value=\"(.+)\">/)[0][0]
     return search
   end
+  # => exemplo
   def self.get_megavar body
     search = body.scan(/name=\"megavar\" value=\"(.+)\">/)[0][0]
     return search

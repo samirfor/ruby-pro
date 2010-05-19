@@ -7,6 +7,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdio_ext.h>
+#include <string.h>
+
+#define FILEPATH "arquivo.bin"
 
 char *read_string(char *str) {
     __fpurge(stdin);
@@ -15,16 +19,14 @@ char *read_string(char *str) {
 
 void read_file() {
     FILE *arq = NULL;
-    char buffer = NULL;
+    char buffer;
 
-    arq = fopen("/home/samir/NetBeansProjects/SalvaArquivo/arquivo.bin", "rb+");
-    if (arq != NULL) {
-        while (1) {
-            if (feof(arq)) {
-                break;
-            }
-            fread(&buffer, sizeof (char), 1, arq);
+    arq = fopen(FILEPATH, "rb+");
+    fread(&buffer, sizeof (buffer), 1, arq);
+    if (arq) {
+        while (!feof(arq)) {
             printf("%c", buffer);
+            fread(&buffer, sizeof (buffer), 1, arq);
         }
         fclose(arq);
         printf("\n");
@@ -36,12 +38,12 @@ void read_file() {
 
 void write_file() {
     FILE *arq = NULL;
-    char *txt = malloc(500 * sizeof (char));
+    char *txt = malloc(500 * sizeof (txt));
 
-    read_string(txt);
-    arq = fopen("/home/samir/NetBeansProjects/SalvaArquivo/arquivo.bin", "wb+");
+    puts(read_string(txt));
+    arq = fopen(FILEPATH, "wb+");
     if (arq != NULL) {
-        fwrite(txt, sizeof (txt), 1, arq);
+        fwrite(txt, sizeof (txt), strlen(txt), arq);
         printf("String escrita: ");
         puts(txt);
         fclose(arq);
@@ -49,6 +51,7 @@ void write_file() {
         printf("Nao foi possivel abrir o arquivo para escrita.\n");
         exit(1);
     }
+    free(txt);
 }
 
 int main(int argc, char** argv) {

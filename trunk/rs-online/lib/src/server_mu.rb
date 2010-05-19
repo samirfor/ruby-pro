@@ -22,7 +22,7 @@ class ServerMU
 
   def generator
     @data = Time.now
-    @ip = IPSocket.getaddress "wwwq#{@id}.megaupload.com"
+    @ip = IPSocket.getaddress "www#{@id}.megaupload.com"
   end
 
   def timestamp time
