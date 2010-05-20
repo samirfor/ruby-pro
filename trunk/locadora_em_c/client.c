@@ -41,15 +41,15 @@ int position_of(int id) {
         fclose(file_stream);
         return NON_EXIST;
     } else {
-        printf("Client search: Nao foi possivel abrir \"%s\" para leitura.\n", CLIENTS_FILEPATH);
+        printf("%s: Nao foi possivel abrir \"%s\" para leitura.\n", __FILE__, CLIENTS_FILEPATH);
         exit(1);
     }
 }
 
 /*
- * Procura um cliente pelo id e retorna o Cliente.
+ * Procura um cliente pelo id e retorna uma cópia do Cliente.
  */
-Client * search(int id) {
+Client search(int id) {
     FILE *file_stream = NULL;
     Client client = NULL;
 
@@ -67,63 +67,82 @@ Client * search(int id) {
         client.id = NON_EXIST;
         return client;
     } else {
-        printf("Client search: Nao foi possivel abrir \"%s\" para leitura.\n", CLIENTS_FILEPATH);
-        exit(1);
-    }
-}
-
-Client * read(int position) {
-    FILE *file_stream = NULL;
-    Client client = NULL;
-
-    file_stream = fopen(CLIENTS_FILEPATH, "rb");
-    if (file_stream) {
-        fseek(file_stream, position, SEEK_SET);
-        fread(&client, sizeof (client), 1, file_stream);
-        fclose(file_stream);
-        return client;
-    } else {
-        printf("Client search: Nao foi possivel abrir \"%s\" para leitura.\n", CLIENTS_FILEPATH);
+        printf("%s: Nao foi possivel abrir \"%s\" para leitura.\n", __FILE__, CLIENTS_FILEPATH);
         exit(1);
     }
 }
 
 /*
- * Testa se há algum Client deletado no arquivo de clientes, ou seja, seu id setado como
- * DELETED. Se não houver, ler o arquivo de sequencia de ids.
+ * Verifica se um cliente c já existe.
  */
-int first_index_avaliable() {
-    int position;
+int index_exist(Client * c) {
+    int find;
 
-    position = position_of(DELETED);
-    if (position != NON_EXIST) {
-        return position;
+    find = search(c->id);
+    if (find == NON_EXIST) {
+        return FALSE;
     }
-    return get_id_sequence();
+    return TRUE;
 }
 
-int get_id_sequence() {
+/*
+ * Retorna um id para cliente válido.
+ */
+int first_index_avaliable() {
     FILE *file_stream = NULL;
     int id;
 
-    file_stream = fopen(ID_FILEPATH, "rb");
+    file_stream = fopen(ID_FILEPATH, "rb+");
     if (file_stream) {
         fread(&id, sizeof (id), 1, file_stream);
         fclose(file_stream);
         return id;
     } else {
-        printf("Client ID seq: Nao foi possivel abrir \"%s\" para leitura.\n", ID_FILEPATH);
-        exit(1);
+        printf("Warning: arquivo \"%s\" foi criado agora.\n", ID_FILEPATH);
+        /* Não conseguiu abrir um arquivo existente, então, criará. */
+        file_stream = fopen(ID_FILEPATH, "wb+");
+        if (file_stream) {
+            id = 2;
+            fwrite(&id, sizeof (id), 1, file_stream);
+            fclose(file_stream);
+            return 1;
+        } else {
+            printf("%s: Nao foi possivel criar \"%s\"\n", __FILE__, ID_FILEPATH);
+            exit(1);
+        }
     }
 }
 
+/* 
+ * Insere um cliente no arquivo CLIENTS_FILEPATH
+ */
 int insert(Client * c) {
-    int id = first_index_avaliable(c);
-    if (is_full(c) || index_exist(c)) {
-        return 0;
+    int id;
+    FILE *file_stream = NULL;
+
+    if (index_exist(c)) {
+        return FALSE;
     }
-    (clients + id) = c;
-    return 1;
+
+    c->id = first_index_avaliable();
+    file_stream = fopen(CLIENTS_FILEPATH, "rb+");
+    if (file_stream) {
+        fseek(file_stream, 0, SEEK_END);
+        fwrite(c, sizeof (c), 1, file_stream);
+        fclose(file_stream);
+    } else {
+        printf("Warning: arquivo \"%s\" foi criado agora.\n", CLIENTS_FILEPATH);
+        /* Não conseguiu abrir um arquivo existente, então, criará. */
+        file_stream = fopen(CLIENTS_FILEPATH, "wb+");
+        if (file_stream) {
+            fwrite(c, sizeof (c), 1, file_stream);
+            fclose(file_stream);
+        } else {
+            printf("%s: Nao foi possivel criar \"%s\"\n", __FILE__, CLIENTS_FILEPATH);
+            exit(1);
+        }
+    }
+    return TRUE;
 }
 
 void copy(Client *to, Client *from) {
@@ -134,45 +153,6 @@ void copy(Client *to, Client *from) {
     strcpy(to->CPF, from->CPF);
     strcpy(to->birth_date, from->birth_date);
 }
-
-
-/*
-Client * clients = malloc(SIZE * sizeof (Client));
-
-void initialize_clients() {
-    int i;
-    for (i = 0; i < SIZE; i++) {
-        clients->id = -1;
-    }
-}
-
-int index_exist(Client * c) {
-    if (index_of(c->id) != -1) {
-        return 1;
-    }
-    return 0;
-}
-
-int is_full(Client * c) {
-    if (search(-1, c) == -1) {
-        return 0;
-    }
-    return 1;
-}
-
-int is_empty(Client * c) {
-    if (search(-1, c) != -1) {
-        return 0;
-    }
-    return 1;
-}
-
-
-
-
-
-
-
 
 
 void list_clients() {
@@ -189,15 +169,15 @@ void list_clients() {
     printf("=======\n");
 }
 
-void call_insert() {
+void form_insert() {
 
 }
 
-void call_update() {
+void form_update() {
 
 }
 
-void call_delete() {
+void form_delete() {
 
 }
 
