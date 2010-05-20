@@ -31,9 +31,9 @@ void main_menu() {
         switch (opcao) {
 /*
             case '1': list_clients();
-            case '2': call_insert();
-            case '3': call_update();
-            case '4': call_delete();
+            case '2': form_insert();
+            case '3': form_update();
+            case '4': form_delete();
 */
         }
     } while (opcao != '0');

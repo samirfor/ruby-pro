@@ -52,11 +52,11 @@ int insert(Client);
 /*  */
 void list_clients();
 /*  */
-void call_insert();
+void form_insert();
 /*  */
-void call_update();
+void form_update();
 /*  */
-void call_delete();
+void form_delete();
 
 #endif	/* _CLIENTE_H */
 
