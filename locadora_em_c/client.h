@@ -23,6 +23,15 @@ struct client {
 
 typedef struct client Client;
 
+enum status {
+    FALSE = 0,
+    TRUE = 1,
+    NON_EXIST = -1,
+    DELETED = -2
+};
+
+typedef enum status Status;
+
 
 /***********************************
 External Function References
