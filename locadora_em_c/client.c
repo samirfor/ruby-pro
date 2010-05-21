@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "client.h"
+#include "main.h"
 
 #define ID_FILEPATH "client_id_seq.bin"
 #define CLIENTS_FILEPATH "clients.bin"
@@ -45,6 +46,21 @@ int position_of(int id) {
         exit(1);
     }
 }
+
+/*
+void read_client(FILE * file_stream) {
+    Client client = NULL;
+    
+    fread(client, sizeof (client), 1, file_stream);
+    while (!feof(file_stream)) {
+        if (client.id == id) {
+            fclose(file_stream);
+            return client;
+        }
+        fread(&client, sizeof (client), 1, file_stream);
+    }
+}
+ */
 
 /*
  * Procura um cliente pelo id e retorna uma cópia do Cliente.
@@ -117,7 +133,6 @@ int first_index_avaliable() {
  * Insere um cliente no arquivo CLIENTS_FILEPATH
  */
 int insert(Client * c) {
-    int id;
     FILE *file_stream = NULL;
 
     if (index_exist(c)) {
@@ -154,31 +169,73 @@ void copy(Client *to, Client *from) {
     strcpy(to->birth_date, from->birth_date);
 }
 
-
 void list_clients() {
-    int i;
-    if (is_empty(clients)) {
-        printf("Nao ha cliente cadastrado.");
-        return;
+    FILE *file_stream = NULL;
+    Client client = NULL;
+
+    file_stream = fopen(CLIENTS_FILEPATH, "rb");
+    if (file_stream) {
+        printf("=======\nLISTA DE CLIENTES: \n\n");
+        fread(&client, sizeof (client), 1, file_stream);
+        while (!feof(file_stream)) {
+            printf("Nome: %s\nCPF: %s\nRG: %s\n", client.id, client.CPF, client.RG);
+            printf("Fone: %s\nData de nascimento: %s\n\n", client.phone, client.birth_date);
+            fread(&client, sizeof (client), 1, file_stream);
+        }
+        printf("=======\n");
+        fclose(file_stream);
+    } else {
+        printf("%s: Nao ha clientes cadastrados.\n", __FILE__);
+        exit(1);
     }
-    printf("=======\nLISTA DE CLIENTES: \n\n");
-    for (i = 0; i < SIZE; i++) {
-        printf("Nome: %s\nCPF: %s\nRG: %s\n", clients->id, clients->CPF, clients->RG);
-        printf("Fone: %s\nData de nascimento: %s\n\n", clients->phone, clients->birth_date);
+}
+
+void form_insert() {
+    Client client = NULL;
+
+    printf("=======\nINSERINDO CLIENTE: \n\n");
+    printf("Nome: ");
+    read_string(client.name);
+    printf("CPF: ");
+    read_string(client.CPF);
+    printf("RG: ");
+    read_string(client.RG);
+    printf("Fone: ");
+    read_string(client.phone);
+    printf("Data de nascimento: ");
+    read_string(client.birth_date);
+
+    if (insert(client)) {
+        printf("Cliente inserido com sucesso.");
+    } else {
+        printf("Cliente nao foi inserido corretamente!");
     }
     printf("=======\n");
 }
 
-void form_insert() {
-
-}
-
 void form_update() {
+    Client client = NULL;
 
+    printf("=======\nMODIFICANDO CLIENTE: \n\n");
+    printf("Nome: ");
+    read_string(client.name);
+    printf("CPF: ");
+    read_string(client.CPF);
+    printf("RG: ");
+    read_string(client.RG);
+    printf("Fone: ");
+    read_string(client.phone);
+    printf("Data de nascimento: ");
+    read_string(client.birth_date);
+
+    if (insert(client)) {
+        printf("Cliente inserido com sucesso.");
+    } else {
+        printf("Cliente nao foi inserido corretamente!");
+    }
+    printf("=======\n");
 }
 
 void form_delete() {
 
 }
-
- */
