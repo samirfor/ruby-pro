@@ -7,8 +7,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "file_handle.h"
-#include "client.h"
 
 /*
  * 

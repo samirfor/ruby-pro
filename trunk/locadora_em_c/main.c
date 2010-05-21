@@ -12,7 +12,10 @@
  * 
  */
 
-
+char *read_string(char *str) {
+    __fpurge(stdin);
+    return gets(str);
+}
 
 void main_menu() {
     char opcao = '\0';
@@ -29,12 +32,12 @@ void main_menu() {
         scanf("%c", &opcao);
 
         switch (opcao) {
-/*
-            case '1': list_clients();
-            case '2': form_insert();
-            case '3': form_update();
-            case '4': form_delete();
-*/
+                /*
+                            case '1': list_clients();
+                            case '2': form_insert();
+                            case '3': form_update();
+                            case '4': form_delete();
+                 */
         }
     } while (opcao != '0');
     exit(0);
