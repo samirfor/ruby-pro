@@ -169,6 +169,19 @@ void copy(Client *to, Client *from) {
     strcpy(to->birth_date, from->birth_date);
 }
 
+void list_client(int id) {
+    Client client = NULL;
+
+    client = search(id);
+    if (client.id == NON_EXIST) {
+        printf("%s: Nao ha cliente cadastrado com esse id.\n", __FILE__);
+        return;
+    } else {
+        printf("Nome: %s\nCPF: %s\nRG: %s\n", client.id, client.CPF, client.RG);
+        printf("Fone: %s\nData de nascimento: %s\n\n", client.phone, client.birth_date);
+    }
+}
+
 void list_clients() {
     FILE *file_stream = NULL;
     Client client = NULL;
@@ -215,8 +228,21 @@ void form_insert() {
 
 void form_update() {
     Client client = NULL;
+    char opcao = '\0';
+    char id[10];
 
     printf("=======\nMODIFICANDO CLIENTE: \n\n");
+    do {
+        printf("Digite [1] para modificar por ID ou [2] para modificar por nome: ");
+        read_string(opcao);
+    } while (opcao == '\0' || opcao != '1' || opcao != '2');
+    switch (opcao) {
+        case '1':
+            printf("Qual ID? ");
+            read_string(id);
+            break;
+        case '2':
+    }
     printf("Nome: ");
     read_string(client.name);
     printf("CPF: ");
