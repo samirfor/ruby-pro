@@ -124,6 +124,7 @@ class Link
       update_db
       return Status::OFFLINE
     end
+    sleep 1
   end
 
   # Verifica o estado do link, podendo ele ser:

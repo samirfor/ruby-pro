@@ -29,7 +29,7 @@ def db_connect
     DBI.connect("DBI:Pg:dbname=#{database};host=#{hostname};port=#{port}", database, password)
   rescue DBI::DatabaseError => e
     to_log "Ocorreu erro ao se conectar no banco de dados.\nStack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
-    sleep 1
+    sleep 5
   end
 end
 
@@ -44,7 +44,7 @@ def db_statement_execute(sql)
     retorno
   rescue DBI::DatabaseError => e
     to_log "Ocorreu erro ao executar uma SQL.\nStack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
-    sleep 1
+    sleep 5
   end
 end
 
@@ -56,7 +56,7 @@ def db_statement_do(sql)
     db_disconnect(conn)
   rescue DBI::DatabaseError => e
     to_log "Ocorreu erro ao consultar o BD.\nStack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
-    sleep 1
+    sleep 5
   end
 end
 
@@ -66,7 +66,7 @@ def db_disconnect(conn)
     conn.disconnect
   rescue DBI::DatabaseError => e
     to_log "Ocorreu erro ao se disconectar no banco de dados.\nStack do erro: #{e.err} #{e.errstr} SQLSTATE: #{e.state}"
-    sleep 1
+    sleep 5
   end
 end
 
@@ -243,6 +243,7 @@ def select_lista_links id_pacote
     lista.sort
   rescue Exception => e
     to_log "Houve erro => #{e}"
+    sleep 2
     return nil
   end
 end
@@ -389,7 +390,6 @@ def save_links(links, id_pacote)
     db_disconnect(conn)
   end
   return retorno
-  return
 end
 
 def select_full_links
@@ -429,6 +429,7 @@ def select_full_links
     end
   rescue Exception => e
     to_log "Houve erro => #{e.message}"
+    sleep 2
     return nil
   end
 end
