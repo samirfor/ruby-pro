@@ -21,20 +21,26 @@ if ARGV[0] == nil or ARGV[0].chomp == ""
   abort
 end
 
-loop do
+begin
+  loop do
 
-  feed = FeedTools::Feed.open('http://legendas.tv/rss-destaques-series.html')
+    feed = FeedTools::Feed.open('http://legendas.tv/rss-destaques-series.html')
 
-  feed.items.each do |post|
-    if post.title =~ /#{ARGV[0].chomp}/i
-      Thread.new {`mpg123 -qo pulse --loop 2 /home/samir/eita_mah.mp3`}
-      puts post.title
-      puts post.link
-      `firefox \"#{post.link}&c=1\"`
-      exit!
+    feed.items.each do |post|
+      if post.title =~ /#{ARGV[0].chomp}/i
+        Thread.new {`mpg123 -qo pulse --loop 2 /home/samir/eita_mah.mp3`}
+        puts post.title
+        puts post.link
+        `firefox \"#{post.link}&c=1\"`
+        exit!
+      end
     end
-  end
 
-  puts "#{Time.now}\tNada ainda :\\"
-  sleep 5*60
+    puts "#{Time.now}\tNada ainda :\\"
+    sleep 5*60
+  end
+rescue Exception => e
+  puts "ERRO: #{e.message}"
+  sleep 5
+  retry
 end
