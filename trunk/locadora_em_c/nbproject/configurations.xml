@@ -9,6 +9,7 @@
       <itemPath>file_handle.h</itemPath>
       <itemPath>location.h</itemPath>
       <itemPath>movie.h</itemPath>
+      <itemPath>strings.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Arquivos de código-fonte"
@@ -19,6 +20,7 @@
       <itemPath>location.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>movie.c</itemPath>
+      <itemPath>strings.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Arquivos de recurso"

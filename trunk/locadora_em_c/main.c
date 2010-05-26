@@ -12,11 +12,6 @@
  * 
  */
 
-char *read_string(char *str) {
-    __fpurge(stdin);
-    return gets(str);
-}
-
 void main_menu() {
     char opcao = '\0';
 

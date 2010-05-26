@@ -37,26 +37,26 @@ typedef enum status Status;
 External Function References
 ************************************/
 
-/* Returns 1 if client exist or zero if don't */
-int index_exist(Client);
-/* Returns 1 if  */
-int is_empty(Client);
-/* Returns index of client or -1 if dont find*/
-int index_of(Client);
+/* Verifica a existencia de um cliente pelo id */
+extern int index_exist(int);
 /* Search into a vector of client and returns */
-int search(int, Client);
+extern Client search_by_id(int);
+/* Search into a vector of client and returns */
+extern Client search_by_name(char*);
+/* Retorna um número id disponível */
+extern int first_index_avaliable();
 /*  */
-int first_index_avaliable(Client);
+extern int insert(Client*);
 /*  */
-int insert(Client);
+extern void list_all_clients();
 /*  */
-void list_clients();
+extern void list_client_by_id(int);
 /*  */
-void form_insert();
+extern void form_insert();
 /*  */
-void form_update();
+extern void form_update();
 /*  */
-void form_delete();
+extern void form_delete();
 
 #endif	/* _CLIENTE_H */
 
