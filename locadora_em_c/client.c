@@ -20,54 +20,11 @@
 Status stats; /* Enum para BOOLEANS, NON_EXIST e DELETED */
 
 /*
- * Procura no arquivo por id e retorna a posição no arquivo onde a
- * estrutura Client está para ser lida com a função read.
- */
-int position_of(int id) {
-    FILE *file_stream = NULL;
-    Client client = NULL;
-    int position = 0;
-
-    file_stream = fopen(CLIENTS_FILEPATH, "rb");
-    if (file_stream) {
-        fread(&client, sizeof (client), 1, file_stream);
-        while (!feof(file_stream)) {
-            if (client.id == id) {
-                fclose(file_stream);
-                return position;
-            }
-            fread(&client, sizeof (client), 1, file_stream);
-            position += sizeof (client);
-        }
-        fclose(file_stream);
-        return NON_EXIST;
-    } else {
-        printf("%s: Nao foi possivel abrir \"%s\" para leitura.\n", __FILE__, CLIENTS_FILEPATH);
-        exit(1);
-    }
-}
-
-/*
-void read_client(FILE * file_stream) {
-    Client client = NULL;
-    
-    fread(client, sizeof (client), 1, file_stream);
-    while (!feof(file_stream)) {
-        if (client.id == id) {
-            fclose(file_stream);
-            return client;
-        }
-        fread(&client, sizeof (client), 1, file_stream);
-    }
-}
- */
-
-/*
  * Procura um cliente pelo id e retorna uma cópia do Cliente.
  */
-Client search(int id) {
+Client search_by_id(int id) {
     FILE *file_stream = NULL;
-    Client client = NULL;
+    Client client;
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (file_stream) {
@@ -89,13 +46,39 @@ Client search(int id) {
 }
 
 /*
+ * Procura um cliente pelo id e retorna uma cópia do Cliente.
+ */
+Client search_by_name(char *name) {
+    FILE *file_stream = NULL;
+    Client client;
+
+    file_stream = fopen(CLIENTS_FILEPATH, "rb");
+    if (file_stream) {
+        fread(&client, sizeof (client), 1, file_stream);
+        while (!feof(file_stream)) {
+            if (!strcmp(name, client.name)) {
+                fclose(file_stream);
+                return client;
+            }
+            fread(&client, sizeof (client), 1, file_stream);
+        }
+        fclose(file_stream);
+        client.id = NON_EXIST;
+        return client;
+    } else {
+        printf("%s: Nao foi possivel abrir \"%s\" para leitura.\n", __FILE__, CLIENTS_FILEPATH);
+        exit(1);
+    }
+}
+
+/*
  * Verifica se um cliente c já existe.
  */
-int index_exist(Client * c) {
-    int find;
+int index_exist(int index) {
+    Client client;
 
-    find = search(c->id);
-    if (find == NON_EXIST) {
+    client = search_by_id(index);
+    if (client.id == NON_EXIST) {
         return FALSE;
     }
     return TRUE;
@@ -114,7 +97,7 @@ int first_index_avaliable() {
         fclose(file_stream);
         return id;
     } else {
-        printf("Warning: arquivo \"%s\" foi criado agora.\n", ID_FILEPATH);
+        printf("Aviso: arquivo \"%s\" foi criado agora.\n", ID_FILEPATH);
         /* Não conseguiu abrir um arquivo existente, então, criará. */
         file_stream = fopen(ID_FILEPATH, "wb+");
         if (file_stream) {
@@ -132,25 +115,21 @@ int first_index_avaliable() {
 /* 
  * Insere um cliente no arquivo CLIENTS_FILEPATH
  */
-int insert(Client * c) {
+int insert(Client * client) {
     FILE *file_stream = NULL;
 
-    if (index_exist(c)) {
-        return FALSE;
-    }
-
-    c->id = first_index_avaliable();
+    client->id = first_index_avaliable();
     file_stream = fopen(CLIENTS_FILEPATH, "rb+");
     if (file_stream) {
         fseek(file_stream, 0, SEEK_END);
-        fwrite(c, sizeof (c), 1, file_stream);
+        fwrite(client, sizeof (client), 1, file_stream);
         fclose(file_stream);
     } else {
-        printf("Warning: arquivo \"%s\" foi criado agora.\n", CLIENTS_FILEPATH);
+        printf("Aviso: arquivo \"%s\" foi criado agora.\n", CLIENTS_FILEPATH);
         /* Não conseguiu abrir um arquivo existente, então, criará. */
         file_stream = fopen(CLIENTS_FILEPATH, "wb+");
         if (file_stream) {
-            fwrite(c, sizeof (c), 1, file_stream);
+            fwrite(client, sizeof (client), 1, file_stream);
             fclose(file_stream);
         } else {
             printf("%s: Nao foi possivel criar \"%s\"\n", __FILE__, CLIENTS_FILEPATH);
@@ -169,10 +148,10 @@ void copy(Client *to, Client *from) {
     strcpy(to->birth_date, from->birth_date);
 }
 
-void list_client(int id) {
+void list_client_by_id(int id) {
     Client client = NULL;
 
-    client = search(id);
+    client = search_by_id(id);
     if (client.id == NON_EXIST) {
         printf("%s: Nao ha cliente cadastrado com esse id.\n", __FILE__);
         return;
@@ -182,7 +161,7 @@ void list_client(int id) {
     }
 }
 
-void list_clients() {
+void list_all_clients() {
     FILE *file_stream = NULL;
     Client client = NULL;
 
@@ -206,6 +185,7 @@ void list_clients() {
 void form_insert() {
     Client client = NULL;
 
+    client->id = -1;
     printf("=======\nINSERINDO CLIENTE: \n\n");
     printf("Nome: ");
     read_string(client.name);
@@ -229,7 +209,7 @@ void form_insert() {
 void form_update() {
     Client client = NULL;
     char opcao = '\0';
-    char id[10];
+    char input[100];
 
     printf("=======\nMODIFICANDO CLIENTE: \n\n");
     do {
@@ -239,10 +219,17 @@ void form_update() {
     switch (opcao) {
         case '1':
             printf("Qual ID? ");
-            read_string(id);
+            read_string(input);
             break;
         case '2':
+            printf("Qual nome? ");
+            read_string(input);
+
     }
+    /*
+     * Verificar se o ID existe
+     */
+
     printf("Nome: ");
     read_string(client.name);
     printf("CPF: ");
