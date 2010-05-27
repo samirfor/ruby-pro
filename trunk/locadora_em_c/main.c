@@ -7,34 +7,43 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "client.h"
+#include "strings.h"
 
 /*
  * 
  */
 
-void main_menu() {
-    char opcao = '\0';
+int main() {
+    char opcao = -1;
 
     do {
-        printf("++ MENU ++\n");
-        printf("1 - Listar\n");
-        printf("2 - Inserir\n");
-        printf("3 - Alterar\n");
-        printf("4 - Deletar\n");
-        printf("0 - Sair\n");
-        printf("++++++\n");
+        do {
+            printf("++ MENU CLIENTE ++\n");
+            printf("1 - Listar\n");
+            printf("2 - Inserir\n");
+            printf("3 - Alterar\n");
+            printf("4 - Deletar\n");
+            printf("0 - Sair\n");
+            printf("++++++\nOpcao: ");
 
-        scanf("%c", &opcao);
+            read_string(&opcao);
 
-        switch (opcao) {
-                /*
-                            case '1': list_clients();
-                            case '2': form_insert();
-                            case '3': form_update();
-                            case '4': form_delete();
-                 */
-        }
+            switch (opcao) {
+                case '1':
+                    list_all_clients();
+                    break;
+                case '2':
+                    form_client_insert();
+                    break;
+                case '3':
+                    form_client_update();
+                    break;
+                case '4':
+                    form_client_delete();
+                    break;
+            }
+        } while (opcao != '0');
     } while (opcao != '0');
-    exit(0);
+    return 0;
 }
-

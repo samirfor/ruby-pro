@@ -7,10 +7,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "strings.h"
 #include "client.h"
-#include "main.h"
 
-#define ID_FILEPATH "client_id_seq.bin"
+#define ID_FILEPATH "clients_id_seq.bin"
 #define CLIENTS_FILEPATH "clients.bin"
 
 /*
@@ -19,9 +19,6 @@
 
 Status stats; /* Enum para BOOLEANS, NON_EXIST e DELETED */
 
-/*
- * Procura um cliente pelo id e retorna uma cópia do Cliente.
- */
 Client search_by_id(int id) {
     FILE *file_stream = NULL;
     Client client;
@@ -45,9 +42,6 @@ Client search_by_id(int id) {
     }
 }
 
-/*
- * Procura um cliente pelo id e retorna uma cópia do Cliente.
- */
 Client search_by_name(char *name) {
     FILE *file_stream = NULL;
     Client client;
@@ -71,9 +65,18 @@ Client search_by_name(char *name) {
     }
 }
 
-/*
- * Verifica se um cliente c já existe.
- */
+int client_is_empty() {
+    FILE *file_stream = NULL;
+
+    file_stream = fopen(CLIENTS_FILEPATH, "rb");
+    if (file_stream) {
+        fclose(file_stream);
+        return FALSE;
+    } else {
+        return TRUE;
+    }
+}
+
 int index_exist(int index) {
     Client client;
 
@@ -84,25 +87,24 @@ int index_exist(int index) {
     return TRUE;
 }
 
-/*
- * Retorna um id para cliente válido.
- */
-int first_index_avaliable() {
+int client_first_index_avaliable() {
     FILE *file_stream = NULL;
-    int id;
+    int old_id, new_id;
 
     file_stream = fopen(ID_FILEPATH, "rb+");
     if (file_stream) {
-        fread(&id, sizeof (id), 1, file_stream);
+        fread(&old_id, sizeof (old_id), 1, file_stream);
+        rewind(file_stream);
+        fwrite(&new_id, sizeof (new_id), 1, file_stream);
         fclose(file_stream);
-        return id;
+        return old_id;
     } else {
         printf("Aviso: arquivo \"%s\" foi criado agora.\n", ID_FILEPATH);
         /* Não conseguiu abrir um arquivo existente, então, criará. */
         file_stream = fopen(ID_FILEPATH, "wb+");
         if (file_stream) {
-            id = 2;
-            fwrite(&id, sizeof (id), 1, file_stream);
+            old_id = 2;
+            fwrite(&old_id, sizeof (old_id), 1, file_stream);
             fclose(file_stream);
             return 1;
         } else {
@@ -112,13 +114,10 @@ int first_index_avaliable() {
     }
 }
 
-/* 
- * Insere um cliente no arquivo CLIENTS_FILEPATH
- */
 int insert(Client * client) {
     FILE *file_stream = NULL;
 
-    client->id = first_index_avaliable();
+    client->id = client_first_index_avaliable();
     file_stream = fopen(CLIENTS_FILEPATH, "rb+");
     if (file_stream) {
         fseek(file_stream, 0, SEEK_END);
@@ -139,53 +138,56 @@ int insert(Client * client) {
     return TRUE;
 }
 
-void copy(Client *to, Client *from) {
-    to->id = from->id;
-    strcpy(to->name, from->name);
-    strcpy(to->phone, from->phone);
-    strcpy(to->RG, from->RG);
-    strcpy(to->CPF, from->CPF);
-    strcpy(to->birth_date, from->birth_date);
-}
-
 void list_client_by_id(int id) {
-    Client client = NULL;
+    Client client;
 
     client = search_by_id(id);
     if (client.id == NON_EXIST) {
         printf("%s: Nao ha cliente cadastrado com esse id.\n", __FILE__);
         return;
     } else {
-        printf("Nome: %s\nCPF: %s\nRG: %s\n", client.id, client.CPF, client.RG);
+        printf("Nome: %s\nCPF: %s\nRG: %s\n", client.name, client.CPF, client.RG);
         printf("Fone: %s\nData de nascimento: %s\n\n", client.phone, client.birth_date);
     }
 }
 
 void list_all_clients() {
     FILE *file_stream = NULL;
-    Client client = NULL;
+    Client client;
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (file_stream) {
         printf("=======\nLISTA DE CLIENTES: \n\n");
-        fread(&client, sizeof (client), 1, file_stream);
+        /*
+                fread(&client, sizeof (client), 1, file_stream);
+         */
         while (!feof(file_stream)) {
-            printf("Nome: %s\nCPF: %s\nRG: %s\n", client.id, client.CPF, client.RG);
-            printf("Fone: %s\nData de nascimento: %s\n\n", client.phone, client.birth_date);
             fread(&client, sizeof (client), 1, file_stream);
+            printf("Nome: %s\nCPF: %s\nRG: %s\n", client.name, client.CPF, client.RG);
+            printf("Fone: %s\nData de nascimento: %s\n\n", client.phone, client.birth_date);
+            /*
+                        fread(&client, sizeof (client), 1, file_stream);
+             */
         }
         printf("=======\n");
         fclose(file_stream);
     } else {
         printf("%s: Nao ha clientes cadastrados.\n", __FILE__);
-        exit(1);
+        return;
     }
 }
 
-void form_insert() {
-    Client client = NULL;
+void form_client_insert() {
+    /*
+        Client *client = malloc(sizeof (Client));
+        if (!client) {
+            printf("%s: ERRO FATAL -> Nao foi possivel alocar memoria.\n", __FILE__);
+            exit(1);
+        }
+     */
+    Client client;
 
-    client->id = -1;
+    client.id = -1;
     printf("=======\nINSERINDO CLIENTE: \n\n");
     printf("Nome: ");
     read_string(client.name);
@@ -198,7 +200,7 @@ void form_insert() {
     printf("Data de nascimento: ");
     read_string(client.birth_date);
 
-    if (insert(client)) {
+    if (insert(&client)) {
         printf("Cliente inserido com sucesso.");
     } else {
         printf("Cliente nao foi inserido corretamente!");
@@ -206,29 +208,33 @@ void form_insert() {
     printf("=======\n");
 }
 
-void form_update() {
-    Client client = NULL;
-    char opcao = '\0';
-    char input[100];
+void form_client_update() {
+    Client client;
+    char input[200] = "";
+
+    /* Antes de tudo, precisamos testar se há algum cliente */
+    if (client_is_empty()) {
+        printf("%s: Nao ha clientes cadastrados.\n", __FILE__);
+        return;
+    }
 
     printf("=======\nMODIFICANDO CLIENTE: \n\n");
     do {
         printf("Digite [1] para modificar por ID ou [2] para modificar por nome: ");
-        read_string(opcao);
-    } while (opcao == '\0' || opcao != '1' || opcao != '2');
-    switch (opcao) {
+        read_string(input);
+    } while (input[0] != '1' && input[1] != '2');
+    switch (input[0]) {
         case '1':
             printf("Qual ID? ");
             read_string(input);
+            /* Verificar se o ID existe */
             break;
         case '2':
             printf("Qual nome? ");
             read_string(input);
-
+            /* Verificar  */
+            break;
     }
-    /*
-     * Verificar se o ID existe
-     */
 
     printf("Nome: ");
     read_string(client.name);
@@ -241,7 +247,7 @@ void form_update() {
     printf("Data de nascimento: ");
     read_string(client.birth_date);
 
-    if (insert(client)) {
+    if (insert(&client)) {
         printf("Cliente inserido com sucesso.");
     } else {
         printf("Cliente nao foi inserido corretamente!");
@@ -249,6 +255,49 @@ void form_update() {
     printf("=======\n");
 }
 
-void form_delete() {
+void form_client_delete() {
+    Client client;
+    char input[200] = "";
 
+    /* Antes de tudo, precisamos testar se há algum cliente */
+    if (client_is_empty()) {
+        printf("%s: Nao ha clientes cadastrados.\n", __FILE__);
+        return;
+    }
+
+    printf("=======\nDELETANDO CLIENTE: \n\n");
+    do {
+        printf("Digite [1] para deletar por ID ou [2] para deletar por nome: ");
+        read_string(input);
+    } while (input[0] != '1' && input[1] != '2');
+    switch (input[0]) {
+        case '1':
+            printf("Qual ID? ");
+            read_string(input);
+            /* Verificar se o ID existe */
+            break;
+        case '2':
+            printf("Qual nome? ");
+            read_string(input);
+            /* Verificar  */
+            break;
+    }
+
+    printf("Nome: ");
+    read_string(client.name);
+    printf("CPF: ");
+    read_string(client.CPF);
+    printf("RG: ");
+    read_string(client.RG);
+    printf("Fone: ");
+    read_string(client.phone);
+    printf("Data de nascimento: ");
+    read_string(client.birth_date);
+
+    if (insert(&client)) {
+        printf("Cliente inserido com sucesso.");
+    } else {
+        printf("Cliente nao foi inserido corretamente!");
+    }
+    printf("=======\n");
 }

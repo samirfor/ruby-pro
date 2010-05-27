@@ -8,7 +8,5 @@
 #ifndef _MAIN_H
 #define	_MAIN_H
 
-extern char * read_string(char);
-
 #endif	/* _MAIN_H */
 

@@ -8,6 +8,7 @@
       <itemPath>dvd.h</itemPath>
       <itemPath>file_handle.h</itemPath>
       <itemPath>location.h</itemPath>
+      <itemPath>main.h</itemPath>
       <itemPath>movie.h</itemPath>
       <itemPath>strings.h</itemPath>
     </logicalFolder>
@@ -41,6 +42,9 @@
         <platform>2</platform>
       </toolsSet>
       <compileType>
+        <cTool>
+          <commandlineTool>gcc</commandlineTool>
+        </cTool>
         <linkerTool>
           <linkerLibItems>
           </linkerLibItems>

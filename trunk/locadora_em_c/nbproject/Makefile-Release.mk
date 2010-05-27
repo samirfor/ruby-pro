@@ -31,10 +31,12 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/location.o \
 	${OBJECTDIR}/movie.o \
 	${OBJECTDIR}/dvd.o \
 	${OBJECTDIR}/client.o \
-	${OBJECTDIR}/location.o \
+	${OBJECTDIR}/strings.o \
+	${OBJECTDIR}/file_handle.o \
 	${OBJECTDIR}/main.o
 
 # C Compiler Flags
@@ -61,6 +63,11 @@ dist/Release/GNU-Linux-x86/locadora_em_c: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/locadora_em_c ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
+${OBJECTDIR}/location.o: nbproject/Makefile-${CND_CONF}.mk location.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/location.o location.c
+
 ${OBJECTDIR}/movie.o: nbproject/Makefile-${CND_CONF}.mk movie.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -76,10 +83,15 @@ ${OBJECTDIR}/client.o: nbproject/Makefile-${CND_CONF}.mk client.c
 	${RM} $@.d
 	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/client.o client.c
 
-${OBJECTDIR}/location.o: nbproject/Makefile-${CND_CONF}.mk location.c 
+${OBJECTDIR}/strings.o: nbproject/Makefile-${CND_CONF}.mk strings.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/location.o location.c
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/strings.o strings.c
+
+${OBJECTDIR}/file_handle.o: nbproject/Makefile-${CND_CONF}.mk file_handle.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/file_handle.o file_handle.c
 
 ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.c 
 	${MKDIR} -p ${OBJECTDIR}

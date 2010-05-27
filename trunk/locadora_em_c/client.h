@@ -44,19 +44,19 @@ extern Client search_by_id(int);
 /* Search into a vector of client and returns */
 extern Client search_by_name(char*);
 /* Retorna um número id disponível */
-extern int first_index_avaliable();
-/*  */
+extern int client_first_index_avaliable();
+/* Insere um cliente no arquivo */
 extern int insert(Client*);
-/*  */
+/* Lista todos os clientes */
 extern void list_all_clients();
-/*  */
+/* Lista um cliente identificado pelo id */
 extern void list_client_by_id(int);
-/*  */
-extern void form_insert();
-/*  */
-extern void form_update();
-/*  */
-extern void form_delete();
+/* Formulário de inserção de cliente */
+extern void form_client_insert();
+/* Formulário de atualização de cliente */
+extern void form_client_update();
+/* Formulário de deleção de cliente */
+extern void form_client_delete();
 
 #endif	/* _CLIENTE_H */
 
