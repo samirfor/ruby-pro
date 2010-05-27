@@ -12,3 +12,12 @@
  * 
  */
 
+FILE * open_file(char * path, char * mode) {
+    FILE *file_stream = NULL;
+
+    file_stream = fopen(path, mode);
+    if (!file_stream) {
+        printf("%s: Nao foi possivel manipular o arquivo \"%s\".\n", __FILE__, path);
+    }
+    return file_stream;
+}

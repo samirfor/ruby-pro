@@ -11,6 +11,8 @@
 #include <string.h>
 #include <stdio_ext.h>
 
+#include "strings.h"
+
 /*
  * 
  */
@@ -26,4 +28,8 @@ char *upper(char *string) {
 char *read_string(char *str) {
     __fpurge(stdin);
     return gets(str);
+}
+
+char *compare_upcase(char *str1, char *str2) {
+
 }
