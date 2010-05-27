@@ -23,15 +23,6 @@ struct client {
 
 typedef struct client Client;
 
-enum status {
-    FALSE = 0,
-    TRUE = 1,
-    NON_EXIST = -1,
-    DELETED = -2
-};
-
-typedef enum status Status;
-
 
 /***********************************
 External Function References
@@ -57,6 +48,7 @@ extern void form_client_insert();
 extern void form_client_update();
 /* Formulário de deleção de cliente */
 extern void form_client_delete();
+/* Imprime na tela um cliente de forma humanamente legível */
+extern void client_puts(Client*);
 
 #endif	/* _CLIENTE_H */
-
