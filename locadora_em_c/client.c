@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "strings.h"
 #include "client.h"
+#include "status.h"
 
 #define ID_FILEPATH "clients_id_seq.bin"
 #define CLIENTS_FILEPATH "clients.bin"
@@ -16,8 +17,6 @@
 /*
  * 
  */
-
-Status stats; /* Enum para BOOLEANS, NON_EXIST e DELETED */
 
 Client search_by_id(int id) {
     FILE *file_stream = NULL;
@@ -95,6 +94,7 @@ int client_first_index_avaliable() {
     if (file_stream) {
         fread(&old_id, sizeof (old_id), 1, file_stream);
         rewind(file_stream);
+        new_id = old_id + 1;
         fwrite(&new_id, sizeof (new_id), 1, file_stream);
         fclose(file_stream);
         return old_id;
@@ -103,8 +103,8 @@ int client_first_index_avaliable() {
         /* Não conseguiu abrir um arquivo existente, então, criará. */
         file_stream = fopen(ID_FILEPATH, "wb+");
         if (file_stream) {
-            old_id = 2;
-            fwrite(&old_id, sizeof (old_id), 1, file_stream);
+            new_id = 2;
+            fwrite(&new_id, sizeof (new_id), 1, file_stream);
             fclose(file_stream);
             return 1;
         } else {
@@ -132,7 +132,7 @@ int insert(Client * client) {
             fclose(file_stream);
         } else {
             printf("%s: Nao foi possivel criar \"%s\"\n", __FILE__, CLIENTS_FILEPATH);
-            exit(1);
+            return FALSE;
         }
     }
     return TRUE;
@@ -146,9 +146,14 @@ void list_client_by_id(int id) {
         printf("%s: Nao ha cliente cadastrado com esse id.\n", __FILE__);
         return;
     } else {
-        printf("Nome: %s\nCPF: %s\nRG: %s\n", client.name, client.CPF, client.RG);
-        printf("Fone: %s\nData de nascimento: %s\n\n", client.phone, client.birth_date);
+        client_puts(&client);
     }
+}
+
+void client_puts(Client * client) {
+    printf("ID: %d\n", client->id);
+    printf("Nome: %s\nCPF: %s\nRG: %s\n", client->name, client->CPF, client->RG);
+    printf("Fone: %s\nData de nascimento: %s\n\n", client->phone, client->birth_date);
 }
 
 void list_all_clients() {
@@ -157,14 +162,13 @@ void list_all_clients() {
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (file_stream) {
-        printf("=======\nLISTA DE CLIENTES: \n\n");
+        printf("=======\nLISTA DE TODOS OS CLIENTES: \n\n");
         /*
                 fread(&client, sizeof (client), 1, file_stream);
          */
         while (!feof(file_stream)) {
             fread(&client, sizeof (client), 1, file_stream);
-            printf("Nome: %s\nCPF: %s\nRG: %s\n", client.name, client.CPF, client.RG);
-            printf("Fone: %s\nData de nascimento: %s\n\n", client.phone, client.birth_date);
+            client_puts(&client);
             /*
                         fread(&client, sizeof (client), 1, file_stream);
              */
@@ -201,9 +205,9 @@ void form_client_insert() {
     read_string(client.birth_date);
 
     if (insert(&client)) {
-        printf("Cliente inserido com sucesso.");
+        printf("Cliente inserido com sucesso.\n");
     } else {
-        printf("Cliente nao foi inserido corretamente!");
+        printf("Cliente nao foi inserido corretamente!\n");
     }
     printf("=======\n");
 }
