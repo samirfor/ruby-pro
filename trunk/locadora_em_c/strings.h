@@ -9,11 +9,7 @@
 #define	_STRINGS_H
 
 /*  */
-extern char *upper(char*);
-/*  */
 extern char *read_string(char*);
-/*  */
-extern char *compare_upcase(char*, char*);
 
 
 #endif	/* _STRINGS_H */

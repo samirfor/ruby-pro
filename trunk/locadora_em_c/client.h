@@ -49,6 +49,6 @@ extern void form_client_update();
 /* Formulário de deleção de cliente */
 extern void form_client_delete();
 /* Imprime na tela um cliente de forma humanamente legível */
-extern void client_puts(Client*);
+extern void puts_client(Client*);
 
 #endif	/* _CLIENTE_H */

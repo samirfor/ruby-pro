@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "strings.h"
 #include "client.h"
 #include "status.h"
@@ -18,9 +19,21 @@
  * 
  */
 
+Client * initialize(Client * client) {
+    client->id = NON_EXIST;
+    strcpy(client->CPF, "");
+    strcpy(client->RG, "");
+    strcpy(client->birth_date, "");
+    strcpy(client->name, "initialize");
+    strcpy(client->phone, "");
+    return client;
+}
+
 Client search_by_id(int id) {
     FILE *file_stream = NULL;
     Client client;
+
+    initialize(&client);
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (file_stream) {
@@ -45,11 +58,13 @@ Client search_by_name(char *name) {
     FILE *file_stream = NULL;
     Client client;
 
+    initialize(&client);
+
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (file_stream) {
         fread(&client, sizeof (client), 1, file_stream);
         while (!feof(file_stream)) {
-            if (!strcmp(name, client.name)) {
+            if (!strcasecmp(name, client.name)) {
                 fclose(file_stream);
                 return client;
             }
@@ -79,6 +94,8 @@ int client_is_empty() {
 int index_exist(int index) {
     Client client;
 
+    initialize(&client);
+
     client = search_by_id(index);
     if (client.id == NON_EXIST) {
         return FALSE;
@@ -88,7 +105,7 @@ int index_exist(int index) {
 
 int client_first_index_avaliable() {
     FILE *file_stream = NULL;
-    int old_id, new_id;
+    int old_id = NON_EXIST, new_id = NON_EXIST;
 
     file_stream = fopen(ID_FILEPATH, "rb+");
     if (file_stream) {
@@ -121,14 +138,22 @@ int insert(Client * client) {
     file_stream = fopen(CLIENTS_FILEPATH, "rb+");
     if (file_stream) {
         fseek(file_stream, 0, SEEK_END);
-        fwrite(client, sizeof (client), 1, file_stream);
+        if (!fwrite(client, sizeof (client), 1, file_stream)) {
+            printf("%s: ERRO FATAL -> Nao foi possivel escrever no arquivo \"%s\".\n", __FILE__, CLIENTS_FILEPATH);
+            fclose(file_stream);
+            return FALSE;
+        }
         fclose(file_stream);
     } else {
         printf("Aviso: arquivo \"%s\" foi criado agora.\n", CLIENTS_FILEPATH);
         /* Não conseguiu abrir um arquivo existente, então, criará. */
         file_stream = fopen(CLIENTS_FILEPATH, "wb+");
         if (file_stream) {
-            fwrite(client, sizeof (client), 1, file_stream);
+            if (!fwrite(client, sizeof (client), 1, file_stream)) {
+                printf("%s: ERRO FATAL -> Nao foi possivel escrever no arquivo \"%s\".\n", __FILE__, CLIENTS_FILEPATH);
+                fclose(file_stream);
+                return FALSE;
+            }
             fclose(file_stream);
         } else {
             printf("%s: Nao foi possivel criar \"%s\"\n", __FILE__, CLIENTS_FILEPATH);
@@ -141,16 +166,18 @@ int insert(Client * client) {
 void list_client_by_id(int id) {
     Client client;
 
+    initialize(&client);
+
     client = search_by_id(id);
     if (client.id == NON_EXIST) {
         printf("%s: Nao ha cliente cadastrado com esse id.\n", __FILE__);
         return;
     } else {
-        client_puts(&client);
+        puts_client(&client);
     }
 }
 
-void client_puts(Client * client) {
+void puts_client(Client * client) {
     printf("ID: %d\n", client->id);
     printf("Nome: %s\nCPF: %s\nRG: %s\n", client->name, client->CPF, client->RG);
     printf("Fone: %s\nData de nascimento: %s\n\n", client->phone, client->birth_date);
@@ -160,18 +187,17 @@ void list_all_clients() {
     FILE *file_stream = NULL;
     Client client;
 
+    initialize(&client);
+
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (file_stream) {
         printf("=======\nLISTA DE TODOS OS CLIENTES: \n\n");
-        /*
-                fread(&client, sizeof (client), 1, file_stream);
-         */
         while (!feof(file_stream)) {
-            fread(&client, sizeof (client), 1, file_stream);
-            client_puts(&client);
-            /*
-                        fread(&client, sizeof (client), 1, file_stream);
-             */
+            if (!fread(&client, sizeof (client), 1, file_stream)) {
+                printf("%s: ERRO FATAL -> Nao foi possivel ler do arquivo \"%s\".\n\n", __FILE__, CLIENTS_FILEPATH);
+                return;
+            }
+            puts_client(&client);
         }
         printf("=======\n");
         fclose(file_stream);
@@ -182,39 +208,46 @@ void list_all_clients() {
 }
 
 void form_client_insert() {
-    /*
-        Client *client = malloc(sizeof (Client));
-        if (!client) {
-            printf("%s: ERRO FATAL -> Nao foi possivel alocar memoria.\n", __FILE__);
-            exit(1);
-        }
-     */
-    Client client;
+    Client *client = malloc(sizeof (Client));
+    
+    if (!client) {
+        printf("%s: ERRO FATAL -> Nao foi possivel alocar memoria.\n", __FILE__);
+        exit(1);
+    }
 
-    client.id = -1;
+    initialize(client);
+
     printf("=======\nINSERINDO CLIENTE: \n\n");
     printf("Nome: ");
-    read_string(client.name);
+    read_string(client->name);
     printf("CPF: ");
-    read_string(client.CPF);
+    read_string(client->CPF);
     printf("RG: ");
-    read_string(client.RG);
+    read_string(client->RG);
     printf("Fone: ");
-    read_string(client.phone);
+    read_string(client->phone);
     printf("Data de nascimento: ");
-    read_string(client.birth_date);
+    read_string(client->birth_date);
 
-    if (insert(&client)) {
+    printf("Showing antes:\n");
+    puts_client(client);
+
+    if (insert(client)) {
         printf("Cliente inserido com sucesso.\n");
     } else {
         printf("Cliente nao foi inserido corretamente!\n");
     }
+    printf("=======\n");
+    printf("Showing antes:\n");
+    puts_client(client);
     printf("=======\n");
 }
 
 void form_client_update() {
     Client client;
     char input[200] = "";
+
+    initialize(&client);
 
     /* Antes de tudo, precisamos testar se há algum cliente */
     if (client_is_empty()) {
@@ -262,6 +295,8 @@ void form_client_update() {
 void form_client_delete() {
     Client client;
     char input[200] = "";
+
+    initialize(&client);
 
     /* Antes de tudo, precisamos testar se há algum cliente */
     if (client_is_empty()) {
