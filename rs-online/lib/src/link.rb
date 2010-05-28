@@ -1,5 +1,7 @@
 require 'net/http'
 require 'socket'
+require "httpclient"
+
 require "src/status"
 require "src/database"
 require "src/error_rs"
@@ -74,7 +76,8 @@ class Link
   # Retorno: String IP
   def set_ip
     begin
-      @ip = IPSocket.getaddress @host
+      @ip = Resolv::DNS.new
+      @ip = @ip.getaddress(@host).to_s
     rescue Exception
       if @host == "rapidshare.com" or @host == "www.rapidshare.com"
         @ip = "195.122.131.2"
