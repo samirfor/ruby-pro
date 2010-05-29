@@ -40,7 +40,7 @@ int main() {
                     form_client_update();
                     break;
                 case '4':
-                    form_client_delete();
+                    form_client_erase();
                     break;
             }
         } while (opcao != '0');

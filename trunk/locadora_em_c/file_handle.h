@@ -8,7 +8,7 @@
 #ifndef _FILE_HANDLE_H
 #define	_FILE_HANDLE_H
 
-extern FILE * open_file(char*, char*);
+
 
 #endif	/* _FILE_HANDLE_H */
 
