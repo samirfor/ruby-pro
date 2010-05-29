@@ -10,34 +10,52 @@
 
 /***********************************
 External Variables References
-************************************/
+ ************************************/
 
-struct client {
+typedef struct {
     int id;
     char name[150];
     char RG[100];
     char CPF[100];
     char phone[100];
     char birth_date[100];
-};
+} Client;
 
-typedef struct client Client;
+#define ID_FILEPATH "clients_id_seq.bin"
+#define CLIENTS_FILEPATH "clients.bin"
+#define TMP_CLIENTS_FILEPATH "tmp_clients.bin"
+
+/************************************
+ * Error messages
+ ************************************/
+#define READ_OPEN_ERROR "%s: Nao foi possivel abrir \"%s\" para leitura.\n"
+#define FILE_NOT_FOUND_ERROR "%s: Nao foi possivel localizar o arquivo \"%s\".\n"
+#define ALLOC_ERROR "%s: ERRO FATAL -> Nao foi possivel alocar memoria.\n"
+#define WRITE_FILE_ERROR "%s: ERRO FATAL -> Nao foi possivel escrever no arquivo \"%s\".\n"
+#define CREATE_FILE_ERROR "%s: Nao foi possivel criar \"%s\"\n"
+#define ID_NOT_FOUND_ERROR "%s: Nao ha cliente cadastrado com esse ID.\n"
+#define NAME_NOT_FOUND_ERROR "%s: Nao ha cliente cadastrado com esse nome.\n"
+#define FILE_EMPTY_ERROR "%s: Nao ha clientes cadastrados.\n"
 
 
 /***********************************
 External Function References
-************************************/
+ ************************************/
 
 /* Verifica a existencia de um cliente pelo id */
 extern int index_exist(int);
 /* Search into a vector of client and returns */
-extern Client search_by_id(int);
+extern Client * search_by_id(int);
 /* Search into a vector of client and returns */
-extern Client search_by_name(char*);
+extern Client * search_by_name(char*);
 /* Retorna um número id disponível */
 extern int client_first_index_avaliable();
 /* Insere um cliente no arquivo */
 extern int insert(Client*);
+/* Modifica um cliente no arquivo */
+extern int update(Client*);
+/* Remove um cliente no arquivo */
+extern int erase(Client*);
 /* Lista todos os clientes */
 extern void list_all_clients();
 /* Lista um cliente identificado pelo id */
@@ -46,9 +64,21 @@ extern void list_client_by_id(int);
 extern void form_client_insert();
 /* Formulário de atualização de cliente */
 extern void form_client_update();
-/* Formulário de deleção de cliente */
-extern void form_client_delete();
+/* Formulário de remoção de cliente */
+extern void form_client_erase();
 /* Imprime na tela um cliente de forma humanamente legível */
 extern void puts_client(Client*);
+/* Remove o lixo da estrutura */
+extern void initialize(Client*);
+/* Declara dinâmicamente um cliente */
+extern Client * new_malloc();
+/* Verifica se o arquivo CLIENTS_FILEPATH está vazio */
+extern int clients_file_is_empty();
+/* Validação do que foi digitado pelo usuário. */
+extern int check_by_id(char *);
+/* Validação do que foi digitado pelo usuário. */
+extern int check_by_name(char *);
+/* Diálogo de confirmação. */
+extern int be_sure(char *);
 
 #endif	/* _CLIENTE_H */
