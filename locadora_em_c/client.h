@@ -3,6 +3,12 @@
  * Author: samir
  *
  * Created on 5 de Maio de 2010, 16:24
+ *
+ * REQUISITOS:
+ * 
+ * -> CLIENTE(ID, NOME, FONE, DT_NASC, RG, CPF)
+ * INSERIR, ALTERAR, EXLCUIR, LISTAR, PESQUISAR E *ORDENAR POR NOME.
+ *
  */
 
 #ifndef _CLIENTE_H
@@ -50,6 +56,8 @@ extern Client * search_by_id(int);
 extern Client * search_by_name(char*);
 /* Retorna um número id disponível */
 extern int client_first_index_avaliable();
+/* Ordenar arquivo cliente por nome  */
+extern int sort_by_name();
 /* Insere um cliente no arquivo */
 extern int insert(Client*);
 /* Modifica um cliente no arquivo */
@@ -66,6 +74,8 @@ extern void form_client_insert();
 extern void form_client_update();
 /* Formulário de remoção de cliente */
 extern void form_client_erase();
+/* Formulário de ordenação de clientes */
+extern void form_client_sort();
 /* Imprime na tela um cliente de forma humanamente legível */
 extern void puts_client(Client*);
 /* Remove o lixo da estrutura */

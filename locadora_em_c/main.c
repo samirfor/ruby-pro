@@ -24,6 +24,7 @@ int main() {
             printf("2 - Inserir\n");
             printf("3 - Alterar\n");
             printf("4 - Deletar\n");
+            printf("5 - Ordenar por nome\n");
             printf("0 - Sair\n");
             printf("++++++\nOpcao: ");
 
@@ -42,6 +43,11 @@ int main() {
                 case '4':
                     form_client_erase();
                     break;
+                case '5':
+                    form_client_sort();
+                    break;
+                default:
+                    printf("Opcao invalida!\n");
             }
         } while (opcao != '0');
     } while (opcao != '0');
