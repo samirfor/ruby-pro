@@ -205,7 +205,6 @@ int update(Client *client) {
 int erase(Client *client) {
     FILE *file_stream = NULL, *file_stream_tmp = NULL;
     Client *client_aux;
-    long size = -1;
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb+");
     if (!file_stream) {
@@ -248,6 +247,89 @@ int erase(Client *client) {
     // Se o arquivo tiver 0 bytes, será removido.
     if (!ftell(file_stream)) {
         remove(CLIENTS_FILEPATH);
+    }
+
+    return TRUE;
+}
+
+int get_size_clients() {
+    FILE *file_stream = NULL;
+    Client *client;
+    int count = 0;
+
+    file_stream = fopen(CLIENTS_FILEPATH, "rb");
+    if (!file_stream) {
+        printf(FILE_NOT_FOUND_ERROR, __FILE__, CLIENTS_FILEPATH);
+        return FALSE;
+    }
+
+    client = new_malloc();
+    fread(client, sizeof (Client), 1, file_stream);
+    while (!feof(file_stream)) {
+        count++;
+        fread(client, sizeof (Client), 1, file_stream);
+    }
+    free(client);
+    fclose(file_stream);
+    return count;
+}
+
+int sort_by_name() {
+    FILE *file_stream = NULL, *file_stream_tmp = NULL;
+    Client *client1, *client2, *smaller, *bigger;
+    int i = 1, j = 1, size;
+
+    /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
+    if (clients_file_is_empty()) {
+        printf(FILE_EMPTY_ERROR, __FILE__);
+        return;
+    }
+
+    file_stream = fopen(CLIENTS_FILEPATH, "rb+");
+    if (!file_stream) {
+        printf(FILE_NOT_FOUND_ERROR, __FILE__, CLIENTS_FILEPATH);
+        return FALSE;
+    }
+
+    file_stream_tmp = fopen(TMP_CLIENTS_FILEPATH, "wb");
+    if (!file_stream_tmp) {
+        printf(FILE_NOT_FOUND_ERROR, __FILE__, TMP_CLIENTS_FILEPATH);
+        return FALSE;
+    }
+
+    client1 = new_malloc();
+    client2 = new_malloc();
+    smaller = new_malloc();
+    bigger = new_malloc();
+    size = get_size_clients();
+    for (i = 0; i < size; i++) {
+        fread(client1, sizeof (Client), 1, file_stream);
+        for (j = i; j < size; j++) {
+            fread(client2, sizeof (Client), 1, file_stream);
+            if (strcmp(client1->name, client2->name) < 0) {
+                smaller = client1;
+                bigger = client2;
+            } else {
+                smaller = client2;
+                bigger = client1;
+            }
+            fseek(file_stream, j * sizeof (Client), SEEK_SET);
+        }
+        fseek(file_stream, i * sizeof (Client), SEEK_SET);
+
+        fwrite(smaller, sizeof (Client), 1, file_stream_tmp);
+        fwrite(bigger, sizeof (Client), 1, file_stream_tmp);
+    }
+    free(client1);
+    free(client2);
+    fclose(file_stream);
+    fclose(file_stream_tmp);
+
+    if (remove(CLIENTS_FILEPATH)) {
+        return FALSE;
+    }
+    if (rename(TMP_CLIENTS_FILEPATH, CLIENTS_FILEPATH)) {
+        return FALSE;
     }
 
     return TRUE;
@@ -335,6 +417,12 @@ int be_sure(char *input) {
     }
 }
 
+void form_client_sort() {
+    printf(">>> ORDENANDO CLIENTES ... \n\n");
+    sort_by_name();
+    list_all_clients();
+}
+
 void form_client_insert() {
     Client *client;
 
@@ -366,7 +454,7 @@ void form_client_update() {
     int id;
     Client *client;
 
-    /* Antes de tudo, precisamos testar se há algum cliente no arquivo*/
+    /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
         printf(FILE_EMPTY_ERROR, __FILE__);
         return;
@@ -441,7 +529,7 @@ void form_client_erase() {
     int id;
     Client *client;
 
-    /* Antes de tudo, precisamos testar se há algum cliente no arquivo*/
+    /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
         printf(FILE_EMPTY_ERROR, __FILE__);
         return;
