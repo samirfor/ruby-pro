@@ -43,20 +43,22 @@ class Link
   end
 
   def get_body
-    http = Net::HTTP.new(@ip)
-    http.read_timeout = 15 #segundos
+    http = HTTPClient.new
+    tmp_uri = @uri
+    tmp_uri.host = @ip
+    #    http.timeout_scheduler 15 #segundos
     begin
-      headers, body = http.get(@path)
-      unless headers.code == "200"
+      response = http.get(tmp_uri)
+      unless response.header.status_code == 200
         to_log "Não foi possível carregar a página."
-        to_log "#{headers.code} - #{headers.message}"
+        to_log "#{response.header.status_code} - #{response.header.reason_phrase}"
         if retry_ == Status::OFFLINE
           return
         end
       end
-    end while headers.code != "200"
+    end while response.header.status_code != 200
     @tentativas = 0
-    body
+    response.body.content
   end
 
   # Escreve os dados no BD.
@@ -82,7 +84,7 @@ class Link
       if @host == "rapidshare.com" or @host == "www.rapidshare.com"
         @ip = "195.122.131.2"
       elsif @host == "megaupload.com" or @host == "www.megaupload.com"
-        @ip = "174.140.154.12"
+        @ip = "174.140.154.25"
       elsif @host =~ /rs\d+\.rapidshare\.com/
         server = ServerRS.new(@host.scan(/\d+/)[0].to_i)
         @ip = server.ip
@@ -391,7 +393,7 @@ class Link
 
       ## Captura captcha
       captcha = Megaupload::get_captcha(body)
-      if captcha == nil
+      if captcha == nil or captcha.size < 4
         to_log('Não foi possível capturar o captcha.')
         retry_
         return
