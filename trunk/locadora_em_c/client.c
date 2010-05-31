@@ -1,5 +1,5 @@
 /* 
- * File:   cliente.c
+ * File:   client.c
  * Author: samir
  *
  * Created on 5 de Maio de 2010, 16:22
@@ -8,26 +8,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <regex.h>
 #include "strings.h"
 #include "client.h"
 #include "status.h"
+#include "exceptions.h"
 
 /*
  * 
  */
 
-Client * new_malloc() {
+Client * client_malloc() {
     Client *client = malloc(sizeof (Client));
 
     if (!client) {
         printf(ALLOC_ERROR, __FILE__);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
-    initialize(client);
+    client_initialize(client);
     return client;
 }
 
-void initialize(Client * client) {
+void client_initialize(Client * client) {
     client->id = NON_EXIST;
     strcpy(client->CPF, "");
     strcpy(client->RG, "");
@@ -36,16 +38,16 @@ void initialize(Client * client) {
     strcpy(client->phone, "");
 }
 
-Client * search_by_id(int id) {
+Client * search_client_by_id(int id) {
     FILE *file_stream = NULL;
     Client *client;
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (!file_stream) {
         printf(READ_OPEN_ERROR, __FILE__, CLIENTS_FILEPATH);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
-    client = new_malloc();
+    client = client_malloc();
     fread(client, sizeof (Client), 1, file_stream);
     while (!feof(file_stream)) {
         if (client->id == id) {
@@ -59,16 +61,16 @@ Client * search_by_id(int id) {
     return client;
 }
 
-Client * search_by_name(char *name) {
+Client * search_client_by_name(char *name) {
     FILE *file_stream = NULL;
     Client *client;
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (!file_stream) {
         printf(READ_OPEN_ERROR, __FILE__, CLIENTS_FILEPATH);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
-    client = new_malloc();
+    client = client_malloc();
     fread(client, sizeof (Client), 1, file_stream);
     while (!feof(file_stream)) {
         if (!strcasecmp(name, client->name)) {
@@ -77,6 +79,31 @@ Client * search_by_name(char *name) {
         }
         fread(client, sizeof (Client), 1, file_stream);
     }
+
+    /*
+     * Não achou pelo nome exato, então tentaremos uma aproximação com
+     * expressão regular
+     */
+
+    regex_t reg;
+
+    if (regcomp(&reg, name, REG_EXTENDED | REG_NOSUB | REG_ICASE)) {
+        fprintf(stderr, "%s: ERRO na compilacao da expressao regular.", __FILE__);
+        fclose(file_stream);
+        client->id = NON_EXIST;
+        return client;
+    }
+
+    fseek(file_stream, 0, SEEK_SET);
+    fread(client, sizeof (Client), 1, file_stream);
+    while (!feof(file_stream)) {
+        if (!(regexec(&reg, client->name, 0, (regmatch_t *) NULL, 0))) {
+            fclose(file_stream);
+            return client;
+        }
+        fread(client, sizeof (Client), 1, file_stream);
+    }
+
     fclose(file_stream);
     client->id = NON_EXIST;
     return client;
@@ -94,12 +121,12 @@ int clients_file_is_empty() {
     }
 }
 
-int index_exist(int index) {
+int client_index_exist(int index) {
     Client *client;
 
-    client = new_malloc();
+    client = client_malloc();
 
-    client = search_by_id(index);
+    client = search_client_by_id(index);
     if (client->id == NON_EXIST) {
         free(client);
         return FALSE;
@@ -112,7 +139,7 @@ int client_first_index_avaliable() {
     FILE *file_stream = NULL;
     int old_id = NON_EXIST, new_id = NON_EXIST;
 
-    file_stream = fopen(ID_FILEPATH, "rb+");
+    file_stream = fopen(CLIENTS_ID_FILEPATH, "rb+");
     if (file_stream) {
         fread(&old_id, sizeof (old_id), 1, file_stream);
         rewind(file_stream);
@@ -121,22 +148,22 @@ int client_first_index_avaliable() {
         fclose(file_stream);
         return old_id;
     } else {
-        printf("Aviso: arquivo \"%s\" foi criado agora.\n", ID_FILEPATH);
+        printf("Aviso: arquivo \"%s\" foi criado agora.\n", CLIENTS_ID_FILEPATH);
         /* Não conseguiu abrir um arquivo existente, então, criará. */
-        file_stream = fopen(ID_FILEPATH, "wb+");
+        file_stream = fopen(CLIENTS_ID_FILEPATH, "wb+");
         if (file_stream) {
             new_id = 2;
             fwrite(&new_id, sizeof (new_id), 1, file_stream);
             fclose(file_stream);
             return 1;
         } else {
-            printf(CREATE_FILE_ERROR, __FILE__, ID_FILEPATH);
-            exit(1);
+            printf(CREATE_FILE_ERROR, __FILE__, CLIENTS_ID_FILEPATH);
+            exit(EXIT_FAILURE);
         }
     }
 }
 
-int insert(Client * client) {
+int insert_client(Client * client) {
     FILE *file_stream = NULL;
 
     client->id = client_first_index_avaliable();
@@ -168,43 +195,43 @@ int insert(Client * client) {
     return TRUE;
 }
 
-int update(Client *client) {
+int update_client(Client *client) {
     FILE *file_stream = NULL;
-    Client *client_aux;
+    Client *aux;
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb+");
     if (!file_stream) {
         printf(FILE_NOT_FOUND_ERROR, __FILE__, CLIENTS_FILEPATH);
         return FALSE;
     }
-    client_aux = new_malloc();
+    aux = client_malloc();
     // Procurar o registro a ser alterado no arquivo
-    fread(client_aux, sizeof (Client), 1, file_stream);
+    fread(aux, sizeof (Client), 1, file_stream);
     while (!feof(file_stream)) {
-        if (client_aux->id == client->id) {
+        if (aux->id == client->id) {
             fseek(file_stream, -(sizeof (Client)), SEEK_CUR);
             if (!fwrite(client, sizeof (Client), 1, file_stream)) {
                 printf(WRITE_FILE_ERROR, __FILE__, CLIENTS_FILEPATH);
                 fclose(file_stream);
-                free(client_aux);
+                free(aux);
                 return FALSE;
             }
             fclose(file_stream);
-            free(client_aux);
+            free(aux);
             return TRUE;
         }
-        fread(client_aux, sizeof (Client), 1, file_stream);
+        fread(aux, sizeof (Client), 1, file_stream);
     }
 
     // Se chegar até aqui é porque não encontrou nada
     fclose(file_stream);
-    free(client_aux);
+    free(aux);
     return FALSE;
 }
 
-int erase(Client *client) {
+int erase_client(Client *client) {
     FILE *file_stream = NULL, *file_stream_tmp = NULL;
-    Client *client_aux;
+    Client *aux;
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb+");
     if (!file_stream) {
@@ -212,28 +239,28 @@ int erase(Client *client) {
         return FALSE;
     }
 
-    file_stream_tmp = fopen(TMP_CLIENTS_FILEPATH, "wb");
+    file_stream_tmp = fopen(CLIENTS_TMP_FILEPATH, "wb");
     if (!file_stream_tmp) {
-        printf(FILE_NOT_FOUND_ERROR, __FILE__, TMP_CLIENTS_FILEPATH);
+        printf(FILE_NOT_FOUND_ERROR, __FILE__, CLIENTS_TMP_FILEPATH);
         return FALSE;
     }
 
-    client_aux = new_malloc();
-    fread(client_aux, sizeof (Client), 1, file_stream);
+    aux = client_malloc();
+    fread(aux, sizeof (Client), 1, file_stream);
     while (!feof(file_stream)) {
-        if (client_aux->id != client->id) {
-            fwrite(client_aux, sizeof (Client), 1, file_stream_tmp);
+        if (aux->id != client->id) {
+            fwrite(aux, sizeof (Client), 1, file_stream_tmp);
         }
-        fread(client_aux, sizeof (Client), 1, file_stream);
+        fread(aux, sizeof (Client), 1, file_stream);
     }
-    free(client_aux);
+    free(aux);
     fclose(file_stream);
     fclose(file_stream_tmp);
 
     if (remove(CLIENTS_FILEPATH)) {
         return FALSE;
     }
-    if (rename(TMP_CLIENTS_FILEPATH, CLIENTS_FILEPATH)) {
+    if (rename(CLIENTS_TMP_FILEPATH, CLIENTS_FILEPATH)) {
         return FALSE;
     }
 
@@ -252,10 +279,38 @@ int erase(Client *client) {
     return TRUE;
 }
 
+void copy_client(Client * dest, Client * src) {
+    dest->id = src->id;
+    strcpy(dest->name, src->name);
+    strcpy(dest->phone, src->phone);
+    strcpy(dest->RG, src->RG);
+    strcpy(dest->CPF, src->CPF);
+    strcpy(dest->birth_date, src->birth_date);
+}
+
 int get_size_clients() {
     FILE *file_stream = NULL;
-    Client *client;
-    int count = 0;
+
+    file_stream = fopen(CLIENTS_FILEPATH, "rb");
+    if (!file_stream) {
+        printf(FILE_NOT_FOUND_ERROR, __FILE__, CLIENTS_FILEPATH);
+        return FALSE;
+    }
+    fseek(file_stream, 0, SEEK_END);
+
+    return ftell(file_stream) / sizeof (Client);
+}
+
+Client * client_file_to_a() {
+    FILE * file_stream = NULL;
+    Client *vetor;
+    int i, size;
+
+    /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
+    if (clients_file_is_empty()) {
+        printf(FILE_EMPTY_ERROR, __FILE__);
+        return FALSE;
+    }
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (!file_stream) {
@@ -263,76 +318,47 @@ int get_size_clients() {
         return FALSE;
     }
 
-    client = new_malloc();
-    fread(client, sizeof (Client), 1, file_stream);
-    while (!feof(file_stream)) {
-        count++;
-        fread(client, sizeof (Client), 1, file_stream);
+    size = get_size_clients();
+    if (!size) {
+        printf("%s: Nao foi possivel obter a quantidade de clientes.\n", __FILE__);
+        return FALSE;
     }
-    free(client);
+    vetor = malloc(size * sizeof (Client));
+    if (!vetor) {
+        printf(ALLOC_ERROR, __FILE__);
+        return FALSE;
+    }
+
+    for (i = 0; i < size; i++) {
+        fread(vetor + i, sizeof (Client), 1, file_stream);
+    }
+
     fclose(file_stream);
-    return count;
+
+    return vetor;
 }
 
-int sort_by_name() {
-    FILE *file_stream = NULL, *file_stream_tmp = NULL;
-    Client *client1, *client2, *smaller, *bigger;
-    int i = 1, j = 1, size;
+Client * sort_client_by_name() {
 
-    /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
-    if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
-        return;
-    }
+    Client *aux, *vetor;
+    int size, i, j;
 
-    file_stream = fopen(CLIENTS_FILEPATH, "rb+");
-    if (!file_stream) {
-        printf(FILE_NOT_FOUND_ERROR, __FILE__, CLIENTS_FILEPATH);
-        return FALSE;
-    }
-
-    file_stream_tmp = fopen(TMP_CLIENTS_FILEPATH, "wb");
-    if (!file_stream_tmp) {
-        printf(FILE_NOT_FOUND_ERROR, __FILE__, TMP_CLIENTS_FILEPATH);
-        return FALSE;
-    }
-
-    client1 = new_malloc();
-    client2 = new_malloc();
-    smaller = new_malloc();
-    bigger = new_malloc();
+    aux = client_malloc();
+    vetor = client_file_to_a();
     size = get_size_clients();
+
     for (i = 0; i < size; i++) {
-        fread(client1, sizeof (Client), 1, file_stream);
-        for (j = i; j < size; j++) {
-            fread(client2, sizeof (Client), 1, file_stream);
-            if (strcmp(client1->name, client2->name) < 0) {
-                smaller = client1;
-                bigger = client2;
-            } else {
-                smaller = client2;
-                bigger = client1;
+        for (j = i + 1; j < size; j++) {
+            if (strcmp((vetor + i)->name, (vetor + j)->name) > 0) {
+                copy_client(aux, vetor + j);
+                copy_client(vetor + j, vetor + i);
+                copy_client(vetor + i, aux);
             }
-            fseek(file_stream, j * sizeof (Client), SEEK_SET);
         }
-        fseek(file_stream, i * sizeof (Client), SEEK_SET);
-
-        fwrite(smaller, sizeof (Client), 1, file_stream_tmp);
-        fwrite(bigger, sizeof (Client), 1, file_stream_tmp);
     }
-    free(client1);
-    free(client2);
-    fclose(file_stream);
-    fclose(file_stream_tmp);
+    free(aux);
 
-    if (remove(CLIENTS_FILEPATH)) {
-        return FALSE;
-    }
-    if (rename(TMP_CLIENTS_FILEPATH, CLIENTS_FILEPATH)) {
-        return FALSE;
-    }
-
-    return TRUE;
+    return vetor;
 }
 
 void puts_client(Client * client) {
@@ -344,9 +370,9 @@ void puts_client(Client * client) {
 void list_client_by_id(int id) {
     Client *client;
 
-    client = new_malloc();
+    client = client_malloc();
 
-    client = search_by_id(id);
+    client = search_client_by_id(id);
     if (client->id == NON_EXIST) {
         printf(ID_NOT_FOUND_ERROR, __FILE__);
         free(client);
@@ -367,7 +393,7 @@ void list_all_clients() {
         return;
     }
 
-    client = new_malloc();
+    client = client_malloc();
     printf("=======\nLISTA DE TODOS OS CLIENTES: \n\n");
     fread(client, sizeof (Client), 1, file_stream);
     while (!feof(file_stream)) {
@@ -379,56 +405,7 @@ void list_all_clients() {
     free(client);
 }
 
-int check_by_id(char *input) {
-    int id;
-
-    printf("Qual ID? ");
-    read_string(input);
-    id = atoi(input);
-    // Verificar se o ID existe
-    if (id > 0 && index_exist(id)) {
-        return id;
-    } else {
-        printf(ID_NOT_FOUND_ERROR, __FILE__);
-        return FALSE;
-    }
-}
-
-int check_by_name(char *input) {
-    printf("Qual nome? ");
-    read_string(input);
-
-    if (strlen(input) < 3) {
-        printf("%s: Nao ha caracteres suficientes para a pesquisa.\n", __FILE__);
-        return FALSE;
-    }
-    return TRUE;
-}
-
-int be_sure(char *input) {
-    do {
-        printf("Digite [s] para confirmar ou [n] abortar: ");
-        read_string(input);
-    } while (input[0] != 's' && input[0] != 'n' && input[0] != 'S' && input[0] != 'N');
-    if (input[0] == 's' || input[0] == 'S') {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-void form_client_sort() {
-    printf(">>> ORDENANDO CLIENTES ... \n\n");
-    sort_by_name();
-    list_all_clients();
-}
-
-void form_client_insert() {
-    Client *client;
-
-    client = new_malloc();
-
-    printf("=======\nINSERINDO CLIENTE: \n\n");
+void form_client(Client *client) {
     printf("Nome: ");
     read_string(client->name);
     printf("CPF: ");
@@ -439,8 +416,42 @@ void form_client_insert() {
     read_string(client->phone);
     printf("Data de nascimento: ");
     read_string(client->birth_date);
+}
 
-    if (insert(client)) {
+void form_client_sort() {
+    int i, size;
+    Client *vetor;
+
+    /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
+    if (clients_file_is_empty()) {
+        printf(FILE_EMPTY_ERROR, __FILE__);
+        return;
+    }
+
+    vetor = sort_client_by_name();
+    size = get_size_clients();
+    if (!vetor) {
+        printf("Nao foi possivel ordenar corretamente!\n");
+        return;
+    }
+
+    printf("=======\nLISTA DE TODOS OS CLIENTES ORDENADOS POR NOME: \n\n");
+    for (i = 0; i < size; i++) {
+        puts_client(vetor + i);
+    }
+    printf("=======\n");
+    free(vetor);
+}
+
+void form_client_insert() {
+    Client *client;
+
+    client = client_malloc();
+
+    printf("=======\nINSERINDO CLIENTE: \n\n");
+    form_client(client);
+
+    if (insert_client(client)) {
         printf("Cliente inserido com sucesso.\n");
     } else {
         printf("Cliente nao foi inserido corretamente!\n");
@@ -450,9 +461,9 @@ void form_client_insert() {
 }
 
 void form_client_update() {
-    char input[200] = "";
-    int id;
+    char *input;
     Client *client;
+    int id;
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
@@ -460,17 +471,19 @@ void form_client_update() {
         return;
     }
 
-    client = new_malloc();
+    client = client_malloc();
+    input = input_malloc();
     printf("=======\nMODIFICANDO CLIENTE: \n\n");
     do {
         printf("Digite [1] para modificar por ID ou [2] para modificar por nome: ");
         read_string(input);
-    } while (input[0] != '1' && input[0] != '2');
-    switch (input[0]) {
+    } while (*input != '1' && *input != '2');
+    switch (*input) {
         case '1':
             id = check_by_id(input);
             if (!id) {
                 free(client);
+                free(input);
                 return;
             }
 
@@ -483,10 +496,8 @@ void form_client_update() {
                 return;
             }
 
-            client = search_by_name(input);
+            client = search_client_by_name(input);
             if (client->id == NON_EXIST) {
-                // TODO: Tentar localizar nomes aproximados
-
                 printf(NAME_NOT_FOUND_ERROR, __FILE__);
                 free(client);
                 return;
@@ -495,37 +506,35 @@ void form_client_update() {
             break;
     }
 
-    printf("Nome: ");
-    read_string(client->name);
-    printf("CPF: ");
-    read_string(client->CPF);
-    printf("RG: ");
-    read_string(client->RG);
-    printf("Fone: ");
-    read_string(client->phone);
-    printf("Data de nascimento: ");
-    read_string(client->birth_date);
+    if (!be_sure(input)) {
+        printf("Abortando modificacao de cliente.\n\n");
+        free(client);
+        free(input);
+        return;
+    }
+    form_client(client);
 
     // Tem certeza?
     if (!be_sure(input)) {
         printf("Abortando modificacao de cliente.\n\n");
         free(client);
+        free(input);
         return;
     }
 
     // Atualização confirmada!
-    if (update(client)) {
+    if (update_client(client)) {
         printf("Cliente atualizado com sucesso.\n");
     } else {
-
         printf("Cliente nao foi atualizado corretamente!\n");
     }
     printf("=======\n");
     free(client);
+    free(input);
 }
 
 void form_client_erase() {
-    char input[200] = "";
+    char *input;
     int id;
     Client *client;
 
@@ -535,13 +544,13 @@ void form_client_erase() {
         return;
     }
 
-    client = new_malloc();
+    client = client_malloc();
     printf("=======\nREMOVENDO CLIENTE: \n\n");
     do {
         printf("Digite [1] para remover por ID ou [2] para remover por nome: ");
         read_string(input);
-    } while (input[0] != '1' && input[0] != '2');
-    switch (input[0]) {
+    } while (*input != '1' && *input != '2');
+    switch (*input) {
         case '1':
             id = check_by_id(input);
             if (!id) {
@@ -550,7 +559,7 @@ void form_client_erase() {
             }
 
             list_client_by_id(id);
-            client = search_by_id(id);
+            client = search_client_by_id(id);
             break;
         case '2':
             if (!check_by_name(input)) {
@@ -558,10 +567,8 @@ void form_client_erase() {
                 return;
             }
 
-            client = search_by_name(input);
+            client = search_client_by_name(input);
             if (client->id == NON_EXIST) {
-                // TODO: Tentar localizar nomes aproximados
-
                 printf(NAME_NOT_FOUND_ERROR, __FILE__);
                 free(client);
                 return;
@@ -578,11 +585,60 @@ void form_client_erase() {
     }
 
     // Remoção confirmada!
-    if (erase(client)) {
+    if (erase_client(client)) {
         printf("Cliente removido com sucesso.\n");
     } else {
         printf("Cliente nao foi removido corretamente!\n");
     }
     printf("=======\n");
     free(client);
+}
+
+void form_client_search() {
+    char *input;
+    Client *client;
+    int id;
+
+    /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
+    if (clients_file_is_empty()) {
+        printf(FILE_EMPTY_ERROR, __FILE__);
+        return;
+    }
+
+    client = client_malloc();
+    input = input_malloc();
+    printf("=======\nPESQSUISANDO CLIENTE: \n\n");
+    do {
+        printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por nome: ");
+        read_string(input);
+    } while (*input != '1' && *input != '2');
+    switch (*input) {
+        case '1':
+            id = check_by_id(input);
+            if (!id) {
+                free(client);
+                free(input);
+                return;
+            }
+
+            list_client_by_id(id);
+            break;
+        case '2':
+            if (!check_by_name(input)) {
+                free(client);
+                return;
+            }
+
+            client = search_client_by_name(input);
+            if (client->id == NON_EXIST) {
+                printf(NAME_NOT_FOUND_ERROR, __FILE__);
+                free(client);
+                return;
+            }
+            list_client_by_id(client->id);
+            break;
+    }
+    printf("=======\n");
+    free(client);
+    free(input);
 }

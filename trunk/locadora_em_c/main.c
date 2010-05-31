@@ -24,13 +24,17 @@ int main() {
             printf("2 - Inserir\n");
             printf("3 - Alterar\n");
             printf("4 - Deletar\n");
-            printf("5 - Ordenar por nome\n");
+            printf("5 - Listar ordenado por nome\n");
+            printf("6 - Pesquisar\n");
             printf("0 - Sair\n");
             printf("++++++\nOpcao: ");
 
             read_string(&opcao);
 
             switch (opcao) {
+                case '0':
+                    printf("Good bye! Have a nice day.\n");
+                    return EXIT_SUCCESS;
                 case '1':
                     list_all_clients();
                     break;
@@ -45,6 +49,9 @@ int main() {
                     break;
                 case '5':
                     form_client_sort();
+                    break;
+                case '6':
+                    form_client_search();
                     break;
                 default:
                     printf("Opcao invalida!\n");
