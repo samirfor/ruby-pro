@@ -5,8 +5,9 @@ module Captcha
   # App GOCR is necessary
   def self.recognize(path)
     system("convert #{path} -colorspace Gray #{path}")
-    system("convert #{path} -negate #{path}")
-    `gocr #{path}`.chomp.delete(" ").strip
+    system("convert #{path} #{path.gsub(".png", "")}.tiff")
+#    system("convert #{path} -negate #{path}")
+    `gocr #{path}.tiff`.chomp.delete(" ").strip
   end
 
   # App WGET is necessary

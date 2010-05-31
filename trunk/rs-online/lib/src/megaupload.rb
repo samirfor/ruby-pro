@@ -1,5 +1,5 @@
 require "src/captcha"
-
+require "resolv"
 
 def regex string, body
   expressao = body.scan(/#{string}/i)[0]
@@ -12,11 +12,15 @@ end
 
 module Megaupload
   def self.get_captcha body
-    expressao = body.scan(/http:\/\/(\S+)\.megaupload.com\/gencap.php?(\S+)\.gif/)[0]
+    expressao = body.scan(/http:\/\/(\S+)\.megaupload.com\/gencap.php\?(\S+)\.gif/)[0]
     unless expressao == nil
       url = "http://#{expressao[0]}.megaupload.com/gencap.php?#{expressao[1]}.gif"
       to_debug("URL da imagem: #{url}")
-      path = "/tmp/captcha.gif"
+      dns = Resolv::DNS.new
+      expressao[0] = dns.getaddress("#{expressao[0]}.megaupload.com").to_s
+      url = "http://#{expressao[0]}/gencap.php?#{expressao[1]}.gif"
+      to_debug("URL da imagem: #{url}")
+      path = "/tmp/captcha.png"
       Captcha::save(url, path)
       ocr = Captcha::recognize(path)
       return ocr
