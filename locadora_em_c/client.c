@@ -81,10 +81,20 @@ Client * search_client_by_name(char *name) {
     }
 
     /*
-     * Não achou pelo nome exato, então tentaremos uma aproximação com
-     * expressão regular
+     * Não achou pelo nome exato, então tentaremos uma substring
      */
 
+    /*
+        fseek(file_stream, 0, SEEK_SET);
+        fread(client, sizeof (Client), 1, file_stream);
+        while (!feof(file_stream)) {
+            if (strstr(client->name, name)) {
+                fclose(file_stream);
+                return client;
+            }
+            fread(client, sizeof (Client), 1, file_stream);
+        }
+     */
     regex_t reg;
 
     if (regcomp(&reg, name, REG_EXTENDED | REG_NOSUB | REG_ICASE)) {
@@ -104,6 +114,7 @@ Client * search_client_by_name(char *name) {
         fread(client, sizeof (Client), 1, file_stream);
     }
 
+    // Nada foi encontrado
     fclose(file_stream);
     client->id = NON_EXIST;
     return client;
