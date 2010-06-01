@@ -20,7 +20,7 @@ module Megaupload
       expressao[0] = dns.getaddress("#{expressao[0]}.megaupload.com").to_s
       url = "http://#{expressao[0]}/gencap.php?#{expressao[1]}.gif"
       to_debug("URL da imagem: #{url}")
-      path = "/tmp/captcha.png"
+      path = "/tmp/captcha.gif"
       Captcha::save(url, path)
       ocr = Captcha::recognize(path)
       return ocr
