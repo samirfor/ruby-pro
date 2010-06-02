@@ -58,11 +58,12 @@ Released   : 20081230
               <p>
                 <%
                 begin
-                  pacote = select_pacote_pendente
-                  if pacote == nil
+                  pacote = Pacote.new("nil")
+                  pacote.select_pendente
+                  if pacote.id_pacote == nil
                     puts "Não há pacotes para baixar atualmente."
                   else
-                    count = select_count_links(pacote.id_pacote)
+                    count = pacote.select_count_links
                     puts "Pacote baixando/a ser baixado a seguir: "
                   %>
                   </p>
@@ -73,7 +74,7 @@ Released   : 20081230
                   </p>
                   <p>
                     <% restante = count[1] - count[0] %>
-                    <%= count[0] %> de <%= count[1] %> links baixados. Falta só <%= restante %> <% print "link" if restante == 1 %><% print "links" if restante > 1 %>.
+                    <%= count[0] %> de <%= count[1] %> links baixados. Falta só <%= restante %> links restantes.
                   </p>
                   <p>
                     <b>Service handler</b><br/>

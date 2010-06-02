@@ -1,12 +1,12 @@
 <%
 require 'dbi'
 require 'cgi'
-require 'src/banco'
+require 'src/pacote'
 
 begin
   cgi = CGI.new
   a_params = cgi.params
-rescue Exception => err %>
+rescue Exception %>
   <html>
     <head>
       <title>Redirecionando...</title>
@@ -19,6 +19,7 @@ rescue Exception => err %>
       </p>
     </body>
   </html> <%
+  puts "Erro"
   raise
 end # => begin - rescue
 
@@ -38,7 +39,7 @@ def update_pacote a_params
     sql += ", url_fonte = '#{a_params["url_fonte"]}'" unless a_params["url_fonte"][0] == ""
     sql += ", legenda = '#{a_params["legenda"]}'" unless a_params["legenda"][0] == ""
     sql += " WHERE id = #{a_params["id_pacote"]}"
-    db_statement_do(sql)
+    Banco.instance.db_connect.do(sql)
     return "Pacote modificado com sucesso."
   rescue Exception => e
     return e
@@ -47,12 +48,13 @@ end
 
 def live_test_links id_pacote
   begin
-    pacote = select_pacote(id_pacote)
+    pacote = Pacote.new("nil")
+    pacote.id_pacote = id_pacote
+    pacote.select
     if pacote == nil
       return "Não foi possível obter o pacote para teste."
     end
-    links_before_test = select_lista_links pacote.id_pacote
-    pacote.tamanho = 0
+    links_before_test = Banco.instance.select_lista_links pacote.id_pacote
     links_before_test.each do |link|
       if link.id_status == Status::BAIXADO
         pacote.tamanho += link.tamanho
@@ -74,7 +76,7 @@ def action_pacote a_params
     if a_params["action"][0] == "cancelar"
       sql = "UPDATE rs.pacote SET mostrar = 'false', problema = 'true' \
       WHERE id = #{a_params["id_pacote"]} "
-      db_statement_do(sql)
+      Banco.instance.db_connect.do(sql)
       msg = "ACTION = Cancelar => Pacote modificado com sucesso."
     elsif a_params["action"][0] == "reiniciar"
       # UPDATE link
@@ -82,13 +84,13 @@ def action_pacote a_params
       sql += "testado = 'false', "
       sql += "id_status = 5 "
       sql += "WHERE id_pacote = #{a_params["id_pacote"]} "
-      db_statement_do(sql)
+      Banco.instance.db_connect.do(sql)
       # UPDATE pacote
       sql = "UPDATE rs.pacote SET "
       sql += "mostrar = 'true', problema = 'false', "
       sql += "completado = 'false' "
       sql += "WHERE id = #{a_params["id_pacote"]} "
-      db_statement_do(sql)
+      Banco.instance.db_connect.do(sql)
       msg = "ACTION = Reiniciar => Pacote modificado com sucesso."
     elsif a_params["action"][0] == "retestarNow"
       txt = live_test_links a_params["id_pacote"]
@@ -100,12 +102,12 @@ def action_pacote a_params
       sql += "id_status = 5 "
       sql += "WHERE id_pacote = #{a_params["id_pacote"]} "
       sql += "AND l.completado = 'false' "
-      db_statement_do(sql)
+      Banco.instance.db_connect.do(sql)
       # UPDATE pacote
       sql = "UPDATE rs.pacote SET "
       sql += "problema = 'false' "
       sql += "WHERE id = #{a_params["id_pacote"]} "
-      db_statement_do(sql)
+      Banco.instance.db_connect.do(sql)
       msg = "ACTION = Retestar => Pacote modificado com sucesso."
     else
       msg = "NO ACTION."

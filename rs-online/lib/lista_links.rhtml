@@ -1,7 +1,6 @@
 <%
 require 'dbi'
 require 'cgi'
-require 'src/banco'
 require 'src/status'
 require "src/pacote"
 require "src/link"
@@ -54,346 +53,348 @@ def show_lista_links lista, pacote%>
                 <td align="left">
                   <a href="<%
                   if link.tipo == TipoServidor::RS
-                    link.link.gsub("rapidshare.com","195.122.131.2")
-                  elsif link.tipo == TipoServidor::RS
-                    link.link.gsub("www.megaupload.com","174.140.154.12")
+                    link_parsed = link.link.gsub("rapidshare.com","195.122.131.2")
+                  elsif link.tipo == TipoServidor::MU
+                    link_parsed = link.link.gsub("www.megaupload.com","174.140.154.25")
                   else
-                    
-                  end
-                     %>">
-                      <img alt="link" src="images/link.png" border="0"/></a>&nbsp;&nbsp;
-                    <a href="<%= link.link %>"><%= path %></a>
-                  </td>
-                  <%
-                  # tamanho
-                  unless link.tamanho == nil %>
-                    <td><%=sprintf("%.2f MB", link.tamanho/1024.0) %></td><%
-                  else
-                  %><td align="center"> --- </td><%
-                  end
-                  print "\n"
-
-                  # data inicio
-                  begin
-                    time_data_inicio = link.data_inicio.to_time
-                    data_inicio_to_s = time_data_inicio.strftime("%d/%m/%Y %H:%M:%S")
-                  rescue Exception
-                    begin
-                      time_data_inicio = link.data_inicio
-                      data_inicio_to_s = time_data_inicio.strftime("%d/%m/%Y %H:%M:%S")
-                    rescue Exception
-                      data_inicio_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" title=\"Não informado\" \/>"
-                    end
-                  end %>
-                  <td align="center"><%= data_inicio_to_s %> </td> <%
-
-                  # data fim
-                  begin
-                    time_data_fim = link.data_fim.to_time
-                    data_fim_to_s = link.data_fim.to_time.strftime("%d/%m/%Y %H:%M:%S")
-                  rescue Exception
-                    begin
-                      time_data_fim = link.data_fim
-                      data_fim_to_s = time_data_fim.strftime("%d/%m/%Y %H:%M:%S")
-                    rescue Exception
-                      data_fim_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" title=\"Não informado\" \/>"
-                    end
-                  end %>
-                  <td align="center"><%= data_fim_to_s %> </td> <%
-
-                  # intervalo
-                  unless link.data_fim == nil or link.data_inicio == nil
-                    begin
-                      intervalo = Time.local(0) + (time_data_fim - time_data_inicio)
-                    rescue Exception
-                      intervalo = nil
-                    end
-                  end %>
-                  <td align="center"> <%
-                    if intervalo == nil %>
-                      --- <%
-                    else %>
-                      <%= intervalo.strftime("%Hh %Mm %Ss") %>
-                    <%
-                    end %>
-                  </td><%
-                  # completado
-                  if link.completado == false
-                  %><td align="center"><img src="images/cancel.png" alt="Não" /></td><%
-                  else
-                  %><td align="center"><img src="images/accept.png" alt="Não" /></td><%
-                  end
-                  # --- STATUS
-                  case link.id_status
-                  when Status::BAIXADO
-                  %><td align="center"><img src="images/drive_disk.png" alt="Baixado" title="Baixado" /></td><%
-                  when Status::OFFLINE
-                  %><td align="center"><img src="images/database_error.png" alt="Offline" title="Offline" /></td><%
-                  when Status::ONLINE
-                  %><td align="center"><img src="images/database_connect.png" alt="Online" title="Online" /></td><%
-                  when Status::BAIXANDO
-                  %><td align="center"><img src="images/loading.gif" alt="Baixando" title="Baixando" /></td><%
-                  when Status::AGUARDANDO
-                  %><td align="center"><img src="images/hourglass.png" alt="Aguardando" title="Aguardando" /></td><%
-                  when Status::INTERROMPIDO
-                  %><td align="center"><img src="images/exclamation.png" alt="Interrompido" title="Interrompido" /></td><%
-                  when Status::TESTANDO
-                  %><td align="center"><img src="images/loading.gif" alt="Testando" title="Testando" /></td><%
-                  when Status::TENTANDO
-                  %><td align="center"><img src="images/loading.gif" alt="Tentando" title="Tentando" /></td><%
                   end
                 %>
-                </tr>
-              <%
-              end # => lista.each
-              print "\n" %>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th colspan="8" align="center">
-                  RS-Online ~ version 1.0b ~ Powered by eRuby
-                </th>
+                     <%= link_parsed %> ">
+                    <img alt="link" src="images/link.png" border="0"/></a>&nbsp;&nbsp;
+                  <a href="<%= link.link %>"><%= path %></a>
+                </td>
+                <%
+                # tamanho
+                unless link.tamanho == nil %>
+                  <td><%=sprintf("%.2f MB", link.tamanho/1024.0) %></td><%
+                else
+                %><td align="center"> --- </td><%
+                end
+                print "\n"
+
+                # data inicio
+                begin
+                  time_data_inicio = link.data_inicio.to_time
+                  data_inicio_to_s = time_data_inicio.strftime("%d/%m/%Y %H:%M:%S")
+                rescue Exception
+                  begin
+                    time_data_inicio = link.data_inicio
+                    data_inicio_to_s = time_data_inicio.strftime("%d/%m/%Y %H:%M:%S")
+                  rescue Exception
+                    data_inicio_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" title=\"Não informado\" \/>"
+                  end
+                end %>
+                <td align="center"><%= data_inicio_to_s %> </td> <%
+
+                # data fim
+                begin
+                  time_data_fim = link.data_fim.to_time
+                  data_fim_to_s = link.data_fim.to_time.strftime("%d/%m/%Y %H:%M:%S")
+                rescue Exception
+                  begin
+                    time_data_fim = link.data_fim
+                    data_fim_to_s = time_data_fim.strftime("%d/%m/%Y %H:%M:%S")
+                  rescue Exception
+                    data_fim_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" title=\"Não informado\" \/>"
+                  end
+                end %>
+                <td align="center"><%= data_fim_to_s %> </td> <%
+
+                # intervalo
+                unless link.data_fim == nil or link.data_inicio == nil
+                  begin
+                    intervalo = Time.local(0) + (time_data_fim - time_data_inicio)
+                  rescue Exception
+                    intervalo = nil
+                  end
+                end %>
+                <td align="center"> <%
+                  if intervalo == nil %>
+                    --- <%
+                  else %>
+                    <%= intervalo.strftime("%Hh %Mm %Ss") %>
+                  <%
+                  end %>
+                </td><%
+                # completado
+                if link.completado == false
+                %><td align="center"><img src="images/cancel.png" alt="Não" /></td><%
+                else
+                %><td align="center"><img src="images/accept.png" alt="Não" /></td><%
+                end
+                # --- STATUS
+                case link.id_status
+                when Status::BAIXADO
+                %><td align="center"><img src="images/drive_disk.png" alt="Baixado" title="Baixado" /></td><%
+                when Status::OFFLINE
+                %><td align="center"><img src="images/database_error.png" alt="Offline" title="Offline" /></td><%
+                when Status::ONLINE
+                %><td align="center"><img src="images/database_connect.png" alt="Online" title="Online" /></td><%
+                when Status::BAIXANDO
+                %><td align="center"><img src="images/loading.gif" alt="Baixando" title="Baixando" /></td><%
+                when Status::AGUARDANDO
+                %><td align="center"><img src="images/hourglass.png" alt="Aguardando" title="Aguardando" /></td><%
+                when Status::INTERROMPIDO
+                %><td align="center"><img src="images/exclamation.png" alt="Interrompido" title="Interrompido" /></td><%
+                when Status::TESTANDO
+                %><td align="center"><img src="images/loading.gif" alt="Testando" title="Testando" /></td><%
+                when Status::TENTANDO
+                %><td align="center"><img src="images/loading.gif" alt="Tentando" title="Tentando" /></td><%
+                end
+              %>
               </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-      <div class="meta">
-        <p class="links"></p>
+            <%
+            end # => lista.each
+            print "\n" %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="8" align="center">
+                RS-Online ~ version 1.0b ~ Powered by eRuby
+              </th>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </div>
-    <div class="post">
-      <h1 class="title">Editar Pacote</h1>
-      <div class="entry">
-        <form action="resp_lista_links.rhtml" method="post">
-          <table width="90%" border="0" cellpadding="5">
-            <tr align="left">
-              <td><b>Prioridade: </b></td>
-              <td>
-                <select name="prioridade" class="select-box"> <%
-                  select_prioridade.each do |p|
-                    print "<option value=\"" + p[0].to_s + "\""
-                    if pacote.prioridade == p[0]
-                      print " selected=\"selected\">"
-                    else
-                      print ">"
-                    end
-                    print p[1].capitalize + "<\/option>\n"
-                  end %>
-                </select>
-              </td>
-              <td>
-                <b>Mostrar na Lista: </b>
-              </td>
-              <td>
-                <select name="mostrar" class="select-box"> <%
-                  if pacote.mostrar %>
-                    <option value="true" selected="selected">Sim</option>
-                    <option value="false">Não</option> <%
-                  else %>
-                    <option value="false" selected="selected">Não</option>
-                    <option value="true">Sim</option> <%
-                  end  %>
-                </select>
-              </td>
-            </tr>
-            <tr align="left">
-              <td><b>Senha: </b></td>
-              <td>
-                <input type="text" name="senha" class="text" size="30" value="<% print pacote.senha unless pacote.senha == nil %>"/>
-              </td>
-              <td>
-                <b>Ações: </b>
-              </td>
-              <td>
-                <select name="action" class="select-box">
-                  <option value="" selected="selected">-</option>
-                  <option value="cancelar">Cancelar</option>
-                  <option value="reiniciar">Resetar</option>
-                  <option value="retestar">Agendar reteste</option>
-                  <option value="retestarNow">Retestar agora</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td><b>Link fonte: </b><br/></td>
-              <td>
-                <input type="text" name="url_fonte" class="text" size="50" value="<% print pacote.url_fonte unless pacote.url_fonte == nil %>"/>
-              </td>
-              <td><b>Legenda: </b><br/></td>
-              <td>
-                <input type="text" name="legenda" class="text" size="50" value="<% print pacote.legenda unless pacote.legenda == nil %>"/>
-              </td>
-            </tr>
-            <tr>
-              <td><b>Descrição: </b><br/></td>
-              <td>
-                <textarea name="descricao" cols="30" rows="5" class="area-wide" title="Insira um pequena descrição sobre o pacote" ><% print pacote.descricao unless pacote.descricao == nil %></textarea>
-              </td>
-              <td> &nbsp; </td>
-              <td> &nbsp; </td>
-            </tr>
-            <tr align="right">
-              <td colspan="4">
-                <input type="hidden" name="id_pacote" value="<%= pacote.id_pacote %>" />
-                <input type="reset" value="Limpar" class="sLimpar"/>&nbsp;
-                <input type="submit" value=" OK   &raquo; " class="sPacote"/>
-              </td>
-            </tr>
-          </table>
-        </form>
-      </div>
-    </div> <%
-  end
+    <div class="meta">
+      <p class="links"></p>
+    </div>
+  </div>
+  <div class="post">
+    <h1 class="title">Editar Pacote</h1>
+    <div class="entry">
+      <form action="resp_lista_links.rhtml" method="post">
+        <table width="90%" border="0" cellpadding="5">
+          <tr align="left">
+            <td><b>Prioridade: </b></td>
+            <td>
+              <select name="prioridade" class="select-box"> <%
+                Banco.instance.select_prioridade.each do |p|
+                  print "<option value=\"" + p[0].to_s + "\""
+                  if pacote.prioridade == p[0]
+                    print " selected=\"selected\">"
+                  else
+                    print ">"
+                  end
+                  print p[1].capitalize + "<\/option>\n"
+                end %>
+              </select>
+            </td>
+            <td>
+              <b>Mostrar na Lista: </b>
+            </td>
+            <td>
+              <select name="mostrar" class="select-box"> <%
+                if pacote.mostrar %>
+                  <option value="true" selected="selected">Sim</option>
+                  <option value="false">Não</option> <%
+                else %>
+                  <option value="false" selected="selected">Não</option>
+                  <option value="true">Sim</option> <%
+                end  %>
+              </select>
+            </td>
+          </tr>
+          <tr align="left">
+            <td><b>Senha: </b></td>
+            <td>
+              <input type="text" name="senha" class="text" size="30" value="<% print pacote.senha unless pacote.senha == nil %>"/>
+            </td>
+            <td>
+              <b>Ações: </b>
+            </td>
+            <td>
+              <select name="action" class="select-box">
+                <option value="" selected="selected">-</option>
+                <option value="cancelar">Cancelar</option>
+                <option value="reiniciar">Resetar</option>
+                <option value="retestar">Agendar reteste</option>
+                <option value="retestarNow">Retestar agora</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td><b>Link fonte: </b><br/></td>
+            <td>
+              <input type="text" name="url_fonte" class="text" size="50" value="<% print pacote.url_fonte unless pacote.url_fonte == nil %>"/>
+            </td>
+            <td><b>Legenda: </b><br/></td>
+            <td>
+              <input type="text" name="legenda" class="text" size="50" value="<% print pacote.legenda unless pacote.legenda == nil %>"/>
+            </td>
+          </tr>
+          <tr>
+            <td><b>Descrição: </b><br/></td>
+            <td>
+              <textarea name="descricao" cols="30" rows="5" class="area-wide" title="Insira um pequena descrição sobre o pacote" ><% print pacote.descricao unless pacote.descricao == nil %></textarea>
+            </td>
+            <td> &nbsp; </td>
+            <td> &nbsp; </td>
+          </tr>
+          <tr align="right">
+            <td colspan="4">
+              <input type="hidden" name="id_pacote" value="<%= pacote.id_pacote %>" />
+              <input type="reset" value="Limpar" class="sLimpar"/>&nbsp;
+              <input type="submit" value=" OK   &raquo; " class="sPacote"/>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div> <%
+end
 %>
 
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <!--
-  Design by Free CSS Templates
-  http://www.freecsstemplates.org
-  Released for free under a Creative Commons Attribution 2.5 License
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
 
-  Name       : Professional
-  Description: A two-column, fixed-width design with dark color scheme background.
-  Version    : 1.0
-  Released   : 20081230
+Name       : Professional
+Description: A two-column, fixed-width design with dark color scheme background.
+Version    : 1.0
+Released   : 20081230
 
-  -->
+-->
 
-  <html>
-    <head>
-      <link rel="icon" href="images/favicon.png" type="image/x-icon" />
-      <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
-      <!-- PAGINAÇÃO VIA AJAX -->
-      <style type="text/css" title="currentStyle">
-        @import "pagination/css/demo_page.css";
-        @import "pagination/css/demo_table.css";
-      </style>
-      <script type="text/javascript" language="javascript" src="pagination/js/jquery.js"></script>
-      <script type="text/javascript" language="javascript" src="pagination/js/jquery.dataTables.js"></script>
-      <script type="text/javascript" charset="utf-8">
-        $(document).ready(function() {
-          $('#example').dataTable( {
-            "sPaginationType": "full_numbers"
-          } );
+<html>
+  <head>
+    <link rel="icon" href="images/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
+    <!-- PAGINAÇÃO VIA AJAX -->
+    <style type="text/css" title="currentStyle">
+      @import "pagination/css/demo_page.css";
+      @import "pagination/css/demo_table.css";
+    </style>
+    <script type="text/javascript" language="javascript" src="pagination/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="pagination/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      $(document).ready(function() {
+        $('#example').dataTable( {
+          "sPaginationType": "full_numbers"
         } );
-      </script>
-      <!-- PAGINAÇÃO VIA AJAX -->
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-      <title>RS-Online ~ version 1.0b ~ Powered by eRuby</title>
-      <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
-    </head>
-    <body>
+      } );
+    </script>
+    <!-- PAGINAÇÃO VIA AJAX -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>RS-Online ~ version 1.0b ~ Powered by eRuby</title>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+  </head>
+  <body>
 
-      <div id="wrapper">
+    <div id="wrapper">
 
-        <div id="header">
-          <div id="logo">
-            <h1><a href="#">RS-Online Beta</a></h1>
-            <p>version 1.0b ~ Powered by eRuby</p>
-          </div>
-          <!-- end #logo -->
-          <div id="menu">
-            <ul>
-              <li class="active"><a href="index.rhtml">Home</a></li>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Products</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">Contact Us</a></li>
-            </ul>
-          </div>
-          <!-- end #menu -->
+      <div id="header">
+        <div id="logo">
+          <h1><a href="#">RS-Online Beta</a></h1>
+          <p>version 1.0b ~ Powered by eRuby</p>
         </div>
-        <!-- end #header -->
-        <div id="page">
-          <!--<div id="header-pic"></div>-->
-          <div id="content">
-            <%
-            begin
-              lista = select_lista_links(id_pacote)
-              pacote = select_pacote(id_pacote)
+        <!-- end #logo -->
+        <div id="menu">
+          <ul>
+            <li class="active"><a href="index.rhtml">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <!-- end #menu -->
+      </div>
+      <!-- end #header -->
+      <div id="page">
+        <!--<div id="header-pic"></div>-->
+        <div id="content">
+          <%
+          begin
+            lista = Banco.instance.select_lista_links(id_pacote)
+            pacote = Pacote.new("nil")
+            pacote.id_pacote = id_pacote
+            pacote.select
 
-              if lista == nil %>
-                <div class="post">
-                  <h1 class="title">Ocorreu um erro!</h1>
-                  <div class="entry">
-                    <p>Houve algum problema com a leitura dos links.</p>
-                    <p><b>Lista DUMP: </b><%= p lista %></p>
-                    <p>Tente novamente!</p>
-                  </div>
-                </div><%
-                raise
-              elsif pacote == nil %>
-                <div class="post">
-                  <h1 class="title">Ocorreu um erro!</h1>
-                  <div class="entry">
-                    <p>Houve algum problema com a leitura do pacote.</p>
-                    <p><b>Pacote DUMP: </b><%= p pacote %></p>
-                    <p>Tente novamente!</p>
-                  </div>
-                </div> <%
-                raise
-              else
-                show_lista_links lista, pacote
-              end
-            rescue Exception => err %>
+            if lista == nil %>
               <div class="post">
+                <h1 class="title">Ocorreu um erro!</h1>
                 <div class="entry">
-                  <h1 class="title">Ocorreu um erro.</h1>
-                  <p>Não foi possível carregar a página. Contate o administrador!</p>
-                  <p>
-                    <b>Erro:</b> <%= err %><br/><br/>
-                    <% err.backtrace.each do |i| %>
-                      <%= i %><br/>
-                    <%end%>
-                  </p>
+                  <p>Houve algum problema com a leitura dos links.</p>
+                  <p><b>Lista DUMP: </b><%= p lista %></p>
+                  <p>Tente novamente!</p>
                 </div>
               </div><%
-            end # => begin - rescue%>
-          </div>
-          <!-- end #content -->
-          <div id="sidebar">
-            <div id="sidebar-bgtop"></div>
-            <div id="sidebar-content">
-              <div id="sidebar-bgbtm">
-                <ul>
-                  <li id="search">
-                    <h2>Search</h2>
-                    <form method="get" action="">
-                      <fieldset>
-                        <input type="text" id="s" name="s" value="" />
-                        <input type="submit" id="x" value="Search" />
-                      </fieldset>
-                    </form>
-                  </li>
-                  <li>
-                    <h2>Pacotes</h2>
-                    <ul>
-                      <li><a href="add_pacote.rhtml"><img alt="new" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
-                      <li><a href="lista_pacotes.rhtml"><img alt="lst" src="images/drive_web.png"/>&nbsp;Lista de Pacotes</a></li>
-                      <li><a href="lista_pacotes_ocultos.rhtml"><img alt="oct" src="images/safe.png"/>&nbsp;Lista de Pacotes Ocultos</a></li>
-                    </ul>
-                  </li>
-                  <li>
-                    <h2>Downloads</h2>
-                    <ul>
-                      <li><a href="#"><img alt="est" src="images/chart_bar.png"/>&nbsp;Estatística (em construção)</a></li>
-                      <li><a href="log_downloads.rhtml"><img alt="log" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
-                    </ul>
-                  </li>
-                </ul>
+              raise
+            elsif pacote == nil %>
+              <div class="post">
+                <h1 class="title">Ocorreu um erro!</h1>
+                <div class="entry">
+                  <p>Houve algum problema com a leitura do pacote.</p>
+                  <p><b>Pacote DUMP: </b><%= p pacote %></p>
+                  <p>Tente novamente!</p>
+                </div>
+              </div> <%
+              raise
+            else
+              show_lista_links lista, pacote
+            end
+          rescue Exception => err %>
+            <div class="post">
+              <div class="entry">
+                <h1 class="title">Ocorreu um erro.</h1>
+                <p>Não foi possível carregar a página. Contate o administrador!</p>
+                <p>
+                  <b>Erro:</b> <%= err %><br/><br/>
+                  <% err.backtrace.each do |i| %>
+                    <%= i %><br/>
+                  <%end%>
+                </p>
               </div>
+            </div><%
+          end # => begin - rescue%>
+        </div>
+        <!-- end #content -->
+        <div id="sidebar">
+          <div id="sidebar-bgtop"></div>
+          <div id="sidebar-content">
+            <div id="sidebar-bgbtm">
+              <ul>
+                <li id="search">
+                  <h2>Search</h2>
+                  <form method="get" action="">
+                    <fieldset>
+                      <input type="text" id="s" name="s" value="" />
+                      <input type="submit" id="x" value="Search" />
+                    </fieldset>
+                  </form>
+                </li>
+                <li>
+                  <h2>Pacotes</h2>
+                  <ul>
+                    <li><a href="add_pacote.rhtml"><img alt="new" src="images/package_add.png"/>&nbsp;Novo Pacote</a></li>
+                    <li><a href="lista_pacotes.rhtml"><img alt="lst" src="images/drive_web.png"/>&nbsp;Lista de Pacotes</a></li>
+                    <li><a href="lista_pacotes_ocultos.rhtml"><img alt="oct" src="images/safe.png"/>&nbsp;Lista de Pacotes Ocultos</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2>Downloads</h2>
+                  <ul>
+                    <li><a href="#"><img alt="est" src="images/chart_bar.png"/>&nbsp;Estatística (em construção)</a></li>
+                    <li><a href="log_downloads.rhtml"><img alt="log" src="images/report.png"/>&nbsp;Log de Downloads</a></li>
+                  </ul>
+                </li>
+              </ul>
             </div>
           </div>
-          <!-- end #sidebar -->
-          <div style="clear:both; margin:0;"></div>
         </div>
-        <!-- end #page -->
+        <!-- end #sidebar -->
+        <div style="clear:both; margin:0;"></div>
       </div>
+      <!-- end #page -->
+    </div>
 
-      <div id="footer">
-        <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. RS-Online is powered by eRuby.</p>
-      </div>
-      <!-- end #footer -->
-    </body>
-  </html>
+    <div id="footer">
+      <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. RS-Online is powered by eRuby.</p>
+    </div>
+    <!-- end #footer -->
+  </body>
+</html>

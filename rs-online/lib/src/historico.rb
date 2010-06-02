@@ -18,13 +18,23 @@ class Historico
     Banco.instance.db_connect.do(sql, @data, @processo, @mensagem)
   end
 
-  def select
-    sql = "SELECT * FROM rs.historico ORDER BY id desc LIMIT 100 "
-    rst = Banco.instance.db_connect.execute(sql)
+  ### No banco
+  #
+  #  id bigserial NOT NULL,
+  #  data character varying(50) NOT NULL,
+  #  processo character varying(10),
+  #  mensagem character varying(300) NOT NULL,
+
+  # Método estático
+  def self.select_top limit
+    sql = "SELECT * FROM rs.historico ORDER BY id desc LIMIT ? "
+    rst = Banco.instance.db_connect.execute(sql, limit)
     historicos = Array.new
-    historico = nil
     rst.fetch do |row|
-      historico = Historico.new(row["id"], row["data"], row["processo"], row["mensagem"])
+      historico = Historico.new(row["mensagem"])
+      historico.data = row["data"]
+      historico.id = row["id"]
+      historico.processo = row["processo"]
       historicos.push historico
     end
     rst.finish

@@ -228,9 +228,11 @@ class Banco
   def select_prioridade
     sql = "SELECT * FROM rs.prioridade"
     rst = Banco.instance.db_connect.execute(sql)
-    array = rst.fetch_all[0].clone
+    array = rst.fetch_all
     rst.finish
     Banco.instance.db_disconnect
+    p array
+    puts array.class
     array.sort
   end
 

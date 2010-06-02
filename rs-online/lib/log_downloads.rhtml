@@ -1,6 +1,5 @@
 <%
 require 'src/historico'
-require 'src/banco'
 
 def show_logs_msg historicos %>
   <div class="post">
@@ -103,21 +102,21 @@ Released   : 20081230
       <div id="page">
         <!--<div id="header-pic"></div>-->
         <div id="content"> <%
-          historicos = select_historicos
+          historicos = Historico.select_top(200)
           if historicos == nil %>
             <div class="post">
               <div class="entry">
                 <h1 class="title">Ocorreu um erro!</h1>
                 <p>Não foi ler os históricos. Contate o administrador!</p>
-                <p>
-                  <b>Erro:</b> <%= err %><br/><br/>
-                  <% err.backtrace.each do |i| %>
-                    <%= i %><br/>
-                  <%end%>
-                </p>
+  <%#*<p>%>
+  <%#*<b>Erro:</b> <%= err %><br/><br/>%>
+  <%# err.backtrace.each do |i| %>
+  <%#= i %><br/>
+  <%#end%>
+  <%#*</p>%>
               </div>
             </div> <%
-            raise
+            #raise
           else
             begin
               show_logs_msg historicos
