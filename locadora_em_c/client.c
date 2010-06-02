@@ -319,7 +319,7 @@ Client * client_file_to_a() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
         return FALSE;
     }
 
@@ -385,7 +385,7 @@ void list_client_by_id(int id) {
 
     client = search_client_by_id(id);
     if (client->id == NON_EXIST) {
-        printf(ID_NOT_FOUND_ERROR, __FILE__);
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "cliente");
         free(client);
         return;
     } else {
@@ -400,7 +400,7 @@ void list_all_clients() {
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (!file_stream) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 
@@ -435,7 +435,7 @@ void form_client_sort() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 
@@ -478,7 +478,7 @@ void form_client_update() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 
@@ -509,7 +509,7 @@ void form_client_update() {
 
             client = search_client_by_name(input);
             if (client->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__);
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "cliente");
                 free(client);
                 return;
             }
@@ -551,7 +551,7 @@ void form_client_erase() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 
@@ -580,7 +580,7 @@ void form_client_erase() {
 
             client = search_client_by_name(input);
             if (client->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__);
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "cliente");
                 free(client);
                 return;
             }
@@ -612,7 +612,7 @@ void form_client_search() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 
@@ -642,7 +642,7 @@ void form_client_search() {
 
             client = search_client_by_name(input);
             if (client->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__);
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "cliente");
                 free(client);
                 return;
             }

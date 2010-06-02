@@ -43,7 +43,7 @@ int check_by_id(char *input) {
     if (id > 0 && client_index_exist(id)) {
         return id;
     } else {
-        printf(ID_NOT_FOUND_ERROR, __FILE__);
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "");
         return FALSE;
     }
 }
@@ -71,11 +71,11 @@ int be_sure(char *input) {
     }
 }
 
-int validate_number_int(char *input) {
-    if (atoi(input)) {
+int validate_number_float(char *input) {
+    if (atof(input)) {
         return TRUE;
     } else {
-        printf("Voce nao digitou um numero valido.\n");
+        printf("Voce nao digitou um valor valido.\n");
         return FALSE;
     }
 }
