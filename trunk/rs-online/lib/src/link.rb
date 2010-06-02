@@ -23,7 +23,7 @@ class Link
     @id_link = nil
     set_ip
     @tentativas = 0
-    @max_tentativas = 5
+    @max_tentativas = 20
     @completado = false
     @tamanho = 0
     @id_status = Status::AGUARDANDO
@@ -189,7 +189,6 @@ class Link
     begin
       to_log("Tentando baixar o link: #{@link}")
       @id_status = Status::TENTANDO
-      @tentativas = 0
       update_db
 
       body = get_body
@@ -212,7 +211,6 @@ class Link
         end
       end while servidor_host == nil
       server = ServerRS.new(servidor_host.scan(/\d+/)[0].to_i)
-      @tentativas = 0
 
       ## Captura tamanho do arquivo
       expressao = body.scan(/\| (\d+) KB/i)[0][0]
@@ -336,19 +334,12 @@ class Link
       raise
     end
   end
-  
-  def to_html(body)
-    arq = File.open("test.html", "w")
-    arq.print(body)
-    arq.close
-  end
 
   # => Megaupload download
   def download_mu
     begin
       to_log("Tentando baixar o link: #{@link}")
       @id_status = Status::TENTANDO
-      @tentativas = 0
       update_db
 
       body = get_body
@@ -370,7 +361,6 @@ class Link
       else
         to_debug("Tamanho #{@tamanho} KB ou #{sprintf("%.2f MB", @tamanho/1024.0)}")
       end
-      @tentativas = 0
 
       ## Captura captchacode
       captchacode = mu.get_captchacode
@@ -381,7 +371,6 @@ class Link
       else
         to_debug "captchacode reconhecido => #{captchacode}"
       end
-      @tentativas = 0
 
       ## Captura megavar
       megavar = mu.get_megavar
@@ -392,18 +381,16 @@ class Link
       else
         to_debug "megavar reconhecido => #{megavar}"
       end
-      @tentativas = 0
 
       ## Captura captcha
       captcha = mu.get_captcha
-      if captcha == nil or captcha.size < 4
+      if captcha == nil or captcha.size != 4
         to_log('Não foi possível capturar o captcha.')
         retry_
         return
       else
         to_log "Captcha reconhecido => #{captcha}"
       end
-      @tentativas = 0
 
       ## Requisição POST
       to_debug('Enviando requisição de download...')
@@ -419,11 +406,10 @@ class Link
         retry_
       end
       response = response.body.content
-      to_html(response)
-
-      mu = Megaupload.new(response)
       # Fim da requisição POST
 
+      mu = Megaupload.new(response)
+      
       if mu.captcha_recognized?
         to_debug "Captcha está correto."        
       else
@@ -431,7 +417,6 @@ class Link
         retry_
         return
       end
-      @tentativas = 0
 
       ## Captura link do download
       download = mu.get_downloadlink
@@ -440,10 +425,19 @@ class Link
         retry_
         return
       end
-      puts download
-      @tentativas = 0
 
-      download = Link.new(download)
+      begin
+        servidor_host = mu.reconhecer_servidor
+        if servidor_host == nil
+          if retry_ == Status::OFFLINE
+            return
+          end
+        end
+      end while servidor_host == nil
+      server = ServerMU.new(servidor_host)
+
+      download.gsub!(/www\d+\.megaupload.com/, server.ip)
+      to_log("Baixando: #{download}")
 
       ## Captura tempo de espera
       count = mu.get_countdown
@@ -455,15 +449,14 @@ class Link
       time = Time.local(0) + count
       to_debug(time.strftime("Contador identificado: %Hh %Mm %Ss."))
       contador(count, "O download iniciará em %Hh %Mm %Ss.")
-      @tentativas = 0
 
-      to_log("Baixando: #{download.uri_parsed}")
+      to_log("Baixando: #{download}")
       time_inicio = Time.now
       @data_inicio = timestamp time_inicio
       @id_status = Status::BAIXANDO
       update_db
       ## Download com curl
-      baixou = system("curl -LOC - #{download}")
+      baixou = system("curl -LOC - \"#{download}\"")
       time_fim = Time.now
       @data_fim = timestamp time_fim
       duracao = Time.local(0) + (time_fim - time_inicio)

@@ -128,19 +128,6 @@ class Banco
     return pacotes
   end
 
-  def save_links(links, id_pacote)
-    retorno = []
-    links.each do |line|
-      sql = "INSERT INTO rs.link (id_pacote, link) VALUES (?, ?) RETURNING id_link"
-      db_connect
-      rst = @conn.execute(sql, id_pacote, line)
-      retorno.push rst.fetch_all.clone
-      rst.finish
-      db_disconnect
-    end
-    return retorno
-  end
-
   def select_full_links
     sql = "SELECT * FROM rs.link "
     db_connect
@@ -226,12 +213,12 @@ class Banco
     sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = ? "
     db_connect
     rst = @conn.execute(sql, id_pacote)
-    count_pacotes = rst.fetch_all.clone
+    count_pacotes = rst.fetch_all[0].clone
     rst.finish
 
     sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = ? AND id_status = 1 "
     rst = @conn.execute(sql, id_pacote)
-    count_baixados = rst.fetch_all.clone
+    count_baixados = rst.fetch_all[0].clone
     rst.finish
     db_disconnect
 
@@ -241,7 +228,7 @@ class Banco
   def select_prioridade
     sql = "SELECT * FROM rs.prioridade"
     rst = Banco.instance.db_connect.execute(sql)
-    array = rst.fetch_all.clone
+    array = rst.fetch_all[0].clone
     rst.finish
     Banco.instance.db_disconnect
     array.sort

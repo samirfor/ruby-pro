@@ -23,8 +23,8 @@ class Pacote
   end
   
   def update_db
-    @legenda = encurta_url(@legenda)
-    @url_fonte = encurta_url(@url_fonte)
+    #    @legenda = encurta_url(@legenda)
+    #    @url_fonte = encurta_url(@url_fonte)
 
     sql = "UPDATE rs.pacote SET "
     sql += "tamanho = #{@tamanho}, " unless @tamanho == nil
@@ -61,13 +61,13 @@ class Pacote
   def select_count_links
     sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = ? "
     rst = Banco.instance.db_connect.execute(sql, @id_pacote)
-    count_total = rst.fetch_all.clone
+    count_total = rst.fetch_all[0].clone
     rst.finish
 
     sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = ? AND id_status = 1 "
     rst = Banco.instance.db_connect.execute(sql, @id_pacote)
 
-    count_baixados = rst.fetch_all.clone
+    count_baixados = rst.fetch_all[0].clone
     rst.finish
     Banco.instance.db_disconnect
 
@@ -151,14 +151,44 @@ class Pacote
       rst = Banco.instance.db_connect.execute(sql, @nome, timestamp(@data_inicio), \
           @prioridade, @senha, @descricao, @url_fonte, \
           @legenda)
-    rescue
-      puts "Não foi possível salvar o pacote \"#{@nome}\"."
-      @id = nil
+    rescue Exception => e
+      puts "Erro no resultset. Não foi possível salvar o pacote \"#{@nome}\"."
+      puts "#{e.message}\nBacktrace: #{e.backtrace.join("\n")}"
+      @id_pacote = nil
+      return
     end
-    @id = rst.fetch_all.clone
+    if rst == nil
+      puts "Resultset nulo. Não foi possível salvar o pacote \"#{@nome}\"."
+      @id_pacote = nil
+      return
+    end
+    
+    begin
+      @id_pacote = rst.fetch_all[0][0]
+    rescue Exception => e
+      puts "Erro no fetch: #{e.message}\nBacktrace: #{e.backtrace.join("\n")}"
+      @id_pacote = nil
+    end
     rst.finish
     Banco.instance.db_disconnect
-    @id
+    @id_pacote
+  end
+
+  def save_links(links)
+    retorno = []
+    links.each do |line|
+      sql = "INSERT INTO rs.link (id_pacote, link) VALUES (?, ?) RETURNING id_link"
+      begin
+        rst = Banco.instance.db_connect.execute(sql, @id_pacote, line)
+      rescue Exception => e
+        puts "Erro no resultset: #{e.message}\nBacktrace: #{e.backtrace.join("\n")}"
+        return nil
+      end
+      retorno.push rst.fetch_all[0][0]
+      rst.finish
+      Banco.instance.db_disconnect
+    end
+    return retorno
   end
 
 end
