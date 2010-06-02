@@ -1,9 +1,9 @@
 require 'net/http'
 require 'socket'
+require "uri"
 require "httpclient"
-
 require "src/status"
-require "src/database"
+require "src/banco"
 require "src/error_rs"
 require "src/error_mu"
 require "src/server_rs"
@@ -13,15 +13,13 @@ require "src/megaupload"
 require "src/rapidshare"
 
 class Link
-  attr_accessor :link, :host, :path, :ip, :uri, :id_link, :id_pacote, \
+  attr_accessor :link, :path, :ip, :uri_original, :uri_parsed, :id_link, :id_pacote, \
     :completado, :tamanho, :id_status, :tentativas, :max_tentativas, \
     :data_inicio, :data_fim, :testado, :tipo
 
   def initialize link
     @link = link.strip
-    @uri = URI.parse link
-    @host = @uri.host
-    @path = @uri.path
+    @uri_original = URI.parse link
     @id_link = nil
     set_ip
     @tentativas = 0
@@ -32,9 +30,9 @@ class Link
     @data_fim = nil
     @data_inicio = nil
     @testado = false
-    if @host =~ /megaupload/
+    if @uri_original.host =~ /megaupload/
       @tipo = TipoServidor::MU
-    elsif @host =~ /rapidshare/
+    elsif @uri_original.host =~ /rapidshare/
       @tipo = TipoServidor::RS
     else
       @tipo = nil
@@ -44,11 +42,9 @@ class Link
 
   def get_body
     http = HTTPClient.new
-    tmp_uri = @uri
-    tmp_uri.host = @ip
     #    http.timeout_scheduler 15 #segundos
     begin
-      response = http.get(tmp_uri)
+      response = http.get(@uri_parsed)
       unless response.header.status_code == 200
         to_log "Não foi possível carregar a página."
         to_log "#{response.header.status_code} - #{response.header.reason_phrase}"
@@ -71,7 +67,7 @@ class Link
     sql += "completado = '#{@completado}', " unless @completado == nil
     sql += "id_status = #{@id_status} "
     sql += "WHERE id_link = #{@id_link}"
-    db_statement_do(sql)
+    Banco.instance.db_connect.do(sql)
   end
 
   # Traduz hostname da URL para ip.
@@ -79,17 +75,19 @@ class Link
   def set_ip
     begin
       @ip = Resolv::DNS.new
-      @ip = @ip.getaddress(@host).to_s
+      @ip = @ip.getaddress(@uri_original.host)
+      @uri_parsed = @uri_original.clone
+      @uri_parsed.host = @ip.to_s
     rescue Exception
-      if @host == "rapidshare.com" or @host == "www.rapidshare.com"
+      if @uri_original.host == "rapidshare.com" or @uri_original.host == "www.rapidshare.com"
         @ip = "195.122.131.2"
-      elsif @host == "megaupload.com" or @host == "www.megaupload.com"
+      elsif @uri_original.host == "megaupload.com" or @uri_original.host == "www.megaupload.com"
         @ip = "174.140.154.25"
-      elsif @host =~ /rs\d+\.rapidshare\.com/
-        server = ServerRS.new(@host.scan(/\d+/)[0].to_i)
+      elsif @uri_original.host =~ /rs\d+\.rapidshare\.com/
+        server = ServerRS.new(@uri_original.host.scan(/\d+/)[0].to_i)
         @ip = server.ip
-      elsif @host =~ /www\d+\.megaupload\.com/
-        server = ServerMU.new(@host.scan(/\d+/)[0].to_i)
+      elsif @uri_original.host =~ /www\d+\.megaupload\.com/
+        server = ServerMU.new(@uri_original.host.scan(/\d+/)[0].to_i)
         @ip = server.ip
       else
         raise
@@ -229,7 +227,7 @@ class Link
 
       ## Mandando requisição POST
       to_debug('Enviando requisição de download...')
-      resposta = Net::HTTP.post_form(URI.parse("http://#{server.ip}#{@path}"), {'dl.start'=>'Free'})
+      resposta = Net::HTTP.post_form(URI.parse("http://#{server.ip}#{@uri_original.path}"), {'dl.start'=>'Free'})
       resposta = resposta.body
       
       if ErrorRS::lot_of_users(resposta) or ErrorRS::respaw(resposta) or \
@@ -304,7 +302,6 @@ class Link
       @data_inicio = timestamp Time.now
       update_db
       body = get_body
-      to_html body
       
       # Verificando erros
       if ErrorMU::indisponivel(body) or ErrorMU::deletado(body) or ErrorMU::invalido(body)
@@ -313,8 +310,10 @@ class Link
         update_db
         return
       end
+
+      mu = Megaupload.new body
       ## Captura tamanho do arquivo
-      @tamanho = Megaupload::get_size body
+      @tamanho = mu.get_size
       if @tamanho == nil
         to_log 'Não foi possível capturar o tamanho.'
         # Download ainda pode ser feito.
@@ -337,6 +336,12 @@ class Link
       raise
     end
   end
+  
+  def to_html(body)
+    arq = File.open("test.html", "w")
+    arq.print(body)
+    arq.close
+  end
 
   # => Megaupload download
   def download_mu
@@ -347,10 +352,6 @@ class Link
       update_db
 
       body = get_body
-      to_html(body)
-
-      # Requisitando pagina de download
-      to_debug 'Conexão HTTPOK 200.'
 
       if ErrorMU::indisponivel(body) or ErrorMU::deletado(body) or ErrorMU::invalido(body)
         @id_status = Status::OFFLINE
@@ -358,8 +359,10 @@ class Link
         return
       end
 
+      mu = Megaupload.new(body)
+
       ## Captura tamanho do arquivo
-      @tamanho = Megaupload::get_size body
+      @tamanho = mu.get_size
       if @tamanho == nil
         to_log('Não foi possível capturar o tamanho.')
         retry_
@@ -370,7 +373,7 @@ class Link
       @tentativas = 0
 
       ## Captura captchacode
-      captchacode = Megaupload::get_captchacode(body)
+      captchacode = mu.get_captchacode
       if captchacode == nil
         to_log('Não foi possível capturar o captchacode.')
         retry_
@@ -381,7 +384,7 @@ class Link
       @tentativas = 0
 
       ## Captura megavar
-      megavar = Megaupload::get_megavar(body)
+      megavar = mu.get_megavar
       if megavar == nil
         to_log('Não foi possível capturar o megavar.')
         retry_
@@ -392,7 +395,7 @@ class Link
       @tentativas = 0
 
       ## Captura captcha
-      captcha = Megaupload::get_captcha(body)
+      captcha = mu.get_captcha
       if captcha == nil or captcha.size < 4
         to_log('Não foi possível capturar o captcha.')
         retry_
@@ -402,57 +405,65 @@ class Link
       end
       @tentativas = 0
 
-      ## Mandando requisição POST
+      ## Requisição POST
       to_debug('Enviando requisição de download...')
       hash = {
         "captchacode" => captchacode,
         "megavar" => megavar,
         "captcha" => captcha
       }
-      resposta = Net::HTTP.post_form(URI.parse("http://#{@ip}#{@path}"), hash)
-      resposta = resposta.body
+      post = HTTPClient.new
+      response = post.post(@uri_parsed, hash)
+      unless response.header.status_code == 200
+        to_log "Erro no POST."
+        retry_
+      end
+      response = response.body.content
+      to_html(response)
 
-      #      if lot_of_users(resposta) or respaw(resposta) or waiting(resposta) or \
-      #          get_no_slot(resposta) or simultaneo(resposta) or get_justify(resposta)
-      #        retry_
-      #        return
-      #      end
+      mu = Megaupload.new(response)
+      # Fim da requisição POST
+
+      if mu.captcha_recognized?
+        to_debug "Captcha está correto."        
+      else
+        to_log('ERRO: Captcha não está correto.')
+        retry_
+        return
+      end
+      @tentativas = 0
+
+      ## Captura link do download
+      download = mu.get_downloadlink
+      if download == nil
+        to_log('Não foi possível capturar o link para download.')
+        retry_
+        return
+      end
+      puts download
+      @tentativas = 0
+
+      download = Link.new(download)
 
       ## Captura tempo de espera
-      expressao = resposta.scan(/var c=(\d+)/)[0][0]
-      if expressao == nil # Testa se identificou o contador
+      count = mu.get_countdown
+      if count == nil # Testa se identificou o contador
         to_log('Não foi possível capturar o contador.')
         retry_
         return
       end
-      tempo_inteiro = expressao.to_i
-      time = Time.local(0) + tempo_inteiro
+      time = Time.local(0) + count
       to_debug(time.strftime("Contador identificado: %Hh %Mm %Ss."))
-      contador(tempo_inteiro, "O download iniciará em %Hh %Mm %Ss.")
-
-      begin
-        servidor_host = Megaupload::reconhecer_servidor body
-        if servidor_host == nil
-          if retry_ == Status::OFFLINE
-            return
-          end
-        end
-      end while servidor_host == nil
-      server = ServerMU.new(servidor_host.scan(/\d+/)[0].to_i)
+      contador(count, "O download iniciará em %Hh %Mm %Ss.")
       @tentativas = 0
 
-      expressao = resposta.scan(/dlf.action=\\\'\S+\\/)[0]
-      expressao.gsub!("dlf.action=\\'","").gsub!("\\","")
-      real_uri = URI.parse expressao
-      download = "http://#{server.ip}#{real_uri.path}"
-
-      to_log("Baixando: #{download}")
+      to_log("Baixando: #{download.uri_parsed}")
       time_inicio = Time.now
       @data_inicio = timestamp time_inicio
       @id_status = Status::BAIXANDO
       update_db
       ## Download com curl
-      baixou = system("curl -LO #{download}")
+      baixou = system("curl -LOC - #{download}")
       time_fim = Time.now
       @data_fim = timestamp time_fim
       duracao = Time.local(0) + (time_fim - time_inicio)
@@ -476,4 +487,5 @@ class Link
       raise
     end
   end
+
 end

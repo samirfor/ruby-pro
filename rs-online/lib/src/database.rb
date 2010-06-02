@@ -1,6 +1,13 @@
+# Deprecated file!
+# Deprecated file!
+# Deprecated file!
+# Deprecated file!
+# Use banco.rb
+
 require 'dbi'
 require 'src/pacote'
 require 'src/link'
+require "singleton"
 
 # Gera linhas de log
 def to_log texto

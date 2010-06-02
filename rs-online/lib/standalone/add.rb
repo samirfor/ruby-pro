@@ -10,7 +10,7 @@ $:.push "/home/#{`whoami`.chomp}/NetBeansProjects/trunk/rs-online/lib/standalone
 
 
 require 'libglade2'
-require "database"
+require "banco"
 require "pacote"
 
 
