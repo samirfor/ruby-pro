@@ -16,9 +16,9 @@
 #define ALLOC_ERROR "%s: ERRO FATAL -> Nao foi possivel alocar memoria.\n"
 #define WRITE_FILE_ERROR "%s: ERRO FATAL -> Nao foi possivel escrever no arquivo \"%s\".\n"
 #define CREATE_FILE_ERROR "%s: Nao foi possivel criar \"%s\"\n"
-#define ID_NOT_FOUND_ERROR "%s: Nao ha cliente cadastrado com esse ID.\n"
-#define NAME_NOT_FOUND_ERROR "%s: Nao ha cliente cadastrado com esse nome.\n"
-#define FILE_EMPTY_ERROR "%s: Nao ha clientes cadastrados.\n"
+#define ID_NOT_FOUND_ERROR "%s: Nao ha %s cadastrado com esse ID.\n"
+#define NAME_NOT_FOUND_ERROR "%s: Nao ha %s cadastrado com esse nome.\n"
+#define FILE_EMPTY_ERROR "%s: Nao ha %s cadastrado.\n"
 
 #endif	/* _EXCEPTIONS_H */
 

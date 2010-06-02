@@ -300,7 +300,7 @@ Movie * movie_file_to_a() {
 
     /* Antes de tudo, precisamos testar se há algum filme no arquivo */
     if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
         return FALSE;
     }
 
@@ -366,7 +366,7 @@ void list_movie_by_id(int id) {
 
     movie = search_movie_by_id(id);
     if (movie->id == NON_EXIST) {
-        printf(ID_NOT_FOUND_ERROR, __FILE__);
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
         free(movie);
         return;
     } else {
@@ -381,7 +381,7 @@ void list_all_movies() {
 
     file_stream = fopen(MOVIES_FILEPATH, "rb");
     if (!file_stream) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
@@ -416,7 +416,7 @@ void form_movie_sort() {
 
     /* Antes de tudo, precisamos testar se há algum filme no arquivo */
     if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
@@ -460,7 +460,7 @@ void form_movie_update() {
 
     /* Antes de tudo, precisamos testar se há algum filme no arquivo */
     if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
@@ -491,7 +491,7 @@ void form_movie_update() {
 
             movie = search_movie_by_title(input);
             if (movie->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__);
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
                 free(movie);
                 return;
             }
@@ -533,7 +533,7 @@ void form_movie_erase() {
 
     /* Antes de tudo, precisamos testar se há algum filme no arquivo */
     if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
@@ -562,7 +562,7 @@ void form_movie_erase() {
 
             movie = search_movie_by_title(input);
             if (movie->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__);
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
                 free(movie);
                 return;
             }
@@ -594,7 +594,7 @@ void form_movie_search() {
 
     /* Antes de tudo, precisamos testar se há algum filme no arquivo */
     if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__);
+        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
@@ -624,7 +624,7 @@ void form_movie_search() {
 
             movie = search_movie_by_title(input);
             if (movie->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__);
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
                 free(movie);
                 return;
             }

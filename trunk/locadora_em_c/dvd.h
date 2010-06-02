@@ -23,17 +23,17 @@ typedef struct {
     int id;
     int id_dvd;
     char avaliable;
-    float price_location;
-    time_t buy_date;
+    double price_location;
+    struct tm buy_date;
 } DVD;
 
 /***************************************
  * Files references
  ***************************************/
 
-#define MOVIES_ID_FILEPATH "dvds_id_seq.bin"
-#define MOVIES_FILEPATH "dvds.bin"
-#define MOVIES_TMP_FILEPATH "tmp_dvds.bin"
+#define DVDS_ID_FILEPATH "dvds_id_seq.bin"
+#define DVDS_FILEPATH "dvds.bin"
+#define DVDS_TMP_FILEPATH "tmp_dvds.bin"
 
 /***********************************
  * External Function References
@@ -43,12 +43,8 @@ typedef struct {
 extern int dvd_index_exist(int);
 /* Search into a vector of dvd and returns */
 extern DVD * search_dvd_by_id(int);
-/* Search into a vector of dvd and returns */
-extern DVD * search_dvd_by_title(char*);
 /* Retorna um número id disponível */
 extern int dvd_first_index_avaliable();
-/* Ordenar arquivo dvd por nome  */
-extern DVD * sort_dvd_by_title();
 /* Imprime na tela um dvd de forma humanamente legível */
 extern void puts_dvd(DVD*);
 /* Remove o lixo da estrutura */
