@@ -1,4 +1,5 @@
-require "src/database"
+require "src/banco"
+require "src/timestamp"
 require 'net/http'
 require 'socket'
 require "date"
@@ -22,19 +23,14 @@ class ServerRS
 
   def generator
     @data = Time.now
+    @data = timestamp @data
     @ip = IPSocket.getaddress "rs#{@id}.rapidshare.com"
-  end
-
-  def timestamp time
-    time.strftime("%Y/%m/%d %H:%M:%S")
   end
 
   def update_db
     sql = "UPDATE rs.servidores_rs SET "
-    sql += "data_modificacao = '#{timestamp(@data)}', " unless @data == nil
-    sql += "ip = '#{@ip}' "
-    sql += "WHERE id = #{@id}"
-    db_statement_do(sql)
+    sql += "data_modificacao = ?, ip = ? WHERE id = ?"
+    Banco.instance.db_connect.do(sql, @data, @ip, @id)
   end
 
   def select_db
@@ -43,41 +39,39 @@ class ServerRS
   ip inet NOT NULL,
   data_modificacao timestamp without time zone
 =end
-    sql = "SELECT * FROM rs.servidores_rs WHERE id = #{@id}"
-    db = db_statement_execute(sql)
-    rst = db[0]
-    conn = db[1]
+    sql = "SELECT * FROM rs.servidores_rs WHERE id = ?"
+    rst = Banco.instance.db_connect.execute(sql, @id)
     begin
       server = rst.fetch_all[0]
     rescue Exception => e
-      to_log "Erro do fetch"
+      puts "Erro do fetch"
       raise
     end
     @ip = server["ip"]
     @data = Time.parse server["data_modificacao"].to_s
     rst.finish
-    db_disconnect(conn)
+    Banco.instance.db_disconnect
   end
 
   def insert_db
     sql = "INSERT INTO rs.servidores_rs (id, ip, data_modificacao) "
-    sql += "VALUES (#{@id}, '#{@ip}', '#{timestamp(@data)}')"
-    db_statement_do(sql)
+    sql += "VALUES (?, ?, ?)"
+    Banco.instance.db_connect.do(sql, @id, @ip, @data)
   end
 
   def is_exist?
-    sql = "SELECT * FROM rs.servidores_rs WHERE id = #{@id}"
-    db = db_statement_execute(sql)
-    rst = db[0]
-    conn = db[1]
+    sql = "SELECT * FROM rs.servidores_rs WHERE id = ?"
+    rst = Banco.instance.db_connect.execute(sql, @id)
     begin
       if rst.fetch_all == [] or rst.fetch_all == nil
         return false
       else
         return true
       end
-    rescue Exception => ex
-      to_log "Erro no fetch_all. Função is_exist?"
+      rst.finish
+      Banco.instance.db_disconnect
+    rescue Exception
+      puts "Erro no fetch_all. Função is_exist?"
       return false
     end
   end

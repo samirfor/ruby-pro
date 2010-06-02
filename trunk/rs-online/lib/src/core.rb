@@ -26,12 +26,13 @@ require 'net/http'
 require 'socket'
 require 'dbi'
 require 'src/link'
-require 'src/database'
+require 'src/banco'
 require 'src/status'
 require 'src/prioridade'
 require 'src/excecoes'
 require 'src/pacote'
 require 'src/twitter'
+require "src/timestamp"
 
 # -- Métodos locais
 
@@ -64,8 +65,9 @@ end
 
 # Gera linhas de log
 def to_log texto
-  save_historico texto
   puts texto
+  h = Historico.new(texto)
+  h.save
 end
 
 # Gera linhas de log para debug
@@ -124,21 +126,16 @@ def run_thread proc
   $thread = Thread.new {proc.call}
 end
 
-# Retorna uma string na forma ideal para o UPDATE no BD.
-def timestamp time
-  time.strftime("%Y/%m/%d %H:%M:%S")
-end
-
 # Testa os outros links que estão submetidos à download
 def teste_paralelo id_pacote_excecao
-  pacotes = select_pacotes_pendetes_teste(id_pacote_excecao)
+  pacotes = Banco.instance.select_pacotes_pendetes_teste(id_pacote_excecao)
   if pacotes == nil
     to_log "<T> Não há mais pacotes pendetes para testar."
     return
   end
   pacotes.each do |pacote|
     to_log "<T> Testando pacote #{pacote.nome}"
-    links_before_test = select_lista_links pacote.id_pacote
+    links_before_test = Banco.instance.select_lista_links(pacote.id_pacote)
     pacote.tamanho = 0
     links_before_test.each do |link|
       if link.id_status == Status::BAIXADO
@@ -164,14 +161,15 @@ def run
     begin
       cancelar?
       ## Select pacote
-      pacote = select_pacote_pendente
-      if pacote == nil
+      pacote = Pacote.new ""
+      pacote.select_pendente
+      if pacote.id_pacote == nil
         evento = 'Fim do(s) download(s). Have a nice day!'
         to_log evento
         RSTwitter.tweet evento 
         exit!(1)
       end
-      links_before_test = select_lista_links pacote.id_pacote
+      links_before_test = Banco.instance.select_lista_links(pacote.id_pacote)
       if links_before_test == nil
         to_log "Não foi possível selecionar a lista de links."
         exit!(1)
@@ -179,7 +177,6 @@ def run
       ## Fim do Select pacote
 
       ## Inicio do teste
-      pacote.tamanho = 0
       to_log "Testando os links de \"#{pacote.nome}\"..."
       links_online = Array.new
       links_before_test.each do |link|
@@ -203,13 +200,13 @@ def run
       ## Informações do teste
       msg = "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
       to_log msg
-      run_thread Proc.new {
+      Thread.new {
         RSTwitter.tweet msg  
       }
       ## Fim Informações do teste
 
       ## Inicio Thread Testes
-      thread_testes = Thread.new {
+      Thread.new {
         teste_paralelo pacote.id_pacote
       }
       ## Fim Thread Testes
@@ -222,7 +219,7 @@ def run
         begin
           link.download
           if link.id_status == Status::TENTANDO
-            falhou 10 #segundos
+            falhou 3 #segundos
           end
         end while link.id_status == Status::TENTANDO
       end
@@ -240,7 +237,7 @@ def run
       run_thread Proc.new {
         RSTwitter.tweet evento  
       }
-      unless select_remaining_links(pacote.id_pacote) == 0
+      unless Banco.instance.select_remaining_links(pacote.id_pacote) == 0
         pacote.problema = true
         pacote.update_db
         run_thread Proc.new {
@@ -276,9 +273,9 @@ end
 def run_single_link(link)
   pacote = Pacote.new("SingleMode")
   pacote.prioridade = Prioridade::MUITO_ALTA
-  id_pacote = save_pacote(pacote)
+  id_pacote = Banco.instance.save_pacote(pacote)
   down = Link.new link
-  down.id_link = save_links([link], id_pacote)[0]
+  down.id_link = Banco.instance.save_links([link], id_pacote)[0]
   
   down.test
   down.download
@@ -317,7 +314,7 @@ rescue SystemExit => err
   RSTwitter.tweet evento  
   exit!
 rescue NoMethodError => err
-  to_log "FATAL: Não há método definido."
+  to_log "FATAL: Não há método definido.\nBacktrace: #{err.backtrace.join("\n")}"
   exit!
 rescue Exception => err
   to_log err
