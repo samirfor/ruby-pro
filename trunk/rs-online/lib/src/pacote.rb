@@ -61,13 +61,13 @@ class Pacote
   def select_count_links
     sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = ? "
     rst = Banco.instance.db_connect.execute(sql, @id_pacote)
-    count_total = rst.fetch_all[0].clone
+    count_total = rst.fetch_all[0]
     rst.finish
 
     sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = ? AND id_status = 1 "
     rst = Banco.instance.db_connect.execute(sql, @id_pacote)
 
-    count_baixados = rst.fetch_all[0].clone
+    count_baixados = rst.fetch_all[0]
     rst.finish
     Banco.instance.db_disconnect
 
@@ -96,29 +96,35 @@ class Pacote
       @id_pacote = nil
     end
     rst.finish
+
     Banco.instance.db_disconnect
   end
 
   # Tras do banco o pacote com o id específico
   def select
+
+    #  id bigserial NOT NULL,
+    #  nome character varying(100) NOT NULL,
+    #  completado boolean DEFAULT false,
+    #  mostrar boolean DEFAULT true,
+    #  problema boolean DEFAULT false,
+    #  data_inicio timestamp without time zone DEFAULT now(),
+    #  data_fim timestamp without time zone,
+    #  senha character varying(50),
+    #  prioridade integer DEFAULT 3,
+    #  tamanho integer,
+    #  descricao character varying(250),
+    #  url_fonte character varying(200),
+    #  legenda character varying(200),
+
     sql = "SELECT * FROM rs.pacote WHERE id = ?"
-    rst = Banco.instance.db_connect.execute(sql, @id)
-=begin
-  id bigserial NOT NULL,
-  nome character varying(100) NOT NULL,
-  completado boolean DEFAULT false,
-  mostrar boolean DEFAULT true,
-  problema boolean DEFAULT false,
-  data_inicio timestamp without time zone DEFAULT now(),
-  data_fim timestamp without time zone,
-  senha character varying(50),
-  prioridade integer DEFAULT 3,
-  tamanho integer,
-=end
     begin
+      rst = Banco.instance.db_connect.execute(sql, @id_pacote)
+      if rst == nil
+        raise
+      end
       rst.fetch do |row|
         @nome = row["nome"]
-        @id_pacote = row["id"]
         @completado = row["completado"]
         @mostrar = row["mostrar"]
         @problema = row["problema"]
@@ -131,13 +137,13 @@ class Pacote
         @url_fonte = row["url_fonte"]
         @legenda = row["legenda"]
       end
+      rst.finish
     rescue Exception => err
-      puts "Erro no fetch"
-      puts err
+      puts "Erro no fetch: #{err.message}\nBacktrace: #{err.backtrace.join("\n")}"
       @id_pacote = nil
     end
-    rst.finish
     Banco.instance.db_disconnect
+    self
   end
 
   # Insere o pacote e os links no banco

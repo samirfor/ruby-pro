@@ -1,5 +1,4 @@
 <%
-require "src/banco"
 require "src/pacote"
 require "src/prioridade"
 
@@ -160,7 +159,7 @@ Released   : 20081230
         <!--<div id="header-pic"></div>-->
         <div id="content">
           <%
-          pacotes = select_lista_pacotes true
+          pacotes = Banco.instance.select_lista_pacotes true
           if pacotes == nil %>
             <div class="post">
               <h1 class="title">Ocorreu um erro!</h1>
@@ -174,7 +173,7 @@ Released   : 20081230
           else
             begin
               show_pacotes pacotes
-            rescue Exception => err %>
+            rescue Exception %>
               <h1 class="title">Ocorreu um erro!</h1>
               <p>Não foi possível carregar a página. Contate o administrador!</p> <%
             end # => begin - rescue

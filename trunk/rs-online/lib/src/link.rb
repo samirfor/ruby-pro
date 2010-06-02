@@ -30,9 +30,9 @@ class Link
     @data_fim = nil
     @data_inicio = nil
     @testado = false
-    if @uri_original.host =~ /megaupload/
+    if @uri_original.host =~ /megaupload/i
       @tipo = TipoServidor::MU
-    elsif @uri_original.host =~ /rapidshare/
+    elsif @uri_original.host =~ /rapidshare/i
       @tipo = TipoServidor::RS
     else
       @tipo = nil
@@ -437,7 +437,6 @@ class Link
       server = ServerMU.new(servidor_host)
 
       download.gsub!(/www\d+\.megaupload.com/, server.ip)
-      to_log("Baixando: #{download}")
 
       ## Captura tempo de espera
       count = mu.get_countdown

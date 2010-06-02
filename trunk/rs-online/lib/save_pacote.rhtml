@@ -14,7 +14,7 @@ def erro_fatal %>
       <meta http-equiv="Refresh" content="0;url=error.rhtml"/>
     </head>
   </html> <%
-  to_log "Erro fatal em [save_pacote]"
+  Banco.instance.to_log "Erro fatal em [save_pacote]"
 end
 
 def show_response
@@ -23,15 +23,14 @@ def show_response
     a_params = cgi.params
     params_links = a_params["package"][0].to_a
     pacote = Pacote.new(a_params["name"])
-    pacote.prioridade = a_params["prioridade"]
+    pacote.prioridade = a_params["prioridade"][0].to_i
     pacote.senha = a_params["senha"][0]
     pacote.descricao = a_params["descricao"][0]
     pacote.url_fonte = a_params["url_fonte"][0]
     pacote.legenda = a_params["legenda"][0]
-    return (p a_params)
     links_validos = Array.new
     links_duplicados = Array.new
-    links_db = select_full_links
+    links_db = Banco.instance.select_full_links
     params_links.each do |linha|
       linha.strip!
       if linha =~ /.*(http:\/\/\S*rapidshare.com\/\S+\/\S+).*/
@@ -74,15 +73,23 @@ def show_response
 
     # Só aceita o pacote se não houver nenhum link duplicado
     unless links_duplicados.size > 0
-      id_pacote = save_pacote(pacote)
-      save_links(links_validos, id_pacote)
+      if pacote.save == nil
+        $erro = true
+        $backtrace = "Inserção de pacote inválida."
+        return nil
+      end
+      if pacote.save_links(links_validos) == nil
+        $erro = true
+        $backtrace = "Inserção de links no pacote inválida."
+        return nil
+      end
     end
     retorna.push(pacote, links_validos, links_duplicados)
     return retorna
   rescue Exception => err
     $erro = true
     $backtrace = err.backtrace.join("<br\/>")
-    to_log "Erro ao responder add_pacote: #{e.message}"
+    Banco.instance.to_log "Erro ao responder add_pacote: #{err.message}"
     return nil
   end
 end
@@ -94,7 +101,7 @@ begin
     links = show[1]
     links_duplicados = show[2]
   end
-rescue Exception => ex
+rescue Exception
   erro_fatal
 end
 
@@ -181,25 +188,26 @@ Released   : 20081230
               <h1 class="title"><%= pacote.nome %></h1>
               <div class="entry">
                 <p>
+                  Pacote <%= pacote.nome %> foi inserido na lista de pacotes. <br/>
                   <%
-
-                  RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes."
-                else
-                  print "Não foi possível twittar. Veja o log para detalhes."
-                end%>
-              </p>
-              <p>
-                <%
-                links.each do |link| %>
-                  <%= link %><br/>
-                <%
-                end %>
-              </p>
-            </div>
-            <div class="meta">
-              <p class="links"><% print "Pacote adicionado." %></p>
-            </div>
-          <% end %>
+                  begin
+                    RSTwitter.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes."
+                  rescue
+                  end
+                %>
+                </p>
+                <p>
+                  <%
+                  links.each do |link| %>
+                    <%= link %><br/>
+                  <%
+                  end %>
+                </p>
+              </div>
+              <div class="meta">
+                <p class="links"><% print "Pacote adicionado." %></p>
+              </div>
+            <% end %>
           </div>
         </div>
         <!-- end #content -->
