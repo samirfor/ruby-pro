@@ -1,8 +1,6 @@
 require "src/captcha"
 require "resolv"
 
-
-
 class Megaupload
 
   attr_reader :body
@@ -70,9 +68,21 @@ class Megaupload
   def captcha_recognized?
     search = @body.scan(/post/i)
     if search == nil or search == []
-      return false
-    else
       return true
+    else
+      return false
     end
+  end
+
+  # Método para reconhecimento do servidor de download
+  def reconhecer_servidor
+    servidor_host = @body.scan(/http:\/\/www(\d+)\.megaupload\.com\/files/i)[0][0]
+    if servidor_host == nil
+      to_log("Não foi possível reconhecer o servidor.")
+      to_log("Verifique se a URL está correta. Evitando ...")
+      return nil
+    end
+    to_debug("Servidor www#{servidor_host}.megaupload.com identificado.")
+    servidor_host.to_i
   end
 end

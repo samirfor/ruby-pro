@@ -35,7 +35,7 @@ class RsOnline2Glade
     @url_fonte = @glade.get_widget("url_fonte")
     @legenda = @glade.get_widget("legenda")
     @label_status = @glade.get_widget("label_status")
-    @host = get_host_db
+    @host = Banco.instance.get_host_db
     @label_status.set_label "#{@label_status.text}#{@host}"
   end
 
@@ -48,7 +48,7 @@ class RsOnline2Glade
     @submit_erro.set_secondary_text(msg)
     @submit_erro.show_all
   end
-  def on_submit_clicked(widget)
+  def on_submit_clicked
     begin
       lista = @links.buffer.get_text(nil, nil, false).split("\n")
       links_validos = verify_list(lista)
@@ -67,7 +67,7 @@ class RsOnline2Glade
       pacote.legenda = @legenda.text
 
       links_duplicados = Array.new
-      links_db = select_full_links
+      links_db = Banco.instance.select_full_links
 
       # Verifica se links_db é válido
       if links_db == nil
@@ -92,8 +92,14 @@ class RsOnline2Glade
 
       # Só aceita o pacote se não houver nenhum link duplicado
       unless links_duplicados.size > 0
-        pacote.id_pacote = save_pacote(pacote)
-        save_links(links_validos, pacote.id_pacote)
+        if pacote.save == nil
+          show_erro "Inserção de pacote inválida."
+          return nil
+        end
+        if pacote.save_links(links_validos) == nil
+          show_erro "Inserção de links no pacote inválida."
+          return nil
+        end
         puts "Pacote salvo com sucesso\!"
         @submit_ok.set_secondary_text(links_validos.join("\n"))
         @submit_ok.show_all

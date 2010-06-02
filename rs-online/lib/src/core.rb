@@ -257,6 +257,10 @@ end
 def singleton?
   arq_conf = "/home/#{`whoami`.chomp}/rs-online.conf"
   unless FileTest.exist? arq_conf
+    arq = File.open(arq_conf, "w")
+    arq.puts "Último Pid=#{Process.pid}"
+    arq.puts "Local para downloads=/home/#{`whoami`.chomp}"
+    arq.close
     return true
   end
   arq = File.open(arq_conf, "r")

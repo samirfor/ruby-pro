@@ -22,8 +22,11 @@ if twitter
       puts "Twittando: \"#{evento}\""
       autenticacao = Twitter::HTTPAuth.new 'rsonline_', 'rs4all'
       cliente = Twitter::Base.new autenticacao
-      if cliente.user_timeline[0].text == evento
-        evento += "."
+      begin
+        if cliente.user_timeline[0].text == evento
+          evento += "."
+        end
+      rescue
       end
       cliente.update evento
     end
