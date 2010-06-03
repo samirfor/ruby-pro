@@ -1,9 +1,11 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
+require "resolv"
 
-module Rapidshare
+class Rapidshare
+
+  attr_accessor :body
+
   # Método para reconhecimento do servidor de download
-  def self.reconhecer_servidor body
+  def reconhecer_servidor body
     servidor_host = nil
     servidor_host = body.scan(/rs\w{1,}.rapidshare.com/i)[0]
     if servidor_host == nil
@@ -16,7 +18,7 @@ module Rapidshare
   end
   
   # Testa se identificou o tamanho
-  def self.get_size body
+  def get_size body
     expressao = body.scan(/\| (\d+) KB/i)[0][0]
     unless expressao == nil 
       tamanho = expressao.to_i
@@ -24,7 +26,7 @@ module Rapidshare
     return tamanho
   end
 
-  def self.get_countdown
+  def get_countdown
 
   end
 end

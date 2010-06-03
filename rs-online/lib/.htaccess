@@ -1,6 +1,0 @@
-AuthUserFile "/home/multi/www/rs-online/.htpasswd"
-AuthGroupFile /dev/null
-AuthName "Autenticacao"
-AuthType Basic
-
-require valid-user

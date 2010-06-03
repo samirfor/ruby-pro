@@ -87,7 +87,7 @@ class RsOnline2Glade
       if pacote.nome == "" or pacote.nome == nil
         short_link = links_validos[0].split("/")
         path = short_link[short_link.size - 1]
-        pacote.nome = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+)$/, "")
+        pacote.nome = path.gsub(/\.part\d+.\S+$/, "").gsub(/\.(rar|zip|\d+|htm|html)$/, "")
       end
 
       # Só aceita o pacote se não houver nenhum link duplicado
@@ -146,6 +146,8 @@ def verify_list lista
       links_validos.push linha.scan(/.*(http:\/\/\S*rapidshare.com\/\S+\/\S+).*/)[0][0]
     elsif linha =~ /.*(http:\/\/\S*megaupload.com\/\S+).*/
       links_validos.push linha.scan(/.*(http:\/\/\S*megaupload.com\/\S+).*/)[0][0]
+    elsif linha =~ /.*(http:\/\/\S*\.4shared\.com\/\S+).*/
+      links_validos.push linha.scan(/.*(http:\/\/\S*\.4shared\.com\/\S+).*/)[0][0]
     end
   end
   links_validos

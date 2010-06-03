@@ -8,9 +8,11 @@ require "src/error_rs"
 require "src/error_mu"
 require "src/server_rs"
 require "src/server_mu"
+require "src/server_fs"
 require "src/tipo_servidor"
 require "src/megaupload"
 require "src/rapidshare"
+require "src/4shared"
 
 class Link
   attr_accessor :link, :path, :ip, :uri_original, :uri_parsed, :id_link, :id_pacote, \
@@ -34,6 +36,8 @@ class Link
       @tipo = TipoServidor::MU
     elsif @uri_original.host =~ /rapidshare/i
       @tipo = TipoServidor::RS
+    elsif @uri_original.host =~ /4shared/i
+      @tipo = TipoServidor::FS
     else
       @tipo = nil
       to_log("Tipo do host não detectado.")
@@ -60,6 +64,7 @@ class Link
   # Escreve os dados no BD.
   def update_db
     sql = "UPDATE rs.link SET "
+    sql += "link = ?," unless @link == nil
     sql += "tamanho = #{@tamanho}, " unless @tamanho == nil
     sql += "testado = #{@testado}, " unless @testado == nil
     sql += "data_inicio = '#{@data_inicio}', " unless @data_inicio == nil
@@ -67,7 +72,11 @@ class Link
     sql += "completado = '#{@completado}', " unless @completado == nil
     sql += "id_status = #{@id_status} "
     sql += "WHERE id_link = #{@id_link}"
-    Banco.instance.db_connect.do(sql)
+    if @link == nil
+      Banco.instance.db_connect.do(sql)
+    else
+      Banco.instance.db_connect.do(sql, @link)
+    end
   end
 
   # Traduz hostname da URL para ip.
@@ -83,13 +92,18 @@ class Link
         @ip = "195.122.131.2"
       elsif @uri_original.host == "megaupload.com" or @uri_original.host == "www.megaupload.com"
         @ip = "174.140.154.25"
+      elsif @uri_original.host == "4shared.com" or @uri_original.host == "www.4shared.com"
+        @ip = "72.233.72.133"
       elsif @uri_original.host =~ /rs\d+\.rapidshare\.com/
         server = ServerRS.new(@uri_original.host.scan(/\d+/)[0].to_i)
         @ip = server.ip
       elsif @uri_original.host =~ /www\d+\.megaupload\.com/
         server = ServerMU.new(@uri_original.host.scan(/\d+/)[0].to_i)
         @ip = server.ip
-      else
+      elsif @uri_original.host =~ /dc\d+\.4shared\.com/
+        server = ServerFS.new(@uri_original.host.scan(/\d+/)[0].to_i)
+        @ip = server.ip
+      else   
         raise
       end
     end
@@ -104,6 +118,8 @@ class Link
       test_rs
     elsif @tipo == TipoServidor::MU
       test_mu
+    elsif @tipo == TipoServidor::FS
+      test_4s
     else
       to_log("Erro ao testar tipo de link nil.")
     end
@@ -114,6 +130,8 @@ class Link
       download_rs
     elsif @tipo == TipoServidor::MU
       download_mu
+    elsif @tipo == TipoServidor::FS
+      download_4s
     else
       to_log("Erro ao baixar tipo de link nil.")
     end
@@ -456,6 +474,168 @@ class Link
       update_db
       ## Download com curl
       baixou = system("curl -LOC - \"#{download}\"")
+      time_fim = Time.now
+      @data_fim = timestamp time_fim
+      duracao = Time.local(0) + (time_fim - time_inicio)
+      duracao_str = duracao.strftime("%Hh %Mm %Ss")
+      if baixou
+        to_log("D. link concluído com sucesso em #{duracao_str}.")
+        to_log("Velocidade média do link foi de #{sprintf("%.2f KB/s", @tamanho.to_i/(time_fim - time_inicio))}.")
+        @id_status = Status::BAIXADO
+        @completado = true
+      else
+        to_log("Download do link falhou com #{duracao_str} decorridos.")
+        @id_status = Status::TENTANDO
+      end
+      update_db
+      return
+    rescue Timeout::Error
+      to_log("Tempo de requisição esgotado. Tentando novamente.")
+      retry
+    rescue Exception
+      @id_status = Status::INTERROMPIDO
+      raise
+    end
+  end
+
+
+  # => 4shared test
+  def test_4s
+    begin
+      to_log "Testando link: #{@link}"
+      unless @link =~ /http:\/\/\S+\/.+/
+        to_log "ERRO: Sintaxe do link inválido. Evitado."
+        @id_status = Status::OFFLINE
+        @testado = true
+        @data_inicio = timestamp Time.now
+        update_db
+        return
+      end
+
+      # Corrige link
+      @link.gsub!(/red\.com\/(get|audio|video)/, "red.com/file")
+
+      @id_status = Status::TESTANDO
+      @data_inicio = timestamp Time.now
+      update_db
+      body = get_body
+
+      fs = FourShared.new body
+
+      if fs.file_not_found?
+        @id_status = Status::OFFLINE
+        @testado = true
+        update_db
+        return
+      end
+
+      ## Captura tamanho do arquivo
+      @tamanho = fs.get_size
+      if @tamanho == nil
+        to_log 'Não foi possível capturar o tamanho.'
+        # Download ainda pode ser feito.
+      else
+        to_log "Tamanho #{@tamanho} KB ou #{sprintf "%.2f MB", @tamanho/1024.0}"
+        @id_status = Status::ONLINE
+        @testado = true
+        update_db
+      end
+      return
+    rescue Timeout::Error
+      to_log "Tempo de requisição esgotado. Tentando novamente."
+      retry
+    rescue Exception => e
+      to_log "Erro: #{e.message}\nBacktrace: #{e.backtrace.join("\n")}"
+      @id_status = Status::INTERROMPIDO
+      @testado = false
+      update_db
+      raise
+    end
+  end
+
+  # => 4shared download
+  def download_4s
+    begin
+      to_log("Tentando baixar o link: #{@link}")
+      @id_status = Status::TENTANDO
+      update_db
+
+      body = get_body
+      fs = FourShared.new body
+
+      if fs.file_not_found?
+        @id_status = Status::OFFLINE
+        @testado = true
+        update_db
+        return
+      end
+
+      ## Captura tamanho do arquivo
+      @tamanho = fs.get_size
+      if @tamanho == nil
+        to_log('Não foi possível capturar o tamanho.')
+        retry_
+        return
+      else
+        to_debug("Tamanho #{@tamanho} KB ou #{sprintf("%.2f MB", @tamanho/1024.0)}")
+      end
+
+      ticket = fs.get_ticket
+      if ticket == nil
+        to_log('Não foi possível o ticket.')
+        retry_
+        return
+      end
+
+      to_debug('Enviando requisição de download...')
+      request = Link.new(ticket)
+      response = request.get_body
+      fs = FourShared.new(response)
+
+      if fs.linkerror?
+        to_log('Arquivo não encontrado no servidor.')
+        retry_
+        return
+      end
+
+      ## Captura link do download
+      download = fs.get_downloadlink
+      if download == nil
+        to_log('Não foi possível capturar o link para download.')
+        retry_
+        return
+      end
+
+      begin
+        servidor_host = fs.reconhecer_servidor
+        if servidor_host == nil
+          if retry_ == Status::OFFLINE
+            return
+          end
+        end
+      end while servidor_host == nil
+      server = ServerFS.new(servidor_host)
+
+      download.gsub!(/dc\d+\.4shared.com/, server.ip)
+
+      ## Captura tempo de espera
+      count = fs.get_countdown
+      if count == nil # Testa se identificou o contador
+        to_log('Não foi possível capturar o contador.')
+        retry_
+        return
+      end
+      time = Time.local(0) + count
+      to_debug(time.strftime("Contador identificado: %Hh %Mm %Ss."))
+      contador(count, "O download iniciará em %Hh %Mm %Ss.")
+
+      to_log("Baixando: #{download}")
+      time_inicio = Time.now
+      @data_inicio = timestamp time_inicio
+      @id_status = Status::BAIXANDO
+      update_db
+      ## Download com curl
+      baixou = system("curl -LO \"#{download}\"")
       time_fim = Time.now
       @data_fim = timestamp time_fim
       duracao = Time.local(0) + (time_fim - time_inicio)
