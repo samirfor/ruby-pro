@@ -10,7 +10,11 @@ class Megaupload
   end
 
   def get_captcha
-    expressao = @body.scan(/http:\/\/(\S+)\.megaupload.com\/gencap.php\?(\S+)\.gif/)[0]
+    begin
+      expressao = @body.scan(/http:\/\/(\S+)\.megaupload.com\/gencap.php\?(\S+)\.gif/)[0]
+    rescue
+      return nil
+    end
     unless expressao == nil
       url = "http://#{expressao[0]}.megaupload.com/gencap.php?#{expressao[1]}.gif"
       to_debug("URL da imagem: #{url}")
@@ -27,42 +31,63 @@ class Megaupload
     end
   end
   def get_captchacode
-    search = @body.scan(/name=\"captchacode\" value=\"(.+)\">/)[0][0]
+    begin
+      search = @body.scan(/name=\"captchacode\" value=\"(.+)\">/)[0][0]
+    rescue
+      return nil
+    end
     return search
   end
-  # => exemplo
   def get_megavar
-    search = @body.scan(/name=\"megavar\" value=\"(.+)\">/)[0][0]
+    begin
+      search = @body.scan(/name=\"megavar\" value=\"(.+)\">/)[0][0]
+    rescue
+      return nil
+    end
     return search
   end
   def get_size
-    tamanho = @body.scan(/font style=.*File size.*>(.+)<\/font/i)[0][0]
-    unless tamanho == nil # Testa se identificou o tamanho
+    begin
+      tamanho = @body.scan(/font style=.*File size.*>(.+)<\/font/i)[0][0]
+    rescue
+      return nil
+    end
+    unless tamanho == nil
       tamanho = tamanho.to_f*1024
       tamanho = tamanho.to_i
     end
     return tamanho
   end
   def get_countdown
-    search = @body.scan(/count=(\d+);/)[0][0]
-    unless search == nil
-      return search.to_i
+    begin
+      search = @body.scan(/count=(\d+);/)[0][0]
+    rescue
+      return nil
     end
-    nil
+    if search == nil or search == []
+      return nil
+    end
+    search.to_i
   end
   def get_filename
-    search = @body.scan(/<font style=.*>Filename:<\/font> <font style=.*>(.*)<\/font><br>/)[0][0]
-    puts "link: #{search}"
+    begin
+      search = @body.scan(/<font style=.*>Filename:<\/font> <font style=.*>(.*)<\/font><br>/)[0][0]
+    rescue
+      return nil
+    end
+    if search == nil or search == []
+      return nil
+    end
     return search
   end
 
   def get_downloadlink
     begin
       search = @body.scan(/downloadlink.*href=\"(.*)\" onclick/i)[0][0]
-      return search
     rescue
       return nil
     end
+    return search
   end
 
   def captcha_recognized?
@@ -76,7 +101,11 @@ class Megaupload
 
   # Método para reconhecimento do servidor de download
   def reconhecer_servidor
-    servidor_host = @body.scan(/http:\/\/www(\d+)\.megaupload\.com\/files/i)[0][0]
+    begin
+      servidor_host = @body.scan(/http:\/\/www(\d+)\.megaupload\.com\/files/i)[0][0]
+    rescue
+      return nil
+    end
     if servidor_host == nil
       to_log("Não foi possível reconhecer o servidor.")
       to_log("Verifique se a URL está correta. Evitando ...")

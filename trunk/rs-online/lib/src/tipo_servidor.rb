@@ -4,4 +4,5 @@
 module TipoServidor
     RS = 1
     MU = 2
+    FS = 3
 end
