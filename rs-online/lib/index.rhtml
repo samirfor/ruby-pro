@@ -58,9 +58,8 @@ Released   : 20081230
               <p>
                 <%
                 begin
-                  pacote = Pacote.new("nil")
-                  pacote.select_pendente
-                  if pacote.id_pacote == nil
+                  pacote = Pacote.select_pendente
+                  if pacote == nil
                     puts "Não há pacotes para baixar atualmente."
                   else
                     count = pacote.select_count_links
