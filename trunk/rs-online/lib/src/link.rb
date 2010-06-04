@@ -660,4 +660,33 @@ class Link
     end
   end
 
+  def self.select_full
+    sql = "SELECT * FROM rs.link "
+    rst = Banco.instance.db_connect.execute(sql)
+    lista = Array.new
+    current_link = nil
+    begin
+      rst.fetch do |row|
+        begin
+          current_link = row["link"].strip
+        rescue URI::InvalidURIError
+          to_log "URI inválido, pulando link."
+          current_link = nil
+        end
+        lista.push current_link
+      end
+      rst.finish
+      Banco.instance.db_disconnect
+      lista.delete_if { |l| l == [] or l == nil }
+      if lista == []
+        nil
+      else
+        lista.sort
+      end
+    rescue Exception => e
+      to_log "Houve erro => #{e}"
+      sleep 1
+      return nil
+    end
+  end
 end

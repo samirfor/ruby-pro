@@ -30,7 +30,7 @@ def show_response
     pacote.legenda = a_params["legenda"][0]
     links_validos = Array.new
     links_duplicados = Array.new
-    links_db = Banco.instance.select_full_links
+    links_db = Link.select_full
     params_links.each do |linha|
       linha.strip!
       if linha =~ /.*(http:\/\/\S*\.rapidshare\.com\/\S+\/\S+).*/

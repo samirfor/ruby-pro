@@ -128,14 +128,14 @@ end
 
 # Testa os outros links que estão submetidos à download
 def teste_paralelo id_pacote_excecao
-  pacotes = Banco.instance.select_pacotes_pendetes_teste(id_pacote_excecao)
+  pacotes = Pacote.select_pacotes_pendetes_teste(id_pacote_excecao)
   if pacotes == nil
     to_log "<T> Não há mais pacotes pendetes para testar."
     return
   end
   pacotes.each do |pacote|
     to_log "<T> Testando pacote #{pacote.nome}"
-    links_before_test = Banco.instance.select_lista_links(pacote.id_pacote)
+    links_before_test = pacote.select_links
     pacote.tamanho = 0
     links_before_test.each do |link|
       if link.id_status == Status::BAIXADO
@@ -161,15 +161,14 @@ def run
     begin
       cancelar?
       ## Select pacote
-      pacote = Pacote.new ""
-      pacote.select_pendente
-      if pacote.id_pacote == nil
+      pacote = Pacote.select_pendente
+      if pacote == nil
         evento = 'Fim do(s) download(s). Have a nice day!'
         to_log evento
         RSTwitter.tweet evento 
         exit!(1)
       end
-      links_before_test = Banco.instance.select_lista_links(pacote.id_pacote)
+      links_before_test = pacote.select_links
       if links_before_test == nil
         to_log "Não foi possível selecionar a lista de links."
         exit!(1)
@@ -237,7 +236,7 @@ def run
       run_thread Proc.new {
         RSTwitter.tweet evento  
       }
-      unless Banco.instance.select_remaining_links(pacote.id_pacote) == 0
+      unless Banco.instance.select_count_remaining_links(pacote.id_pacote) == 0
         pacote.problema = true
         pacote.update_db
         run_thread Proc.new {

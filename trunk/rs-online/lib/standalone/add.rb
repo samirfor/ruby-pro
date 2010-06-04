@@ -67,7 +67,7 @@ class RsOnline2Glade
       pacote.legenda = @legenda.text
 
       links_duplicados = Array.new
-      links_db = Banco.instance.select_full_links
+      links_db = Link.select_full
 
       # Verifica se links_db é válido
       if links_db == nil

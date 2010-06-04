@@ -309,10 +309,10 @@ Released   : 20081230
         <div id="content">
           <%
           begin
-            lista = Banco.instance.select_lista_links(id_pacote)
             pacote = Pacote.new("nil")
             pacote.id_pacote = id_pacote
             pacote.select
+            lista = pacote.select_links
 
             if lista == nil %>
               <div class="post">

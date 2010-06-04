@@ -159,7 +159,7 @@ Released   : 20081230
         <!--<div id="header-pic"></div>-->
         <div id="content">
           <%
-          pacotes = Banco.instance.select_lista_pacotes false
+          pacotes = Pacote.select_lista false
           if pacotes == nil %>
             <div class="post">
               <h1 class="title">Ocorreu um erro!</h1>

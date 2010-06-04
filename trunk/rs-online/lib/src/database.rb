@@ -291,7 +291,7 @@ end
 
 # Verifica a quantidade de pacotes e a quantidade de pacotes baixado.
 # O retorno é a diferença entre as respectivas quantidades.
-def select_remaining_links id_pacote
+def select_count_remaining_links id_pacote
   sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = #{id_pacote} "
   db = db_statement_execute(sql)
   rst = db[0]

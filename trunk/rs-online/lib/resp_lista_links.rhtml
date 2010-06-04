@@ -54,7 +54,7 @@ def live_test_links id_pacote
     if pacote == nil
       return "Não foi possível obter o pacote para teste."
     end
-    links_before_test = Banco.instance.select_lista_links pacote.id_pacote
+    links_before_test = pacote.select_links
     links_before_test.each do |link|
       if link.id_status == Status::BAIXADO
         pacote.tamanho += link.tamanho
