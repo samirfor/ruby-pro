@@ -2,7 +2,6 @@ require 'dbi'
 require 'src/pacote'
 require "src/historico"
 require 'src/link'
-require "src/timestamp"
 require "singleton"
 
 class Banco
@@ -12,13 +11,6 @@ class Banco
 
   def initialize
     self
-  end
-
-  # Gera linhas de log
-  def to_log texto
-    puts texto
-    h = Historico.new(texto)
-    h.save
   end
 
   # Ve o endereço do banco

@@ -52,16 +52,26 @@ def show_lista_links lista, pacote%>
                 <td><%= link.id_link %></td>
                 <td align="left">
                   <a href="<%
-                  if link.tipo == TipoServidor::RS
-                    link_parsed = link.link.gsub("rapidshare.com","195.122.131.2")
-                  elsif link.tipo == TipoServidor::MU
+                  case link.class.to_s
+                  when "Megaupload"
                     link_parsed = link.link.gsub("www.megaupload.com","174.140.154.25")
-                  else
+                  when "Rapidshare"
+                    link_parsed = link.link.gsub("rapidshare.com","195.122.131.2")
+                  when "FourShared"
+                    link_parsed = link.link.gsub("www.4shared.com","72.233.72.131")
                   end
                 %>
                      <%= link_parsed %> ">
                     <img alt="link" src="images/link.png" border="0"/></a>&nbsp;&nbsp;
-                  <a href="<%= link.link %>"><%= path %></a>
+                  <a href="<%= link.link %>">
+                    <%
+                    if link.filename
+                      print link.filename
+                    else
+                      print path
+                    end
+                  %>
+                  </a>
                 </td>
                 <%
                 # tamanho

@@ -1,7 +1,9 @@
 require "src/timestamp"
 require "rubygems"
 require "shorturl"
-require "src/link"
+#require "src/plugins/4shared"
+require "src/plugins/megaupload"
+#require "src/plugins/rapidshare"
 
 class Pacote
   attr_accessor :id_pacote, :tamanho, :problema, :nome, :completado, \
@@ -100,7 +102,6 @@ class Pacote
     pacote
   end
 
-  # Tras do banco o pacote com o id específico
   def select
 
     #  id bigserial NOT NULL,
@@ -139,7 +140,7 @@ class Pacote
       end
       rst.finish
     rescue Exception => err
-      puts "Erro no fetch: #{err.message}\nBacktrace: #{err.backtrace.join("\n")}"
+      puts "Erro: #{err.message}\nBacktrace: #{err.backtrace.join("\n")}"
       @id_pacote = nil
     end
     Banco.instance.db_disconnect
@@ -154,7 +155,7 @@ class Pacote
         VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id"
 
     begin
-      rst = Banco.instance.db_connect.execute(sql, @nome, timestamp(@data_inicio), \
+      rst = Banco.instance.db_connect.execute(sql, @nome, StrTime.timestamp(@data_inicio), \
           @prioridade, @senha, @descricao, @url_fonte, \
           @legenda)
     rescue Exception => e
@@ -213,7 +214,7 @@ class Pacote
         pacote = Pacote.new(row["nome"])
         pacote.id_pacote = row["id"]
         pacote.prioridade = row["prioridade_max"]
-        pacotes.push pacote
+        pacotes << pacote
       end
     rescue Exception => err
       puts "Erro no fetch: #{err}"
@@ -244,7 +245,7 @@ class Pacote
         pacote.descricao = row["descricao"]
         pacote.url_fonte = row["url_fonte"]
         pacote.legenda = row["legenda"]
-        pacotes.push pacote
+        pacotes << pacote
       end
     rescue Exception => err
       puts "Erro no fetch"
@@ -272,6 +273,7 @@ class Pacote
   data_inicio timestamp without time zone,
   data_fim timestamp without time zone,
   testado boolean NOT NULL DEFAULT false,
+  filename character varying(200),
 =end
     sql = "SELECT l.id_link, l.id_pacote, l.link, l.completado, l.tamanho, "
     sql += "l.id_status, l.data_inicio, l.data_fim, l.testado "
@@ -282,7 +284,16 @@ class Pacote
     begin
       rst = Banco.instance.db_connect.execute(sql, @id_pacote)
       rst.fetch do |row|
-        link = Link.new(row["link"])
+        case row["link"]
+        when /megaupload/i
+          link = Megaupload.new(row["link"])
+        when /rapidshare/i
+          # link = Rapidshare.new(row["link"])
+          link = Link.new(row["link"])
+        when /4shared/i
+          # link = FourShared.new(row["link"])
+          link = Link.new(row["link"])
+        end
         link.id_link = row["id_link"]
         link.id_pacote = row["id_pacote"]
         link.completado = row["completado"]
@@ -291,13 +302,13 @@ class Pacote
         link.testado = row["testado"]
         link.data_inicio = row["data_inicio"]
         link.data_fim = row["data_fim"]
-        lista.push link
+        lista << link
       end
       rst.finish
       Banco.instance.db_disconnect
       lista.sort
     rescue Exception => e
-      to_log "Houve erro => #{e}"
+      puts "Houve erro => #{e}"
       sleep 1
       return nil
     end

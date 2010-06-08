@@ -41,4 +41,10 @@ class Historico
     Banco.instance.db_disconnect
     historicos
   end
+
+  def self.to_log msg
+    puts msg
+    h = Historico.new(msg)
+    h.save
+  end
 end

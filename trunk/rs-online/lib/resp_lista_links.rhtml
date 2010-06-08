@@ -2,10 +2,17 @@
 require 'dbi'
 require 'cgi'
 require 'src/pacote'
+require "src/status"
 
 begin
   cgi = CGI.new
   a_params = cgi.params
+  $id_pacote = a_params["id_pacote"][0]
+
+  $pacote = Pacote.new("nil")
+  $pacote.id_pacote = $id_pacote
+  $pacote.select
+
 rescue Exception %>
   <html>
     <head>
@@ -33,41 +40,36 @@ def update_pacote a_params
       end
     end
 
-    sql = "UPDATE rs.pacote SET prioridade = #{a_params["prioridade"]}, mostrar = '#{a_params["mostrar"]}'"
-    sql += ", senha = '#{a_params["senha"]}'" unless a_params["senha"][0] == ""
-    sql += ", descricao = '#{a_params["descricao"]}'" unless a_params["descricao"][0] == ""
-    sql += ", url_fonte = '#{a_params["url_fonte"]}'" unless a_params["url_fonte"][0] == ""
-    sql += ", legenda = '#{a_params["legenda"]}'" unless a_params["legenda"][0] == ""
-    sql += " WHERE id = #{a_params["id_pacote"]}"
-    Banco.instance.db_connect.do(sql)
+    $pacote.senha = a_params["senha"][0] unless a_params["senha"][0] == ""
+    $pacote.descricao = a_params["descricao"][0] unless a_params["descricao"][0] == ""
+    $pacote.url_fonte = a_params["url_fonte"][0] unless a_params["url_fonte"][0] == ""
+    $pacote.legenda = a_params["legenda"][0] unless a_params["legenda"][0] == ""
+    $pacote.update_db
     return "Pacote modificado com sucesso."
   rescue Exception => e
     return e
   end
 end
 
-def live_test_links id_pacote
+def live_test_links
   begin
-    pacote = Pacote.new("nil")
-    pacote.id_pacote = id_pacote
-    pacote.select
-    if pacote == nil
+    if $pacote == nil
       return "Não foi possível obter o pacote para teste."
     end
-    links_before_test = pacote.select_links
+    links_before_test = $pacote.select_links
     links_before_test.each do |link|
       if link.id_status == Status::BAIXADO
-        pacote.tamanho += link.tamanho
+        $pacote.tamanho += link.tamanho
       else
         link.test
-        pacote.tamanho += link.tamanho if link.id_status == Status::ONLINE
+        $pacote.tamanho += link.tamanho if link.id_status == Status::ONLINE
       end
     end
-    pacote.problema = true if pacote.tamanho == 0
-    pacote.update_db
+    $pacote.problema = true if $pacote.tamanho == 0
+    $pacote.update_db
     return "Pacote testado com sucesso."
   rescue Exception => e
-    return "Ocorreu um erro no teste do pacote. #{e.message}"
+    return "Ocorreu um erro no teste do pacote. #{e}"
   end
 end
 
@@ -75,46 +77,55 @@ def action_pacote a_params
   begin
     if a_params["action"][0] == "cancelar"
       sql = "UPDATE rs.pacote SET mostrar = 'false', problema = 'true' \
-      WHERE id = #{a_params["id_pacote"]} "
-      Banco.instance.db_connect.do(sql)
+      WHERE id = ? "
+      Banco.instance.db_connect.do(sql, $id_pacote)
       msg = "ACTION = Cancelar => Pacote modificado com sucesso."
     elsif a_params["action"][0] == "reiniciar"
       # UPDATE link
-      sql = "UPDATE rs.link SET "
-      sql += "testado = 'false', "
-      sql += "id_status = 5 "
-      sql += "WHERE id_pacote = #{a_params["id_pacote"]} "
-      Banco.instance.db_connect.do(sql)
+      sql = "UPDATE rs.link SET testado = 'false', id_status = 5, "
+      sql += "data_inicio = ?, data_fim = NULL WHERE id_pacote = ? "
+      Banco.instance.db_connect.do(sql, StrTime.timestamp(Time.now), $id_pacote)
       # UPDATE pacote
       sql = "UPDATE rs.pacote SET "
       sql += "mostrar = 'true', problema = 'false', "
-      sql += "completado = 'false' "
-      sql += "WHERE id = #{a_params["id_pacote"]} "
-      Banco.instance.db_connect.do(sql)
-      msg = "ACTION = Reiniciar => Pacote modificado com sucesso."
+      sql += "completado = 'false', data_inicio = ?, data_fim = NULL "
+      sql += "WHERE id = ? "
+      Banco.instance.db_connect.do(sql, StrTime.timestamp(Time.now), $id_pacote)
+      lista_links = $pacote.select_links
+      if lista_links
+        lista_links.each do |link|
+          link.data_inicio = StrTime.timestamp(Time.now)
+          link.data_fim = nil
+          link.id_status = Status::AGUARDANDO
+          link.tamanho = nil
+          link.testado = false
+          link.filename = nil
+          link.completado = false
+          link.update_db
+        end
+        msg = "ACTION = Reiniciar => Pacote modificado com sucesso."
+      else
+        msg = "ACTION = Reiniciar => <b>Não foi possível obter os links.</b>"
+      end
     elsif a_params["action"][0] == "retestarNow"
-      txt = live_test_links a_params["id_pacote"]
+      txt = live_test_links
       msg = "ACTION = Retestar agora => #{txt}"
     elsif a_params["action"][0] == "retestar"
       # UPDATE link
-      sql = "UPDATE rs.link SET "
-      sql += "testado = 'false', "
-      sql += "id_status = 5 "
-      sql += "WHERE id_pacote = #{a_params["id_pacote"]} "
-      sql += "AND l.completado = 'false' "
-      Banco.instance.db_connect.do(sql)
+      sql = "UPDATE rs.link SET testado = 'false', id_status = 5 "
+      sql += "WHERE id_pacote = ? AND l.completado = 'false' "
+      Banco.instance.db_connect.do(sql, $id_pacote)
       # UPDATE pacote
-      sql = "UPDATE rs.pacote SET "
-      sql += "problema = 'false' "
-      sql += "WHERE id = #{a_params["id_pacote"]} "
-      Banco.instance.db_connect.do(sql)
+      sql = "UPDATE rs.pacote SET problema = 'false' "
+      sql += "WHERE id = ? "
+      Banco.instance.db_connect.do(sql, $id_pacote)
       msg = "ACTION = Retestar => Pacote modificado com sucesso."
     else
       msg = "NO ACTION."
     end
     return msg
   rescue Exception => e
-    return "#{e}<br\/>#{e.backtrace.join("<br\/>")}"
+    return "Erro: #{e}<br\/>#{e.backtrace.join("<br\/>")}"
   end
 end
 %>
@@ -137,7 +148,7 @@ Released   : 20081230
     <link rel="icon" href="images/favicon.png" type="image/x-icon" />
     <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="Refresh" content="3;url=lista_links.rhtml?id_pacote=<%= a_params["id_pacote"] %> "/>
+    <meta http-equiv="Refresh" content="3;url=lista_links.rhtml?id_pacote=<%= $id_pacote %> "/>
     <title>RS-Online ~ version 1.0b ~ Powered by eRuby</title>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
   </head>
