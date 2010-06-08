@@ -1,8 +1,0 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-
-module TipoServidor
-    RS = 1
-    MU = 2
-    FS = 3
-end

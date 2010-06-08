@@ -1,5 +1,6 @@
-# => Captura de erros
+require "src/historico"
 
+# => Captura de erros
 module ErrorRS
 	# Retorna true quando não há slots disponíveis.
   def self.get_no_slot(body)
@@ -8,7 +9,7 @@ module ErrorRS
     if expressao == nil
       return false
     end
-    to_log("Não há slots disponíveis no momento.")
+    Historico.to_log("Não há slots disponíveis no momento.")
     return true
   end
 
@@ -20,7 +21,7 @@ module ErrorRS
       return false
     end
     server = expressao.scan(/\d+/)[0]
-    to_log("O servidor do rapidshare #{server} está em manutenção. Evitando")
+    Historico.to_log("O servidor do rapidshare #{server} está em manutenção. Evitando")
     return true
   end
 
@@ -33,7 +34,7 @@ module ErrorRS
       return false
     end
     minutos.gsub!("try again in about ","").gsub!(" minutes","")
-    to_log("Respaw de #{minutos} minutos.")
+    Historico.to_log("Respaw de #{minutos} minutos.")
     minutos = minutos.to_i
     contador(60*minutos, "Falta #{"%M min e " if minutos >= 1}%S seg.")
     return true
@@ -46,7 +47,7 @@ module ErrorRS
       return false
     end
     minutos.gsub!("Please try again in ","").gsub!(" minutes","")
-    to_log("Tentando novamente em #{minutos.to_s} minutos.")
+    Historico.to_log("Tentando novamente em #{minutos.to_s} minutos.")
     minutos = minutos.to_i
     contador(60*minutos.to_i, "Falta #{"%M min e " if minutos >= 1}%S seg.")
     return true
@@ -60,8 +61,8 @@ module ErrorRS
     if expressao == nil
       return false
     end
-    to_log("Ja existe um download corrente.")
-    to_log("Tentando novamente em #{minutos} minutos.")
+    Historico.to_log("Ja existe um download corrente.")
+    Historico.to_log("Tentando novamente em #{minutos} minutos.")
     contador(60*minutos, "Falta #{"%M min e " if minutos >= 1}%S seg.")
     return true
   end
@@ -74,7 +75,7 @@ module ErrorRS
       return false
     end
     justify.gsub!("<p align=\"justify\">", "").gsub!("</p>", "")
-    to_log(justify)
+    Historico.to_log(justify)
     return true
   end
 
@@ -87,9 +88,9 @@ module ErrorRS
     end
     error_msg = body.scan(/<.*--.*E.*-->(.+)/i)[0]
     unless error_msg == nil
-      to_log(error_msg[0] + " Evitando link.")
+      Historico.to_log(error_msg[0] + " Evitando link.")
     else
-      to_log("Houve algum erro do rapidshare. Evitando link.")
+      Historico.to_log("Houve algum erro do rapidshare. Evitando link.")
     end
     return true
   end
@@ -98,7 +99,7 @@ module ErrorRS
   def self.error2 body
     expressao = body.scan(/<h1>.*DOWNLOAD.*<\/h1>/i)[0]
     if expressao == nil
-      to_log "Há algum problema com o link."
+      Historico.to_log "Há algum problema com o link."
       return true
     else
       return false
@@ -112,7 +113,7 @@ module ErrorRS
     if expressao == nil
       return false
     end
-    to_log("O link foi bloqueado.")
+    Historico.to_log("O link foi bloqueado.")
     return true
   end
 
@@ -123,8 +124,8 @@ module ErrorRS
     if res == nil
       return false
     end
-    to_log("Atualmente muitos usuários estão baixando arquivos.")
-    to_log("Tentando novamente em 2 minutos.")
+    Historico.to_log("Atualmente muitos usuários estão baixando arquivos.")
+    Historico.to_log("Tentando novamente em 2 minutos.")
     contador(60*minutos, "Falta #{"%M min e " if minutos >= 1}%S seg.")
     return true
   end

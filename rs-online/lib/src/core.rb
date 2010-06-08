@@ -25,89 +25,23 @@ $:.push "/home/#{`whoami`.chomp}/NetBeansProjects/trunk/rs-online/lib"
 require 'net/http'
 require 'socket'
 require 'dbi'
-require 'src/link'
-require 'src/banco'
+#require 'src/link'
+#require 'src/banco'
 require 'src/status'
 require 'src/prioridade'
-require 'src/excecoes'
 require 'src/pacote'
-require 'src/twitter'
-require "src/timestamp"
+require 'src/twitter_bot'
+#require "src/historico"
+require "src/verbose"
 
-# -- Métodos locais
 
 #Usage
-def ajuda()
+def ajuda
   puts "::: RS-Online Beta :::\n"
   puts ">>> Criado por Samir <samirfor@gmail.com>\n"
   puts ">>> Incrementado por Átila <camurca.home@gmail.com>\n"
   puts "Banco de Dados PostgreSQL é necessário para rodar o programa."
   puts "Local da aplicação: #{File.dirname($0)}"
-end
-
-# Contador regressivo
-def contador(tempo, mensagem)
-  begin
-    t = Time.local(0) + tempo
-    $stdout.sync = true
-    tempo.downto(0) do
-      print "\r" + t.strftime(mensagem)
-      sleep 1
-      t -= 1
-    end
-    print "\r" + " " * mensagem.length + "\r"
-    $stdout.sync = false
-    sleep(1)
-  rescue Exception
-    raise
-  end
-end
-
-# Gera linhas de log
-def to_log texto
-  puts texto
-  h = Historico.new(texto)
-  h.save
-end
-
-# Gera linhas de log para debug
-def to_debug texto
-  ARGV.each do |arg|
-    if arg == "debug"
-      puts texto
-    end
-  end
-end
-
-def falhou(segundos)
-  begin
-    to_log("Tentando novamente em #{segundos} segundos.")
-    contador(segundos, "Falta %S segundos.")
-  rescue Exception
-    raise
-  end
-end
-
-def to_html(body)
-  arq = File.open("test.html", "w")
-  arq.print(body)
-  arq.close
-end
-
-# Verifica se existe algum arquivo chamado "cancelar" ou "fechar" no local
-def cancelar?
-  fullpath = get_local_path
-  if FileTest.exist?("#{fullpath}/cancelar") or FileTest.exist?("#{fullpath}/fechar")
-    evento = "Downloads cancelado pelo usuário."
-    to_log evento
-    RSTwitter.tweet evento 
-    exit!(1)
-  end
-end
-
-# O mesmo que "cancelar?"
-def fechar?
-  cancelar?
 end
 
 # Retorna onde o caminho completo de onde os downloads serão salvos.
@@ -130,11 +64,11 @@ end
 def teste_paralelo id_pacote_excecao
   pacotes = Pacote.select_pacotes_pendetes_teste(id_pacote_excecao)
   if pacotes == nil
-    to_log "<T> Não há mais pacotes pendetes para testar."
+    Verbose.to_log "<T> Não há mais pacotes pendetes para testar."
     return
   end
   pacotes.each do |pacote|
-    to_log "<T> Testando pacote #{pacote.nome}"
+    Verbose.to_log "<T> Testando pacote #{pacote.nome}"
     links_before_test = pacote.select_links
     pacote.tamanho = 0
     links_before_test.each do |link|
@@ -150,7 +84,62 @@ def teste_paralelo id_pacote_excecao
     pacote.problema = true if pacote.tamanho == 0
     pacote.update_db
   end
-  to_log "<T> Fim do teste dos pacotes."
+  Verbose.to_log "<T> Fim do teste dos pacotes."
+end
+
+module Core
+
+  def self.interrupt
+    require 'src/twitter'
+    require "src/historico"
+
+    Verbose.to_log "\nSinal de interrupção recebido"
+    Verbose.to_log "O programa foi encerrado."
+    TwitterBot.tweet "O programa foi encerrado."
+    exit!(1)
+  end
+  
+	# Contador regressivo
+  def self.contador(tempo, mensagem)
+    begin
+      t = Time.local(0) + tempo
+      $stdout.sync = true
+      tempo.downto(0) do
+        print "\r" + t.strftime(mensagem)
+        sleep 1
+        t -= 1
+      end
+      print "\r" + " " * mensagem.length + "\r"
+      $stdout.sync = false
+      sleep(1)
+    rescue
+      raise
+    end
+  end
+  def self.falhou(segundos)
+    begin
+      Verbose.to_log("Tentando novamente em #{segundos} segundos.")
+      contador(segundos, "Falta %S segundos.")
+    rescue
+      raise
+    end
+  end
+
+  # Verifica se existe algum arquivo chamado "cancelar" ou "fechar" no local
+  def self.cancelar?
+    fullpath = get_local_path
+    if FileTest.exist?("#{fullpath}/cancelar") or FileTest.exist?("#{fullpath}/fechar")
+      evento = "Downloads cancelado pelo usuário."
+      Verbose.to_log evento
+      TwitterBot.tweet evento
+      exit!(1)
+    end
+  end
+
+  # O mesmo que "cancelar?"
+  def self.fechar?
+    cancelar?
+  end
 end
 
 #################
@@ -159,34 +148,34 @@ end
 def run
   begin
     begin
-      cancelar?
+      Core.cancelar?
       ## Select pacote
       pacote = Pacote.select_pendente
       if pacote == nil
         evento = 'Fim do(s) download(s). Have a nice day!'
-        to_log evento
-        RSTwitter.tweet evento 
+        Verbose.to_log evento
+        TwitterBot.tweet evento 
         exit!(1)
       end
       links_before_test = pacote.select_links
       if links_before_test == nil
-        to_log "Não foi possível selecionar a lista de links."
+        Verbose.to_log "Não foi possível selecionar a lista de links."
         exit!(1)
       end
       ## Fim do Select pacote
 
       ## Inicio do teste
-      to_log "Testando os links de \"#{pacote.nome}\"..."
+      Verbose.to_log "Testando os links de \"#{pacote.nome}\"..."
       links_online = Array.new
       links_before_test.each do |link|
-        cancelar?
+        Core.cancelar?
         if link.id_status == Status::BAIXADO
           pacote.tamanho += link.tamanho
         else
           link.test
           if link.id_status == Status::ONLINE
             pacote.tamanho += link.tamanho
-            links_online.push link
+            links_online << link
           end
           link.update_db
         end
@@ -198,9 +187,9 @@ def run
 
       ## Informações do teste
       msg = "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
-      to_log msg
+      Verbose.to_log msg
       Thread.new {
-        RSTwitter.tweet msg  
+        TwitterBot.tweet msg  
       }
       ## Fim Informações do teste
 
@@ -214,14 +203,20 @@ def run
       pacote.data_inicio = Time.now # Marca quando o pacote iniciou download
       pacote.update_db
       links_online.each do |link|
-        cancelar?
+        Core.cancelar?
         begin
+          link.get_ticket
+          raise if link.retry?
           link.download
-          if link.id_status == Status::TENTANDO
-            falhou 3 #segundos
-          end
-        end while link.id_status == Status::TENTANDO
+          raise if link.retry?
+        rescue Interrupt
+          raise
+        rescue Exception => err
+          Verbose.to_debug("#{err}\nBacktrace: #{err.backtrace.join("\n")}")
+          retry
+        end
       end
+      
       pacote.data_fim = Time.now
       pacote.completado = true
       pacote.update_db
@@ -232,15 +227,15 @@ def run
       evento = "Concluido o download do pacote #{pacote.nome}"
       evento += " em #{duracao.strftime("%Hh %Mm %Ss")} | "
       evento += "V. media = #{sprintf("%.2f KB/s", pacote.tamanho/(pacote.data_fim - pacote.data_inicio))}"
-      to_log evento
+      Verbose.to_log evento
       run_thread Proc.new {
-        RSTwitter.tweet evento  
+        TwitterBot.tweet evento  
       }
       unless Banco.instance.select_count_remaining_links(pacote.id_pacote) == 0
         pacote.problema = true
         pacote.update_db
         run_thread Proc.new {
-          RSTwitter.tweet "Pacote #{pacote.nome} está problema." 
+          TwitterBot.tweet "Pacote #{pacote.nome} está problema." 
         }
       end
       ## Fim Informações do download
@@ -276,9 +271,10 @@ end
 def run_single_link(link)
   pacote = Pacote.new("SingleMode")
   pacote.prioridade = Prioridade::MUITO_ALTA
-  id_pacote = Banco.instance.save_pacote(pacote)
+  pacote.save
   down = Link.new link
-  down.id_link = Banco.instance.save_links([link], id_pacote)[0]
+  #  down.id_link = Banco.instance.save_links([link], pacote.id_pacote)[0]
+  down.id_link = pacote.save_links(links)
   
   down.test
   down.download
@@ -287,6 +283,12 @@ end
 # O método main do programa
 begin
   ajuda
+#  ARGV.each do |a|
+#    if a =~ /debug/i
+#      $DEBUG = true
+#      break
+#    end
+#  end
   if ARGV[0] == "-1"
     unless ARGV[1] == ""
       run_single_link ARGV[1].strip
@@ -310,16 +312,16 @@ begin
     exit!
   end
 rescue Interrupt
-  interrupt
+  Core.interrupt
 rescue SystemExit => err
   evento = "O programa foi encerrado."
-  to_log evento
-  RSTwitter.tweet evento  
+  Verbose.to_log evento
+  TwitterBot.tweet evento  
   exit!
 rescue NoMethodError => err
-  to_log "FATAL: Não há método definido.\nBacktrace: #{err.backtrace.join("\n")}"
+  Verbose.to_log "FATAL: Não há método definido.\nBacktrace: #{err.backtrace.join("\n")}"
   exit!
 rescue Exception => err
-  to_log err
+  Verbose.to_log err
   exit!
 end

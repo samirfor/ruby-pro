@@ -1,10 +1,16 @@
+## Deprecated
+
+
+
+require "src/historico"
+
 twitter = true
 begin
   require 'rubygems'
   require 'twitter' # gem install twitter
 rescue Exception => e
   twitter = false
-  to_log "Não foi possível carregar o twitter: #{e.message}"
+  Historico.to_log "Não foi possível carregar o twitter: #{e.message}"
 end
 
 #
