@@ -36,6 +36,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/dvd.o \
 	${OBJECTDIR}/client.o \
 	${OBJECTDIR}/strings.o \
+	${OBJECTDIR}/validations.o \
 	${OBJECTDIR}/main.o
 
 # C Compiler Flags
@@ -86,6 +87,11 @@ ${OBJECTDIR}/strings.o: nbproject/Makefile-${CND_CONF}.mk strings.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/strings.o strings.c
+
+${OBJECTDIR}/validations.o: nbproject/Makefile-${CND_CONF}.mk validations.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/validations.o validations.c
 
 ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.c 
 	${MKDIR} -p ${OBJECTDIR}

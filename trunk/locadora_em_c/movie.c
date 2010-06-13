@@ -13,6 +13,7 @@
 #include "status.h"
 #include "movie.h"
 #include "strings.h"
+#include "validations.h"
 
 Movie * movie_malloc() {
     Movie *movie = malloc(sizeof (Movie));
@@ -398,16 +399,19 @@ void list_all_movies() {
 }
 
 void form_movie(Movie *movie) {
-    char input[100] = "";
-    
+    char *input;
+
     printf("Titulo: ");
     read_string(movie->title);
     printf("Genero: ");
     read_string(movie->genere);
+    input = input_malloc();
     do {
         printf("Duracao em minutos: ");
         read_string(input);
     } while (!validate_number_int(input));
+    movie->lenght = atoi(input);
+    free(input);
 }
 
 void form_movie_sort() {
@@ -437,7 +441,6 @@ void form_movie_sort() {
 
 void form_movie_insert() {
     Movie *movie;
-    char input[100] = "";
 
     movie = movie_malloc();
 
@@ -473,7 +476,7 @@ void form_movie_update() {
     } while (*input != '1' && *input != '2');
     switch (*input) {
         case '1':
-            id = check_by_id(input);
+            id = check_by_id_movie(input);
             if (!id) {
                 free(movie);
                 free(input);
@@ -486,6 +489,7 @@ void form_movie_update() {
         case '2':
             if (!check_by_name(input)) {
                 free(movie);
+                free(input);
                 return;
             }
 
@@ -493,6 +497,7 @@ void form_movie_update() {
             if (movie->id == NON_EXIST) {
                 printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
                 free(movie);
+                free(input);
                 return;
             }
             list_movie_by_id(movie->id);
@@ -545,7 +550,7 @@ void form_movie_erase() {
     } while (*input != '1' && *input != '2');
     switch (*input) {
         case '1':
-            id = check_by_id(input);
+            id = check_by_id_movie(input);
             if (!id) {
                 free(movie);
                 return;
@@ -600,14 +605,14 @@ void form_movie_search() {
 
     movie = movie_malloc();
     input = input_malloc();
-    printf("=======\nPESQSUISANDO FILME: \n\n");
+    printf("=======\nPESQUISANDO FILME: \n\n");
     do {
         printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por titulo: ");
         read_string(input);
     } while (*input != '1' && *input != '2');
     switch (*input) {
         case '1':
-            id = check_by_id(input);
+            id = check_by_id_movie(input);
             if (!id) {
                 free(movie);
                 free(input);
@@ -619,6 +624,7 @@ void form_movie_search() {
         case '2':
             if (!check_by_name(input)) {
                 free(movie);
+                free(input);
                 return;
             }
 
@@ -626,6 +632,7 @@ void form_movie_search() {
             if (movie->id == NON_EXIST) {
                 printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
                 free(movie);
+                free(input);
                 return;
             }
             list_movie_by_id(movie->id);

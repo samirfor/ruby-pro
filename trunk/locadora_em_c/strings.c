@@ -33,7 +33,7 @@ char * input_malloc() {
     return input;
 }
 
-int check_by_id(char *input) {
+int check_by_id_client(char *input) {
     int id;
 
     printf("Qual ID? ");
@@ -43,7 +43,22 @@ int check_by_id(char *input) {
     if (id > 0 && client_index_exist(id)) {
         return id;
     } else {
-        printf(ID_NOT_FOUND_ERROR, __FILE__, "");
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "cliente");
+        return FALSE;
+    }
+}
+
+int check_by_id_movie(char *input) {
+    int id;
+
+    printf("Qual ID? ");
+    read_string(input);
+    id = atoi(input);
+    // Verificar se o ID existe
+    if (id > 0 && movie_index_exist(id)) {
+        return id;
+    } else {
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
         return FALSE;
     }
 }
@@ -67,15 +82,6 @@ int be_sure(char *input) {
     if (*input == 's' || *input == 'S') {
         return TRUE;
     } else {
-        return FALSE;
-    }
-}
-
-int validate_number_float(char *input) {
-    if (atof(input)) {
-        return TRUE;
-    } else {
-        printf("Voce nao digitou um valor valido.\n");
         return FALSE;
     }
 }

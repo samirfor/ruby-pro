@@ -17,7 +17,9 @@ extern char *read_string(char*);
 /* Declara dinâmicamente um input */
 extern char * input_malloc();
 /* Validação do que foi digitado pelo usuário. */
-extern int check_by_id(char *);
+extern int check_by_id_client(char *);
+/* Validação do que foi digitado pelo usuário. */
+extern int check_by_id_movie(char *);
 /* Validação do que foi digitado pelo usuário. */
 extern int check_by_name(char *);
 /* Diálogo de confirmação. */

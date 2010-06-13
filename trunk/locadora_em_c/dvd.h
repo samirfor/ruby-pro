@@ -15,16 +15,18 @@
 #ifndef _DVD_H
 #define	_DVD_H
 
+#include <time.h>
+
 /***********************************
  * External Variables References
  ************************************/
 
 typedef struct {
     int id;
-    int id_dvd;
+    int id_movie;
     char avaliable;
     double price_location;
-    struct tm buy_date;
+    struct tm *buy_date;
 } DVD;
 
 /***************************************

@@ -12,6 +12,7 @@
       <itemPath>movie.h</itemPath>
       <itemPath>status.h</itemPath>
       <itemPath>strings.h</itemPath>
+      <itemPath>validations.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Arquivos de código-fonte"
@@ -22,6 +23,7 @@
       <itemPath>main.c</itemPath>
       <itemPath>movie.c</itemPath>
       <itemPath>strings.c</itemPath>
+      <itemPath>validations.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Arquivos de recurso"
@@ -32,6 +34,7 @@
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>LICENSE</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>
