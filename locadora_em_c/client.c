@@ -80,21 +80,8 @@ Client * search_client_by_name(char *name) {
         fread(client, sizeof (Client), 1, file_stream);
     }
 
-    /*
-     * Não achou pelo nome exato, então tentaremos uma substring
-     */
-
-    /*
-        fseek(file_stream, 0, SEEK_SET);
-        fread(client, sizeof (Client), 1, file_stream);
-        while (!feof(file_stream)) {
-            if (strstr(client->name, name)) {
-                fclose(file_stream);
-                return client;
-            }
-            fread(client, sizeof (Client), 1, file_stream);
-        }
-     */
+    // Não achou pelo nome exato, então tentaremos uma substring
+    
     regex_t reg;
 
     if (regcomp(&reg, name, REG_EXTENDED | REG_NOSUB | REG_ICASE)) {
@@ -491,7 +478,7 @@ void form_client_update() {
     } while (*input != '1' && *input != '2');
     switch (*input) {
         case '1':
-            id = check_by_id(input);
+            id = check_by_id_client(input);
             if (!id) {
                 free(client);
                 free(input);
@@ -504,6 +491,7 @@ void form_client_update() {
         case '2':
             if (!check_by_name(input)) {
                 free(client);
+                free(input);
                 return;
             }
 
@@ -511,6 +499,7 @@ void form_client_update() {
             if (client->id == NON_EXIST) {
                 printf(NAME_NOT_FOUND_ERROR, __FILE__, "cliente");
                 free(client);
+                free(input);
                 return;
             }
             list_client_by_id(client->id);
@@ -556,6 +545,7 @@ void form_client_erase() {
     }
 
     client = client_malloc();
+    input = input_malloc();
     printf("=======\nREMOVENDO CLIENTE: \n\n");
     do {
         printf("Digite [1] para remover por ID ou [2] para remover por nome: ");
@@ -563,9 +553,10 @@ void form_client_erase() {
     } while (*input != '1' && *input != '2');
     switch (*input) {
         case '1':
-            id = check_by_id(input);
+            id = check_by_id_client(input);
             if (!id) {
                 free(client);
+                free(input);
                 return;
             }
 
@@ -575,6 +566,7 @@ void form_client_erase() {
         case '2':
             if (!check_by_name(input)) {
                 free(client);
+                free(input);
                 return;
             }
 
@@ -582,6 +574,7 @@ void form_client_erase() {
             if (client->id == NON_EXIST) {
                 printf(NAME_NOT_FOUND_ERROR, __FILE__, "cliente");
                 free(client);
+                free(input);
                 return;
             }
             list_client_by_id(client->id);
@@ -592,6 +585,7 @@ void form_client_erase() {
     if (!be_sure(input)) {
         printf("Abortando remocao de cliente.\n\n");
         free(client);
+        free(input);
         return;
     }
 
@@ -603,6 +597,7 @@ void form_client_erase() {
     }
     printf("=======\n");
     free(client);
+    free(input);
 }
 
 void form_client_search() {
@@ -618,14 +613,14 @@ void form_client_search() {
 
     client = client_malloc();
     input = input_malloc();
-    printf("=======\nPESQSUISANDO CLIENTE: \n\n");
+    printf("=======\nPESQUISANDO CLIENTE: \n\n");
     do {
         printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por nome: ");
         read_string(input);
     } while (*input != '1' && *input != '2');
     switch (*input) {
         case '1':
-            id = check_by_id(input);
+            id = check_by_id_client(input);
             if (!id) {
                 free(client);
                 free(input);
@@ -637,6 +632,7 @@ void form_client_search() {
         case '2':
             if (!check_by_name(input)) {
                 free(client);
+                free(input);
                 return;
             }
 
@@ -644,6 +640,7 @@ void form_client_search() {
             if (client->id == NON_EXIST) {
                 printf(NAME_NOT_FOUND_ERROR, __FILE__, "cliente");
                 free(client);
+                free(input);
                 return;
             }
             list_client_by_id(client->id);
