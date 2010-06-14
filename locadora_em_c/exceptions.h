@@ -1,6 +1,5 @@
 /* 
  * File:   exceptions.h
- * Author: samir
  *
  * Created on 31 de Maio de 2010, 03:12
  */

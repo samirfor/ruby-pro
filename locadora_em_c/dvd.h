@@ -1,6 +1,5 @@
 /* 
  * File:   dvd.h
- * Author: samir
  *
  * Created on 5 de Maio de 2010, 16:24
  *

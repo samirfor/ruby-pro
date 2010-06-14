@@ -1,6 +1,5 @@
 /* 
  * File:   strings.h
- * Author: samir
  *
  * Created on 26 de Maio de 2010, 14:35
  */
@@ -12,7 +11,7 @@
  * External Function References
  ************************************/
 
-/*  */
+/* Ler do teclado */
 extern char *read_string(char*);
 /* Declara dinâmicamente um input */
 extern char * input_malloc();

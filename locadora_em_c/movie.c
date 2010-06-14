@@ -1,6 +1,5 @@
 /* 
  * File:   movie.c
- * Author: samir
  *
  * Created on 5 de Maio de 2010, 16:22
  */
@@ -355,9 +354,9 @@ Movie * sort_movie_by_title() {
 }
 
 void puts_movie(Movie * movie) {
-    printf("ID: %d\n", movie->id);
-    printf("Titulo: %s\nGenero: %s\n", movie->title, movie->genere);
-    printf("Duracao em minutos: %d\n", movie->lenght);
+    printf("%d  ", movie->id);
+    printf("%s \t %s \t ", movie->title, movie->genere);
+    printf("%d\n", movie->lenght);
 }
 
 void list_movie_by_id(int id) {
@@ -371,6 +370,7 @@ void list_movie_by_id(int id) {
         free(movie);
         return;
     } else {
+        printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
         puts_movie(movie);
     }
     free(movie);
@@ -388,6 +388,7 @@ void list_all_movies() {
 
     movie = movie_malloc();
     printf("=======\nLISTA DE TODOS OS FILMES: \n\n");
+    printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
     fread(movie, sizeof (Movie), 1, file_stream);
     while (!feof(file_stream)) {
         puts_movie(movie);
@@ -431,7 +432,8 @@ void form_movie_sort() {
         return;
     }
 
-    printf("=======\nLISTA DE TODOS OS FILMES ORDENADOS POR NOME: \n\n");
+    printf("=======\nLISTA DE TODOS OS FILMES ORDENADOS POR TITULO: \n\n");
+    printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
     for (i = 0; i < size; i++) {
         puts_movie(vetor + i);
     }
@@ -615,8 +617,6 @@ Movie * validate_movie_search(char *input) {
                 movie->id = NON_EXIST;
                 return movie;
             }
-
-            list_movie_by_id(id);
             movie = search_movie_by_id(id);
             break;
         case '2':
@@ -624,13 +624,11 @@ Movie * validate_movie_search(char *input) {
                 movie->id = NON_EXIST;
                 return movie;
             }
-
             movie = search_movie_by_title(input);
             if (movie->id == NON_EXIST) {
                 printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
                 return movie;
             }
-            list_movie_by_id(movie->id);
             break;
     }
     return movie;
@@ -652,6 +650,7 @@ void form_movie_search() {
     if (movie->id == NON_EXIST) {
         printf("%s: Nada encontrado.\n", __FILE__);
     } else {
+        printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
         puts_movie(movie);
     }
     printf("=======\n");

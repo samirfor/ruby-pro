@@ -1,6 +1,5 @@
 /* 
  * File:   main.c
- * Author: alunos
  *
  * Created on 26 de Abril de 2010, 14:58
  */
@@ -12,6 +11,7 @@
 #include "movie.h"
 #include "location.h"
 #include "dvd.h"
+#include "status.h"
 
 /*
 Copyright (C) 2010 Samir C. Costa <samirfor@gmail.com>
@@ -77,7 +77,7 @@ void main_client() {
 }
 
 void main_movie() {
-    char opcao = -1;
+    char opcao = NON_EXIST;
 
     do {
         do {
@@ -86,7 +86,7 @@ void main_movie() {
             printf("2 - Inserir\n");
             printf("3 - Alterar\n");
             printf("4 - Deletar\n");
-            printf("5 - Listar ordenado por nome\n");
+            printf("5 - Listar ordenado por titulo\n");
             printf("6 - Pesquisar\n");
             printf("0 - Voltar\n");
             printf("++++++\nOpcao: ");
@@ -123,7 +123,7 @@ void main_movie() {
 }
 
 void main_dvd() {
-    char opcao = -1;
+    char opcao = NON_EXIST;
 
     do {
         do {
@@ -207,11 +207,11 @@ void main_location() {
 }
 
 int main() {
-    char opcao = -1;
+    char opcao = NON_EXIST;
 
     printf("::: LoC LoCadora :::\n\n");
     printf(">>> Criado por Samir <samirfor@gmail.com> e\n");
-    printf(">>> <regflafil@hotmail.com>\n");
+    printf(">>> Regio <regflafil@hotmail.com>\n");
     printf("Este programa esta sob GNU General Public License <http://www.gnu.org/licenses/>\n\n");
 
     do {
@@ -223,13 +223,13 @@ int main() {
             printf("4 - DVDs\n");
             printf("0 - Sair\n");
             printf("++++++\nOpcao: ");
-
+				opcao = '5';
             read_string(&opcao);
 
             switch (opcao) {
                 case '0':
                     printf("Good bye! Have a nice day.\n");
-                    return EXIT_SUCCESS;
+                    return 0;
                 case '1':
                     main_client();
                     break;
