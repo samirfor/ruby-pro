@@ -10,6 +10,8 @@
 #include "client.h"
 #include "strings.h"
 #include "movie.h"
+#include "location.h"
+#include "dvd.h"
 
 /*
 Copyright (C) 2010 Samir C. Costa <samirfor@gmail.com>
@@ -120,16 +122,59 @@ void main_movie() {
     return;
 }
 
+void main_dvd() {
+    char opcao = -1;
+
+    do {
+        do {
+            printf("++ MENU DVD ++\n");
+            printf("1 - Listar\n");
+            printf("2 - Inserir\n");
+            printf("3 - Alterar\n");
+            printf("4 - Deletar\n");
+            printf("5 - Pesquisar\n");
+            printf("0 - Voltar\n");
+            printf("++++++\nOpcao: ");
+
+            read_string(&opcao);
+
+            switch (opcao) {
+                case '0':
+                    return;
+                case '1':
+                    list_all_dvds();
+                    break;
+                case '2':
+                    form_dvd_insert();
+                    break;
+                case '3':
+                    form_dvd_update();
+                    break;
+                case '4':
+                    form_dvd_erase();
+                    break;
+                case '5':
+                    form_dvd_search();
+                    break;
+                default:
+                    printf("Opcao invalida!\n");
+            }
+        } while (opcao != '0');
+    } while (opcao != '0');
+    return;
+}
+
 void main_location() {
     char opcao = -1;
 
     do {
         do {
             printf("++ MENU DE LOCACAO ++\n");
-            printf("1 - Locacao\n");
+            printf("1 - Nova\n");
             printf("2 - Devolucao\n");
-            printf("3 - Editar locacao\n");
-            printf("4 - Listar locacoes\n");
+            printf("3 - Editar\n");
+            printf("4 - Listar todas\n");
+            printf("5 - Pesquisar\n");
             printf("0 - Voltar\n");
             printf("++++++\nOpcao: ");
 
@@ -144,8 +189,14 @@ void main_location() {
                 case '2':
                     form_location_devolution();
                     break;
-                case '2':
-                    form_location_list();
+                case '3':
+                    form_location_update();
+                    break;
+                case '4':
+                    list_all_locations();
+                    break;
+                case '5':
+                    form_location_search();
                     break;
                 default:
                     printf("Opcao invalida!\n");
@@ -168,8 +219,8 @@ int main() {
             printf("++ MENU ++\n");
             printf("1 - Cliente\n");
             printf("2 - Filme\n");
-            printf("3 - DVD\n");
-            printf("4 - Locacao\n");
+            printf("3 - Locacao\n");
+            printf("4 - DVDs\n");
             printf("0 - Sair\n");
             printf("++++++\nOpcao: ");
 
@@ -186,10 +237,10 @@ int main() {
                     main_movie();
                     break;
                 case '3':
-                    main_dvd();
+                    main_location();
                     break;
                 case '4':
-                    main_location();
+                    main_dvd();
                     break;
                 default:
                     printf("Opcao invalida!\n");

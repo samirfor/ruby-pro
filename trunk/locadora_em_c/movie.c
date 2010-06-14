@@ -301,7 +301,7 @@ Movie * movie_file_to_a() {
 
     /* Antes de tudo, precisamos testar se há algum filme no arquivo */
     if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
+        printf(EMPTY_ERROR, __FILE__, "filme");
         return FALSE;
     }
 
@@ -382,7 +382,7 @@ void list_all_movies() {
 
     file_stream = fopen(MOVIES_FILEPATH, "rb");
     if (!file_stream) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
+        printf(EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
@@ -420,7 +420,7 @@ void form_movie_sort() {
 
     /* Antes de tudo, precisamos testar se há algum filme no arquivo */
     if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
+        printf(EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
@@ -463,7 +463,7 @@ void form_movie_update() {
 
     /* Antes de tudo, precisamos testar se há algum filme no arquivo */
     if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
+        printf(EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
@@ -538,11 +538,12 @@ void form_movie_erase() {
 
     /* Antes de tudo, precisamos testar se há algum filme no arquivo */
     if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
+        printf(EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
     movie = movie_malloc();
+    input = input_malloc();
     printf("=======\nREMOVENDO FILME: \n\n");
     do {
         printf("Digite [1] para remover por ID ou [2] para remover por titulo: ");
@@ -553,6 +554,7 @@ void form_movie_erase() {
             id = check_by_id_movie(input);
             if (!id) {
                 free(movie);
+                free(input);
                 return;
             }
 
@@ -562,6 +564,7 @@ void form_movie_erase() {
         case '2':
             if (!check_by_name(input)) {
                 free(movie);
+                free(input);
                 return;
             }
 
@@ -569,6 +572,7 @@ void form_movie_erase() {
             if (movie->id == NON_EXIST) {
                 printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
                 free(movie);
+                free(input);
                 return;
             }
             list_movie_by_id(movie->id);
@@ -579,6 +583,7 @@ void form_movie_erase() {
     if (!be_sure(input)) {
         printf("Abortando remocao de filme.\n\n");
         free(movie);
+        free(input);
         return;
     }
 
@@ -590,22 +595,15 @@ void form_movie_erase() {
     }
     printf("=======\n");
     free(movie);
+    free(input);
 }
 
-void form_movie_search() {
-    char *input;
+Movie * validate_movie_search(char *input) {
     Movie *movie;
     int id;
 
-    /* Antes de tudo, precisamos testar se há algum filme no arquivo */
-    if (movies_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "filme");
-        return;
-    }
-
     movie = movie_malloc();
-    input = input_malloc();
-    printf("=======\nPESQUISANDO FILME: \n\n");
+
     do {
         printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por titulo: ");
         read_string(input);
@@ -614,29 +612,47 @@ void form_movie_search() {
         case '1':
             id = check_by_id_movie(input);
             if (!id) {
-                free(movie);
-                free(input);
-                return;
+                movie->id = NON_EXIST;
+                return movie;
             }
 
             list_movie_by_id(id);
+            movie = search_movie_by_id(id);
             break;
         case '2':
             if (!check_by_name(input)) {
-                free(movie);
-                free(input);
-                return;
+                movie->id = NON_EXIST;
+                return movie;
             }
 
             movie = search_movie_by_title(input);
             if (movie->id == NON_EXIST) {
                 printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
-                free(movie);
-                free(input);
-                return;
+                return movie;
             }
             list_movie_by_id(movie->id);
             break;
+    }
+    return movie;
+}
+
+void form_movie_search() {
+    char *input;
+    Movie *movie;
+
+    /* Antes de tudo, precisamos testar se há algum filme no arquivo */
+    if (movies_file_is_empty()) {
+        printf(EMPTY_ERROR, __FILE__, "filme");
+        return;
+    }
+
+    input = input_malloc();
+    printf("\n=======\nPESQUISANDO FILME: \n\n");
+    movie = validate_movie_search(input);
+    if (movie->id == NON_EXIST) {
+        printf("%s: Nada encontrado.\n", __FILE__);
+    } else {
+        puts_movie(movie);
     }
     printf("=======\n");
     free(movie);

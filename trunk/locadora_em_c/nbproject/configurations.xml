@@ -5,6 +5,7 @@
                    displayName="Arquivos de cabeçalho"
                    projectFiles="true">
       <itemPath>client.h</itemPath>
+      <itemPath>cpf.h</itemPath>
       <itemPath>dvd.h</itemPath>
       <itemPath>exceptions.h</itemPath>
       <itemPath>location.h</itemPath>
@@ -18,6 +19,7 @@
                    displayName="Arquivos de código-fonte"
                    projectFiles="true">
       <itemPath>client.c</itemPath>
+      <itemPath>cpf.c</itemPath>
       <itemPath>dvd.c</itemPath>
       <itemPath>location.c</itemPath>
       <itemPath>main.c</itemPath>

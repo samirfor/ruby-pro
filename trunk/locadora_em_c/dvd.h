@@ -16,6 +16,7 @@
 #define	_DVD_H
 
 #include <time.h>
+#include "movie.h"
 
 /***********************************
  * External Variables References
@@ -26,7 +27,7 @@ typedef struct {
     int id_movie;
     char avaliable;
     double price_location;
-    struct tm *buy_date;
+    time_t buy_date;
 } DVD;
 
 /***************************************
@@ -45,6 +46,8 @@ typedef struct {
 extern int dvd_index_exist(int);
 /* Search into a vector of dvd and returns */
 extern DVD * search_dvd_by_id(int);
+/* Procura no arquivo se há algum dvd referente ao filme espcificado. */
+extern DVD * search_dvd_by_movie(Movie *movie, char force_avaliable);
 /* Retorna um número id disponível */
 extern int dvd_first_index_avaliable();
 /* Imprime na tela um dvd de forma humanamente legível */
@@ -72,7 +75,7 @@ extern int update_dvd(DVD*);
 /* Remove um dvd no arquivo */
 extern int erase_dvd(DVD*);
 /* Formulário com os atributos do dvd */
-extern void form_dvd(DVD*);
+extern int form_dvd(DVD*, char *input);
 /* Formulário de inserção de dvd */
 extern void form_dvd_insert();
 /* Formulário de atualização de dvd */

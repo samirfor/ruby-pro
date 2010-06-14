@@ -31,6 +31,7 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/cpf.o \
 	${OBJECTDIR}/location.o \
 	${OBJECTDIR}/movie.o \
 	${OBJECTDIR}/dvd.o \
@@ -62,6 +63,11 @@ LDLIBSOPTIONS=
 dist/Release/GNU-Linux-x86/locadora_em_c: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/locadora_em_c ${OBJECTFILES} ${LDLIBSOPTIONS} 
+
+${OBJECTDIR}/cpf.o: nbproject/Makefile-${CND_CONF}.mk cpf.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/cpf.o cpf.c
 
 ${OBJECTDIR}/location.o: nbproject/Makefile-${CND_CONF}.mk location.c 
 	${MKDIR} -p ${OBJECTDIR}

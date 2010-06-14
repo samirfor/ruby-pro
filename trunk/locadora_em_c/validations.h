@@ -16,6 +16,8 @@
 extern int validate_number_float(char *input);
 /* Valida um integer capturado da entrada padrão. */
 extern int validate_number_int(char *input);
+/* Valida um número ID natural capturado da entrada padrão. */
+extern int validate_id(char *input);
 
 #endif	/* _VALIDATIONS_H */
 

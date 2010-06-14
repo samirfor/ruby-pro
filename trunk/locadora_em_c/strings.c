@@ -12,6 +12,7 @@
 #include "strings.h"
 #include "exceptions.h"
 #include "status.h"
+#include "validations.h"
 
 /*
  * 
@@ -36,8 +37,10 @@ char * input_malloc() {
 int check_by_id_client(char *input) {
     int id;
 
-    printf("Qual ID? ");
-    read_string(input);
+    do {
+        printf("Qual ID? ");
+        read_string(input);
+    } while (!validate_id(input));
     id = atoi(input);
     // Verificar se o ID existe
     if (id > 0 && client_index_exist(id)) {
@@ -48,11 +51,30 @@ int check_by_id_client(char *input) {
     }
 }
 
+int check_by_id_dvd(char *input) {
+    int id;
+
+    do {
+        printf("Qual ID? ");
+        read_string(input);
+    } while (!validate_id(input));
+    id = atoi(input);
+    // Verificar se o ID existe
+    if (id > 0 && dvd_index_exist(id)) {
+        return id;
+    } else {
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "DVD");
+        return FALSE;
+    }
+}
+
 int check_by_id_movie(char *input) {
     int id;
 
-    printf("Qual ID? ");
-    read_string(input);
+    do {
+        printf("Qual ID? ");
+        read_string(input);
+    } while (!validate_id(input));
     id = atoi(input);
     // Verificar se o ID existe
     if (id > 0 && movie_index_exist(id)) {
@@ -85,3 +107,29 @@ int be_sure(char *input) {
         return FALSE;
     }
 }
+
+int input_overflow(char *string, char *input) {
+    if (strlen(input) > strlen(string))
+        return TRUE;
+    else
+        return FALSE;
+}
+
+/*
+void puts_timestamp(int day, int month, int year) {
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    // get current timeinfo and modify it to the user's choice
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    timeinfo->tm_year = year - 1900;
+    timeinfo->tm_mon = month - 1;
+    timeinfo->tm_mday = day;
+
+    // call mktime: timeinfo->tm_wday will be set
+    mktime(timeinfo);
+
+    printf("%d/%d/%d", timeinfo->tm_mday, timeinfo->tm_mon, timeinfo->tm_year);
+}
+ */
