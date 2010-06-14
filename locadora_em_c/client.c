@@ -9,10 +9,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <regex.h>
+#include <time.h>
 #include "strings.h"
 #include "client.h"
 #include "status.h"
 #include "exceptions.h"
+#include "validations.h"
 
 /*
  * 
@@ -31,11 +33,11 @@ Client * client_malloc() {
 
 void client_initialize(Client * client) {
     client->id = NON_EXIST;
-    strcpy(client->CPF, "");
-    strcpy(client->RG, "");
-    strcpy(client->birth_date, "");
+    strcpy(client->CPF, "0");
+    strcpy(client->RG, "0");
+    client->birth_date = time(NULL);
     strcpy(client->name, "initialize");
-    strcpy(client->phone, "");
+    strcpy(client->phone, "0");
 }
 
 Client * search_client_by_id(int id) {
@@ -81,7 +83,7 @@ Client * search_client_by_name(char *name) {
     }
 
     // Não achou pelo nome exato, então tentaremos uma substring
-    
+
     regex_t reg;
 
     if (regcomp(&reg, name, REG_EXTENDED | REG_NOSUB | REG_ICASE)) {
@@ -283,7 +285,7 @@ void copy_client(Client * dest, Client * src) {
     strcpy(dest->phone, src->phone);
     strcpy(dest->RG, src->RG);
     strcpy(dest->CPF, src->CPF);
-    strcpy(dest->birth_date, src->birth_date);
+    dest->birth_date = src->birth_date;
 }
 
 int get_size_clients() {
@@ -306,7 +308,7 @@ Client * client_file_to_a() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
+        printf(EMPTY_ERROR, __FILE__, "cliente");
         return FALSE;
     }
 
@@ -360,9 +362,20 @@ Client * sort_client_by_name() {
 }
 
 void puts_client(Client * client) {
+    struct tm * timeinfo;
+    char date[11];
+
     printf("ID: %d\n", client->id);
     printf("Nome: %s\nCPF: %s\nRG: %s\n", client->name, client->CPF, client->RG);
-    printf("Fone: %s\nData de nascimento: %s\n\n", client->phone, client->birth_date);
+    printf("Fone: %s\n", client->phone);
+    time(&(client->birth_date));
+    timeinfo = localtime(&(client->birth_date));
+    strftime(date, 11, "%d/%m/%Y", timeinfo);
+    printf("Data de nascimento: %s\n\n", date);
+}
+
+void puts_client_short(Client * client) {
+    printf("Cliente [%d]: %s", client->id, client->name);
 }
 
 void list_client_by_id(int id) {
@@ -387,7 +400,7 @@ void list_all_clients() {
 
     file_stream = fopen(CLIENTS_FILEPATH, "rb");
     if (!file_stream) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
+        printf(EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 
@@ -404,16 +417,82 @@ void list_all_clients() {
 }
 
 void form_client(Client *client) {
+    char *input, do_again_flag;
+    int date[3];
+    struct tm * timeinfo;
+
+    input = input_malloc();
     printf("Nome: ");
     read_string(client->name);
+    /*
+        do {
+            printf("CPF: ");
+            read_string(input);
+        } while (!validate_cpf(input));
+        strcpy(client->CPF, input);
+     */
     printf("CPF: ");
     read_string(client->CPF);
     printf("RG: ");
     read_string(client->RG);
     printf("Fone: ");
     read_string(client->phone);
-    printf("Data de nascimento: ");
-    read_string(client->birth_date);
+    do {
+        printf("Data de nascimento: ");
+        do {
+            do_again_flag = FALSE;
+            printf("\tDia: ");
+            read_string(input);
+            if (!validate_number_int(input)) {
+                do_again_flag = TRUE;
+                continue;
+            }
+            date[0] = atoi(input);
+            if (date[0] < 0 || date[0] > 31) {
+                do_again_flag = TRUE;
+                continue;
+            }
+        } while (do_again_flag);
+        do {
+            do_again_flag = FALSE;
+            printf("\tMes: ");
+            read_string(input);
+            if (!validate_number_int(input)) {
+                do_again_flag = TRUE;
+                continue;
+            }
+            date[1] = atoi(input);
+            if (date[1] < 0 || date[1] > 12) {
+                do_again_flag = TRUE;
+                continue;
+            }
+        } while (do_again_flag);
+        do {
+            do_again_flag = FALSE;
+            printf("\tAno: ");
+            read_string(input);
+            if (!validate_number_int(input)) {
+                do_again_flag = TRUE;
+                continue;
+            }
+            date[0] = atoi(input);
+            if (date[2] < 1900) {
+                do_again_flag = TRUE;
+                continue;
+            }
+        } while (do_again_flag);
+        if (!validate_date(date[0], date[1], date[2])) {
+            printf("%s: Data invalida.", __FILE__);
+            do_again_flag = TRUE;
+            continue;
+        }
+    } while (do_again_flag);
+    time(&(client->birth_date));
+    timeinfo = localtime(&(client->birth_date));
+    timeinfo->tm_year = date[2] - 1900;
+    timeinfo->tm_mon = date[1] - 1;
+    timeinfo->tm_mday = date[0];
+    client->birth_date = mktime(timeinfo);
 }
 
 void form_client_sort() {
@@ -422,7 +501,7 @@ void form_client_sort() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
+        printf(EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 
@@ -465,7 +544,7 @@ void form_client_update() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
+        printf(EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 
@@ -540,7 +619,7 @@ void form_client_erase() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
+        printf(EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 
@@ -607,7 +686,7 @@ void form_client_search() {
 
     /* Antes de tudo, precisamos testar se há algum cliente no arquivo */
     if (clients_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "cliente");
+        printf(EMPTY_ERROR, __FILE__, "cliente");
         return;
     }
 

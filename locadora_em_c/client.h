@@ -24,7 +24,7 @@ typedef struct {
     char RG[100];
     char CPF[100];
     char phone[100];
-    char birth_date[100];
+    time_t birth_date;
 } Client;
 
 /***************************************
@@ -50,9 +50,11 @@ extern int client_first_index_avaliable();
 /* Ordenar arquivo cliente por nome  */
 extern Client * sort_client_by_name();
 /* Imprime na tela um cliente de forma humanamente legível */
-extern void puts_client(Client*);
+extern void puts_client(Client *client);
+/* Imprime na tela um cliente apenas informações fundamentais */
+extern void puts_client_short(Client *client);
 /* Remove o lixo da estrutura */
-extern void client_initialize(Client*);
+extern void client_initialize(Client *client);
 /* Declara dinâmicamente um cliente */
 extern Client * client_malloc();
 /* Verifica se o arquivo CLIENTS_FILEPATH está vazio */

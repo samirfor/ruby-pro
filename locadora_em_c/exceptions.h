@@ -18,7 +18,7 @@
 #define CREATE_FILE_ERROR "%s: Nao foi possivel criar \"%s\"\n"
 #define ID_NOT_FOUND_ERROR "%s: Nao ha %s cadastrado com esse ID.\n"
 #define NAME_NOT_FOUND_ERROR "%s: Nao ha %s cadastrado com esse nome.\n"
-#define FILE_EMPTY_ERROR "%s: Nao ha %s cadastrado.\n"
+#define EMPTY_ERROR "%s: Nao ha %s cadastrado.\n"
 
 #endif	/* _EXCEPTIONS_H */
 

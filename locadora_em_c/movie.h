@@ -62,6 +62,8 @@ extern Movie * movie_file_to_a();
 extern void copy_movie(Movie* dest, Movie* src);
 /* Ver a quantidade de filmes no arquivo. */
 extern int get_size_movies();
+/* Subformulário para filme */
+extern Movie * validate_movie_search(char *input);
 /* Lista todos os filmes */
 extern void list_all_movies();
 /* Lista um filme identificado pelo id */

@@ -15,6 +15,8 @@
 #include "location.h"
 #include "client.h"
 #include "movie.h"
+#include "dvd.h"
+#include "validations.h"
 
 Location * location_malloc() {
     Location *location = malloc(sizeof (Location));
@@ -28,11 +30,31 @@ Location * location_malloc() {
 }
 
 void location_initialize(Location * location) {
-    time_t t = time(NULL);
+    int i;
 
     location->id = NON_EXIST;
     location->id_client = NON_EXIST;
-    location->date = localtime(&t);
+    location->date = time(NULL);
+    location->amount_dvds = 0;
+    for (i = 0; i < ITEM_SIZE; i++) {
+        location->dvds[i] = NON_EXIST;
+    }
+}
+
+Location_array * location_array_malloc() {
+    Location_array *array = malloc(sizeof (Location_array));
+
+    if (!array) {
+        printf(ALLOC_ERROR, __FILE__);
+        exit(EXIT_FAILURE);
+    }
+    location_array_initialize(array);
+    return array;
+}
+
+void location_array_initialize(Location_array * array) {
+    array->size = 0;
+    array->locations = NULL;
 }
 
 Location * search_location_by_id(int id) {
@@ -58,11 +80,10 @@ Location * search_location_by_id(int id) {
     return location;
 }
 
-/*
-
-Location * search_location_by_client(Client * client) {
+Location_array * search_location_by_client(int id_client) {
     FILE *file_stream = NULL;
     Location *location;
+    Location_array *array;
 
     file_stream = fopen(LOCATIONS_FILEPATH, "rb");
     if (!file_stream) {
@@ -70,42 +91,24 @@ Location * search_location_by_client(Client * client) {
         exit(EXIT_FAILURE);
     }
     location = location_malloc();
+    array = location_array_malloc();
     fread(location, sizeof (Location), 1, file_stream);
     while (!feof(file_stream)) {
-        if (client->id == location->id_client) {
-            fclose(file_stream);
-            return location;
+        if (location->id_client == id_client) {
+            array->size++;
+            array->locations = (Location*) realloc(array->locations, array->size * sizeof (Location));
+            if (array->locations == NULL) {
+                printf("%s: Erro (re)alocando memoria.\n", __FILE__);
+                exit(EXIT_FAILURE);
+            }
+            copy_location(array->locations + (array->size - 1), location);
         }
         fread(location, sizeof (Location), 1, file_stream);
     }
-
-    // Não achou pelo nome exato, então tentaremos uma substring
-
-    regex_t reg;
-
-    if (regcomp(&reg, name, REG_EXTENDED | REG_NOSUB | REG_ICASE)) {
-        fprintf(stderr, "%s: ERRO na compilacao da expressao regular.", __FILE__);
-        fclose(file_stream);
-        location->id = NON_EXIST;
-        return location;
-    }
-
-    fseek(file_stream, 0, SEEK_SET);
-    fread(location, sizeof (Location), 1, file_stream);
-    while (!feof(file_stream)) {
-        if (!(regexec(&reg, location->name, 0, (regmatch_t *) NULL, 0))) {
-            fclose(file_stream);
-            return location;
-        }
-        fread(location, sizeof (Location), 1, file_stream);
-    }
-
-    // Nada foi encontrado
     fclose(file_stream);
-    location->id = NON_EXIST;
-    return location;
+    free(location);
+    return array;
 }
- */
 
 int locations_file_is_empty() {
     FILE *file_stream = NULL;
@@ -131,6 +134,17 @@ int location_index_exist(int index) {
     }
     free(location);
     return TRUE;
+}
+
+int index_of_dvd_item(Location *location, int dvd_id) {
+    int i;
+
+    for (i = 0; i < ITEM_SIZE; i++) {
+        if (location->dvds[i] == dvd_id) {
+            return i;
+        }
+    }
+    return NON_EXIST;
 }
 
 int location_first_index_avaliable() {
@@ -278,21 +292,15 @@ int erase_location(Location *location) {
 }
 
 void copy_location(Location * dest, Location * src) {
+    int i;
+
     dest->id = src->id;
     dest->amount_dvds = src->amount_dvds;
     dest->id_client = src->id_client;
-    dest->date->tm_gmtoff = src->date->tm_gmtoff;
-    dest->date->tm_hour = src->date->tm_hour;
-    dest->date->tm_isdst = src->date->tm_isdst;
-    dest->date->tm_mday = src->date->tm_mday;
-    dest->date->tm_min = src->date->tm_min;
-    dest->date->tm_mon = src->date->tm_mon;
-    dest->date->tm_sec = src->date->tm_sec;
-    dest->date->tm_wday = src->date->tm_wday;
-    dest->date->tm_yday = src->date->tm_yday;
-    dest->date->tm_year = src->date->tm_year;
-    strcpy(dest->date->tm_zone, src->date->tm_zone);
-    dest->dvds = src->dvds;
+    dest->date = src->date;
+    for (i = 0; i < ITEM_SIZE; i++) {
+        dest->dvds[i] = src->dvds[i];
+    }
 }
 
 int get_size_locations() {
@@ -315,7 +323,7 @@ Location * location_file_to_a() {
 
     /* Antes de tudo, precisamos testar se há alguma locação no arquivo */
     if (locations_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "locacao");
+        printf(EMPTY_ERROR, __FILE__, "locacao");
         return FALSE;
     }
 
@@ -345,18 +353,127 @@ Location * location_file_to_a() {
     return vetor;
 }
 
+int items_lenght(Location *location) {
+    int i, count = 0;
+    for (i = 0; i < ITEM_SIZE; i++) {
+        if (location->dvds[i] == NON_EXIST) {
+            return count;
+        }
+        count++;
+    }
+    return count;
+}
+
+int items_is_full(Location *location) {
+    if (items_lenght(location) >= ITEM_SIZE) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+int items_is_empty(Location *location) {
+    if (items_lenght(location) == 0) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+int first_item_slot_avaliable(Location *location) {
+    int i;
+    for (i = 0; i < ITEM_SIZE; i++) {
+        if (location->dvds[i] == NON_EXIST) {
+            return i;
+        }
+    }
+    return NON_EXIST;
+}
+
+void puts_list_all_items(Location *location) {
+    Movie * movie;
+    DVD *dvd;
+    int i;
+    double subtotal = 0.0;
+    time_t devolution_time;
+    struct tm * timeinfo;
+    char input[11];
+
+    movie = movie_malloc();
+    dvd = dvd_malloc();
+    printf("------ Item | No. DVD | Filme | Data de entrega | Valor ------\n");
+    for (i = 0; i < location->amount_dvds; i++) {
+        printf("%d  ", i + 1);
+        movie = search_movie_by_id(location->dvds[i]);
+        printf("%d  %s\t", location->dvds[i], movie->title);
+        dvd = search_dvd_by_id(location->dvds[i]);
+
+        // Calcula data de entrega
+        devolution_time += 60 * 60 * 24 * (3); // dias
+        timeinfo = localtime(&devolution_time);
+        strftime(input, 11, "%d/%m/%Y\t", timeinfo);
+
+        printf("R$ %.2lf\n", dvd->price_location);
+        subtotal += dvd->price_location;
+    }
+    printf("------ Total = R$ %.2lf ------\n", subtotal);
+    free(movie);
+    free(dvd);
+}
+
+void puts_single_item(Location *location, int item) {
+    Movie * movie;
+    DVD *dvd;
+    time_t devolution_time;
+    struct tm * timeinfo;
+    char input[11];
+
+    movie = movie_malloc();
+    dvd = dvd_malloc();
+    printf("------ Item | No. DVD | Filme | Data de entrega | Valor ------\n");
+    printf("%d  ", item);
+    movie = search_movie_by_id(location->dvds[item - 1]);
+    printf("%d  %s\t", location->dvds[item - 1], movie->title);
+    dvd = search_dvd_by_id(location->dvds[item - 1]);
+
+    // Calcula data de entrega
+    devolution_time += 60 * 60 * 24 * (3); // dias
+    timeinfo = localtime(&devolution_time);
+    strftime(input, 11, "%d/%m/%Y\t", timeinfo);
+
+    printf("R$ %.2lf\n", dvd->price_location);
+
+    free(movie);
+    free(dvd);
+}
+
 void puts_location(Location * location) {
     Client * client;
-    Movie * movie;
-    int i;
 
     client = search_client_by_id(location->id);
-    printf("ID: %d\n", location->id);
-    printf("Nome do cliente: %s\n", client->name);
-    printf("------ No. DVD\t | \tFilme ------\n");
-    for (i = 0; i < location->amount_dvds; i++) {
-        movie = search_movie_by_id((location->dvds + i)->id_movie);
-        printf("%d\t%s\n", (location->dvds + i)->id, movie->title);
+    printf("ID da locacao: %d\n", location->id);
+    printf("Cliente [%d]: %s\n", client->id, client->name);
+    puts_list_all_items(location);
+}
+
+void puts_location_short(Location * location) {
+    Client * client;
+    Movie *movie;
+    int i, size_items;
+
+    client = search_client_by_id(location->id);
+    printf("ID da locacao: %d\n", location->id);
+    printf("Cliente [%d]: %s\n", client->id, client->name);
+    printf("Filmes locados: ");
+    size_items = items_lenght(location);
+    movie = movie_malloc();
+    for (i = 0; i < size_items; i++) {
+        movie = search_movie_by_id(location->dvds[i]);
+        if (i == size_items - 1) {
+            printf("%s", movie->title);
+        } else {
+            printf("%s, ", movie->title);
+        }
     }
 }
 
@@ -382,15 +499,15 @@ void list_all_locations() {
 
     file_stream = fopen(LOCATIONS_FILEPATH, "rb");
     if (!file_stream) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "locacao");
+        printf(EMPTY_ERROR, __FILE__, "locacao");
         return;
     }
 
     location = location_malloc();
-    printf("=======\nLISTA DE TODOS OS LOCACOES: \n\n");
+    printf("=======\nLISTA DE LOCACOES: \n\n");
     fread(location, sizeof (Location), 1, file_stream);
     while (!feof(file_stream)) {
-        puts_location(location);
+        puts_location_short(location);
         fread(location, sizeof (Location), 1, file_stream);
     }
     printf("=======\n");
@@ -398,36 +515,34 @@ void list_all_locations() {
     free(location);
 }
 
-/*
-void form_location(Location *location) {
-    printf("Nome do filme: ");
-    read_string(location->name);
-    printf("CPF: ");
-    read_string(location->CPF);
-    printf("RG: ");
-    read_string(location->RG);
-    printf("Fone: ");
-    read_string(location->phone);
-    printf("Data de nascimento: ");
-    read_string(location->birth_date);
-}
- */
-
-void form_location_insert() {
+void list_all_locations_by_client() {
     Location *location;
-    Client * client;
-    Movie *movie, *movies_array;
-    char *input, do_again_flag, more_movies = FALSE;
-    int id, count = 0;
+    Location_array *array;
+    char *input;
+    int i;
 
-    location = location_malloc();
     input = input_malloc();
+    location = location_malloc();
+    form_location_client(location, input, "> Qual cliente? ");
+    array = search_location_by_client(location->id_client);
 
-    printf("=======\nLOCANDO: \n\n");
-    // Definindo cliente
+    for (i = 0; i < array->size; i++) {
+        puts_location(array->locations + i);
+    }
+
+    free(location);
+    free(array);
+}
+
+void form_location_client(Location *location, char *input, char *msg) {
+    Client * client;
+    char do_again_flag;
+    int id;
+
+    client = client_malloc();
     do {
         do_again_flag = FALSE;
-        printf("> A qual cliente deseja locar?\n");
+        printf("%s", msg);
         do {
             printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por nome: ");
             read_string(input);
@@ -437,7 +552,7 @@ void form_location_insert() {
                 id = check_by_id_client(input);
                 if (!id) {
                     do_again_flag = TRUE;
-                    break;
+                    continue;
                 }
                 list_client_by_id(id);
                 client = search_client_by_id(id);
@@ -445,25 +560,40 @@ void form_location_insert() {
             case '2':
                 if (!check_by_name(input)) {
                     do_again_flag = TRUE;
-                    break;
+                    continue;
                 }
 
                 client = search_client_by_name(input);
                 if (client->id == NON_EXIST) {
                     printf(NAME_NOT_FOUND_ERROR, __FILE__, "cliente");
                     do_again_flag = TRUE;
-                    break;
+                    continue;
                 }
                 list_client_by_id(client->id);
                 break;
         }
-    } while (!be_sure(input) || do_again_flag);
+        do_again_flag = !be_sure(input);
+    } while (do_again_flag);
+    location->id_client = client->id;
+    free(client);
+}
 
-    // Definindo filmes
+void form_location_add_items(Location *location, char *input) {
+    char do_again_flag = FALSE, more_movies = FALSE;
+    int id;
+    Movie *movie;
+    DVD *dvd;
+
+    movie = movie_malloc();
+    dvd = dvd_malloc();
     do {
+        if (items_is_full(location)) {
+            printf("%s: Lista de locacao cheia.\n", __FILE__);
+            break;
+        }
         do {
             do_again_flag = FALSE;
-            printf("> Qual filme deseja adicionar ao carrinho?\n");
+            printf("> Qual filme deseja adicionar?\n");
             do {
                 printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por titulo: ");
                 read_string(input);
@@ -473,34 +603,166 @@ void form_location_insert() {
                     id = check_by_id_movie(input);
                     if (!id) {
                         do_again_flag = TRUE;
-                        break;
+                        continue;
                     }
                     list_movie_by_id(id);
-                    movie = search_movie_by_title(id);
+                    movie = search_movie_by_id(id);
                     break;
                 case '2':
                     if (!check_by_name(input)) {
                         do_again_flag = TRUE;
-                        break;
+                        continue;
                     }
 
                     movie = search_movie_by_title(input);
                     if (movie->id == NON_EXIST) {
                         printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
                         do_again_flag = TRUE;
-                        break;
+                        continue;
                     }
                     list_movie_by_id(movie->id);
                     break;
             }
-        } while (!be_sure(input) || do_again_flag);
-        count++;
-
+            do_again_flag = !be_sure(input);
+        } while (do_again_flag);
+        do_again_flag = FALSE;
+        // Pesquisar DVD disponível
+        dvd = search_dvd_by_movie(movie, TRUE);
+        if (dvd->id == NON_EXIST) {
+            printf("%s: Nao ha dvd disponivel para \"%s\".", __FILE__, movie->title);
+            do_again_flag = TRUE;
+            continue;
+        }
+        location->dvds[location->amount_dvds] = dvd->id;
+        location->amount_dvds++;
         printf("> Deseja adicionar mais filmes?\n");
-        be_sure(input) ? more_movies = TRUE : more_movies = FALSE;
-    } while (more_movies);
+        if (be_sure(input))
+            more_movies = TRUE;
+        else
+            more_movies = FALSE;
+    } while (more_movies || do_again_flag);
+}
 
-    // Locacao confirmada!
+void form_location_remove_items(Location *location, char *input) {
+    char do_again_flag = FALSE, more_movies = FALSE;
+    int item;
+    Movie *movie;
+    DVD *dvd;
+
+    if (items_is_empty(location)) {
+        printf("%s: Nao ha filmes locados nesta locacao.", __FILE__);
+        return;
+    }
+
+    movie = movie_malloc();
+    dvd = dvd_malloc();
+    input = input_malloc();
+    do {
+        do {
+            do {
+                do_again_flag = FALSE;
+                printf("> Qual item deseja remover? ");
+                read_string(input);
+                if (!validate_id(input)) {
+                    do_again_flag = TRUE;
+                    continue;
+                }
+                if (index_of_dvd_item(location, atoi(input)) == NON_EXIST) {
+                    do_again_flag = TRUE;
+                    continue;
+                }
+            } while (do_again_flag);
+            item = atoi(input);
+            puts_single_item(location, item);
+            do_again_flag = !be_sure(input);
+        } while (do_again_flag);
+
+        // Remoção propriamente dita
+        location->dvds[index_of_dvd_item(location, item)] = NON_EXIST;
+        location->amount_dvds--;
+        printf("> Deseja remover mais itens? ");
+        if (be_sure(input))
+            more_movies = TRUE;
+        else
+            more_movies = FALSE;
+    } while (more_movies || do_again_flag);
+    free(movie);
+    free(dvd);
+}
+
+void form_location_return_items(Location *location, char *input) {
+    char do_again_flag = FALSE, more_movies = FALSE;
+    int item;
+    Movie *movie;
+    DVD *dvd;
+
+    if (items_is_empty(location)) {
+        printf("%s: Nao ha filmes locados nesta locacao.", __FILE__);
+        return;
+    }
+
+    movie = movie_malloc();
+    dvd = dvd_malloc();
+    input = input_malloc();
+    do {
+        do {
+            do {
+                do_again_flag = FALSE;
+                printf("> Qual item deseja devolver? ");
+                read_string(input);
+                if (!validate_id(input)) {
+                    do_again_flag = TRUE;
+                    continue;
+                }
+                if (index_of_dvd_item(location, atoi(input)) == NON_EXIST) {
+                    do_again_flag = TRUE;
+                    continue;
+                }
+            } while (do_again_flag);
+            item = atoi(input);
+            puts_single_item(location, item);
+            do_again_flag = !be_sure(input);
+        } while (do_again_flag);
+
+        // Devolução propriamente dita
+        dvd = search_dvd_by_id(location->dvds[index_of_dvd_item(location, item)]);
+        dvd->avaliable = TRUE;
+        update_dvd(dvd);
+        
+        printf("> Deseja remover mais itens? ");
+        if (be_sure(input))
+            more_movies = TRUE;
+        else
+            more_movies = FALSE;
+    } while (more_movies || do_again_flag);
+    free(movie);
+    free(dvd);
+}
+
+void form_location_insert() {
+    Location *location;
+    DVD *dvd;
+    char *input;
+    int i;
+
+    printf("=======\nLOCANDO: \n\n");
+    location = location_malloc();
+    input = input_malloc();
+    // Definir cliente
+    form_location_client(location, input, "> A qual cliente quer locar? ");
+    // Definir filmes
+    form_location_add_items(location, input);
+    // Imprimir resultado geral
+    puts_location(location);
+    // Atualizar situação de disponibilidade dos DVDs locados
+    dvd = dvd_malloc();
+    for (i = 0; i < location->amount_dvds; i++) {
+        dvd = search_dvd_by_id(location->dvds[i]);
+        dvd->avaliable = FALSE;
+        update_dvd(dvd);
+    }
+    free(dvd);
+    // Inserir no arquivo
     if (insert_location(location)) {
         printf("Locacao foi um sucesso.\n");
     } else {
@@ -512,231 +774,151 @@ void form_location_insert() {
 }
 
 void form_location_update() {
-    char *input;
-    Location *location;
-    int id;
-
-    /* Antes de tudo, precisamos testar se há alguma locação no arquivo */
-    if (locations_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "locacao");
-        return;
-    }
-
-    location = location_malloc();
-    input = input_malloc();
-    printf("=======\nMODIFICANDO LOCACAO: \n\n");
-    do {
-        printf("Digite [1] para modificar por ID ou [2] para modificar por nome: ");
-        read_string(input);
-    } while (*input != '1' && *input != '2');
-    switch (*input) {
-        case '1':
-            id = check_by_id_client(input);
-            if (!id) {
-                free(location);
-                free(input);
-                return;
-            }
-
-            list_location_by_id(id);
-            location->id = id;
-            break;
-        case '2':
-            if (!check_by_name(input)) {
-                free(location);
-                return;
-            }
-
-            location = search_location_by_name(input);
-            if (location->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__, "locacao");
-                free(location);
-                return;
-            }
-            list_location_by_id(location->id);
-            break;
-    }
-
-    if (!be_sure(input)) {
-        printf("Abortando modificacao de locacao.\n\n");
-        free(location);
-        free(input);
-        return;
-    }
-    form_location(location);
-
-    // Tem certeza?
-    if (!be_sure(input)) {
-        printf("Abortando modificacao de locacao.\n\n");
-        free(location);
-        free(input);
-        return;
-    }
-
-    // Atualização confirmada!
-    if (update_location(location)) {
-        printf("Locacao atualizado com sucesso.\n");
-    } else {
-        printf("Locacao nao foi atualizado corretamente!\n");
-    }
-    printf("=======\n");
-    free(location);
-    free(input);
-}
-
-void form_location_erase() {
-    char *input;
-    int id;
-    Location *location;
-
-    /* Antes de tudo, precisamos testar se há alguma locação no arquivo */
-    if (locations_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "locacao");
-        return;
-    }
-
-    location = location_malloc();
-    printf("=======\nREMOVENDO LOCACAO: \n\n");
-    do {
-        printf("Digite [1] para remover por ID ou [2] para remover por nome: ");
-        read_string(input);
-    } while (*input != '1' && *input != '2');
-    switch (*input) {
-        case '1':
-            id = check_by_id_client(input);
-            if (!id) {
-                free(location);
-                return;
-            }
-
-            list_location_by_id(id);
-            location = search_location_by_id(id);
-            break;
-        case '2':
-            if (!check_by_name(input)) {
-                free(location);
-                return;
-            }
-
-            location = search_location_by_name(input);
-            if (location->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__, "locacao");
-                free(location);
-                return;
-            }
-            list_location_by_id(location->id);
-            break;
-    }
-
-    // Tem certeza?
-    if (!be_sure(input)) {
-        printf("Abortando remocao de locacao.\n\n");
-        free(location);
-        return;
-    }
-
-    // Remoção confirmada!
-    if (erase_location(location)) {
-        printf("Locacao removido com sucesso.\n");
-    } else {
-        printf("Locacao nao foi removido corretamente!\n");
-    }
-    printf("=======\n");
-    free(location);
-}
-
-void form_location_search() {
-    char *input;
+    char *input, do_again_flag = FALSE;
     Location *location;
     int id;
 
     // Antes de tudo, precisamos testar se há alguma locação no arquivo
     if (locations_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "locacao");
+        printf(EMPTY_ERROR, __FILE__, "locacao");
         return;
     }
 
     location = location_malloc();
     input = input_malloc();
-    printf("=======\nPESQUISANDO LOCACAO: \n\n");
+
+    // Difinir cliente
+    form_location_client(location, input, "> Qual cliente? ");
+    // Pesquisa locacao
+    list_all_locations_by_client(location->id_client);
     do {
-        printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por cliente: ");
+        do_again_flag = FALSE;
+        printf("Qual locacao [ID] deseja modificar? ");
         read_string(input);
-    } while (*input != '1' && *input != '2');
-    switch (*input) {
-        case '1':
-            id = check_by_id_client(input);
-            if (!id) {
-                free(location);
-                free(input);
-                return;
-            }
+        if (!validate_id(input)) {
+            do_again_flag = TRUE;
+            continue;
+        }
+        id = atoi(input);
+        if (!location_index_exist(id)) {
+            printf(ID_NOT_FOUND_ERROR, __FILE__, "locacao");
+            do_again_flag = TRUE;
+            continue;
+        }
+    } while (do_again_flag);
+    location = search_location_by_id(id);
 
-            list_location_by_id(id);
-            break;
-        case '2':
-            if (!check_by_name(input)) {
-                free(location);
-                return;
-            }
+    printf("=======\nMODIFICANDO LOCACAO: \n\n");
+    puts_client_short(search_client_by_id(location->id_client));
+    do {
+        printf("> Deseja modificar cliente? [S]im ou [n]ao? ");
+        read_string(input);
+    } while (!strcasecmp(input, "S") && !strcasecmp(input, "N"));
+    if (!strcasecmp(input, "S")) {
+        form_location_client(location, input, "> Qual cliente deseja selecionar? ");
+    }
 
-            location = search_location_by_name(input);
-            if (location->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__, "locacao");
-                free(location);
-                return;
-            }
-            list_location_by_id(location->id);
-            break;
+    puts_list_all_items(location);
+    do {
+        printf("> Deseja remover filme? [S]im ou [n]ao? ");
+        read_string(input);
+    } while (!strcasecmp(input, "S") && !strcasecmp(input, "N"));
+    if (!strcasecmp(input, "S")) {
+        form_location_remove_items(location, input);
+    }
+
+    puts_list_all_items(location);
+    do {
+        printf("> Deseja adicionar filme? [S]im ou [n]ao? ");
+        read_string(input);
+    } while (!strcasecmp(input, "S") && !strcasecmp(input, "N"));
+    if (!strcasecmp(input, "S")) {
+        form_location_add_items(location, input);
+    }
+
+    // Escrevendo no arquivo
+    if (update_location(location)) {
+        printf("Locacao atualizada com sucesso.\n");
+    } else {
+        printf("Locacao nao foi atualizada corretamente!\n");
     }
     printf("=======\n");
     free(location);
     free(input);
 }
 
-void form_location_devolution() {
-    char *input;
-    Location *location;
-    int id;
-
-    /* Antes de tudo, precisamos testar se há alguma locação no arquivo */
+void form_location_search() {
+    // Antes de tudo, precisamos testar se há alguma locação no arquivo
     if (locations_file_is_empty()) {
-        printf(FILE_EMPTY_ERROR, __FILE__, "locacao");
+        printf(EMPTY_ERROR, __FILE__, "locacao");
         return;
     }
 
-    location = location_malloc();
+    printf("=======\nPESQUISANDO LOCACAO: \n\n");
+    list_all_locations_by_client();
+    printf("=======\n");
+}
+
+void form_location_devolution() {
+    char *input, do_again_flag = FALSE;
+    Location *location;
+    int id;
+
+    // Antes de tudo, precisamos testar se há alguma locação no arquivo
+    if (locations_file_is_empty()) {
+        printf(EMPTY_ERROR, __FILE__, "locacao");
+        return;
+    }
+
     input = input_malloc();
+    location = location_malloc();
     printf("=======\nDEVOLUCAO DE DVDs: \n\n");
+    // Difinir cliente
+    form_location_client(location, input, "> Qual cliente? ");
+    // Pesquisa locacao
+    list_all_locations_by_client(location->id_client);
     do {
-        printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por nome: ");
+        do_again_flag = FALSE;
+        printf("Qual locacao [ID] deseja devolver? ");
         read_string(input);
-    } while (*input != '1' && *input != '2');
-    switch (*input) {
-        case '1':
-            id = check_by_id_client(input);
-            if (!id) {
-                free(location);
-                free(input);
-                return;
-            }
+        if (!validate_id(input)) {
+            do_again_flag = TRUE;
+            continue;
+        }
+        id = atoi(input);
+        if (!location_index_exist(id)) {
+            printf(ID_NOT_FOUND_ERROR, __FILE__, "locacao");
+            do_again_flag = TRUE;
+            continue;
+        }
+    } while (do_again_flag);
+    location = search_location_by_id(id);
+    printf("\n\n");
+    puts_location(location);
+    do {
+        printf("> Deseja devolver todos os filme? [S]im ou [n]ao? ");
+        read_string(input);
+    } while (!strcasecmp(input, "S") && !strcasecmp(input, "N"));
+    if (!strcasecmp(input, "n")) {
+        form_location_return_items(location, input);
+        puts_list_all_items(location);
+    }
+    printf("Confirmar devolucao? ");
+    if (!be_sure(input)) {
+        free(location);
+        free(input);
+        return;
+    }
 
-            list_location_by_id(id);
-            break;
-        case '2':
-            if (!check_by_name(input)) {
-                free(location);
-                return;
-            }
+    // Devolução propriamente dita
 
-            location = search_location_by_name(input);
-            if (location->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__, "locacao");
-                free(location);
-                return;
-            }
-            list_location_by_id(location->id);
-            break;
+
+    // Escrevendo no arquivo
+    if (update_location(location)) {
+        printf("Locacao atualizada com sucesso.\n");
+    } else {
+
+        printf("Locacao nao foi atualizada corretamente!\n");
     }
     printf("=======\n");
     free(location);

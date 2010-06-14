@@ -21,9 +21,13 @@ extern int check_by_id_client(char *);
 /* Validação do que foi digitado pelo usuário. */
 extern int check_by_id_movie(char *);
 /* Validação do que foi digitado pelo usuário. */
+extern int check_by_id_dvd(char *);
+/* Validação do que foi digitado pelo usuário. */
 extern int check_by_name(char *);
 /* Diálogo de confirmação. */
 extern int be_sure(char *);
+/* Verifica se haverá estouro de memória ao capturar string do teclado. */
+extern int input_overflow(char *string, char *input);
 
 
 #endif	/* _STRINGS_H */
