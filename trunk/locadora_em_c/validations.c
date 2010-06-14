@@ -1,6 +1,5 @@
 /* 
  * File:   validations.c
- * Author: samir
  *
  * Created on 12 de Junho de 2010, 13:21
  */

@@ -8,6 +8,7 @@
       <itemPath>cpf.h</itemPath>
       <itemPath>dvd.h</itemPath>
       <itemPath>exceptions.h</itemPath>
+      <itemPath>item.h</itemPath>
       <itemPath>location.h</itemPath>
       <itemPath>main.h</itemPath>
       <itemPath>movie.h</itemPath>
@@ -21,6 +22,7 @@
       <itemPath>client.c</itemPath>
       <itemPath>cpf.c</itemPath>
       <itemPath>dvd.c</itemPath>
+      <itemPath>item.c</itemPath>
       <itemPath>location.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>movie.c</itemPath>

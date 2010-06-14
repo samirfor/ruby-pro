@@ -1,6 +1,5 @@
 /* 
- * File:   cliente.h
- * Author: samir
+ * File:   client.h
  *
  * Created on 5 de Maio de 2010, 16:24
  *
@@ -24,7 +23,7 @@ typedef struct {
     char RG[100];
     char CPF[100];
     char phone[100];
-    time_t birth_date;
+    int birth_date[3];
 } Client;
 
 /***************************************

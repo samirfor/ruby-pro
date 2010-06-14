@@ -1,6 +1,5 @@
-/* 
+/*
  * File:   client.c
- * Author: samir
  *
  * Created on 5 de Maio de 2010, 16:22
  */
@@ -17,7 +16,7 @@
 #include "validations.h"
 
 /*
- * 
+ *
  */
 
 Client * client_malloc() {
@@ -35,7 +34,9 @@ void client_initialize(Client * client) {
     client->id = NON_EXIST;
     strcpy(client->CPF, "0");
     strcpy(client->RG, "0");
-    client->birth_date = time(NULL);
+    client->birth_date[0] = 1;
+    client->birth_date[1] = 1;
+    client->birth_date[2] = 1901;
     strcpy(client->name, "initialize");
     strcpy(client->phone, "0");
 }
@@ -285,7 +286,9 @@ void copy_client(Client * dest, Client * src) {
     strcpy(dest->phone, src->phone);
     strcpy(dest->RG, src->RG);
     strcpy(dest->CPF, src->CPF);
-    dest->birth_date = src->birth_date;
+    dest->birth_date[0] = src->birth_date[0];
+    dest->birth_date[1] = src->birth_date[1];
+    dest->birth_date[2] = src->birth_date[2];
 }
 
 int get_size_clients() {
@@ -362,16 +365,10 @@ Client * sort_client_by_name() {
 }
 
 void puts_client(Client * client) {
-    struct tm * timeinfo;
-    char date[11];
-
     printf("ID: %d\n", client->id);
     printf("Nome: %s\nCPF: %s\nRG: %s\n", client->name, client->CPF, client->RG);
     printf("Fone: %s\n", client->phone);
-    time(&(client->birth_date));
-    timeinfo = localtime(&(client->birth_date));
-    strftime(date, 11, "%d/%m/%Y", timeinfo);
-    printf("Data de nascimento: %s\n\n", date);
+    printf("Data de nascimento: %d/%d/%d\n\n", client->birth_date[0],client->birth_date[1],client->birth_date[2]);
 }
 
 void puts_client_short(Client * client) {
@@ -418,7 +415,6 @@ void list_all_clients() {
 
 void form_client(Client *client) {
     char *input, do_again_flag;
-    int date[3];
     struct tm * timeinfo;
 
     input = input_malloc();
@@ -438,7 +434,7 @@ void form_client(Client *client) {
     printf("Fone: ");
     read_string(client->phone);
     do {
-        printf("Data de nascimento: ");
+        printf("Data de nascimento:\n");
         do {
             do_again_flag = FALSE;
             printf("\tDia: ");
@@ -447,8 +443,8 @@ void form_client(Client *client) {
                 do_again_flag = TRUE;
                 continue;
             }
-            date[0] = atoi(input);
-            if (date[0] < 0 || date[0] > 31) {
+            client->birth_date[0] = atoi(input);
+            if (client->birth_date[0] < 0 || client->birth_date[0] > 31) {
                 do_again_flag = TRUE;
                 continue;
             }
@@ -461,8 +457,8 @@ void form_client(Client *client) {
                 do_again_flag = TRUE;
                 continue;
             }
-            date[1] = atoi(input);
-            if (date[1] < 0 || date[1] > 12) {
+            client->birth_date[1] = atoi(input);
+            if (client->birth_date[1] < 0 || client->birth_date[1] > 12) {
                 do_again_flag = TRUE;
                 continue;
             }
@@ -475,24 +471,27 @@ void form_client(Client *client) {
                 do_again_flag = TRUE;
                 continue;
             }
-            date[0] = atoi(input);
-            if (date[2] < 1900) {
+            client->birth_date[2] = atoi(input);
+            if (client->birth_date[2] < 1900) {
                 do_again_flag = TRUE;
                 continue;
             }
         } while (do_again_flag);
-        if (!validate_date(date[0], date[1], date[2])) {
-            printf("%s: Data invalida.", __FILE__);
+        if (!validate_date(client->birth_date[0], client->birth_date[1], client->birth_date[2])) {
+            printf("%s: Data invalida.\n", __FILE__);
             do_again_flag = TRUE;
             continue;
         }
     } while (do_again_flag);
-    time(&(client->birth_date));
-    timeinfo = localtime(&(client->birth_date));
+
+    /*time(&client->birth_date);
+    timeinfo = localtime(&client->birth_date);
     timeinfo->tm_year = date[2] - 1900;
     timeinfo->tm_mon = date[1] - 1;
-    timeinfo->tm_mday = date[0];
+    timeinfo->tm_mday = client->birth_date[0];
     client->birth_date = mktime(timeinfo);
+    */
+    
 }
 
 void form_client_sort() {

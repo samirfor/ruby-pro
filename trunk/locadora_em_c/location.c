@@ -1,6 +1,5 @@
-/* 
+/*
  * File:   location.c
- * Author: samir
  *
  * Created on 5 de Maio de 2010, 16:23
  */
@@ -391,6 +390,12 @@ int first_item_slot_avaliable(Location *location) {
 }
 
 void puts_list_all_items(Location *location) {
+    Item *item;
+
+    
+
+
+/*
     Movie * movie;
     DVD *dvd;
     int i;
@@ -419,32 +424,7 @@ void puts_list_all_items(Location *location) {
     printf("------ Total = R$ %.2lf ------\n", subtotal);
     free(movie);
     free(dvd);
-}
-
-void puts_single_item(Location *location, int item) {
-    Movie * movie;
-    DVD *dvd;
-    time_t devolution_time;
-    struct tm * timeinfo;
-    char input[11];
-
-    movie = movie_malloc();
-    dvd = dvd_malloc();
-    printf("------ Item | No. DVD | Filme | Data de entrega | Valor ------\n");
-    printf("%d  ", item);
-    movie = search_movie_by_id(location->dvds[item - 1]);
-    printf("%d  %s\t", location->dvds[item - 1], movie->title);
-    dvd = search_dvd_by_id(location->dvds[item - 1]);
-
-    // Calcula data de entrega
-    devolution_time += 60 * 60 * 24 * (3); // dias
-    timeinfo = localtime(&devolution_time);
-    strftime(input, 11, "%d/%m/%Y\t", timeinfo);
-
-    printf("R$ %.2lf\n", dvd->price_location);
-
-    free(movie);
-    free(dvd);
+*/
 }
 
 void puts_location(Location * location) {
@@ -470,7 +450,7 @@ void puts_location_short(Location * location) {
     for (i = 0; i < size_items; i++) {
         movie = search_movie_by_id(location->dvds[i]);
         if (i == size_items - 1) {
-            printf("%s", movie->title);
+            printf("%s\n", movie->title);
         } else {
             printf("%s, ", movie->title);
         }
@@ -728,7 +708,7 @@ void form_location_return_items(Location *location, char *input) {
         dvd = search_dvd_by_id(location->dvds[index_of_dvd_item(location, item)]);
         dvd->avaliable = TRUE;
         update_dvd(dvd);
-        
+
         printf("> Deseja remover mais itens? ");
         if (be_sure(input))
             more_movies = TRUE;

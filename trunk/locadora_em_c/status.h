@@ -1,6 +1,5 @@
 /* 
  * File:   status.h
- * Author: samir
  *
  * Created on 27 de Maio de 2010, 18:34
  */
