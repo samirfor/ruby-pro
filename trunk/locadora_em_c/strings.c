@@ -14,7 +14,7 @@
 #include "validations.h"
 
 /*
- * 
+ * String module
  */
 
 char *read_string(char *str) {
@@ -31,57 +31,6 @@ char * input_malloc() {
     }
     strcpy(input, "");
     return input;
-}
-
-int check_by_id_client(char *input) {
-    int id;
-
-    do {
-        printf("Qual ID? ");
-        read_string(input);
-    } while (!validate_id(input));
-    id = atoi(input);
-    // Verificar se o ID existe
-    if (id > 0 && client_index_exist(id)) {
-        return id;
-    } else {
-        printf(ID_NOT_FOUND_ERROR, __FILE__, "cliente");
-        return FALSE;
-    }
-}
-
-int check_by_id_dvd(char *input) {
-    int id;
-
-    do {
-        printf("Qual ID? ");
-        read_string(input);
-    } while (!validate_id(input));
-    id = atoi(input);
-    // Verificar se o ID existe
-    if (id > 0 && dvd_index_exist(id)) {
-        return id;
-    } else {
-        printf(ID_NOT_FOUND_ERROR, __FILE__, "DVD");
-        return FALSE;
-    }
-}
-
-int check_by_id_movie(char *input) {
-    int id;
-
-    do {
-        printf("Qual ID? ");
-        read_string(input);
-    } while (!validate_id(input));
-    id = atoi(input);
-    // Verificar se o ID existe
-    if (id > 0 && movie_index_exist(id)) {
-        return id;
-    } else {
-        printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
-        return FALSE;
-    }
 }
 
 int check_by_name(char *input) {

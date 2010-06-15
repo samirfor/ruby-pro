@@ -51,7 +51,7 @@ void main_client() {
                 case '0':
                     return;
                 case '1':
-                    list_all_clients();
+                    puts_all_clients();
                     break;
                 case '2':
                     form_client_insert();
@@ -97,7 +97,7 @@ void main_movie() {
                 case '0':
                     return;
                 case '1':
-                    list_all_movies();
+                    puts_all_movies();
                     break;
                 case '2':
                     form_movie_insert();
@@ -142,7 +142,7 @@ void main_dvd() {
                 case '0':
                     return;
                 case '1':
-                    list_all_dvds();
+                    puts_all_dvds();
                     break;
                 case '2':
                     form_dvd_insert();
@@ -193,7 +193,7 @@ void main_location() {
                     form_location_update();
                     break;
                 case '4':
-                    list_all_locations();
+                    puts_all_locations();
                     break;
                 case '5':
                     form_location_search();

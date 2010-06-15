@@ -16,6 +16,27 @@
 #include "client.h"
 #include "strings.h"
 
+/*
+ * DVD module
+ */
+
+int check_by_id_dvd(char *input) {
+    int id;
+
+    do {
+        printf("Qual ID? ");
+        read_string(input);
+    } while (!validate_id(input));
+    id = atoi(input);
+    // Verificar se o ID existe
+    if (id > 0 && dvd_index_exist(id)) {
+        return id;
+    } else {
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "DVD");
+        return FALSE;
+    }
+}
+
 DVD * dvd_malloc() {
 	DVD *dvd = malloc(sizeof(DVD));
 
@@ -374,7 +395,7 @@ void puts_dvd_short(DVD * dvd) {
 	free(movie);
 }
 
-void list_dvd_by_id(int id) {
+void puts_dvd_by_id(int id) {
 	DVD *dvd;
 
 	dvd = dvd_malloc();
@@ -390,7 +411,7 @@ void list_dvd_by_id(int id) {
 	free(dvd);
 }
 
-void list_all_dvds() {
+void puts_all_dvds() {
 	FILE *file_stream = NULL;
 	DVD *dvd;
 
@@ -445,7 +466,7 @@ int form_dvd(DVD *dvd, char * input) {
 	// Definir filme
 	do {
 		printf("> Qual o filme? ");
-		movie = validate_movie_search(input);
+		movie = form_movie_select(input);
 	} while (movie->id == NON_EXIST);
 	dvd->id_movie = movie->id;
 	do {
@@ -585,7 +606,7 @@ void form_dvd_erase() {
 			return;
 		}
 
-		list_dvd_by_id(id);
+		puts_dvd_by_id(id);
 		dvd = search_dvd_by_id(id);
 		break;
 	case '2':
@@ -602,7 +623,7 @@ void form_dvd_erase() {
 			free(input);
 			return;
 		}
-		list_dvd_by_id(dvd->id);
+		puts_dvd_by_id(dvd->id);
 		break;
 	}
 
@@ -642,7 +663,7 @@ void form_dvd_search() {
 	printf("\n=======\nPESQUISANDO DVD: \n\n");
 	// Definir filme
 	printf("> Qual o filme? ");
-	movie = validate_movie_search(input);
+	movie = form_movie_select(input);
 	if (movie->id == NON_EXIST) {
 		free(input);
 		free(movie);

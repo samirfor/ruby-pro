@@ -15,6 +15,27 @@
 #include "dvd.h"
 #include "location.h"
 
+/*
+ * Item module
+ */
+
+int check_by_id_item(char *input) {
+    int id;
+
+    do {
+        printf("Qual ID? ");
+        read_string(input);
+    } while (!validate_id(input));
+    id = atoi(input);
+    // Verificar se o ID existe
+    if (id > 0 && item_index_exist(id)) {
+        return id;
+    } else {
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
+        return FALSE;
+    }
+}
+
 Item * item_malloc() {
     Item *item = malloc(sizeof (Item));
 
@@ -309,23 +330,65 @@ void puts_item(Item *item, char quiet) {
     free(dvd);
 }
 
-void list_item_by_id(int id) {
+void puts_items_by_location(Location *location) {
+    FILE *file_stream = NULL;
     Item *item;
 
-    item = item_malloc();
-
-    item = search_item_by_id(id);
-    if (item->id == NON_EXIST) {
-        printf(ID_NOT_FOUND_ERROR, __FILE__, "item");
-        free(item);
+    // Antes de tudo, precisamos testar se há algum item no arquivo
+    if (items_file_is_empty()) {
+        printf(EMPTY_ERROR, __FILE__, "item");
         return;
-    } else {
-        puts_item(item, FALSE);
     }
+
+    file_stream = fopen(ITEMS_FILEPATH, "rb");
+    if (!file_stream) {
+        printf(READ_OPEN_ERROR, __FILE__, ITEMS_FILEPATH);
+        exit(1);
+    }
+    item = item_malloc();
+    printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
+    fread(item, sizeof (Item), 1, file_stream);
+    while (!feof(file_stream)) {
+        if (item->id_location == location->id) {
+            puts_item(item, TRUE);
+        }
+        fread(item, sizeof (Item), 1, file_stream);
+    }
+    fclose(file_stream);
+    printf("=======\n");
     free(item);
 }
 
-void list_all_items() {
+void puts_items_by_location_only_titles(Location *location) {
+    FILE *file_stream = NULL;
+    Item *item;
+
+    // Antes de tudo, precisamos testar se há algum item no arquivo
+    if (items_file_is_empty()) {
+        printf(EMPTY_ERROR, __FILE__, "item");
+        return;
+    }
+
+    file_stream = fopen(ITEMS_FILEPATH, "rb");
+    if (!file_stream) {
+        printf(READ_OPEN_ERROR, __FILE__, ITEMS_FILEPATH);
+        exit(1);
+    }
+    item = item_malloc();
+    fread(item, sizeof (Item), 1, file_stream);
+    while (!feof(file_stream)) {
+        if (item->id_location == location->id) {
+            puts_movie_title_by_dvd_id(item->id_dvd);
+            printf(", ");
+        }
+        fread(item, sizeof (Item), 1, file_stream);
+    }
+    fclose(file_stream);
+    printf("=======\n");
+    free(item);
+}
+
+void puts_all_items() {
     FILE *file_stream = NULL;
     Item *item;
 
@@ -348,25 +411,69 @@ void list_all_items() {
     free(item);
 }
 
-void list_items_by_location(Location *location) {
-    Item *item;
-    int i, size;
+void form_item_insert(Location* location) {
+    // TODO item insert
+    /* Caso de uso:
+     * 1 - O sistema pergunta ao usuário qual filme quer adicionar.
+     * 2 - O usuário pesquisa um filme
+     * 3 - O sistema verifica um dvd disponível do filme
+     * 4 - Se houver, o sistema relaciona o item ao dvd e adiciona à locação.
+     * 5 - Se não houver, o sistema informa o ocorrido.
+     * 6 - Fim do caso de uso
+     */
 
-    // Antes de tudo, precisamos testar se há algum item no arquivo
-    if (items_file_is_empty()) {
-        printf(EMPTY_ERROR, __FILE__, "item");
-        return;
-    }
+    Item *item;
+    Movie *movie;
+    DVD *dvd;
 
     item = item_malloc();
-    printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
-    for (i = 0; i < size; i++) {
-        puts_item(item, TRUE);
+    do {
+        printf("> Qual filme deseja adicionar? ");
+        movie = form_movie_select();
+    } while (movie->id == NON_EXIST);
+    dvd = search_dvd_by_movie(movie, TRUE);
+    if (dvd->id == NON_EXIST) {
+        printf("%s: Nao ha DVD disponivel para este filme.\n", __FILE__);
+    }
+    // Atribuições
+    item->id_location = location->id;
+    item->id_dvd = dvd->id;
+    item->return_date = time(NULL) + (60*60*24*(3)); // 3 dias
+
+    if (insert_item(item)) {
+        printf("Item \"%s\" com sucesso.\n", movie->title);
+    } else {
+        printf("Item \"%s\" nao foi inserido corretamente!\n", movie->title);
     }
 
-
-
-    printf("=======\n");
     free(item);
 }
 
+void form_item_remove(Location* location) {
+    // TODO item remove
+    /* Caso de uso:
+     * 1 - O sistema mostra os ítens da locação.
+     * 2 - O sistema pergunta ao usuário qual item quer remover.
+     * 3 - O usuário escolhe um ítem atraves do ID.
+     * 4 - Se houver, o sistema remove com sucesso.
+     * 5 - Se não houver, o sistema informa o ocorrido.
+     * 6 - Fim do caso de uso
+     */
+}
+
+void form_item_return(Location* location) {
+    // TODO item return
+}
+
+void form_items_insert() {
+    // TODO items insert
+    /* Objetivo: perguntar se o usuário quer adicionar mais ítens. */
+}
+
+void form_items_remove() {
+    // TODO items remove
+}
+
+void form_items_return() {
+    // TODO items return
+}

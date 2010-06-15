@@ -38,6 +38,8 @@ typedef struct {
  * External Function References
  ************************************/
 
+/* Validação do que foi digitado pelo usuário. */
+extern int check_by_id_client(char *id);
 /* Verifica a existencia de um cliente pelo id */
 extern int client_index_exist(int);
 /* Search into a vector of client and returns */
@@ -65,9 +67,9 @@ extern void copy_client(Client* dest, Client* src);
 /* Ver a quantidade de clientes no arquivo. */
 extern int get_size_clients();
 /* Lista todos os clientes */
-extern void list_all_clients();
+extern void puts_all_clients();
 /* Lista um cliente identificado pelo id */
-extern void list_client_by_id(int);
+extern void puts_client_by_id(int);
 /* Insere um cliente no arquivo */
 extern int insert_client(Client*);
 /* Modifica um cliente no arquivo */

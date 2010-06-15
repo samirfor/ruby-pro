@@ -16,8 +16,25 @@
 #include "validations.h"
 
 /*
- *
+ * Client module
  */
+
+int check_by_id_client(char *input) {
+    int id;
+
+    do {
+        printf("Qual ID? ");
+        read_string(input);
+    } while (!validate_id(input));
+    id = atoi(input);
+    // Verificar se o ID existe
+    if (id > 0 && client_index_exist(id)) {
+        return id;
+    } else {
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "cliente");
+        return FALSE;
+    }
+}
 
 Client * client_malloc() {
     Client *client = malloc(sizeof (Client));
@@ -375,7 +392,7 @@ void puts_client_short(Client * client) {
     printf("Cliente [%d]: %s", client->id, client->name);
 }
 
-void list_client_by_id(int id) {
+void puts_client_by_id(int id) {
     Client *client;
 
     client = client_malloc();
@@ -391,7 +408,7 @@ void list_client_by_id(int id) {
     free(client);
 }
 
-void list_all_clients() {
+void puts_all_clients() {
     FILE *file_stream = NULL;
     Client *client;
 
@@ -563,7 +580,7 @@ void form_client_update() {
                 return;
             }
 
-            list_client_by_id(id);
+            puts_client_by_id(id);
             client->id = id;
             break;
         case '2':
@@ -580,7 +597,7 @@ void form_client_update() {
                 free(input);
                 return;
             }
-            list_client_by_id(client->id);
+            puts_client_by_id(client->id);
             break;
     }
 
@@ -638,7 +655,7 @@ void form_client_erase() {
                 return;
             }
 
-            list_client_by_id(id);
+            puts_client_by_id(id);
             client = search_client_by_id(id);
             break;
         case '2':
@@ -655,7 +672,7 @@ void form_client_erase() {
                 free(input);
                 return;
             }
-            list_client_by_id(client->id);
+            puts_client_by_id(client->id);
             break;
     }
 
@@ -705,7 +722,7 @@ void form_client_search() {
                 return;
             }
 
-            list_client_by_id(id);
+            puts_client_by_id(id);
             break;
         case '2':
             if (!check_by_name(input)) {
@@ -721,7 +738,7 @@ void form_client_search() {
                 free(input);
                 return;
             }
-            list_client_by_id(client->id);
+            puts_client_by_id(client->id);
             break;
     }
     printf("=======\n");
