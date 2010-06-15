@@ -13,6 +13,30 @@
 #include "movie.h"
 #include "strings.h"
 #include "validations.h"
+#include "location.h"
+#include "dvd.h"
+#include "item.h"
+
+/*
+ * Movie module
+ */
+
+int check_by_id_movie(char *input) {
+    int id;
+
+    do {
+        printf("Qual ID? ");
+        read_string(input);
+    } while (!validate_id(input));
+    id = atoi(input);
+    // Verificar se o ID existe
+    if (id > 0 && movie_index_exist(id)) {
+        return id;
+    } else {
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
+        return FALSE;
+    }
+}
 
 Movie * movie_malloc() {
     Movie *movie = malloc(sizeof (Movie));
@@ -359,24 +383,27 @@ void puts_movie(Movie * movie) {
     printf("%d\n", movie->lenght);
 }
 
-void list_movie_by_id(int id) {
+void puts_movie_by_id(int id_movie) {
     Movie *movie;
 
     movie = movie_malloc();
+    movie->id = id_movie;
+    puts_movie(movie);
+    free(movie);
+}
+void puts_movie_title_by_dvd_id(int id_dvd) {
+    DVD *dvd;
+    Movie *movie;
 
-    movie = search_movie_by_id(id);
-    if (movie->id == NON_EXIST) {
-        printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
-        free(movie);
-        return;
-    } else {
-        printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
-        puts_movie(movie);
-    }
+    dvd = search_dvd_by_id(id_dvd);
+    movie = search_movie_by_id(dvd->id_movie);
+    printf("%s", movie->title);
+
+    free(dvd);
     free(movie);
 }
 
-void list_all_movies() {
+void puts_all_movies() {
     FILE *file_stream = NULL;
     Movie *movie;
 
@@ -485,7 +512,7 @@ void form_movie_update() {
                 return;
             }
 
-            list_movie_by_id(id);
+            puts_movie_by_id(id);
             movie->id = id;
             break;
         case '2':
@@ -502,7 +529,7 @@ void form_movie_update() {
                 free(input);
                 return;
             }
-            list_movie_by_id(movie->id);
+            puts_movie_by_id(movie->id);
             break;
     }
 
@@ -560,7 +587,7 @@ void form_movie_erase() {
                 return;
             }
 
-            list_movie_by_id(id);
+            puts_movie_by_id(id);
             movie = search_movie_by_id(id);
             break;
         case '2':
@@ -577,7 +604,7 @@ void form_movie_erase() {
                 free(input);
                 return;
             }
-            list_movie_by_id(movie->id);
+            puts_movie_by_id(movie->id);
             break;
     }
 
@@ -600,7 +627,7 @@ void form_movie_erase() {
     free(input);
 }
 
-Movie * validate_movie_search(char *input) {
+Movie * form_movie_select(char *input) {
     Movie *movie;
     int id;
 
@@ -646,7 +673,7 @@ void form_movie_search() {
 
     input = input_malloc();
     printf("\n=======\nPESQUISANDO FILME: \n\n");
-    movie = validate_movie_search(input);
+    movie = form_movie_select(input);
     if (movie->id == NON_EXIST) {
         printf("%s: Nada encontrado.\n", __FILE__);
     } else {

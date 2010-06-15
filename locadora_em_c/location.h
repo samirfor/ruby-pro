@@ -23,20 +23,11 @@
 External Variables References
  ************************************/
 
-#define ITEM_SIZE 100
-
 typedef struct {
     int id;
     int id_client;
     time_t date;
-    int dvds[ITEM_SIZE];
-    int amount_dvds;
 } Location;
-
-typedef struct {
-    int size;
-    Location *locations;
-} Location_array;
 
 /***************************************
  * Files references
@@ -50,12 +41,12 @@ typedef struct {
  * External Function References
  ************************************/
 
+/* Validação do que foi digitado pelo usuário. */
+extern int check_by_id_location(char *id);
 /* Verifica a existencia de uma locação pelo id */
 extern int location_index_exist(int);
 /* Search into a vector of location and returns */
 extern Location * search_location_by_id(int);
-/* Retorna um ponteiro para um array de locações do cliente especificado. */
-extern Location_array * search_location_by_client(int id_client);
 /* Retorna um número id disponível */
 extern int location_first_index_avaliable();
 /* Ordenar arquivo por nome  */
@@ -64,12 +55,8 @@ extern Location * sort_location_by_name();
 extern void puts_location(Location*);
 /* Remove o lixo da estrutura */
 extern void location_initialize(Location*);
-/* Remove o lixo da estrutura */
-extern void location_array_initialize(Location_array*);
 /* Declara dinâmicamente uma locação */
 extern Location * location_malloc();
-/* Declara dinâmicamente uma locação */
-extern Location_array * location_array_malloc();
 /* Verifica se o arquivo LOCATIONS_FILEPATH está vazio */
 extern int locations_file_is_empty();
 /* Carrega o arquivo com estruturas Client num array. */
@@ -87,9 +74,9 @@ extern int items_is_full(Location *location);
 /* Verifica se nenhum slot para ítens de locação está preenchido. */
 extern int items_is_empty(Location *location);
 /* Lista todos os locações */
-extern void list_all_locations();
+extern void puts_all_locations();
 /* Lista uma locação identificada pelo id */
-extern void list_location_by_id(int);
+extern void puts_location_by_id(int);
 /* Insere uma locação no arquivo */
 extern int insert_location(Location*);
 /* Modifica uma locação no arquivo */

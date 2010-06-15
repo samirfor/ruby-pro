@@ -37,6 +37,8 @@ typedef struct {
  * External Function References
  ************************************/
 
+/* Validação do que foi digitado pelo usuário. */
+extern int check_by_id_movie(char *id);
 /* Verifica a existencia de um filme pelo id */
 extern int movie_index_exist(int);
 /* Search into a vector of movie and returns */
@@ -49,6 +51,10 @@ extern int movie_first_index_avaliable();
 extern Movie * sort_movie_by_title();
 /* Imprime na tela um filme de forma humanamente legível */
 extern void puts_movie(Movie*);
+/* O mesmo que puts_movie(Movie*) mas passando apenas o ID como parâmetro. */
+extern void puts_movie_by_id(int id_movie);
+/* Imprime na tela o título do filme referenciado pelo DVD */
+extern void puts_movie_title_by_dvd_id(int id_dvd);
 /* Remove o lixo da estrutura */
 extern void movie_initialize(Movie*);
 /* Declara dinâmicamente um filme */
@@ -62,11 +68,9 @@ extern void copy_movie(Movie* dest, Movie* src);
 /* Ver a quantidade de filmes no arquivo. */
 extern int get_size_movies();
 /* Subformulário para filme */
-extern Movie * validate_movie_search(char *input);
+extern Movie * form_movie_select(char *input);
 /* Lista todos os filmes */
-extern void list_all_movies();
-/* Lista um filme identificado pelo id */
-extern void list_movie_by_id(int);
+extern void puts_all_movies();
 /* Insere um filme no arquivo */
 extern int insert_movie(Movie*);
 /* Modifica um filme no arquivo */
@@ -85,6 +89,8 @@ extern void form_movie_search();
 extern void form_movie_erase();
 /* Formulário de ordenação de filmes */
 extern void form_movie_sort();
+/* Pesquisa um filme e retorna-o. */
+extern Movie * form_movie_select();
 
 #endif	/* _MOVIE_H */
 

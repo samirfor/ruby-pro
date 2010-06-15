@@ -41,6 +41,8 @@ typedef struct {
  * External Function References
  ************************************/
 
+/* Validação do que foi digitado pelo usuário. */
+extern int check_by_id_dvd(char *id);
 /* Verifica a existencia de um dvd pelo id */
 extern int dvd_index_exist(int);
 /* Search into a vector of dvd and returns */
@@ -64,9 +66,9 @@ extern void copy_dvd(DVD* dest, DVD* src);
 /* Ver a quantidade de dvds no arquivo. */
 extern int get_size_dvds();
 /* Lista todos os dvds */
-extern void list_all_dvds();
+extern void puts_all_dvds();
 /* Lista um dvd identificado pelo id */
-extern void list_dvd_by_id(int);
+extern void puts_dvd_by_id(int);
 /* Insere um dvd no arquivo */
 extern int insert_dvd(DVD*);
 /* Modifica um dvd no arquivo */
