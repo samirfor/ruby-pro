@@ -532,6 +532,56 @@ double get_total_to_pay(Location *location) {
     return total;
 }
 
+char items_location_is_empty(Location *location) {
+    FILE *file_stream = NULL;
+    Item *item;
+
+    file_stream = fopen(ITEMS_FILEPATH, "rb");
+    if (!file_stream) {
+        printf(EMPTY_ERROR, __FILE__, "item");
+        exit(EXIT_FAILURE);
+    }
+
+    item = item_malloc();
+    fread(item, sizeof (Item), 1, file_stream);
+    while (!feof(file_stream)) {
+        if (location->id == item->id_location) {
+            fclose(file_stream);
+            free(item);
+            return FALSE;
+        }
+        fread(item, sizeof (Item), 1, file_stream);
+    }
+    fclose(file_stream);
+    free(item);
+    return TRUE;
+}
+
+char location_has_returned_items(Location *location) {
+    FILE *file_stream = NULL;
+    Item *item;
+
+    file_stream = fopen(ITEMS_FILEPATH, "rb");
+    if (!file_stream) {
+        printf(EMPTY_ERROR, __FILE__, "item");
+        exit(EXIT_FAILURE);
+    }
+
+    item = item_malloc();
+    fread(item, sizeof (Item), 1, file_stream);
+    while (!feof(file_stream)) {
+        if (location->id == item->id_location && !item->returned) {
+            fclose(file_stream);
+            free(item);
+            return FALSE;
+        }
+        fread(item, sizeof (Item), 1, file_stream);
+    }
+    fclose(file_stream);
+    free(item);
+    return TRUE;
+}
+
 char update_item_price(Item *item) {
     struct tm *time_info;
     time_t time_now = 0;
@@ -710,6 +760,11 @@ int form_items_insert(Location *location, char *input) {
 
 void form_items_remove(Location *location, char *input) {
     /* Objetivo: perguntar se o usuário quer remover mais ítens. */
+    // Primeiramente, testa se há ítens na locação
+    if (items_location_is_empty(location)) {
+        printf("%s: Nao ha itens nesta locacao.\n", __FILE__);
+        return;
+    }
     do {
         form_item_remove(location, input);
         printf("> Deseja remover mais itens desta locacao? [S]im ou [n]ao? ");
@@ -719,6 +774,11 @@ void form_items_remove(Location *location, char *input) {
 
 void form_items_return(Location *location, char *input) {
     /* Objetivo: perguntar se o usuário quer devolver mais ítens. */
+    // Primeiramente, testa se há ítens aptos à devolução na locação
+    if (location_has_returned_items(location)) {
+        printf("%s: Nao ha itens para ser devolvido nesta locacao.\n", __FILE__);
+        return;
+    }
     do {
         form_item_return(location, input);
         printf("> Deseja devolver mais itens desta locacao? [S]im ou [n]ao? ");

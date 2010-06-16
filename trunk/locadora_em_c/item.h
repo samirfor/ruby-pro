@@ -59,6 +59,10 @@ extern Item * item_malloc();
 extern int insert_item(Item*);
 /* Verifica se o arquivo está vazio */
 extern int items_file_is_empty();
+/* Verifica se uma locação tem ítens. */
+extern char items_location_is_empty(Location *location);
+/* Verifica se uma locação tem ítens para ser devolvidos. */
+extern char location_has_returned_items(Location *location);
 /* Lista todos os items */
 extern void puts_all_items(char quiet);
 /* Imprime na tela um item de forma humanamente legível */
