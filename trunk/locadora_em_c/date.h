@@ -15,7 +15,7 @@
 /* Formulário para preenchimento de datas */
 extern time_t form_parse_date(char *msg, char *input);
 /* Imprime na tela uma data formatada ex: dd/mm/aaaa */
-extern char * puts_date(time_t *time);
+extern char * date_to_s(time_t *time);
 /* Transforma uma data em time_t */
 extern time_t mkdate(int day, int month, int year);
 

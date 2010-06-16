@@ -79,7 +79,7 @@ time_t form_parse_date(char *msg, char* input) {
 
         // Parse para o formato time_t
         time_info.tm_year = year - 1900;
-        time_info.tm_mon = month;
+        time_info.tm_mon = month - 1;
         time_info.tm_mday = day;
         time_info.tm_hour = 0;
         time_info.tm_min = 0;
@@ -106,7 +106,7 @@ time_t mkdate(int day, int month, int year) {
     return time;
 }
 
-char * puts_date(time_t *time) {
+char * date_to_s(time_t *time) {
     char *buffer;
     struct tm *time_info;
 

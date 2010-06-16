@@ -20,6 +20,8 @@ typedef struct {
     int id;
     int id_location;
     int id_dvd;
+    char returned;
+    double price;
     time_t return_date;
 } Item;
 
@@ -72,19 +74,25 @@ extern Item * search_item_by_movietitle(Location* location, char* input);
 /* Modifica um item no arquivo */
 extern int update_item(Item*);
 /* Formulário de inserção de ítem numa locação */
-extern void form_item_insert(Location *location, char* input);
+extern char form_item_insert(Location *location, char* input);
 /* Formulário de remoção de ítem de uma locação */
 extern void form_item_remove(Location *location, char* input);
 /* Formulário de devolução de ítem de uma locação */
 extern void form_item_return(Location *location, char* input);
 /* Pergunta se quer adicionar mais de um ítem */
-extern void form_items_insert(Location *location, char* input);
+extern int form_items_insert(Location *location, char* input);
 /* Pergunta se quer remover mais de um ítem */
 extern void form_items_remove(Location *location, char* input);
 /* Pergunta se quer devolver mais de um ítem */
 extern void form_items_return(Location *location, char* input);
 /* Pesquisa um item e o retorna. */
 extern Item * form_item_select(Location* location, char* input);
+/* Retorna o valor total de ítens retornados */
+extern double get_total_items_returned_by_location(Location *location);
+/* Atualiza os valores dos ítens dependendo do dia */
+extern char update_item_price(Item *item);
+/* Retorna o total a pagar */
+extern double get_total_to_pay(Location *location);
 
 #endif	/* _ITEM_H */
 

@@ -4,11 +4,9 @@
  * Created on 26 de Abril de 2010, 14:58
  */
 
-#include <string.h>
-
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "client.h"
 #include "strings.h"
 #include "movie.h"
@@ -50,7 +48,7 @@ void main_client(char *input) {
 
             switch (*input) {
                 case '0':
-                    free(input);
+                    *input = NON_EXIST;
                     return;
                 case '1':
                     puts_all_clients();
@@ -95,6 +93,7 @@ void main_movie(char *input) {
 
             switch (*input) {
                 case '0':
+                    *input = NON_EXIST;
                     return;
                 case '1':
                     puts_all_movies(input);
@@ -138,6 +137,7 @@ void main_dvd(char *input) {
 
             switch (*input) {
                 case '0':
+                    *input = NON_EXIST;
                     return;
                 case '1':
                     puts_all_dvds(input);
@@ -178,6 +178,7 @@ void main_location(char *input) {
 
             switch (*input) {
                 case '0':
+                    *input = NON_EXIST;
                     return;
                 case '1':
                     form_location_insert(input);
@@ -216,8 +217,8 @@ int main() {
             printf("++ MENU ++\n");
             printf("1 - Cliente\n");
             printf("2 - Filme\n");
-            printf("3 - Locacao\n");
-            printf("4 - DVDs\n");
+            printf("3 - DVDs\n");
+            printf("4 - Locacoes\n");
             printf("0 - Sair\n");
             printf("++++++\nOpcao: ");
             read_string(input);
@@ -234,10 +235,10 @@ int main() {
                     main_movie(input);
                     break;
                 case '3':
-                    main_location(input);
+                    main_dvd(input);
                     break;
                 case '4':
-                    main_dvd(input);
+                    main_location(input);
                     break;
                 default:
                     printf("Opcao invalida!\n");

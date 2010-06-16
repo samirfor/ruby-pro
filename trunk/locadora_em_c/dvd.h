@@ -65,6 +65,8 @@ extern DVD * dvd_file_to_a();
 extern void copy_dvd(DVD* dest, DVD* src);
 /* Ver a quantidade de dvds no arquivo. */
 extern int get_size_dvds();
+/* Retorna o valor de locação de um dvd */
+extern double get_dvd_price(int id_dvd);
 /* Lista todos os dvds */
 extern void puts_all_dvds();
 /* Lista um dvd identificado pelo id */
