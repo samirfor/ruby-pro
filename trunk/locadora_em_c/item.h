@@ -58,25 +58,33 @@ extern int insert_item(Item*);
 /* Verifica se o arquivo está vazio */
 extern int items_file_is_empty();
 /* Lista todos os items */
-extern void puts_all_items();
+extern void puts_all_items(char quiet);
 /* Imprime na tela um item de forma humanamente legível */
 extern void puts_item(Item* item, char quiet);
 /* Imprime na tela os ítens de uma locação específica */
-extern void puts_items_by_location(Location *location);
+extern void puts_items_by_location(Location *location, char quiet);
 /* Imprime na tela os títulos dos filmes de uma locação específica */
 extern void puts_items_by_location_only_titles(Location *location);
 /* Search into a vector of item and returns */
 extern Item * search_item_by_id(int);
-/* Procura no arquivo se há algum item referente ao filme espcificado. */
-extern Item * search_items_by_location(Movie *movie, char force_avaliable);
+/* Procura um ítem atraves do nome do filme */
+extern Item * search_item_by_movietitle(Location* location, char* input);
 /* Modifica um item no arquivo */
 extern int update_item(Item*);
 /* Formulário de inserção de ítem numa locação */
-extern void form_item_insert(Location *location);
+extern void form_item_insert(Location *location, char* input);
 /* Formulário de remoção de ítem de uma locação */
-extern void form_item_remove(Location *location);
+extern void form_item_remove(Location *location, char* input);
 /* Formulário de devolução de ítem de uma locação */
-extern void form_item_return(Location *location);
+extern void form_item_return(Location *location, char* input);
+/* Pergunta se quer adicionar mais de um ítem */
+extern void form_items_insert(Location *location, char* input);
+/* Pergunta se quer remover mais de um ítem */
+extern void form_items_remove(Location *location, char* input);
+/* Pergunta se quer devolver mais de um ítem */
+extern void form_items_return(Location *location, char* input);
+/* Pesquisa um item e o retorna. */
+extern Item * form_item_select(Location* location, char* input);
 
 #endif	/* _ITEM_H */
 

@@ -9,11 +9,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <regex.h>
 #include "status.h"
 #include "item.h"
 #include "exceptions.h"
 #include "dvd.h"
 #include "location.h"
+#include "strings.h"
+#include "validations.h"
 
 /*
  * Item module
@@ -32,7 +35,7 @@ int check_by_id_item(char *input) {
         return id;
     } else {
         printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
-        return FALSE;
+        return NON_EXIST;
     }
 }
 
@@ -72,6 +75,64 @@ Item * search_item_by_id(int id) {
         }
         fread(item, sizeof (Item), 1, file_stream);
     }
+    fclose(file_stream);
+    item->id = NON_EXIST;
+    return item;
+}
+
+Item * search_item_by_movietitle(Location *location, char *input) {
+    FILE *file_stream = NULL;
+    Item *item;
+    DVD *dvd;
+    Movie *movie;
+
+    file_stream = fopen(ITEMS_FILEPATH, "rb");
+    if (!file_stream) {
+        printf(READ_OPEN_ERROR, __FILE__, ITEMS_FILEPATH);
+        exit(1);
+    }
+    item = item_malloc();
+    fread(item, sizeof (Item), 1, file_stream);
+    while (!feof(file_stream)) {
+        dvd = search_dvd_by_id(item->id_dvd);
+        movie = search_movie_by_id(dvd->id_movie);
+        if (location->id == item->id_location && !(strcasecmp(input, movie->title))) {
+            fclose(file_stream);
+            free(dvd);
+            free(movie);
+            return item;
+        }
+        fread(item, sizeof (Item), 1, file_stream);
+    }
+
+    // Não achou pelo nome exato, então tentaremos uma substring
+
+    regex_t reg;
+
+    if (regcomp(&reg, input, REG_EXTENDED | REG_NOSUB | REG_ICASE)) {
+        fprintf(stderr, "%s: ERRO na compilacao da expressao regular.", __FILE__);
+        fclose(file_stream);
+        free(dvd);
+        free(movie);
+        item->id = NON_EXIST;
+        return item;
+    }
+
+    fseek(file_stream, 0, SEEK_SET);
+    fread(item, sizeof (Client), 1, file_stream);
+    while (!feof(file_stream)) {
+        if (location->id == item->id_location && !(regexec(&reg, movie->title, 0, (regmatch_t *) NULL, 0))) {
+            fclose(file_stream);
+            free(dvd);
+            free(movie);
+            return item;
+        }
+        fread(item, sizeof (Client), 1, file_stream);
+    }
+
+    // Nada foi encontrado
+    free(dvd);
+    free(movie);
     fclose(file_stream);
     item->id = NON_EXIST;
     return item;
@@ -330,7 +391,7 @@ void puts_item(Item *item, char quiet) {
     free(dvd);
 }
 
-void puts_items_by_location(Location *location) {
+void puts_items_by_location(Location *location, char quiet) {
     FILE *file_stream = NULL;
     Item *item;
 
@@ -346,7 +407,8 @@ void puts_items_by_location(Location *location) {
         exit(1);
     }
     item = item_malloc();
-    printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
+    if (!quiet)
+        printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
     fread(item, sizeof (Item), 1, file_stream);
     while (!feof(file_stream)) {
         if (item->id_location == location->id) {
@@ -355,7 +417,6 @@ void puts_items_by_location(Location *location) {
         fread(item, sizeof (Item), 1, file_stream);
     }
     fclose(file_stream);
-    printf("=======\n");
     free(item);
 }
 
@@ -384,11 +445,10 @@ void puts_items_by_location_only_titles(Location *location) {
         fread(item, sizeof (Item), 1, file_stream);
     }
     fclose(file_stream);
-    printf("=======\n");
     free(item);
 }
 
-void puts_all_items() {
+void puts_all_items(char quiet) {
     FILE *file_stream = NULL;
     Item *item;
 
@@ -399,20 +459,19 @@ void puts_all_items() {
     }
 
     item = item_malloc();
-    printf("=======\nLISTA DE TODOS OS ITENS: \n\n");
-    printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
+    if (!quiet) {
+        printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
+    }
     fread(item, sizeof (Item), 1, file_stream);
     while (!feof(file_stream)) {
         puts_item(item, TRUE);
         fread(item, sizeof (Item), 1, file_stream);
     }
-    printf("=======\n");
     fclose(file_stream);
     free(item);
 }
 
-void form_item_insert(Location* location) {
-    // TODO item insert
+void form_item_insert(Location* location, char *input) {
     /* Caso de uso:
      * 1 - O sistema pergunta ao usuário qual filme quer adicionar.
      * 2 - O usuário pesquisa um filme
@@ -429,28 +488,30 @@ void form_item_insert(Location* location) {
     item = item_malloc();
     do {
         printf("> Qual filme deseja adicionar? ");
-        movie = form_movie_select();
+        movie = form_movie_select(input);
     } while (movie->id == NON_EXIST);
     dvd = search_dvd_by_movie(movie, TRUE);
     if (dvd->id == NON_EXIST) {
         printf("%s: Nao ha DVD disponivel para este filme.\n", __FILE__);
+        return;
     }
     // Atribuições
     item->id_location = location->id;
     item->id_dvd = dvd->id;
-    item->return_date = time(NULL) + (60*60*24*(3)); // 3 dias
-
+    item->return_date = time(NULL) + (60 * 60 * 24 * (3)); // 3 dias
+    // Escrevendo no arquivo as alterações
     if (insert_item(item)) {
-        printf("Item \"%s\" com sucesso.\n", movie->title);
+        printf("Item \"%s\" inserido com sucesso.\n", movie->title);
     } else {
         printf("Item \"%s\" nao foi inserido corretamente!\n", movie->title);
     }
 
     free(item);
+    free(dvd);
+    free(movie);
 }
 
-void form_item_remove(Location* location) {
-    // TODO item remove
+void form_item_remove(Location* location, char *input) {
     /* Caso de uso:
      * 1 - O sistema mostra os ítens da locação.
      * 2 - O sistema pergunta ao usuário qual item quer remover.
@@ -459,21 +520,106 @@ void form_item_remove(Location* location) {
      * 5 - Se não houver, o sistema informa o ocorrido.
      * 6 - Fim do caso de uso
      */
+    
+    Item *item;
+
+    input = input_malloc();
+    puts_items_by_location(location, FALSE);
+    item = form_item_select(location, input);
+    // Verifica se é ítem válido
+    if (item->id == NON_EXIST) {
+        free(item);
+        return;
+    }
+    // Tem certeza?
+    if (!be_sure(input)) {
+        printf("Abortando remocao de cliente.\n\n");
+        free(item);
+        return;
+    }
+    // Escrevendo no arquivo as alterações
+    if (erase_item(item)) {
+        printf("Item removido com sucesso.\n");
+    } else {
+        printf("Item nao foi removido corretamente!\n");
+    }
+    
+    free(item);
 }
 
-void form_item_return(Location* location) {
+void form_item_return(Location* location, char *input) {
     // TODO item return
+    /* Caso de uso:
+     * 1 - 
+     */
 }
 
-void form_items_insert() {
-    // TODO items insert
+void form_items_insert(Location *location, char *input) {
     /* Objetivo: perguntar se o usuário quer adicionar mais ítens. */
+    do {
+        form_item_insert(location, input);
+        printf("> Deseja inserir mais filmes a esta locacao? [S]im ou [n]ao? ");
+        read_string(input);
+    } while (!strcasecmp(input, "S") || strcasecmp(input, "N"));
 }
 
-void form_items_remove() {
-    // TODO items remove
+void form_items_remove(Location *location, char *input) {
+    /* Objetivo: perguntar se o usuário quer remover mais ítens. */
+    do {
+        form_item_remove(location, input);
+        printf("> Deseja remover mais filmes desta locacao? [S]im ou [n]ao? ");
+        read_string(input);
+    } while (!strcasecmp(input, "S") || strcasecmp(input, "N"));
 }
 
-void form_items_return() {
-    // TODO items return
+void form_items_return(Location *location, char *input) {
+    /* Objetivo: perguntar se o usuário quer devolver mais ítens. */
+    do {
+        form_item_return(location, input);
+        printf("> Deseja devolver mais filmes desta locacao? [S]im ou [n]ao? ");
+        read_string(input);
+    } while (!strcasecmp(input, "S") || strcasecmp(input, "N"));
+}
+
+Item * form_item_select(Location *location, char *input) {
+    int id;
+    Item *item;
+
+    item = item_malloc();
+
+    do {
+        printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por nome: ");
+        read_string(input);
+        switch (*input) {
+            case '1':
+                // Verifica se é um ID válido
+                id = check_by_id_item(input);
+                if (id == NON_EXIST) {
+                    item->id = NON_EXIST;
+                    return item;
+                }
+                // Procura o item pelo ID, caso não ache,
+                // retorna um item com ID = NON_EXIST
+                item = search_item_by_id(id);
+                break;
+            case '2':
+                // Verifica se é um nome válido
+                if (!check_by_name(input)) {
+                    item->id = NON_EXIST;
+                    return item;
+                }
+                // Procura o item pelo nome, caso não ache,
+                // retorna um item com ID = NON_EXIST
+                item = search_item_by_movietitle(location, input);
+                if (item->id == NON_EXIST) {
+                    printf(NAME_NOT_FOUND_ERROR, __FILE__, "item");
+                    item->id = NON_EXIST;
+                    return item;
+                }
+                break;
+            default:
+                printf("Opcao invalida!\n");
+        }
+    } while (*input != '1' && *input != '2');
+    return item;
 }

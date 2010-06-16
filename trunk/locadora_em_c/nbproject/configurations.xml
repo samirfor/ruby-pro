@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>client.h</itemPath>
       <itemPath>cpf.h</itemPath>
+      <itemPath>date.h</itemPath>
       <itemPath>dvd.h</itemPath>
       <itemPath>exceptions.h</itemPath>
       <itemPath>item.h</itemPath>
@@ -21,6 +22,7 @@
                    projectFiles="true">
       <itemPath>client.c</itemPath>
       <itemPath>cpf.c</itemPath>
+      <itemPath>date.c</itemPath>
       <itemPath>dvd.c</itemPath>
       <itemPath>item.c</itemPath>
       <itemPath>location.c</itemPath>

@@ -4,6 +4,9 @@
  * Created on 26 de Abril de 2010, 14:58
  */
 
+#include <string.h>
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "client.h"
@@ -30,9 +33,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-void main_client() {
-    char opcao = -1;
-
+void main_client(char *input) {
     do {
         do {
             printf("++ MENU CLIENTE ++\n");
@@ -45,40 +46,39 @@ void main_client() {
             printf("0 - Voltar\n");
             printf("++++++\nOpcao: ");
 
-            read_string(&opcao);
+            read_string(input);
 
-            switch (opcao) {
+            switch (*input) {
                 case '0':
+                    free(input);
                     return;
                 case '1':
                     puts_all_clients();
                     break;
                 case '2':
-                    form_client_insert();
+                    form_client_insert(input);
                     break;
                 case '3':
-                    form_client_update();
+                    form_client_update(input);
                     break;
                 case '4':
-                    form_client_erase();
+                    form_client_erase(input);
                     break;
                 case '5':
-                    form_client_sort();
+                    form_client_sort(input);
                     break;
                 case '6':
-                    form_client_search();
+                    form_client_search(input);
                     break;
                 default:
                     printf("Opcao invalida!\n");
             }
-        } while (opcao != '0');
-    } while (opcao != '0');
+        } while (*input != '0');
+    } while (*input != '0');
     return;
 }
 
-void main_movie() {
-    char opcao = NON_EXIST;
-
+void main_movie(char *input) {
     do {
         do {
             printf("++ MENU FILME ++\n");
@@ -91,40 +91,38 @@ void main_movie() {
             printf("0 - Voltar\n");
             printf("++++++\nOpcao: ");
 
-            read_string(&opcao);
+            read_string(input);
 
-            switch (opcao) {
+            switch (*input) {
                 case '0':
                     return;
                 case '1':
-                    puts_all_movies();
+                    puts_all_movies(input);
                     break;
                 case '2':
-                    form_movie_insert();
+                    form_movie_insert(input);
                     break;
                 case '3':
-                    form_movie_update();
+                    form_movie_update(input);
                     break;
                 case '4':
-                    form_movie_erase();
+                    form_movie_erase(input);
                     break;
                 case '5':
-                    form_movie_sort();
+                    form_movie_sort(input);
                     break;
                 case '6':
-                    form_movie_search();
+                    form_movie_search(input);
                     break;
                 default:
                     printf("Opcao invalida!\n");
             }
-        } while (opcao != '0');
-    } while (opcao != '0');
+        } while (*input != '0');
+    } while (*input != '0');
     return;
 }
 
-void main_dvd() {
-    char opcao = NON_EXIST;
-
+void main_dvd(char *input) {
     do {
         do {
             printf("++ MENU DVD ++\n");
@@ -136,37 +134,35 @@ void main_dvd() {
             printf("0 - Voltar\n");
             printf("++++++\nOpcao: ");
 
-            read_string(&opcao);
+            read_string(input);
 
-            switch (opcao) {
+            switch (*input) {
                 case '0':
                     return;
                 case '1':
-                    puts_all_dvds();
+                    puts_all_dvds(input);
                     break;
                 case '2':
-                    form_dvd_insert();
+                    form_dvd_insert(input);
                     break;
                 case '3':
-                    form_dvd_update();
+                    form_dvd_update(input);
                     break;
                 case '4':
-                    form_dvd_erase();
+                    form_dvd_erase(input);
                     break;
                 case '5':
-                    form_dvd_search();
+                    form_dvd_search(input);
                     break;
                 default:
                     printf("Opcao invalida!\n");
             }
-        } while (opcao != '0');
-    } while (opcao != '0');
+        } while (*input != '0');
+    } while (*input != '0');
     return;
 }
 
-void main_location() {
-    char opcao = -1;
-
+void main_location(char *input) {
     do {
         do {
             printf("++ MENU DE LOCACAO ++\n");
@@ -178,42 +174,43 @@ void main_location() {
             printf("0 - Voltar\n");
             printf("++++++\nOpcao: ");
 
-            read_string(&opcao);
+            read_string(input);
 
-            switch (opcao) {
+            switch (*input) {
                 case '0':
                     return;
                 case '1':
-                    form_location_insert();
+                    form_location_insert(input);
                     break;
                 case '2':
-                    form_location_devolution();
+                    form_location_devolution(input);
                     break;
                 case '3':
-                    form_location_update();
+                    form_location_update(input);
                     break;
                 case '4':
-                    puts_all_locations();
+                    puts_all_locations(input);
                     break;
                 case '5':
-                    form_location_search();
+                    form_location_search(input);
                     break;
                 default:
                     printf("Opcao invalida!\n");
             }
-        } while (opcao != '0');
-    } while (opcao != '0');
+        } while (*input != '0');
+    } while (*input != '0');
     return;
 }
 
 int main() {
-    char opcao = NON_EXIST;
-
     printf("::: LoC LoCadora :::\n\n");
     printf(">>> Criado por Samir <samirfor@gmail.com> e\n");
     printf(">>> Regio <regflafil@hotmail.com>\n");
-    printf("Este programa esta sob GNU General Public License <http://www.gnu.org/licenses/>\n\n");
+    printf("Este programa esta sob GNU General Public License <http://www.gnu.org/licenses/>\n");
+    printf("\nOBS: Para finalizar o programa a qualquer momento digite \"SAIR\"\n\n");
 
+    char * input;
+    input = input_malloc();
     do {
         do {
             printf("++ MENU ++\n");
@@ -223,29 +220,29 @@ int main() {
             printf("4 - DVDs\n");
             printf("0 - Sair\n");
             printf("++++++\nOpcao: ");
-				opcao = '5';
-            read_string(&opcao);
+            read_string(input);
 
-            switch (opcao) {
+            switch (*input) {
                 case '0':
                     printf("Good bye! Have a nice day.\n");
-                    return 0;
+                    free(input);
+                    return EXIT_SUCCESS;
                 case '1':
-                    main_client();
+                    main_client(input);
                     break;
                 case '2':
-                    main_movie();
+                    main_movie(input);
                     break;
                 case '3':
-                    main_location();
+                    main_location(input);
                     break;
                 case '4':
-                    main_dvd();
+                    main_dvd(input);
                     break;
                 default:
                     printf("Opcao invalida!\n");
             }
-        } while (opcao != '0');
-    } while (opcao != '0');
-    return;
+        } while (*input != '0');
+    } while (*input != '0');
+    return EXIT_SUCCESS;
 }

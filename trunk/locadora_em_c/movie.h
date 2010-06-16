@@ -20,8 +20,8 @@
 
 typedef struct {
     int id;
-    char title[150];
-    char genere[100];
+    char title[255];
+    char genere[255];
     int lenght;
 } Movie;
 
@@ -67,8 +67,6 @@ extern Movie * movie_file_to_a();
 extern void copy_movie(Movie* dest, Movie* src);
 /* Ver a quantidade de filmes no arquivo. */
 extern int get_size_movies();
-/* Subformulário para filme */
-extern Movie * form_movie_select(char *input);
 /* Lista todos os filmes */
 extern void puts_all_movies();
 /* Insere um filme no arquivo */
@@ -78,19 +76,19 @@ extern int update_movie(Movie*);
 /* Remove um filme no arquivo */
 extern int erase_movie(Movie*);
 /* Formulário com os atributos do filme */
-extern void form_movie(Movie*);
+extern void form_movie(Movie*, char *input);
 /* Formulário de inserção de filme */
-extern void form_movie_insert();
+extern void form_movie_insert(char *input);
 /* Formulário de atualização de filme */
-extern void form_movie_update();
+extern void form_movie_update(char *input);
 /* Formulário de pesquisa de filme */
-extern void form_movie_search();
+extern void form_movie_search(char *input);
 /* Formulário de remoção de filme */
-extern void form_movie_erase();
+extern void form_movie_erase(char *input);
 /* Formulário de ordenação de filmes */
 extern void form_movie_sort();
 /* Pesquisa um filme e retorna-o. */
-extern Movie * form_movie_select();
+extern Movie * form_movie_select(char *input);
 
 #endif	/* _MOVIE_H */
 
