@@ -33,6 +33,8 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/cpf.o \
 	${OBJECTDIR}/location.o \
+	${OBJECTDIR}/date.o \
+	${OBJECTDIR}/item.o \
 	${OBJECTDIR}/movie.o \
 	${OBJECTDIR}/dvd.o \
 	${OBJECTDIR}/client.o \
@@ -73,6 +75,16 @@ ${OBJECTDIR}/location.o: nbproject/Makefile-${CND_CONF}.mk location.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/location.o location.c
+
+${OBJECTDIR}/date.o: nbproject/Makefile-${CND_CONF}.mk date.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/date.o date.c
+
+${OBJECTDIR}/item.o: nbproject/Makefile-${CND_CONF}.mk item.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/item.o item.c
 
 ${OBJECTDIR}/movie.o: nbproject/Makefile-${CND_CONF}.mk movie.c 
 	${MKDIR} -p ${OBJECTDIR}

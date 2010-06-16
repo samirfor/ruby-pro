@@ -31,7 +31,7 @@ int check_by_id_location(char *input) {
     if (id > 0 && location_index_exist(id)) {
         return id;
     } else {
-        printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "locacao");
         return NON_EXIST;
     }
 }
@@ -478,6 +478,14 @@ void form_location_update(char *input) {
             printf("> Qual cliente? ");
             client = form_client_select(input);
         } while (client->id == NON_EXIST);
+        puts_client(client);
+        // Tem certeza?
+        if (!be_sure(input)) {
+            printf("Abortando alteracao de locacao.\n\n");
+            free(location);
+            free(client);
+            return;
+        }
         location->id_client = client->id;
         free(client);
     }
