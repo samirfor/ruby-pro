@@ -287,6 +287,19 @@ void copy_dvd(DVD * dest, DVD * src) {
     dest->price_location = src->price_location;
 }
 
+double get_dvd_price(int id_dvd) {
+    DVD *dvd;
+    double price = 0.0;
+
+    dvd = search_dvd_by_id(id_dvd);
+    if (dvd->id == NON_EXIST) {
+        exit(EXIT_FAILURE);
+    }
+    price = dvd->price_location;
+    free(dvd);
+    return price;
+}
+
 int get_size_dvds() {
     FILE *file_stream = NULL;
 
@@ -337,6 +350,10 @@ DVD * dvd_file_to_a() {
     return vetor;
 }
 
+void puts_dvd_row_list() {
+    printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
+}
+
 void puts_dvd(DVD * dvd) {
     Movie *movie;
     char *buffer;
@@ -352,9 +369,9 @@ void puts_dvd(DVD * dvd) {
     }
     printf("\nPreco de locacao: %.2f\n", dvd->price_location);
     //printf("Data de compra: %s\n", ctime(&dvd->buy_date));
-    buffer = puts_date(&dvd->buy_date);
+    buffer = date_to_s(&dvd->buy_date);
     printf("Data de compra: %s\n", buffer);
-    
+
     free(buffer);
     free(movie);
 }
@@ -372,8 +389,7 @@ void puts_dvd_list_format(DVD * dvd) {
         printf("nao");
     }
     printf("\t%.2f\t", dvd->price_location);
-    // printf("%s\n", ctime(&dvd->buy_date));
-    buffer = puts_date(&dvd->buy_date);
+    buffer = date_to_s(&dvd->buy_date);
     printf("%s\n", buffer);
 
     free(buffer);
@@ -406,7 +422,7 @@ void puts_all_dvds() {
 
     dvd = dvd_malloc();
     printf("\n=======\nLISTA DE TODOS OS DVDS: \n\n");
-    printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
+    puts_dvd_row_list();
     fread(dvd, sizeof (DVD), 1, file_stream);
     while (!feof(file_stream)) {
         puts_dvd_list_format(dvd);
@@ -428,7 +444,7 @@ void puts_all_dvds_by_movie(Movie *movie, char force_avaliable) {
     }
 
     dvd = dvd_malloc();
-    printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
+    puts_dvd_row_list();
     fread(dvd, sizeof (DVD), 1, file_stream);
     while (!feof(file_stream)) {
         if (movie->id == dvd->id_movie) {
@@ -446,7 +462,12 @@ void puts_all_dvds_by_movie(Movie *movie, char force_avaliable) {
 
 void form_dvd(DVD *dvd, char * input) {
     do {
-        printf("Disponivel? [S]im ou [n]ao? ");
+        char buffer[4];
+        if (dvd->avaliable)
+            strcpy(buffer, "sim");
+        else
+            strcpy(buffer, "nao");
+        printf("Disponivel [%s]? [S]im ou [n]ao? ", buffer);
         read_string(input);
     } while (strcasecmp(input, "S") && strcasecmp(input, "N"));
     if (!strcasecmp(input, "S"))
@@ -458,7 +479,7 @@ void form_dvd(DVD *dvd, char * input) {
         read_string(input);
     } while (strcasecmp(input, "S") && strcasecmp(input, "N"));
     if (!strcasecmp(input, "S"))
-        dvd->buy_date = form_parse_date("Data de compra []:\n", input);
+        dvd->buy_date = form_parse_date("Data de compra:\n", input);
     do {
         printf("Preco de locacao [R$ %.2lf]: ", dvd->price_location);
         read_string(input);
@@ -484,9 +505,9 @@ DVD *form_dvd_select(char *input) {
                     dvd->id = NON_EXIST;
                     return dvd;
                 }
-                // Procura o dvd pelo ID, caso não ache,
-                // retorna um dvd com ID = NON_EXIST
+                // Procura o dvd pelo ID
                 dvd = search_dvd_by_id(id);
+                *input = '1';
                 break;
             case '2':
                 // Verifica se é um nome válido
@@ -499,10 +520,12 @@ DVD *form_dvd_select(char *input) {
                 // Verifica se é um filme válido
                 if (movie->id == NON_EXIST) {
                     dvd->id = NON_EXIST;
+                    free(movie);
                     return dvd;
                 }
                 // Lista todos os item com o titulo pesquisado.
                 puts_all_dvds_by_movie(movie, FALSE);
+                free(movie);
                 // Pede para o usuário escolher por ID agora.
                 do {
                     printf("> Qual deles? Informe o valor da coluna ID: ");
@@ -511,9 +534,19 @@ DVD *form_dvd_select(char *input) {
                 id = atoi(input);
                 // Procura o dvd pelo ID agora
                 dvd = search_dvd_by_id(id);
+                *input = '2';
                 break;
             default:
                 printf("Opcao invalida!\n");
+        }
+        // Caso não ache, retorna com ID = NON_EXIST
+        if (dvd->id == NON_EXIST) {
+            if (*input == '1')
+                printf(ID_NOT_FOUND_ERROR, __FILE__, "DVD");
+            else if (*input == '2')
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "DVD");
+            dvd->id = NON_EXIST;
+            return dvd;
         }
     } while (*input != '1' && *input != '2');
     return dvd;
@@ -533,6 +566,8 @@ void form_dvd_insert(char *input) {
         printf("> Qual o filme? ");
         movie = form_movie_select(input);
     } while (movie->id == NON_EXIST);
+    puts_movie_row_list();
+    puts_movie(movie);
     // Tem certeza?
     if (!be_sure(input)) {
         printf("Abortando.\n\n");
@@ -546,6 +581,7 @@ void form_dvd_insert(char *input) {
     } while (!validate_number_float(input));
     dvd->price_location = atof(input);
     dvd->avaliable = TRUE;
+    dvd->buy_date = time(NULL);
 
     free(movie);
 
@@ -592,6 +628,8 @@ void form_dvd_update(char *input) {
         free(dvd);
         return;
     }
+    // Mostra o resultado da busca
+    puts_dvd(dvd);
     // Tem certeza?
     if (!be_sure(input)) {
         printf("Abortando modificacao de dvd.\n\n");
@@ -633,6 +671,9 @@ void form_dvd_erase(char *input) {
         free(dvd);
         return;
     }
+    // Mostra o resultado da busca
+    puts_dvd_row_list();
+    puts_dvd(dvd);
     // Tem certeza?
     if (!be_sure(input)) {
         printf("Abortando remocao de dvd.\n\n");

@@ -1,11 +1,11 @@
-/* 
+/*
  * File:   location.h
  *
  * Created on 5 de Maio de 2010, 16:24
  */
 
 #ifndef _LOCATION_H
-#define	_LOCATION_H
+#define _LOCATION_H
 
 #include <time.h>
 #include "client.h"
@@ -27,6 +27,7 @@ typedef struct {
     int id;
     int id_client;
     time_t date;
+    double total;
 } Location;
 
 /***************************************
@@ -52,7 +53,7 @@ extern int location_first_index_avaliable();
 /* Ordenar arquivo por nome  */
 extern Location * sort_location_by_name();
 /* Imprime na tela uma locação de forma humanamente legível */
-extern void puts_location(Location*);
+extern void puts_location(Location*, char show_id);
 /* Remove o lixo da estrutura */
 extern void location_initialize(Location*);
 /* Declara dinâmicamente uma locação */
@@ -92,15 +93,19 @@ extern void form_location_remove_items(Location *location, char *input);
 /* Formulário para seleção do cliente referência */
 extern void form_location_client(Location *location, char *input, char *msg);
 /* Formulário de inserção de locação */
-extern void form_location_insert();
+extern void form_location_insert(char *input);
 /* Formulário de atualização de locação */
-extern void form_location_update();
+extern void form_location_update(char *input);
 /* Formulário de pesquisa de locação */
-extern void form_location_search();
+extern void form_location_search(char *input);
 /* Formulário de remoção de locação */
-extern void form_location_erase();
+extern void form_location_erase(char *input);
 /* Formulário de ordenação de locações */
-extern void form_location_sort();
+extern void form_location_sort(char *input);
+/* Formulário de seleção de uma locação */
+extern Location * form_location_select(char *input);
+/* Manipula todos os ítens como retornados. */
+extern void location_full_returned(Location *location);
 
-#endif	/* _LOCATION_H */
+#endif  /* _LOCATION_H */
 

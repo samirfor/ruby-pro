@@ -19,9 +19,9 @@
 
 char *read_string(char *str) {
     __fpurge(stdin);
+    *str = NON_EXIST;
     gets(str);
-    strcpy(str, "");
-    if (strcasecmp(str, "sair")) {
+    if (!strcasecmp(str, "sair")) {
         printf("Finalizando o programa a pedido do usuario.\n");
         exit(EXIT_SUCCESS);
     }

@@ -106,7 +106,7 @@ Movie * search_movie_by_title(char *name) {
     regex_t reg;
 
     if (regcomp(&reg, name, REG_EXTENDED | REG_NOSUB | REG_ICASE)) {
-        fprintf(stderr, "%s: ERRO na compilacao da expressao regular.", __FILE__);
+        fprintf(stderr, "%s: ERRO na compilacao da expressao regular.\n", __FILE__);
         fclose(file_stream);
         movie->id = NON_EXIST;
         return movie;
@@ -377,6 +377,10 @@ Movie * sort_movie_by_title() {
     return vetor;
 }
 
+void puts_movie_row_list() {
+    printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
+}
+
 void puts_movie(Movie * movie) {
     printf("%d  ", movie->id);
     printf("%s \t %s \t ", movie->title, movie->genere);
@@ -416,7 +420,7 @@ void puts_all_movies() {
 
     movie = movie_malloc();
     printf("\n=======\nLISTA DE TODOS OS FILMES: \n\n");
-    printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
+    puts_movie_row_list();
     fread(movie, sizeof (Movie), 1, file_stream);
     while (!feof(file_stream)) {
         puts_movie(movie);
@@ -458,7 +462,7 @@ void form_movie_sort() {
     }
 
     printf("\n=======\nLISTA DE TODOS OS FILMES ORDENADOS POR TITULO: \n\n");
-    printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
+    puts_movie_row_list();
     for (i = 0; i < size; i++) {
         puts_movie(vetor + i);
     }
@@ -506,6 +510,7 @@ void form_movie_update(char *input) {
         return;
     }
     // Mostra o resultado da pesquisa feita pelo usuário.
+    puts_movie_row_list();
     puts_movie(movie);
     // Tem certeza?
     if (!be_sure(input)) {
@@ -549,7 +554,8 @@ void form_movie_erase(char *input) {
         free(movie);
         return;
     }
-
+    puts_movie_row_list();
+    puts_movie(movie);
     // Tem certeza?
     if (!be_sure(input)) {
         printf("Abortando remocao de filme.\n\n");
@@ -584,6 +590,7 @@ Movie * form_movie_select(char *input) {
                     return movie;
                 }
                 movie = search_movie_by_id(id);
+                *input = '1';
                 break;
             case '2':
                 if (!check_by_name(input)) {
@@ -595,9 +602,19 @@ Movie * form_movie_select(char *input) {
                     printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
                     return movie;
                 }
+                *input = '2';
                 break;
             default:
                 printf("Opcao invalida!\n");
+        }
+        // Caso não ache, retorna com ID = NON_EXIST
+        if (movie->id == NON_EXIST) {
+            if (*input == '1')
+                printf(ID_NOT_FOUND_ERROR, __FILE__, "DVD");
+            else if (*input == '2')
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "DVD");
+            movie->id = NON_EXIST;
+            return movie;
         }
     } while (*input != '1' && *input != '2');
     return movie;
@@ -617,7 +634,7 @@ void form_movie_search(char *input) {
     if (movie->id == NON_EXIST) {
         printf("%s: Nada encontrado.\n", __FILE__);
     } else {
-        printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
+        puts_movie_row_list();
         puts_movie(movie);
     }
     printf("\n=======\n");

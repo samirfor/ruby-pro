@@ -9,11 +9,10 @@
 #include <string.h>
 #include <regex.h>
 #include <time.h>
-#include "strings.h"
-#include "client.h"
-#include "status.h"
+
 #include "exceptions.h"
-#include "validations.h"
+#include "status.h"
+#include "client.h"
 #include "date.h"
 
 /*
@@ -104,7 +103,7 @@ Client * search_client_by_name(char *name) {
     regex_t reg;
 
     if (regcomp(&reg, name, REG_EXTENDED | REG_NOSUB | REG_ICASE)) {
-        fprintf(stderr, "%s: ERRO na compilacao da expressao regular.", __FILE__);
+        fprintf(stderr, "%s: ERRO na compilacao da expressao regular.\n", __FILE__);
         fclose(file_stream);
         client->id = NON_EXIST;
         return client;
@@ -384,7 +383,7 @@ void puts_client(Client * client) {
     printf("ID: %d\n", client->id);
     printf("Nome: %s\nCPF: %s\nRG: %s\n", client->name, client->CPF, client->RG);
     printf("Fone: %s\n", client->phone);
-    buffer = puts_date(&client->birth_date);
+    buffer = date_to_s(&client->birth_date);
     printf("Data de nascimento: %s\n\n", buffer);
     free(buffer);
 }
@@ -432,10 +431,6 @@ void puts_all_clients() {
 }
 
 void form_client(Client *client, char *input) {
-    char do_again_flag;
-    struct tm time_info;
-    int day, month, year;
-
     printf("Nome: ");
     read_string(client->name);
     printf("CPF: ");
@@ -444,69 +439,7 @@ void form_client(Client *client, char *input) {
     read_string(client->RG);
     printf("Fone: ");
     read_string(client->phone);
-    do {
-        printf("Data de nascimento:\n");
-        do {
-            do_again_flag = FALSE;
-            printf("\tDia: ");
-            read_string(input);
-            if (!validate_number_int(input)) {
-                do_again_flag = TRUE;
-                continue;
-            }
-            day = atoi(input);
-            if (day < 0 || day > 31) {
-                do_again_flag = TRUE;
-                printf(ERROR_MSG);
-                continue;
-            }
-        } while (do_again_flag);
-        do {
-            do_again_flag = FALSE;
-            printf("\tMes: ");
-            read_string(input);
-            if (!validate_number_int(input)) {
-                do_again_flag = TRUE;
-                continue;
-            }
-            month = atoi(input);
-            if (month < 0 || month > 12) {
-                do_again_flag = TRUE;
-                printf(ERROR_MSG);
-                continue;
-            }
-        } while (do_again_flag);
-        do {
-            do_again_flag = FALSE;
-            printf("\tAno: ");
-            read_string(input);
-            if (!validate_number_int(input)) {
-                do_again_flag = TRUE;
-                continue;
-            }
-            year = atoi(input);
-            if (year < 1900) {
-                do_again_flag = TRUE;
-                printf(ERROR_MSG);
-                continue;
-            }
-        } while (do_again_flag);
-        if (!validate_date(day, month, year)) {
-            printf("%s: Data invalida.\n", __FILE__);
-            do_again_flag = TRUE;
-            continue;
-        }
-
-        // Parse para o formato time_t
-        time_info.tm_year = year - 1900;
-        time_info.tm_mon = month;
-        time_info.tm_mday = day;
-        time_info.tm_hour = 0;
-        time_info.tm_min = 0;
-        time_info.tm_sec = 1;
-        time_info.tm_isdst = 0;
-        client->birth_date = mktime(&time_info);
-    } while (do_again_flag);
+    client->birth_date = form_parse_date("Data de nascimento: \n", input);
 }
 
 void form_client_sort() {
@@ -567,6 +500,7 @@ void form_client_update(char *input) {
         free(client);
         return;
     }
+    puts_client_by_id(client->id);
     //Tem certeza?
     if (!be_sure(input)) {
         printf("Abortando modificacao de cliente.\n\n");
@@ -608,6 +542,7 @@ void form_client_erase(char *input) {
         free(client);
         return;
     }
+    puts_client_by_id(client->id);
     // Tem certeza?
     if (!be_sure(input)) {
         printf("Abortando remocao de cliente.\n\n");
@@ -642,7 +577,7 @@ void form_client_search(char *input) {
         return;
     }
     // Mostra o cliente
-    puts_client(client);
+    puts_client_by_id(client->id);
     printf("\n=======\n");
     free(client);
 }
@@ -664,9 +599,9 @@ Client *form_client_select(char *input) {
                     client->id = NON_EXIST;
                     return client;
                 }
-                // Procura o cliente pelo ID, caso não ache,
-                // retorna um cliente com ID = NON_EXIST
+                // Procura o cliente pelo ID
                 client = search_client_by_id(id);
+                *input = '1';
                 break;
             case '2':
                 // Verifica se é um nome válido
@@ -674,17 +609,21 @@ Client *form_client_select(char *input) {
                     client->id = NON_EXIST;
                     return client;
                 }
-                // Procura o cliente pelo nome, caso não ache,
-                // retorna um cliente com ID = NON_EXIST
+                // Procura o cliente pelo nome
                 client = search_client_by_name(input);
-                if (client->id == NON_EXIST) {
-                    printf(NAME_NOT_FOUND_ERROR, __FILE__, "cliente");
-                    client->id = NON_EXIST;
-                    return client;
-                }
+                *input = '2';
                 break;
             default:
                 printf("Opcao invalida!\n");
+        }
+        // Caso não ache, retorna com ID = NON_EXIST
+        if (client->id == NON_EXIST) {
+            if (*input == '1')
+                printf(ID_NOT_FOUND_ERROR, __FILE__, "cliente");
+            else if (*input == '2')
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "cliente");
+            client->id = NON_EXIST;
+            return client;
         }
     } while (*input != '1' && *input != '2');
     return client;

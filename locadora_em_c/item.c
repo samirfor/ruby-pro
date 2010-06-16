@@ -10,13 +10,14 @@
 #include <time.h>
 #include <string.h>
 #include <regex.h>
-#include "status.h"
 #include "item.h"
+#include "status.h"
 #include "exceptions.h"
 #include "dvd.h"
 #include "location.h"
 #include "strings.h"
 #include "validations.h"
+#include "date.h"
 
 /*
  * Item module
@@ -55,6 +56,8 @@ void item_initialize(Item * item) {
     item->id_dvd = NON_EXIST;
     item->id_location = NON_EXIST;
     item->return_date = 0;
+    item->returned = FALSE;
+    item->price = 0.0;
 }
 
 Item * search_item_by_id(int id) {
@@ -110,7 +113,7 @@ Item * search_item_by_movietitle(Location *location, char *input) {
     regex_t reg;
 
     if (regcomp(&reg, input, REG_EXTENDED | REG_NOSUB | REG_ICASE)) {
-        fprintf(stderr, "%s: ERRO na compilacao da expressao regular.", __FILE__);
+        fprintf(stderr, "%s: ERRO na compilacao da expressao regular.\n", __FILE__);
         fclose(file_stream);
         free(dvd);
         free(movie);
@@ -313,6 +316,8 @@ void copy_item(Item * dest, Item * src) {
     dest->id_dvd = src->id_dvd;
     dest->id_location = src->id_location;
     dest->return_date = src->return_date;
+    dest->returned = src->returned;
+    dest->price = src->price;
 }
 
 int get_size_items() {
@@ -365,29 +370,34 @@ Item * item_file_to_a() {
     return vetor;
 }
 
+void puts_item_row_list() {
+    printf("------ Item | No. DVD | Filme | Data de entrega | Devolvido | Valor ------\n");
+}
+
 void puts_item(Item *item, char quiet) {
     Movie * movie;
     DVD *dvd;
-    struct tm * timeinfo;
-    char input[11];
+    char *date;
 
     dvd = search_dvd_by_id(item->id_dvd);
     movie = search_movie_by_id(dvd->id_movie);
-    // Calcula data de entrega
-    item->return_date += 60 * 60 * 24 * (3); // dias
-    timeinfo = localtime(&item->return_date);
-    strftime(input, 11, "%d/%m/%Y", timeinfo);
 
     if (!quiet) {
-        printf("------ Item | No. DVD | Filme | Data de entrega | Valor ------\n");
+        puts_item_row_list();
     }
     printf("%d  ", item->id);
     printf("%d  ", item->id_dvd);
     printf("%s\t ", movie->title);
-    printf("%s\t ", ctime(&item->return_date));
-    printf("R$ %.2lf\n", dvd->price_location);
-
+    date = date_to_s(&item->return_date);
+    printf("%s\t", date);
+    if (item->returned) {
+        printf("sim\t");
+    } else {
+        printf("nao\t");
+    }
+    printf("R$ %.2lf\n", item->price);
     free(movie);
+    free(date);
     free(dvd);
 }
 
@@ -404,14 +414,15 @@ void puts_items_by_location(Location *location, char quiet) {
     file_stream = fopen(ITEMS_FILEPATH, "rb");
     if (!file_stream) {
         printf(READ_OPEN_ERROR, __FILE__, ITEMS_FILEPATH);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
     item = item_malloc();
     if (!quiet)
-        printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
+        puts_item_row_list();
     fread(item, sizeof (Item), 1, file_stream);
     while (!feof(file_stream)) {
         if (item->id_location == location->id) {
+            update_item_price(item);
             puts_item(item, TRUE);
         }
         fread(item, sizeof (Item), 1, file_stream);
@@ -433,7 +444,7 @@ void puts_items_by_location_only_titles(Location *location) {
     file_stream = fopen(ITEMS_FILEPATH, "rb");
     if (!file_stream) {
         printf(READ_OPEN_ERROR, __FILE__, ITEMS_FILEPATH);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
     item = item_malloc();
     fread(item, sizeof (Item), 1, file_stream);
@@ -460,10 +471,11 @@ void puts_all_items(char quiet) {
 
     item = item_malloc();
     if (!quiet) {
-        printf("------ ID | Filme | Disponivel | Preco de locacao | Data de compra ------\n");
+        puts_item_row_list();
     }
     fread(item, sizeof (Item), 1, file_stream);
     while (!feof(file_stream)) {
+        update_item_price(item);
         puts_item(item, TRUE);
         fread(item, sizeof (Item), 1, file_stream);
     }
@@ -471,7 +483,93 @@ void puts_all_items(char quiet) {
     free(item);
 }
 
-void form_item_insert(Location* location, char *input) {
+double get_total_items_returned_by_location(Location *location) {
+    FILE *file_stream = NULL;
+    Item *item;
+    double count = 0.0;
+
+    file_stream = fopen(ITEMS_FILEPATH, "rb");
+    if (!file_stream) {
+        printf(EMPTY_ERROR, __FILE__, "item");
+        return;
+    }
+
+    item = item_malloc();
+    fread(item, sizeof (Item), 1, file_stream);
+    while (!feof(file_stream)) {
+        if (location->id == item->id_location && item->returned) {
+            count += get_dvd_price(item->id_dvd);
+        }
+        fread(item, sizeof (Item), 1, file_stream);
+    }
+    fclose(file_stream);
+    free(item);
+    return count;
+}
+
+double get_total_to_pay(Location *location) {
+    double total = 0.0;
+    FILE *file_stream = NULL;
+    Item *item;
+
+    file_stream = fopen(ITEMS_FILEPATH, "rb");
+    if (!file_stream) {
+        printf(EMPTY_ERROR, __FILE__, "item");
+        return;
+    }
+
+    item = item_malloc();
+    fread(item, sizeof (Item), 1, file_stream);
+    while (!feof(file_stream)) {
+        if (location->id == item->id_location && !item->returned) {
+            update_item_price(item);
+            total += item->price;
+        }
+        fread(item, sizeof (Item), 1, file_stream);
+    }
+    fclose(file_stream);
+    free(item);
+    return total;
+}
+
+char update_item_price(Item *item) {
+    struct tm *time_info;
+    time_t time_now = 0;
+    DVD *dvd;
+    int diffday = 0;
+
+    dvd = search_dvd_by_id(item->id_dvd);
+    if (dvd->id == NON_EXIST) {
+        return FALSE;
+    }
+
+    // Calcula diferença de tempos
+    time_now = time(NULL);
+    time_info = localtime(&time_now);
+    // Parse para o formato time_t
+    time_info->tm_hour = 0;
+    time_info->tm_min = 0;
+    time_info->tm_sec = 1;
+    time_info->tm_isdst = 0;
+    time_now = mktime(time_info);
+    diffday = time_now / 60 / 60 / 24 - item->return_date / 60 / 60 / 24;
+    if (diffday <= 0) {
+        // Tudo em dia, preço normal
+        item->price = dvd->price_location;
+    } else {
+        // Se tiver atrasado, o valor cobrado pela diária terá base = 50% do preço de aluguel
+        item->price = dvd->price_location + (diffday * (0.5 * dvd->price_location));
+    }
+
+    free(dvd);
+    if (update_item(item)) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+char form_item_insert(Location* location, char *input) {
     /* Caso de uso:
      * 1 - O sistema pergunta ao usuário qual filme quer adicionar.
      * 2 - O usuário pesquisa um filme
@@ -487,28 +585,43 @@ void form_item_insert(Location* location, char *input) {
 
     item = item_malloc();
     do {
-        printf("> Qual filme deseja adicionar? ");
-        movie = form_movie_select(input);
-    } while (movie->id == NON_EXIST);
+        do {
+            printf("> Qual filme deseja adicionar? ");
+            movie = form_movie_select(input);
+        } while (movie->id == NON_EXIST);
+        puts_movie_row_list();
+        puts_movie(movie);
+        // Tem certeza?
+    } while (!be_sure(input));
     dvd = search_dvd_by_movie(movie, TRUE);
     if (dvd->id == NON_EXIST) {
         printf("%s: Nao ha DVD disponivel para este filme.\n", __FILE__);
-        return;
+        free(dvd);
+        free(item);
+        free(movie);
+        return FALSE;
     }
     // Atribuições
     item->id_location = location->id;
     item->id_dvd = dvd->id;
+    item->returned = FALSE;
     item->return_date = time(NULL) + (60 * 60 * 24 * (3)); // 3 dias
+    item->price = dvd->price_location;
+    location->total += dvd->price_location;
     // Escrevendo no arquivo as alterações
     if (insert_item(item)) {
-        printf("Item \"%s\" inserido com sucesso.\n", movie->title);
+        printf("Filme \"%s\" inserido com sucesso.\n", movie->title);
+        free(item);
+        free(dvd);
+        free(movie);
+        return TRUE;
     } else {
-        printf("Item \"%s\" nao foi inserido corretamente!\n", movie->title);
+        printf("Filme \"%s\" nao foi inserido corretamente!\n", movie->title);
+        free(item);
+        free(dvd);
+        free(movie);
+        return FALSE;
     }
-
-    free(item);
-    free(dvd);
-    free(movie);
 }
 
 void form_item_remove(Location* location, char *input) {
@@ -520,10 +633,43 @@ void form_item_remove(Location* location, char *input) {
      * 5 - Se não houver, o sistema informa o ocorrido.
      * 6 - Fim do caso de uso
      */
-    
+
     Item *item;
 
-    input = input_malloc();
+    item = form_item_select(location, input);
+    // Verifica se é ítem válido
+    if (item->id == NON_EXIST) {
+        free(item);
+        return;
+    }
+    // Tem certeza?
+    if (!be_sure(input)) {
+        printf("Abortando remocao de filme.\n\n");
+        free(item);
+        return;
+    }
+    location->total -= get_dvd_price(item->id_dvd);
+    // Escrevendo no arquivo as alterações
+    if (erase_item(item)) {
+        printf("Filme removido com sucesso.\n");
+    } else {
+        printf("Filme nao foi removido corretamente!\n");
+    }
+
+    free(item);
+}
+
+void form_item_return(Location* location, char *input) {
+    /* Caso de uso:
+     * 1 - O sistema pergunta ao usuário qual item quer devolver.
+     * 2 - O usuário escolhe um ítem.
+     * 3 - Se houver, o sistema devolve com sucesso.
+     * 4 - Se não houver, o sistema informa o ocorrido.
+     * 5 - Fim do caso de uso
+     */
+
+    Item *item;
+
     puts_items_by_location(location, FALSE);
     item = form_item_select(location, input);
     // Verifica se é ítem válido
@@ -533,41 +679,40 @@ void form_item_remove(Location* location, char *input) {
     }
     // Tem certeza?
     if (!be_sure(input)) {
-        printf("Abortando remocao de cliente.\n\n");
+        printf("Abortando devolucao de item.\n\n");
         free(item);
         return;
     }
+    item->returned = TRUE;
+
     // Escrevendo no arquivo as alterações
-    if (erase_item(item)) {
-        printf("Item removido com sucesso.\n");
+    if (update_item(item)) {
+        printf("Item devolvido com sucesso.\n");
     } else {
         printf("Item nao foi removido corretamente!\n");
     }
-    
+
     free(item);
 }
 
-void form_item_return(Location* location, char *input) {
-    // TODO item return
-    /* Caso de uso:
-     * 1 - 
-     */
-}
-
-void form_items_insert(Location *location, char *input) {
+int form_items_insert(Location *location, char *input) {
     /* Objetivo: perguntar se o usuário quer adicionar mais ítens. */
+    int count = 0;
     do {
-        form_item_insert(location, input);
+        if (form_item_insert(location, input)) {
+            count++;
+        }
         printf("> Deseja inserir mais filmes a esta locacao? [S]im ou [n]ao? ");
         read_string(input);
     } while (!strcasecmp(input, "S") || strcasecmp(input, "N"));
+    return count;
 }
 
 void form_items_remove(Location *location, char *input) {
     /* Objetivo: perguntar se o usuário quer remover mais ítens. */
     do {
         form_item_remove(location, input);
-        printf("> Deseja remover mais filmes desta locacao? [S]im ou [n]ao? ");
+        printf("> Deseja remover mais itens desta locacao? [S]im ou [n]ao? ");
         read_string(input);
     } while (!strcasecmp(input, "S") || strcasecmp(input, "N"));
 }
@@ -576,7 +721,7 @@ void form_items_return(Location *location, char *input) {
     /* Objetivo: perguntar se o usuário quer devolver mais ítens. */
     do {
         form_item_return(location, input);
-        printf("> Deseja devolver mais filmes desta locacao? [S]im ou [n]ao? ");
+        printf("> Deseja devolver mais itens desta locacao? [S]im ou [n]ao? ");
         read_string(input);
     } while (!strcasecmp(input, "S") || strcasecmp(input, "N"));
 }
@@ -588,7 +733,7 @@ Item * form_item_select(Location *location, char *input) {
     item = item_malloc();
 
     do {
-        printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por nome: ");
+        printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por titulo: ");
         read_string(input);
         switch (*input) {
             case '1':
@@ -598,9 +743,9 @@ Item * form_item_select(Location *location, char *input) {
                     item->id = NON_EXIST;
                     return item;
                 }
-                // Procura o item pelo ID, caso não ache,
-                // retorna um item com ID = NON_EXIST
+                // Procura o item pelo ID
                 item = search_item_by_id(id);
+                *input = '1';
                 break;
             case '2':
                 // Verifica se é um nome válido
@@ -608,17 +753,21 @@ Item * form_item_select(Location *location, char *input) {
                     item->id = NON_EXIST;
                     return item;
                 }
-                // Procura o item pelo nome, caso não ache,
-                // retorna um item com ID = NON_EXIST
+                // Procura o item pelo titulo
                 item = search_item_by_movietitle(location, input);
-                if (item->id == NON_EXIST) {
-                    printf(NAME_NOT_FOUND_ERROR, __FILE__, "item");
-                    item->id = NON_EXIST;
-                    return item;
-                }
+                *input = '2';
                 break;
             default:
                 printf("Opcao invalida!\n");
+        }
+        // Caso não ache, retorna com ID = NON_EXIST
+        if (item->id == NON_EXIST) {
+            if (*input == '1')
+                printf(ID_NOT_FOUND_ERROR, __FILE__, "item");
+            else if (*input == '2')
+                printf(NAME_NOT_FOUND_ERROR, __FILE__, "item");
+            item->id = NON_EXIST;
+            return item;
         }
     } while (*input != '1' && *input != '2');
     return item;
