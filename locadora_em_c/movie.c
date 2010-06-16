@@ -34,7 +34,7 @@ int check_by_id_movie(char *input) {
         return id;
     } else {
         printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
-        return FALSE;
+        return NON_EXIST;
     }
 }
 
@@ -391,6 +391,7 @@ void puts_movie_by_id(int id_movie) {
     puts_movie(movie);
     free(movie);
 }
+
 void puts_movie_title_by_dvd_id(int id_dvd) {
     DVD *dvd;
     Movie *movie;
@@ -414,21 +415,19 @@ void puts_all_movies() {
     }
 
     movie = movie_malloc();
-    printf("=======\nLISTA DE TODOS OS FILMES: \n\n");
+    printf("\n=======\nLISTA DE TODOS OS FILMES: \n\n");
     printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
     fread(movie, sizeof (Movie), 1, file_stream);
     while (!feof(file_stream)) {
         puts_movie(movie);
         fread(movie, sizeof (Movie), 1, file_stream);
     }
-    printf("=======\n");
+    printf("\n=======\n");
     fclose(file_stream);
     free(movie);
 }
 
-void form_movie(Movie *movie) {
-    char *input;
-
+void form_movie(Movie *movie, char *input) {
     printf("Titulo: ");
     read_string(movie->title);
     printf("Genero: ");
@@ -439,14 +438,13 @@ void form_movie(Movie *movie) {
         read_string(input);
     } while (!validate_number_int(input));
     movie->lenght = atoi(input);
-    free(input);
 }
 
 void form_movie_sort() {
     int i, size;
     Movie *vetor;
 
-    /* Antes de tudo, precisamos testar se há algum filme no arquivo */
+    // Antes de tudo, precisamos testar se há algum filme no arquivo
     if (movies_file_is_empty()) {
         printf(EMPTY_ERROR, __FILE__, "filme");
         return;
@@ -455,97 +453,72 @@ void form_movie_sort() {
     vetor = sort_movie_by_title();
     size = get_size_movies();
     if (!vetor) {
-        printf("Nao foi possivel ordenar corretamente!\n");
+        printf("%s: Nao foi possivel ordenar corretamente!\n", __FILE__);
         return;
     }
 
-    printf("=======\nLISTA DE TODOS OS FILMES ORDENADOS POR TITULO: \n\n");
+    printf("\n=======\nLISTA DE TODOS OS FILMES ORDENADOS POR TITULO: \n\n");
     printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
     for (i = 0; i < size; i++) {
         puts_movie(vetor + i);
     }
-    printf("=======\n");
+    printf("\n=======\n");
     free(vetor);
 }
 
-void form_movie_insert() {
+void form_movie_insert(char *input) {
     Movie *movie;
 
     movie = movie_malloc();
-
-    printf("=======\nINSERINDO FILME: \n\n");
-    form_movie(movie);
+    printf("\n=======\nINSERINDO FILME: \n\n");
+    form_movie(movie, input);
+    // Tem certeza?
+    if (!be_sure(input)) {
+        printf("Abortando modificacao de filme.\n\n");
+        free(movie);
+        return;
+    }
 
     if (insert_movie(movie)) {
         printf("Filme inserido com sucesso.\n");
     } else {
         printf("Filme nao foi inserido corretamente!\n");
     }
-    printf("=======\n");
+    printf("\n=======\n");
     free(movie);
 }
 
-void form_movie_update() {
-    char *input;
+void form_movie_update(char *input) {
     Movie *movie;
-    int id;
 
-    /* Antes de tudo, precisamos testar se há algum filme no arquivo */
+    // Antes de tudo, precisamos testar se há algum filme no arquivo
     if (movies_file_is_empty()) {
         printf(EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
-    movie = movie_malloc();
-    input = input_malloc();
-    printf("=======\nMODIFICANDO FILME: \n\n");
-    do {
-        printf("Digite [1] para modificar por ID ou [2] para modificar por titulo: ");
-        read_string(input);
-    } while (*input != '1' && *input != '2');
-    switch (*input) {
-        case '1':
-            id = check_by_id_movie(input);
-            if (!id) {
-                free(movie);
-                free(input);
-                return;
-            }
-
-            puts_movie_by_id(id);
-            movie->id = id;
-            break;
-        case '2':
-            if (!check_by_name(input)) {
-                free(movie);
-                free(input);
-                return;
-            }
-
-            movie = search_movie_by_title(input);
-            if (movie->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
-                free(movie);
-                free(input);
-                return;
-            }
-            puts_movie_by_id(movie->id);
-            break;
-    }
-
-    if (!be_sure(input)) {
-        printf("Abortando modificacao de filme.\n\n");
+    printf("\n=======\nMODIFICANDO FILME: \n\n");
+    movie = form_movie_select(input);
+    // Se não encontrou, mostra mensagem e sai.
+    if (movie->id == NON_EXIST) {
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
         free(movie);
-        free(input);
         return;
     }
-    form_movie(movie);
-
+    // Mostra o resultado da pesquisa feita pelo usuário.
+    puts_movie(movie);
     // Tem certeza?
     if (!be_sure(input)) {
         printf("Abortando modificacao de filme.\n\n");
         free(movie);
-        free(input);
+        return;
+    }
+    // Formulário de edição de campos.
+    form_movie(movie, input);
+    // Tem certeza?
+    if (!be_sure(input)) {
+        printf("Abortando modificacao de filme.\n\n");
+        free(movie);
         return;
     }
 
@@ -555,64 +528,32 @@ void form_movie_update() {
     } else {
         printf("Filme nao foi atualizado corretamente!\n");
     }
-    printf("=======\n");
+    printf("\n=======\n");
     free(movie);
-    free(input);
 }
 
-void form_movie_erase() {
-    char *input;
-    int id;
+void form_movie_erase(char *input) {
     Movie *movie;
 
-    /* Antes de tudo, precisamos testar se há algum filme no arquivo */
+    // Antes de tudo, precisamos testar se há algum filme no arquivo
     if (movies_file_is_empty()) {
         printf(EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
-    movie = movie_malloc();
-    input = input_malloc();
-    printf("=======\nREMOVENDO FILME: \n\n");
-    do {
-        printf("Digite [1] para remover por ID ou [2] para remover por titulo: ");
-        read_string(input);
-    } while (*input != '1' && *input != '2');
-    switch (*input) {
-        case '1':
-            id = check_by_id_movie(input);
-            if (!id) {
-                free(movie);
-                free(input);
-                return;
-            }
-
-            puts_movie_by_id(id);
-            movie = search_movie_by_id(id);
-            break;
-        case '2':
-            if (!check_by_name(input)) {
-                free(movie);
-                free(input);
-                return;
-            }
-
-            movie = search_movie_by_title(input);
-            if (movie->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
-                free(movie);
-                free(input);
-                return;
-            }
-            puts_movie_by_id(movie->id);
-            break;
+    printf("\n=======\nREMOVENDO FILME: \n\n");
+    movie = form_movie_select(input);
+    // Se não encontrou, mostra mensagem e sai.
+    if (movie->id == NON_EXIST) {
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
+        free(movie);
+        return;
     }
 
     // Tem certeza?
     if (!be_sure(input)) {
         printf("Abortando remocao de filme.\n\n");
         free(movie);
-        free(input);
         return;
     }
 
@@ -622,9 +563,8 @@ void form_movie_erase() {
     } else {
         printf("Filme nao foi removido corretamente!\n");
     }
-    printf("=======\n");
+    printf("\n=======\n");
     free(movie);
-    free(input);
 }
 
 Movie * form_movie_select(char *input) {
@@ -636,42 +576,42 @@ Movie * form_movie_select(char *input) {
     do {
         printf("Digite [1] para pesquisar por ID ou [2] para pesquisar por titulo: ");
         read_string(input);
+        switch (*input) {
+            case '1':
+                id = check_by_id_movie(input);
+                if (id == NON_EXIST) {
+                    movie->id = NON_EXIST;
+                    return movie;
+                }
+                movie = search_movie_by_id(id);
+                break;
+            case '2':
+                if (!check_by_name(input)) {
+                    movie->id = NON_EXIST;
+                    return movie;
+                }
+                movie = search_movie_by_title(input);
+                if (movie->id == NON_EXIST) {
+                    printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
+                    return movie;
+                }
+                break;
+            default:
+                printf("Opcao invalida!\n");
+        }
     } while (*input != '1' && *input != '2');
-    switch (*input) {
-        case '1':
-            id = check_by_id_movie(input);
-            if (!id) {
-                movie->id = NON_EXIST;
-                return movie;
-            }
-            movie = search_movie_by_id(id);
-            break;
-        case '2':
-            if (!check_by_name(input)) {
-                movie->id = NON_EXIST;
-                return movie;
-            }
-            movie = search_movie_by_title(input);
-            if (movie->id == NON_EXIST) {
-                printf(NAME_NOT_FOUND_ERROR, __FILE__, "filme");
-                return movie;
-            }
-            break;
-    }
     return movie;
 }
 
-void form_movie_search() {
-    char *input;
+void form_movie_search(char *input) {
     Movie *movie;
 
-    /* Antes de tudo, precisamos testar se há algum filme no arquivo */
+    // Antes de tudo, precisamos testar se há algum filme no arquivo
     if (movies_file_is_empty()) {
         printf(EMPTY_ERROR, __FILE__, "filme");
         return;
     }
 
-    input = input_malloc();
     printf("\n=======\nPESQUISANDO FILME: \n\n");
     movie = form_movie_select(input);
     if (movie->id == NON_EXIST) {
@@ -680,7 +620,6 @@ void form_movie_search() {
         printf("------ ID | Titulo | Genero | Duracao em minutos ------\n");
         puts_movie(movie);
     }
-    printf("=======\n");
+    printf("\n=======\n");
     free(movie);
-    free(input);
 }

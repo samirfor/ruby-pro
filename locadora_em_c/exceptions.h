@@ -18,6 +18,8 @@
 #define ID_NOT_FOUND_ERROR "%s: Nao ha %s cadastrado com esse ID.\n"
 #define NAME_NOT_FOUND_ERROR "%s: Nao ha %s cadastrado com esse nome.\n"
 #define EMPTY_ERROR "%s: Nao ha %s cadastrado.\n"
+#define ERROR_MSG "Voce nao digitou um valor valido.\n"
+#define INEXPECTED "%s: Erro inesperado!\n"
 
 #endif	/* _EXCEPTIONS_H */
 

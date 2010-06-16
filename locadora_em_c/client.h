@@ -19,11 +19,11 @@ External Variables References
 
 typedef struct {
     int id;
-    char name[150];
-    char RG[100];
-    char CPF[100];
-    char phone[100];
-    int birth_date[3];
+    char name[255];
+    char RG[255];
+    char CPF[255];
+    char phone[255];
+    time_t birth_date;
 } Client;
 
 /***************************************
@@ -77,17 +77,19 @@ extern int update_client(Client*);
 /* Remove um cliente no arquivo */
 extern int erase_client(Client*);
 /* Formulário com os atributos do cliente */
-extern void form_client(Client*);
+extern void form_client(Client*, char *input);
 /* Formulário de inserção de cliente */
-extern void form_client_insert();
+extern void form_client_insert(char *input);
 /* Formulário de atualização de cliente */
-extern void form_client_update();
+extern void form_client_update(char *input);
 /* Formulário de pesquisa de cliente */
-extern void form_client_search();
+extern void form_client_search(char *input);
 /* Formulário de remoção de cliente */
-extern void form_client_erase();
+extern void form_client_erase(char *input);
 /* Formulário de ordenação de clientes */
 extern void form_client_sort();
+/* Formulário de pesquisa de cliente retornando o mesmo */
+extern Client * form_client_select(char* input);
 
 
 #endif	/* _CLIENTE_H */

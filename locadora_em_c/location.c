@@ -35,7 +35,7 @@ int check_by_id_location(char *input) {
         return id;
     } else {
         printf(ID_NOT_FOUND_ERROR, __FILE__, "filme");
-        return FALSE;
+        return NON_EXIST;
     }
 }
 
@@ -311,9 +311,14 @@ void puts_location(Location * location) {
     Client * client;
 
     client = search_client_by_id(location->id);
+    if (client->id == NON_EXIST) {
+        printf(ID_NOT_FOUND_ERROR, __FILE__, "cliente");
+        free(client);
+        return;
+    }
     printf("ID da locacao: %d\n", location->id);
     printf("Cliente [%d]: %s\n", client->id, client->name);
-    puts_items_by_location(location);
+    puts_items_by_location(location, FALSE);
 }
 
 void puts_location_short(Location * location) {
@@ -353,13 +358,13 @@ void puts_all_locations() {
     }
 
     location = location_malloc();
-    printf("=======\nLISTA DE LOCACOES: \n\n");
+    printf("\n=======\nLISTA DE LOCACOES: \n\n");
     fread(location, sizeof (Location), 1, file_stream);
     while (!feof(file_stream)) {
         puts_location_short(location);
         fread(location, sizeof (Location), 1, file_stream);
     }
-    printf("=======\n");
+    printf("\n=======\n");
     fclose(file_stream);
     free(location);
 }
@@ -414,13 +419,13 @@ void form_location_insert() {
     char *input;
     int i;
 
-    printf("=======\nLOCANDO: \n\n");
+    printf("\n=======\nLOCANDO: \n\n");
     location = location_malloc();
     input = input_malloc();
     // Definir cliente
     form_location_client(location, input, "> A qual cliente quer locar? ");
     // Definir filmes
-    form_items_insert(location);
+    form_items_insert(location, input);
     // Imprimir resultado geral
     puts_location(location);
     // Atualizar situação de disponibilidade dos DVDs locados
@@ -433,7 +438,7 @@ void form_location_insert() {
     } else {
         printf("Locacao nao foi completada corretamente!\n");
     }
-    printf("=======\n");
+    printf("\n=======\n");
     free(location);
     free(input);
 }
@@ -474,7 +479,7 @@ void form_location_update() {
     } while (do_again_flag);
     location = search_location_by_id(id);
 
-    printf("=======\nMODIFICANDO LOCACAO: \n\n");
+    printf("\n=======\nMODIFICANDO LOCACAO: \n\n");
     puts_client_short(search_client_by_id(location->id_client));
     do {
         printf("> Deseja modificar cliente? [S]im ou [n]ao? ");
@@ -508,7 +513,7 @@ void form_location_update() {
     } else {
         printf("Locacao nao foi atualizada corretamente!\n");
     }
-    printf("=======\n");
+    printf("\n=======\n");
     free(location);
     free(input);
 }
@@ -520,9 +525,9 @@ void form_location_search() {
         return;
     }
 
-    printf("=======\nPESQUISANDO LOCACAO: \n\n");
+    printf("\n=======\nPESQUISANDO LOCACAO: \n\n");
     //TODO list_all_locations_by_client();
-    printf("=======\n");
+    printf("\n=======\n");
 }
 
 void form_location_devolution() {
@@ -538,7 +543,7 @@ void form_location_devolution() {
 
     input = input_malloc();
     location = location_malloc();
-    printf("=======\nDEVOLUCAO DE DVDs: \n\n");
+    printf("\n=======\nDEVOLUCAO DE DVDs: \n\n");
     // Difinir cliente
     form_location_client(location, input, "> Qual cliente? ");
     // Pesquisa locacao
@@ -586,7 +591,7 @@ void form_location_devolution() {
 
         printf("Locacao nao foi atualizada corretamente!\n");
     }
-    printf("=======\n");
+    printf("\n=======\n");
     free(location);
     free(input);
 }

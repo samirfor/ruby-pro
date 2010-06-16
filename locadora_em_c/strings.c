@@ -19,7 +19,12 @@
 
 char *read_string(char *str) {
     __fpurge(stdin);
-    return gets(str);
+    gets(str);
+    strcpy(str, "");
+    if (strcasecmp(str, "sair")) {
+        printf("Finalizando o programa a pedido do usuario.\n");
+        exit(EXIT_SUCCESS);
+    }
 }
 
 char * input_malloc() {

@@ -8,8 +8,7 @@
 #include <stdlib.h>
 #include "status.h"
 #include "validations.h"
-
-#define ERROR_MSG "Voce nao digitou um valor valido.\n"
+#include "exceptions.h"
 
 int validate_number_float(char *input) {
     if (atof(input)) {
@@ -36,6 +35,17 @@ int validate_id(char *input) {
     }
     if (atoi(input) < 0) {
         printf(ERROR_MSG);
+        return FALSE;
+    }
+    return TRUE;
+}
+
+char validate_price(char *input) {
+    if (!validate_number_float(input)) {
+        return FALSE;
+    }
+    if (atof(input) <= 0.0) {
+        printf("%s: O preco precisa ser maior que zero.\n", __FILE__);
         return FALSE;
     }
     return TRUE;

@@ -69,6 +69,10 @@ extern int get_size_dvds();
 extern void puts_all_dvds();
 /* Lista um dvd identificado pelo id */
 extern void puts_dvd_by_id(int);
+/* Lista um dvd identificado pelo id no formato lista */
+extern void puts_dvd_list_format(DVD * dvd);
+/* Lista todos os DVDs de um certo filme */
+extern void puts_all_dvds_by_movie(Movie* movie, char force_avaliable);
 /* Insere um dvd no arquivo */
 extern int insert_dvd(DVD*);
 /* Modifica um dvd no arquivo */
@@ -76,16 +80,18 @@ extern int update_dvd(DVD*);
 /* Remove um dvd no arquivo */
 extern int erase_dvd(DVD*);
 /* Formulário com os atributos do dvd */
-extern int form_dvd(DVD*, char *input);
+extern void form_dvd(DVD*, char *input);
 /* Formulário de inserção de dvd */
-extern void form_dvd_insert();
+extern void form_dvd_insert(char *input);
 /* Formulário de atualização de dvd */
-extern void form_dvd_update();
+extern void form_dvd_update(char *input);
 /* Formulário de pesquisa de dvd */
-extern void form_dvd_search();
+extern void form_dvd_search(char *input);
 /* Formulário de remoção de dvd */
-extern void form_dvd_erase();
+extern void form_dvd_erase(char *input);
 /* Formulário de ordenação de dvds */
 extern void form_dvd_sort();
+/* Pesquisa um DVD e o retorna. */
+extern DVD * form_dvd_select(char *input);
 
 #endif	/* _DVD_H */
