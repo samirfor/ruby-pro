@@ -1,0 +1,48 @@
+<!-- PAGINAÇÃO VIA AJAX -->
+<script type="text/javascript" charset="utf-8">
+   $(document).ready(function() {
+      $('#example').dataTable( {
+         "sPaginationType": "full_numbers"
+      } );
+   } );
+</script>
+<!-- PAGINAÇÃO VIA AJAX -->
+<h3>Listing packages</h3>
+<div class="entry">
+  <div id="demo"><br/>
+    <table id="example" border="0" cellpadding="0" class="display" width="60%">
+      <thead>
+        <tr>
+          <th width="5%">#</th>
+          <th>Nome</th>
+          <th width="15%">Inicio</th>
+          <th width="15%">Fim</th>
+          <th width="10%">Completado</th>
+          <th colspan="3" width="10%"></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @packages.each do |package| %>
+        <tr>
+          <td><%= package.id %></td>
+          <td><%= package.description %></td>
+          <td><%= date_format(package.date_started) %></td>
+          <td><%= date_format(package.date_finished) %></td>
+          <td align="center">
+            <img src="<%= completed?(package.completed) %>" alt="<%= package.completed %>" title="<%= package.completed %>" />
+          </td>
+          
+          <td><%= link_to 'Show', package %></td>
+          <td><%= link_to 'Edit', edit_package_path(package) %></td>
+          <td><%= link_to 'Destroy', package, :confirm => 'Are you sure?', :method => :delete %></td>
+        </tr>
+      <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="8">RS-Online2 ~ Powered by Rails</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

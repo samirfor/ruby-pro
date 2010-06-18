@@ -8,15 +8,15 @@ require "src/banco"
 class Link
   attr_accessor :link, :path, :ip, :uri_original, :uri_parsed, :id_link, :id_pacote, \
     :completado, :tamanho, :id_status, :tentativas, :max_tentativas, \
-    :data_inicio, :data_fim, :testado, :waittime, :downloadlink, :filename
+    :data_inicio, :data_fim, :testado, :waittime, :downloadlink, :filename, :retry
 
   def initialize link
     @link = link.strip
     @uri_original = URI.parse link
     @id_link = nil
     set_ip
-    @tentativas = 1
-    @max_tentativas = 20
+    @tentativas = 0
+    @max_tentativas = 10
     @completado = false
     @tamanho = 0
     @id_status = Status::AGUARDANDO
@@ -25,7 +25,8 @@ class Link
     @testado = false
     @waittime = 0
     @downloadlink = nil
-    #    define_server
+    @filename = nil
+    @retry = false
   end
 
   def get_body
@@ -72,31 +73,14 @@ class Link
       @uri_parsed = @uri_original.clone
       @uri_parsed.host = @ip.to_s
     rescue Exception
-      #      if @uri_original.host == "rapidshare.com" or @uri_original.host == "www.rapidshare.com"
-      #        @ip = "195.122.131.2"
-      #      elsif @uri_original.host == "megaupload.com" or @uri_original.host == "www.megaupload.com"
-      #        @ip = "174.140.154.25"
-      #      elsif @uri_original.host == "4shared.com" or @uri_original.host == "www.4shared.com"
-      #        @ip = "72.233.72.133"
-      #      elsif @uri_original.host =~ /rs\d+\.rapidshare\.com/
-      #        server = ServerRS.new(@uri_original.host.scan(/\d+/)[0].to_i)
-      #        @ip = server.ip
-      #      elsif @uri_original.host =~ /www\d+\.megaupload\.com/
-      #        server = ServerMU.new(@uri_original.host.scan(/\d+/)[0].to_i)
-      #        @ip = server.ip
-      #      elsif @uri_original.host =~ /dc\d+\.4shared\.com/
-      #        server = ServerFS.new(@uri_original.host.scan(/\d+/)[0].to_i)
-      #        @ip = server.ip
-      #      else
       raise
-      #      end
     end
   end
   def <=>(object)
     return self.id_link <=> object.id_link
   end
   def retry_
-    #    @tentativas += 1
+    @tentativas += 1
     if @tentativas > @max_tentativas
       @id_status = Status::OFFLINE
       @testado = true
@@ -115,19 +99,6 @@ class Link
       false
     end
     true
-  end
-  def retry?
-    case @id_status
-    when Status::BAIXADO
-      false
-    when Status::OFFLINE
-      Historico.to_log("O arquivo está offline.")
-      false
-    else
-      Core.falhou(3)
-      @tentativas += 1
-      true
-    end
   end
   def download
     wait = Time.local(0) + @waittime

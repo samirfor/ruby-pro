@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title>Home: <%= controller.action_name %></title>
+    <%= stylesheet_link_tag 'style' %>
+    <style type="text/css" title="currentStyle">
+      @import "pagination/css/demo_page.css";
+      @import "pagination/css/demo_table.css";
+    </style>
+    <script type="text/javascript" language="javascript" src="pagination/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="pagination/js/jquery.dataTables.js"></script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="header">
+        <div id="logo">
+          <h1><a href="#">RS-Online 2</a></h1>
+          <p>version 2.0b ~ Powered by Rails</p>
+          <p>Follow me: <a class="twitter" href="http://www.twitter.com/RSOnline_">@RSOnline_</a></p>
+        </div>
+        <!-- end #logo -->
+        <div id="menu">
+          <ul>
+            <li class="active"><a href="home">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <!-- end #menu -->
+      </div>
+      <!-- end #header -->
+      <p style="color: green"><%= flash[:notice] %></p>
+      <div id="page">
+        <!--<div id="header-pic"></div>-->
+        <div id="content">
+          <div class="post">
+            <!-- corpo da pagina -->
+            <%= yield %>
+            <!-- corpo da pagina -->
+            <div class="meta">
+              <p class="links"></p>
+            </div>
+          </div>
+        </div>
+        <!-- end #content -->
+        <div id="sidebar">
+          <div id="sidebar-bgtop"></div>
+          <div id="sidebar-content">
+            <div id="sidebar-bgbtm">
+              <ul>
+                <li id="search">
+                  <h2>Search</h2>
+                  <form method="get" action="">
+                    <fieldset>
+                      <input type="text" id="s" name="s" value="" />
+                      <input type="submit" id="x" value="Search" />
+                    </fieldset>
+                  </form>
+                </li>
+                <li>
+                  <h2>Pacotes</h2>
+                  <ul>
+                    <li><%= link_to 'New Package', new_package_path %></li>
+                    <li><%= link_to 'List Packages', packages_path %></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2>Downloads</h2>
+                  <ul>
+                    <li><a href="#">Lista de Downloads</a></li>
+                    <li><a href="#">Log de Downloads</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- end #sidebar -->
+        <div style="clear:both; margin:0;"></div>
+      </div>
+      <!-- end #page -->
+    </div>
+    <div id="footer">
+      <p>&copy; 2010. All Rights Reserved. Design by Nightcrawler. RS-Online 2 is powered by Rails.</p>
+    </div>
+    <!-- end #footer -->
+  </body>
+</html>

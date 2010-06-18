@@ -35,7 +35,7 @@ class Historico
       historico.data = row["data"]
       historico.id = row["id"]
       historico.processo = row["processo"]
-      historicos.push historico
+      historicos << historico
     end
     rst.finish
     Banco.instance.db_disconnect

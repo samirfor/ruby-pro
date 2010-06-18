@@ -288,9 +288,11 @@ class Pacote
         when /megaupload/i
           link = Megaupload.new(row["link"])
         when /rapidshare/i
+          # TODO Refatorar o módulo Rapidshare
           # link = Rapidshare.new(row["link"])
           link = Link.new(row["link"])
         when /4shared/i
+          # TODO Refatorar o módulo 4shared
           # link = FourShared.new(row["link"])
           link = Link.new(row["link"])
         end
@@ -323,7 +325,7 @@ class Pacote
     rst.finish
 
     sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = ? AND id_status = 1 "
-    rst = @conn.execute(sql, @id_pacote)
+    rst = Banco.instance.db_connect.execute(sql, @id_pacote)
     count_baixados = rst.fetch_all[0].clone
     rst.finish
     Banco.instance.db_disconnect

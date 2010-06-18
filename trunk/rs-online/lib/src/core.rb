@@ -25,13 +25,10 @@ $:.push "/home/#{`whoami`.chomp}/NetBeansProjects/trunk/rs-online/lib"
 require 'net/http'
 require 'socket'
 require 'dbi'
-#require 'src/link'
-#require 'src/banco'
 require 'src/status'
 require 'src/prioridade'
 require 'src/pacote'
 require 'src/twitter_bot'
-#require "src/historico"
 require "src/verbose"
 
 
@@ -72,6 +69,7 @@ def teste_paralelo id_pacote_excecao
     links_before_test = pacote.select_links
     pacote.tamanho = 0
     links_before_test.each do |link|
+      link.tentativas = 0
       if link.id_status == Status::BAIXADO
         pacote.tamanho += link.tamanho
       elsif link.testado and (link.tamanho != nil or link.tamanho != 0)
@@ -168,11 +166,14 @@ def run
       Verbose.to_log "Testando os links de \"#{pacote.nome}\"..."
       links_online = Array.new
       links_before_test.each do |link|
+        link.tentativas = 0
         Core.cancelar?
         if link.id_status == Status::BAIXADO
           pacote.tamanho += link.tamanho
         else
-          link.test
+          begin
+            link.retry_
+          end while not link.test
           if link.id_status == Status::ONLINE
             pacote.tamanho += link.tamanho
             links_online << link
@@ -202,13 +203,20 @@ def run
       ## Inicio Download do Pacote
       pacote.data_inicio = Time.now # Marca quando o pacote iniciou download
       pacote.update_db
-      links_online.each do |link|
+      for i in (0...links_online.size)
+        link = links_before_test[i]
+        link.tentativas = 0
         Core.cancelar?
         begin
-          link.get_ticket
-          raise if link.retry?
-          link.download
-          raise if link.retry?
+          begin
+            link.retry_
+            next if link.id_status == Status::OFFLINE
+          end while not link.get_ticket
+          next if link.id_status == Status::OFFLINE
+          unless link.download
+            link.retry_
+            next if link.id_status == Status::OFFLINE
+          end
         rescue Interrupt
           raise
         rescue Exception => err
@@ -231,7 +239,7 @@ def run
       run_thread Proc.new {
         TwitterBot.tweet evento  
       }
-      unless Banco.instance.select_count_remaining_links(pacote.id_pacote) == 0
+      unless pacote.select_count_remaining_links == 0
         pacote.problema = true
         pacote.update_db
         run_thread Proc.new {

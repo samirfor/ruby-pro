@@ -1,0 +1,45 @@
+<% form_for(@package) do |f| %>
+  <%= f.error_messages %>
+
+  <table>
+    <tr>
+      <td>
+        <%= f.label :description, 'Descrição' %><br/>
+        <%= f.text_field :description %>
+      </td>
+      <td>
+        <%= f.label :priority_id, 'Prioridade' %><br/>
+        <%= f.select :priority_id, @priority, :prompt => 'prioridade?' %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= f.label :password, 'Senha' %><br/>
+        <%= f.text_field :password %>
+      </td>
+      <td>
+        <%= f.label :source, 'Fonte dos Links' %><br/>
+        <%= f.text_field :source %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= f.label :legend, 'Legenda' %><br/>
+        <%= f.text_field :legend %>
+      </td>
+      <td>
+        <%= f.label :comment, 'Comentário' %><br/>
+        <%= f.text_field :comment %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <%= f.label :links, 'Lista de Links' %><br/>
+        <%= f.text_area :links, :rows => '10', :cols => '120' %>
+      </td>
+    </tr>
+  </table>
+  <p>
+    <%= f.submit 'Create' %>
+  </p
+<% end %>

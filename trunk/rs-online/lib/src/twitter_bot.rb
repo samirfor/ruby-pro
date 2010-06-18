@@ -46,6 +46,7 @@ module TwitterBot
     end
   else
     def self.tweet msg
+      Verbose.to_debug("Twitter não ativo.\nSuposta msg: #{msg}")
     end
   end
 end

@@ -55,10 +55,11 @@ void write_file() {
 }
 
 int main(int argc, char** argv) {
-
+/*
     printf("==> Escrevendo o arquivo: ");
     write_file();
     printf("==> Lendo o arquivo: ");
     read_file();
+*/
     return (EXIT_SUCCESS);
 }

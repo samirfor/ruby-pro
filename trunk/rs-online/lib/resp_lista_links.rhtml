@@ -3,6 +3,7 @@ require 'dbi'
 require 'cgi'
 require 'src/pacote'
 require "src/status"
+require "src/verbose"
 
 begin
   cgi = CGI.new
@@ -26,17 +27,20 @@ rescue Exception %>
       </p>
     </body>
   </html> <%
-  puts "Erro"
+  msg = "Erro"
+  Verbose.to_log msg
   raise
 end # => begin - rescue
 
 
-def update_pacote a_params
+def get_form a_params
   begin
     # Testa se algum campo é nulo
     a_params.each do |i|
       if i == nil
-        return "Algum parâmetro é nulo. Por favor, preencha todos os campos."
+        msg = "Algum parâmetro é nulo. Por favor, preencha todos os campos."
+        Verbose.to_log msg
+        return msg
       end
     end
 
@@ -44,9 +48,16 @@ def update_pacote a_params
     $pacote.descricao = a_params["descricao"][0] unless a_params["descricao"][0] == ""
     $pacote.url_fonte = a_params["url_fonte"][0] unless a_params["url_fonte"][0] == ""
     $pacote.legenda = a_params["legenda"][0] unless a_params["legenda"][0] == ""
+    case a_params["mostrar"][0]
+    when "true": $pacote.mostrar = true
+    when "false": $pacote.mostrar = false
+    end
     $pacote.update_db
-    return "Pacote modificado com sucesso."
+    msg = "Pacote modificado com sucesso."
+    Verbose.to_log msg
+    return msg
   rescue Exception => e
+    Verbose.to_log e
     return e
   end
 end
@@ -54,13 +65,16 @@ end
 def live_test_links
   begin
     if $pacote == nil
-      return "Não foi possível obter o pacote para teste."
+      msg = "Não foi possível obter o pacote para teste."
+      Verbose.to_log msg
+      return msg
     end
     links_before_test = $pacote.select_links
     links_before_test.each do |link|
       if link.id_status == Status::BAIXADO
         $pacote.tamanho += link.tamanho
       else
+        link.tentativas = 0
         link.test
         $pacote.tamanho += link.tamanho if link.id_status == Status::ONLINE
       end
@@ -69,7 +83,9 @@ def live_test_links
     $pacote.update_db
     return "Pacote testado com sucesso."
   rescue Exception => e
-    return "Ocorreu um erro no teste do pacote. #{e}"
+    msg = "Ocorreu um erro no teste do pacote. #{e}"
+    Verbose.to_log msg
+    return msg
   end
 end
 
@@ -123,9 +139,11 @@ def action_pacote a_params
     else
       msg = "NO ACTION."
     end
+    Verbose.to_log msg
     return msg
   rescue Exception => e
-    return "Erro: #{e}<br\/>#{e.backtrace.join("<br\/>")}"
+    Verbose.to_log "Erro: #{e}<br\/>#{e.backtrace.join("<br\/>")}"
+    nil
   end
 end
 %>
@@ -180,7 +198,7 @@ Released   : 20081230
           <div class="post">
             <h1 class="title">Alterações no pacote</h1>
             <div class="entry">
-              <p> <%= update_pacote a_params %> </p>
+              <p> <%= get_form a_params %> </p>
               <p> <%
                 puts action_pacote a_params unless a_params["acao"][0] == "" %>
               </p>
