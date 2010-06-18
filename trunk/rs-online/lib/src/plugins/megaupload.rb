@@ -24,10 +24,10 @@ class Megaupload < Link
       dns = Resolv::DNS.new
       expressao[0] = dns.getaddress("#{expressao[0]}.megaupload.com").to_s
       url = "http://#{expressao[0]}/gencap.php?#{expressao[1]}.gif"
-      Verbose.to_log("URL da imagem: #{url}")
+      Verbose.to_log("URL do captcha: #{url}")
       path = "/tmp/captcha.gif"
       Captcha::save(url, path)
-      @captcha = Captcha::recognize(path)
+      @captcha = Captcha::Megaupload.recognize(path)
     else
       @captcha = nil
     end

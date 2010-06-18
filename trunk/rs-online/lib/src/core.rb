@@ -28,7 +28,6 @@ require 'dbi'
 require 'src/status'
 require 'src/prioridade'
 require 'src/pacote'
-require 'src/twitter_bot'
 require "src/verbose"
 
 
@@ -88,12 +87,10 @@ end
 module Core
 
   def self.interrupt
-    require 'src/twitter'
-    require "src/historico"
+    require "src/verbose"
 
     Verbose.to_log "\nSinal de interrupção recebido"
-    Verbose.to_log "O programa foi encerrado."
-    TwitterBot.tweet "O programa foi encerrado."
+    Verbose.to_public "O programa foi encerrado."
     exit!(1)
   end
   
@@ -128,8 +125,7 @@ module Core
     fullpath = get_local_path
     if FileTest.exist?("#{fullpath}/cancelar") or FileTest.exist?("#{fullpath}/fechar")
       evento = "Downloads cancelado pelo usuário."
-      Verbose.to_log evento
-      TwitterBot.tweet evento
+      Verbose.to_public evento
       exit!(1)
     end
   end
@@ -151,8 +147,7 @@ def run
       pacote = Pacote.select_pendente
       if pacote == nil
         evento = 'Fim do(s) download(s). Have a nice day!'
-        Verbose.to_log evento
-        TwitterBot.tweet evento 
+        Verbose.to_public(evento)
         exit!(1)
       end
       links_before_test = pacote.select_links
@@ -165,21 +160,28 @@ def run
       ## Inicio do teste
       Verbose.to_log "Testando os links de \"#{pacote.nome}\"..."
       links_online = Array.new
+      test_threads = Array.new
       links_before_test.each do |link|
-        link.tentativas = 0
-        Core.cancelar?
-        if link.id_status == Status::BAIXADO
-          pacote.tamanho += link.tamanho
-        else
-          begin
-            link.retry_
-          end while not link.test
-          if link.id_status == Status::ONLINE
+        test_threads << Thread.new {
+          link.tentativas = 0
+          Core.cancelar?
+          if link.id_status == Status::BAIXADO
             pacote.tamanho += link.tamanho
-            links_online << link
+          else
+            begin
+              link.retry_
+            end while not link.test
+            if link.id_status == Status::ONLINE
+              pacote.tamanho += link.tamanho
+              links_online << link
+            end
+            link.update_db
           end
-          link.update_db
-        end
+        }
+      end
+      while test_threads.size != 0
+        test_threads.delete_if { |thread| not thread.alive? }
+        sleep 1
       end
       pacote.problema = true if pacote.tamanho == 0
       pacote.update_db
@@ -188,10 +190,7 @@ def run
 
       ## Informações do teste
       msg = "Iniciado download do pacote #{pacote.nome} (#{sprintf("%.2f MB", pacote.tamanho/1024.0)})"
-      Verbose.to_log msg
-      Thread.new {
-        TwitterBot.tweet msg  
-      }
+      Verbose.to_public(msg)
       ## Fim Informações do teste
 
       ## Inicio Thread Testes
@@ -235,16 +234,11 @@ def run
       evento = "Concluido o download do pacote #{pacote.nome}"
       evento += " em #{duracao.strftime("%Hh %Mm %Ss")} | "
       evento += "V. media = #{sprintf("%.2f KB/s", pacote.tamanho/(pacote.data_fim - pacote.data_inicio))}"
-      Verbose.to_log evento
-      run_thread Proc.new {
-        TwitterBot.tweet evento  
-      }
+      Verbose.to_public(evento)
       unless pacote.select_count_remaining_links == 0
         pacote.problema = true
         pacote.update_db
-        run_thread Proc.new {
-          TwitterBot.tweet "Pacote #{pacote.nome} está problema." 
-        }
+        Verbose.to_public "Pacote #{pacote.nome} está problema."
       end
       ## Fim Informações do download
     rescue Interrupt
@@ -276,35 +270,9 @@ def singleton?
   end
 end
 
-def run_single_link(link)
-  pacote = Pacote.new("SingleMode")
-  pacote.prioridade = Prioridade::MUITO_ALTA
-  pacote.save
-  down = Link.new link
-  #  down.id_link = Banco.instance.save_links([link], pacote.id_pacote)[0]
-  down.id_link = pacote.save_links(links)
-  
-  down.test
-  down.download
-end
-
 # O método main do programa
 begin
   ajuda
-#  ARGV.each do |a|
-#    if a =~ /debug/i
-#      $DEBUG = true
-#      break
-#    end
-#  end
-  if ARGV[0] == "-1"
-    unless ARGV[1] == ""
-      run_single_link ARGV[1].strip
-    else
-      puts "Link não detectado."
-    end
-    exit!
-  end
   if singleton?
     # Guardando o numero do pid
     arq = File.open("/home/#{`whoami`.chomp}/rs-online.conf", "r+")
@@ -313,7 +281,6 @@ begin
     arq.seek(0)
     arq.puts txt
     arq.close
-    $thread = Thread.new {}
     run
   else
     puts 'Há outro processo rodando nesta máquina.'
@@ -322,9 +289,7 @@ begin
 rescue Interrupt
   Core.interrupt
 rescue SystemExit => err
-  evento = "O programa foi encerrado."
-  Verbose.to_log evento
-  TwitterBot.tweet evento  
+  Verbose.to_public "O programa foi encerrado."
   exit!
 rescue NoMethodError => err
   Verbose.to_log "FATAL: Não há método definido.\nBacktrace: #{err.backtrace.join("\n")}"

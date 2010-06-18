@@ -2,7 +2,7 @@
 require 'src/pacote'
 require "src/historico"
 require 'src/link'
-require 'src/twitter_bot'
+require "src/verbose"
 require 'cgi'
 
 
@@ -15,7 +15,7 @@ def erro_fatal %>
       <meta http-equiv="Refresh" content="0;url=error.rhtml"/>
     </head>
   </html> <%
-  Historico.to_log "Erro fatal em [save_pacote]"
+  Verbose.to_log "Erro fatal em [save_pacote]"
 end
 
 def show_response
@@ -92,7 +92,7 @@ def show_response
   rescue Exception => err
     $erro = true
     $backtrace = err.backtrace.join("<br\/>")
-    Historico.to_log "Erro ao responder add_pacote: #{err.message}"
+    Verbose.to_log "Erro ao responder add_pacote: #{err.message}"
     return nil
   end
 end
@@ -194,7 +194,7 @@ Released   : 20081230
                   Pacote <%= pacote.nome %> foi inserido na lista de pacotes. <br/>
                   <%
                   begin
-                    TwiterBot.tweet "Pacote #{pacote.nome} foi inserido na lista de pacotes."
+                    Verbose.to_public "Pacote #{pacote.nome} foi inserido na lista de pacotes."
                   rescue
                   end
                 %>

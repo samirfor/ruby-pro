@@ -1,5 +1,5 @@
 <%
-require '../src/twitter_bot'
+require '../src/verbose'
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -19,7 +19,7 @@ Released   : 20081230
 def stop_download
   begin
     File.new "/media/AUX1/Scene/videos_scene/cancelar", "w"
-    TwitterBot.tweet "Alguém ativou o cancelamento dos downloads."
+    Verbose.to_public "Alguém ativou o cancelamento dos downloads."
     return "Download cancelado pelo usuário."
   rescue Exception => e
     return e.message
