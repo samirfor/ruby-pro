@@ -27,7 +27,7 @@ def start_download
     if File.exist?(fechar)
       File.delete(fechar)
     end
-    `cd /media/AUX1/Scene//videos_scene/ && rs-online &`
+    #`cd /media/AUX1/Scene//videos_scene/ && rs-online &`
     return "Download iniciado com sucesso."
   rescue Exception => e
     return e.message

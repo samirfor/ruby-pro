@@ -24,7 +24,7 @@ class Megaupload < Link
       dns = Resolv::DNS.new
       expressao[0] = dns.getaddress("#{expressao[0]}.megaupload.com").to_s
       url = "http://#{expressao[0]}/gencap.php?#{expressao[1]}.gif"
-      Verbose.to_debug("URL da imagem: #{url}")
+      Verbose.to_log("URL da imagem: #{url}")
       path = "/tmp/captcha.gif"
       Captcha::save(url, path)
       @captcha = Captcha::recognize(path)
@@ -178,9 +178,9 @@ class Megaupload < Link
     end
   end
   def test
-    begin
+    begin      
       Verbose.to_log "Testando link: #{@link} | Tentativa #{@tentativas} de #{@max_tentativas}."
-      return unless http_valid?
+      return false unless http_valid?
       @id_status = Status::TESTANDO
       @data_inicio = StrTime.timestamp Time.now
       update_db
@@ -191,7 +191,7 @@ class Megaupload < Link
         @id_status = Status::OFFLINE
         @testado = true
         update_db
-        return
+        return false
       end
 
       ## Captura nome do arquivo
@@ -214,7 +214,7 @@ class Megaupload < Link
         @testado = true
         update_db
       end
-      return
+      return true
     rescue Timeout::Error
       Verbose.to_log "Tempo de requisição esgotado. Tentando novamente."
       retry
@@ -236,7 +236,7 @@ class Megaupload < Link
       if self.error?
         @id_status = Status::OFFLINE
         update_db
-        return nil
+        return false
       end
 
       ## Captura nome do arquivo
@@ -251,8 +251,7 @@ class Megaupload < Link
       self.get_size
       if @tamanho == nil
         Verbose.to_log('Não foi possível capturar o tamanho.')
-        retry_
-        return nil
+        return false
       else
         Verbose.to_debug("Tamanho #{@tamanho} KB ou #{sprintf("%.2f MB", @tamanho/1024.0)}")
       end
@@ -261,8 +260,7 @@ class Megaupload < Link
       self.get_captchacode
       if @captchacode == nil
         Verbose.to_log('Não foi possível capturar o captchacode.')
-        retry_
-        return nil
+        false
       else
         Verbose.to_debug "captchacode reconhecido => #{@captchacode}"
       end
@@ -271,8 +269,7 @@ class Megaupload < Link
       self.get_megavar
       if @megavar == nil
         Verbose.to_log('Não foi possível capturar o megavar.')
-        retry_
-        return nil
+        false
       else
         Verbose.to_debug "megavar reconhecido => #{@megavar}"
       end
@@ -281,10 +278,9 @@ class Megaupload < Link
       self.get_captcha
       if @captcha == nil or @captcha.size != 4
         Verbose.to_log('Não foi possível capturar o captcha.')
-        retry_
-        return nil
+        false
       else
-        Verbose.to_debug "Captcha reconhecido => #{@captcha}"
+        Verbose.to_log "Captcha reconhecido => #{@captcha}"
       end
 
       ## Requisição POST
@@ -298,8 +294,7 @@ class Megaupload < Link
       response = post.post(@uri_parsed, hash)
       unless response.header.status_code == 200
         Verbose.to_log "Erro no POST."
-        retry_
-        return nil
+        false
       end
       @body = response.body.content
       # Fim da requisição POST
@@ -308,23 +303,21 @@ class Megaupload < Link
         Verbose.to_debug "Captcha está correto."
       else
         Verbose.to_log('ERRO: Captcha não está correto.')
-        retry_
-        return nil
+        false
       end
 
       ## Captura link do download
       self.get_downloadlink
       if @downloadlink == nil
         Verbose.to_log('Não foi possível capturar o link para download.')
-        retry_
-        return nil
+        false
       end
 
       begin
         servidor_host = self.recognize_server
         if servidor_host == nil
           if retry_ == Status::OFFLINE
-            return nil
+            return false
           end
         end
       end while servidor_host == nil
@@ -337,14 +330,19 @@ class Megaupload < Link
       # Fix URL encoding issue
       @downloadlink.gsub!("[", "%5B")
       @downloadlink.gsub!("]", "%5D")
+      begin
+        @downloadlink = URI.parse @downloadlink
+      rescue Exception => e
+        Vebose.to_log("Erro ao compilar o link para download: #{e}")
+        raise
+      end
       Verbose.to_log("Link para download: #{@downloadlink}")
 
       ## Captura tempo de espera
       self.get_countdown
       if @waittime == nil # Testa se identificou o contador
         Verbose.to_log('Não foi possível capturar o contador.')
-        retry_
-        return nil
+        return false
       end
       @downloadlink
     rescue Timeout::Error

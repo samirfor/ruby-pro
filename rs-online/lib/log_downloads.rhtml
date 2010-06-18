@@ -39,7 +39,31 @@ def show_logs_msg historicos %>
       </div>
     </div>
   </div> <%
-end %>
+end
+
+def puts_error %>
+  <div class="post">
+    <div class="entry">
+      <h1 class="title">Ocorreu um erro.</h1>
+      <p>Não foi possível carregar a página. Contate o administrador!</p>
+    </div>
+  </div>
+<%
+end
+
+def run
+  begin
+    historicos = Historico.select_top(200)
+    if historicos == nil or historicos == []
+      puts_error
+    else
+      show_log_msg historicos
+    end
+  rescue
+    puts_error
+  end
+end
+%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
@@ -101,43 +125,8 @@ Released   : 20081230
       <!-- end #header -->
       <div id="page">
         <!--<div id="header-pic"></div>-->
-        <div id="content"> <%
-          historicos = Historico.select_top(200)
-          if historicos == nil %>
-            <div class="post">
-              <div class="entry">
-                <h1 class="title">Ocorreu um erro!</h1>
-                <p>Não foi ler os históricos. Contate o administrador!</p>
-  <%#*<p>%>
-  <%#*<b>Erro:</b> <%= err %><br/><br/>%>
-  <%# err.backtrace.each do |i| %>
-  <%#= i %><br/>
-  <%#end%>
-  <%#*</p>%>
-              </div>
-            </div> <%
-            #raise
-          else
-            begin
-              show_logs_msg historicos
-            rescue Exception => err %>
-              <div class="post">
-                <div class="entry">
-                  <h1 class="title">Ocorreu um erro.</h1>
-                  <p>Não foi possível carregar a página. Contate o administrador!</p>
-                  <p>
-                    <b>Erro:</b> <%= err %><br/><br/>
-                    <% err.backtrace.each do |i| %>
-                      <%= i %><br/>
-                    <%end%>
-                  </p>
-                </div>
-              </div> <%
-            end # => begin - rescue
-          end
-        %>
-
-
+        <div id="content">
+          <% run %>
         </div>
         <!-- end #content -->
         <div id="sidebar">
