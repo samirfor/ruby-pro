@@ -111,6 +111,8 @@ class Link
     @id_status = Status::BAIXANDO
     update_db
     ## Download com curl
+#    config = RsConfig.parse("/home/#{`whoami`.chomp}/rs-online.conf")
+#    baixou = system("cd #{config[:local]}; curl -LOC - \"#{@downloadlink}\"")
     baixou = system("curl -LOC - \"#{@downloadlink}\"")
     time_fim = Time.now
     @data_fim = StrTime.timestamp time_fim

@@ -1,10 +1,10 @@
 # 25-03-2010
 
-- Usar método singleton
+- OK - Usar método singleton
 - Implementar acesso individualizado. (cada usuário com seus links)
 - Implenentar um sistema de administração geral
 - Implementar estatísticas de download.
-- Implementar uma possível descrição ou observação para cada pacote.
+- OK - Implementar uma possível descrição ou observação para cada pacote.
 - Implementar uma busca no site legendas.tv para cada pacote com sugestões
   sobre possíveis legendas para o mesmo.
 - Implementar status do core no banco de dados. Imformações como:
@@ -16,7 +16,7 @@
   > Programa finalizado
   > Último PID
   > Nome do processo
-- Reformular o service handler. (start, stop, close)
+- OK - Reformular o service handler. (start, stop, close)
 - Precisamos colocar uma senha de gente no BD
 
 # 13-04-2010
