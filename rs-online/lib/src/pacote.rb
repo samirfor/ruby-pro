@@ -1,9 +1,7 @@
 require "src/timestamp"
 require "rubygems"
 require "shorturl"
-#require "src/plugins/4shared"
 require "src/plugins/megaupload"
-#require "src/plugins/rapidshare"
 
 class Pacote
   attr_accessor :id_pacote, :tamanho, :problema, :nome, :completado, \
@@ -25,23 +23,21 @@ class Pacote
   end
   
   def update_db
-    #    @legenda = encurta_url(@legenda)
-    #    @url_fonte = encurta_url(@url_fonte)
-
+    # FIXME testar
     sql = "UPDATE rs.pacote SET "
-    sql += "tamanho = #{@tamanho}, " unless @tamanho == nil
-    sql += "data_fim = '#{@data_fim}', " unless @data_fim == nil
-    sql += "data_inicio = '#{@data_inicio}', " unless @data_inicio == nil
-    sql += "prioridade = #{@prioridade}, " unless @prioridade == nil
-    sql += "completado = '#{@completado}', " unless @completado == nil
-    sql += "mostrar = '#{@mostrar}', " unless @mostrar == nil
-    sql += "senha = '#{@senha}', " unless @senha == nil
-    sql += "descricao = '#{@descricao}', " unless @descricao == nil
-    sql += "url_fonte = '#{@url_fonte}', " unless @url_fonte == nil
-    sql += "legenda = '#{@legenda}', " unless @legenda == nil
-    sql += "problema = '#{@problema}' "
-    sql += "WHERE id = #{@id_pacote}"
-    Banco.instance.db_connect.do(sql)
+    @tamanho ? sql += "tamanho = #{@tamanho}, " : sql += "tamanho = NULL, "
+    @prioridade ? sql += "prioridade = #{@prioridade}, " : sql += "prioridade = NULL, "
+    @data_inicio ? sql += "data_inicio = '#{StrTime.timestamp(@data_inicio)}', " : sql += "data_inicio = NULL, "
+    @data_fim ? sql += "data_fim = '#{StrTime.timestamp(@data_fim)}', " : sql += "data_fim = NULL, "
+    @completado != nil ? sql += "completado = '#{@completado}', " : sql += "completado = DEFAULT, "
+    @mostrar != nil ? sql += "mostrar = '#{@mostrar}', " : sql += "mostrar = DEFAULT, "
+    @problema != nil ? sql += "problema = '#{@problema}', " : sql += "problema = DEFAULT, "
+    @senha ? sql += "senha = '#{@senha}', " : sql += "senha = NULL, "
+    @descricao ? sql += "descricao = '#{@descricao}', " : sql += "descricao = NULL, "
+    @url_fonte ? sql += "url_fonte = '#{@url_fonte}', " : sql += "url_fonte = NULL, "
+    @legenda ? sql += "legenda = '#{@legenda}', " : sql += "legenda = NULL "
+    sql += "WHERE id = ?"
+    Banco.instance.db_connect.do(sql, @id_pacote)
   end
 
   def encurta_url text
@@ -53,6 +49,15 @@ class Pacote
     else
       return text_original
     end
+  end
+  
+  def reset
+    @tamanho = nil
+    @problema = false
+    @completado = false
+    @data_inicio = nil
+    @data_fim = nil
+    update_db
   end
 
   

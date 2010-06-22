@@ -202,8 +202,7 @@ def run
       ## Inicio Download do Pacote
       pacote.data_inicio = Time.now # Marca quando o pacote iniciou download
       pacote.update_db
-      for i in (0...links_online.size)
-        link = links_before_test[i]
+      links_before_test.each do |link|
         link.tentativas = 0
         Core.cancelar?
         begin

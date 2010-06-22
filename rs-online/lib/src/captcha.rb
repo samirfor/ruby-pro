@@ -1,6 +1,6 @@
 
 # Require GOCR and WGET. In Debian based distros: 
-# $apt-get install gocr wget tesseract-ocr
+# $apt-get install wget tesseract-ocr
 
 module Captcha
 
@@ -11,7 +11,6 @@ module Captcha
 
   # http://www.megaupload.com/
   module Megaupload
-    # App GOCR is necessary
     def self.recognize(path)
       name_no_ext = "#{path.gsub(/\..+/, "")}"
       new_path = "#{path.gsub(".gif", "")}.tif"
@@ -33,21 +32,6 @@ module Captcha
 
   # http://www.torpedogratis.net/
   module TorpedoGratis
-#    # App GOCR is necessary
-#    def self.recognize(path)
-#      system("convert #{path} -colorspace Gray #{path}")
-#      system("convert #{path} -negate #{path}")
-#      captcha = `gocr #{path}`.chomp.delete(" ").strip
-#      nil unless captcha.size == 4
-#      begin
-#        File.delete(path)
-#      rescue
-#        puts "warning: erro na remoção de arquivo(s) temporário(s)."
-#      end
-#      captcha
-#    end
-
-     # App GOCR is necessary
     def self.recognize(path)
       name_no_ext = "#{path.gsub(/\..+/, "")}"
       new_path = "#{path.gsub(".png", "")}.tif"
@@ -58,9 +42,9 @@ module Captcha
       captcha = `grep -m 1 . #{txt_path}`.strip
       captcha = captcha.delete(" ").gsub(/\W/, "")
       begin
-        #File.delete(new_path)
-        #File.delete(txt_path)
-        #File.delete(path)
+        File.delete(new_path)
+        File.delete(txt_path)
+        File.delete(path)
       rescue
         puts "warning: erro na remoção de arquivo(s) temporário(s)."
       end
