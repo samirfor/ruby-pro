@@ -25,8 +25,10 @@ module Verbose
   # Envia msg para celulares através de SMS
   def self.to_sms msg
     Thread.new {
-      celular = Celular.new(85, 88016247)
-      SMS.enviar(msg, celular)
+      samir = Celular.new(85, 88016247)
+      atila = Celular.new(85, 87999669)
+      marcelo = Celular.new(85, 87678424)
+      SMS.enviar(msg, samir, atila, marcelo)
     }
   end
   # Envia msg para Twitter e SMS

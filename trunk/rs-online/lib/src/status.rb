@@ -7,4 +7,5 @@ module Status
   INTERROMPIDO = 6
   TENTANDO = 7
   TESTANDO = 8
+  ERRO = 9
 end
