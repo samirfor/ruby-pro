@@ -182,7 +182,7 @@ class Megaupload < Link
       Verbose.to_log "Testando link: #{@link} | Tentativa #{@tentativas} de #{@max_tentativas}."
       return false unless http_valid?
       @id_status = Status::TESTANDO
-      @data_inicio = StrTime.timestamp Time.now
+      @data_inicio = Time.now
       update_db
       
       @body = get_body

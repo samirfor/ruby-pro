@@ -146,8 +146,8 @@ def run
       ## Select pacote
       pacote = Pacote.select_pendente
       if pacote == nil
-        evento = 'Fim do(s) download(s). Have a nice day!'
-        Verbose.to_public(evento)
+        evento = "Fim do(s) download(s). Have a nice day\!"
+        puts evento
         exit!(1)
       end
       links_before_test = pacote.select_links

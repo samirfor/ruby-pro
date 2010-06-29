@@ -1,4 +1,5 @@
 require "src/banco"
+require "src/timestamp"
 
 class Historico
   attr_accessor :id, :data, :processo, :mensagem
@@ -12,10 +13,10 @@ class Historico
 
   # Insere o log no banco de dados
   def save
-    @data = Time.new.strftime("%d/%m/%Y %H:%M:%S")
+    @data = Time.now
     @processo = Process.pid.to_s
     sql = "INSERT INTO rs.historico (data, processo, mensagem) values (?, ?, ?)"
-    Banco.instance.db_connect.do(sql, @data, @processo, @mensagem)
+    Banco.instance.db_connect.do(sql, StrTime.timestamp(@data), @processo, @mensagem)
   end
 
   ### No banco

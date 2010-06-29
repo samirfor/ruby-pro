@@ -47,10 +47,10 @@ def show_pacotes pacotes
                   </a>
                 </td> <%
                 begin
-                  data_inicio_to_s = pacote.data_inicio.to_time.strftime("%d/%m/%Y %H:%M:%S")
+                  data_inicio_to_s = StrTime.timestamp(pacote.data_inicio.to_time)
                 rescue Exception
                   begin
-                    data_inicio_to_s = pacote.data_inicio.strftime("%d/%m/%Y %H:%M:%S")
+                    data_inicio_to_s = StrTime.timestamp(pacote.data_inicio)
                   rescue Exception
                     data_inicio_to_s = "<img src=\"images\/hourglass.png\" alt=\"Progress\" \/>"
                   end
@@ -60,9 +60,9 @@ def show_pacotes pacotes
                   <td align="center"><img src="images/hourglass.png" alt="Progress" /></td> <%
                 else
                   if pacote.data_fim.class.to_s == "DBI::Timestamp"
-                    data_fim_to_s = pacote.data_fim.to_time.strftime("%d/%m/%Y %H:%M:%S")
+                    data_fim_to_s = StrTime.timestamp(pacote.data_fim.to_time)
                   else
-                    data_fim_to_s = pacote.data_fim.strftime("%d/%m/%Y %H:%M:%S")
+                    data_fim_to_s = StrTime.timestamp(pacote.data_fim)
                   end %>
                   <td align="center"><%= data_fim_to_s %> </td> <%
                 end

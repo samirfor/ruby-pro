@@ -92,25 +92,24 @@ end
 def action_pacote a_params
   begin
     if a_params["action"][0] == "cancelar"
-      sql = "UPDATE rs.pacote SET mostrar = 'false', problema = 'true' \
-      WHERE id = ? "
+      sql = "UPDATE rs.pacote SET mostrar = 'false', problema = 'true' WHERE id = ? "
       Banco.instance.db_connect.do(sql, $id_pacote)
       msg = "ACTION = Cancelar => Pacote modificado com sucesso."
     elsif a_params["action"][0] == "reiniciar"
       # UPDATE link
       sql = "UPDATE rs.link SET testado = 'false', id_status = 5, "
       sql += "data_inicio = ?, data_fim = NULL WHERE id_pacote = ? "
-      Banco.instance.db_connect.do(sql, StrTime.timestamp(Time.now), $id_pacote)
+      Banco.instance.db_connect.do(sql, StrTime.now, $id_pacote)
       # UPDATE pacote
       sql = "UPDATE rs.pacote SET "
       sql += "mostrar = 'true', problema = 'false', "
       sql += "completado = 'false', data_inicio = ?, data_fim = NULL "
       sql += "WHERE id = ? "
-      Banco.instance.db_connect.do(sql, StrTime.timestamp(Time.now), $id_pacote)
+      Banco.instance.db_connect.do(sql, StrTime.now, $id_pacote)
       lista_links = $pacote.select_links
       if lista_links
         lista_links.each do |link|
-          link.data_inicio = StrTime.timestamp(Time.now)
+          link.data_inicio = StrTime.now
           link.data_fim = nil
           link.id_status = Status::AGUARDANDO
           link.tamanho = nil

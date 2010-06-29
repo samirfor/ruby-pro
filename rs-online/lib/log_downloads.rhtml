@@ -1,5 +1,6 @@
 <%
-require 'src/historico'
+require "src/historico"
+require "src/timestamp"
 
 def show_logs_msg historicos %>
   <div class="post">
@@ -17,7 +18,7 @@ def show_logs_msg historicos %>
           </thead>
           <tbody> <%
             historicos.each do |h|
-              print "<tr>\n<td>#{h.id}</td>\n";
+              print "<tr>\n<td>#{h.id}</td>\n"
               print "<td>#{h.data}</td>\n"
               print "<td>#{h.processo}</td>\n"
               print "<td>#{h.mensagem}</td>\n</tr>\n"
@@ -26,14 +27,13 @@ def show_logs_msg historicos %>
           <tfoot>
             <tr>
               <th colspan="4" align="center">
-                Página gerada em <%= Time.now.strftime("%d/%m/%Y as %H:%M:%S") %><br/>
+                Página gerada em <%= StrTime.now %><br/>
                 RS-Online ~ version 1.0b ~ Powered by eRuby
               </th>
             </tr>
           </tfoot>
         </table>
       </div>
-
       <div class="meta">
         <p class="links"></p>
       </div>
@@ -41,11 +41,12 @@ def show_logs_msg historicos %>
   </div> <%
 end
 
-def puts_error %>
+def puts_error msg%>
   <div class="post">
     <div class="entry">
       <h1 class="title">Ocorreu um erro.</h1>
-      <p>Não foi possível carregar a página. Contate o administrador!</p>
+      <p><%= msg %></p>
+  <%#*<p>Não foi possível carregar a página. Contate o administrador!</p>%>
     </div>
   </div>
 <%
@@ -55,12 +56,12 @@ def run
   begin
     historicos = Historico.select_top(200)
     if historicos == nil or historicos == []
-      puts_error
+      puts_error "Histórico vazio."
     else
-      show_log_msg historicos
+      show_logs_msg historicos
     end
-  rescue
-    puts_error
+  rescue Exception => err
+    puts_error "Erro:</b> #{err} <br/><br/>#{err.backtrace.each { |i| print i, "<br/>" }}"
   end
 end
 %>
