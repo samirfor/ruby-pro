@@ -1,7 +1,6 @@
 require 'dbi'
 require 'src/pacote'
 require "src/historico"
-require 'src/link'
 require "singleton"
 
 class Banco

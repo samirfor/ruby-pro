@@ -86,7 +86,7 @@ def show_lista_links lista, pacote%>
                 # data inicio
                 begin
                   data_inicio = Time.parse(link.data_inicio.to_s)
-                  data_inicio_to_s = data_inicio.strftime("%d/%m/%Y %H:%M:%S")
+                  data_inicio_to_s = StrTime.timestamp(data_inicio)
                 rescue Exception
                   data_inicio_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" title=\"Não informado\" \/>"
                 end
@@ -96,7 +96,7 @@ def show_lista_links lista, pacote%>
                 # data fim
                 begin
                   data_fim = Time.parse(link.data_fim.to_s)
-                  data_fim_to_s = data_fim.strftime("%d/%m/%Y %H:%M:%S")
+                  data_fim_to_s = StrTime.timestamp(data_fim)
                 rescue Exception
                   data_fim_to_s = "<img src=\"images\/hourglass.png\" alt=\"Não informado\" title=\"Não informado\" \/>"
                 end
@@ -115,7 +115,7 @@ def show_lista_links lista, pacote%>
                   if intervalo == nil %>
                     --- <%
                   else %>
-                    <%= intervalo.strftime("%Hh %Mm %Ss") %>
+                    <%= StrTime.time intervalo %>
                   <%
                   end %>
                 </td><%

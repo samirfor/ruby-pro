@@ -1,7 +1,6 @@
 require "src/timestamp"
 require "rubygems"
 require "shorturl"
-require "src/plugins/megaupload"
 
 class Pacote
   attr_accessor :id_pacote, :tamanho, :problema, :nome, :completado, \
@@ -326,12 +325,12 @@ class Pacote
   def select_count_remaining_links
     sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = ? "
     rst = Banco.instance.db_connect.execute(sql, @id_pacote)
-    count_pacotes = rst.fetch_all[0].clone
+    count_pacotes = rst.fetch_all[0][0]
     rst.finish
 
     sql = "SELECT count(id_link) FROM rs.link WHERE id_pacote = ? AND id_status = 1 "
     rst = Banco.instance.db_connect.execute(sql, @id_pacote)
-    count_baixados = rst.fetch_all[0].clone
+    count_baixados = rst.fetch_all[0][0]
     rst.finish
     Banco.instance.db_disconnect
 
