@@ -6,7 +6,6 @@ require "src/status"
 require "src/banco"
 
 class Link
-  # FIXME testar
   attr_reader :link, :uri_original, :max_tentativas
   attr_accessor :uri_parsed, :id_link, :id_pacote, :completado, :tamanho, \
     :id_status, :tentativas, :data_inicio, :data_fim, :testado, :waittime, \
@@ -59,16 +58,32 @@ class Link
   # Escreve os dados no BD.
   def update_db
     begin
+      a_params = {
+        :tamanho => @tamanho,
+        :testado => @testado,
+        :completado => @completado,
+        :data_inicio => @data_inicio,
+        :data_fim => @data_fim,
+        :filename => @filename,
+        :id_status => @id_status,
+        :id_link => @id_link
+      }
+      a_params.delete_if { |key, val| val == nil or val == "" or val == [] }
+
       sql = "UPDATE rs.link SET "
-      @tamanho ? sql += "tamanho = '#{@tamanho}', " : sql += "tamanho = NULL, "
-      @testado != nil ? sql += "testado = '#{@testado}', " : sql += "testado = DEFAULT, "
-      @completado != nil ? sql += "completado = '#{@completado}', " : sql += "completado = DEFAULT, "
-      @data_inicio ? sql += "data_inicio = '#{StrTime.timestamp(@data_inicio)}', " : sql += "data_inicio = NULL, "
-      @data_fim ? sql += "data_fim = '#{StrTime.timestamp(@data_fim)}', " : sql += "data_fim = NULL, "
-      @filename ? sql += "filename = '#{@filename}', " : sql += "filename = NULL, "
-      sql += "id_status = #{@id_status} "
-      sql += "WHERE id_link = ? "
-      Banco.instance.db_connect.do(sql, @id_link)
+      a_params.each_key do |key|
+        sql += "#{key} = ? , "
+      end
+      # FIXME testar link update_db
+      # DEPRECATED
+      #      @tamanho ? sql += "tamanho = '#{@tamanho}', " : sql += "tamanho = NULL, "
+      #      @testado != nil ? sql += "testado = '#{@testado}', " : sql += "testado = DEFAULT, "
+      #      @completado != nil ? sql += "completado = '#{@completado}', " : sql += "completado = DEFAULT, "
+      #      @data_inicio ? sql += "data_inicio = '#{StrTime.timestamp(@data_inicio)}', " : sql += "data_inicio = NULL, "
+      #      @data_fim ? sql += "data_fim = '#{StrTime.timestamp(@data_fim)}', " : sql += "data_fim = NULL, "
+      #      @filename ? sql += "filename = '#{@filename}', " : sql += "filename = NULL, "
+      sql += "id_status = ? WHERE id_link = ? "
+      Banco.instance.db_connect.do(sql, *a_params.values)
     rescue Exception => e
       Verbose.to_log("Erro ao atualizar link: #{e}")
       sleep 1

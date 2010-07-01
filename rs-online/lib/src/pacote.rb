@@ -22,7 +22,7 @@ class Pacote
   end
   
   def update_db
-    # FIXME testar
+    # FIXME testar pacote update_db
     sql = "UPDATE rs.pacote SET "
     @tamanho ? sql += "tamanho = #{@tamanho}, " : sql += "tamanho = NULL, "
     @prioridade ? sql += "prioridade = #{@prioridade}, " : sql += "prioridade = NULL, "

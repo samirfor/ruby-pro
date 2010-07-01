@@ -11,7 +11,6 @@
 package gui;
 
 import java.awt.Color;
-import java.lang.Integer;
 import javax.swing.UIManager;
 
 /**
